@@ -352,14 +352,36 @@
         };
 
         const loadSyncedAccounts = () => {
+            const ACCOUNTS_PASSWORD_SEED = 'feature-004-v3-default-password';
+            const defaultByKey = new Map();
+            DEFAULT_ACCOUNTS.forEach(d => defaultByKey.set(normalizeEmpId(d.empId), d));
+
             const loaded = safeJsonParse('store_accounts_v48_system', null);
-            const { accounts, stats, changed } = syncAccountsFromSeed(loaded);
-            const seedMismatch = safeGetItem('zdos_accounts_seed_version', '') !== ACCOUNTS_SEED_VERSION;
-            if (loaded === null || changed || seedMismatch) {
-                safeSetItem('store_accounts_v48_system', JSON.stringify(accounts));
-                safeSetItem('zdos_accounts_seed_version', ACCOUNTS_SEED_VERSION);
+            const { accounts, changed } = syncAccountsFromSeed(loaded);
+
+            const list = accounts.map(a => {
+                const def = defaultByKey.get(normalizeEmpId(a.empId));
+                if (!def) return a;
+                const stored = loaded && Array.isArray(loaded)
+                    ? loaded.find(x => normalizeEmpId(x?.empId) === normalizeEmpId(def.empId))
+                    : null;
+                return {
+                    empId: def.empId,
+                    password: def.password,
+                    name: (stored?.name && String(stored.name).trim()) || (a.name && String(a.name).trim()) || def.name,
+                    role: (stored?.role && String(stored.role).trim()) || (a.role && String(a.role).trim()) || def.role,
+                    store: (stored?.store && String(stored.store).trim()) || (a.store && String(a.store).trim()) || def.store,
+                    store2: (stored?.store2 && String(stored.store2).trim()) || (a.store2 && String(a.store2).trim()) || def.store2
+                };
+            });
+
+            const seedMismatch = safeGetItem('zdos_accounts_seed_version', '') !== ACCOUNTS_PASSWORD_SEED;
+            const listChanged = JSON.stringify(list) !== JSON.stringify(accounts);
+            if (loaded === null || changed || seedMismatch || listChanged) {
+                safeSetItem('store_accounts_v48_system', JSON.stringify(list));
+                safeSetItem('zdos_accounts_seed_version', ACCOUNTS_PASSWORD_SEED);
             }
-            return accounts;
+            return list;
         };
 
         const SALES_RECORD_REVIEW_DEFAULTS = { status: 'pending', reviewBy: '', reviewAt: '', reviewRemark: '' };
@@ -1524,7 +1546,12 @@
         // ========================================================================
         // 13. 應用程式自動載入引導
         // ========================================================================
-        window.addEventListener('DOMContentLoaded', () => { updateGlobalGlows(); renderApp(); maybeShowUpdateModal(); });
+        window.addEventListener('DOMContentLoaded', () => {
+            state.accounts = loadSyncedAccounts();
+            updateGlobalGlows();
+            renderApp();
+            maybeShowUpdateModal();
+        });
     </script>
 </body>
 </html>
