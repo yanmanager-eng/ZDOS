@@ -217,6 +217,41 @@
         </div>
     </div>
 
+    <div id="beta-feedback-modal" class="fixed inset-0 z-[10002] hidden flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-2xl animate-fade-in">
+        <div class="w-full max-w-lg bg-slate-900 border border-white/[0.08] rounded-[28px] p-6 shadow-2xl relative zdos-modal-panel font-sans">
+            <div class="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-rose-500 via-pink-500 to-violet-500 rounded-l-full"></div>
+            <h3 class="text-sm font-bold text-slate-100 tracking-wide mb-1">Beta 測試回饋</h3>
+            <p class="text-[10px] text-slate-500 mb-4">回報問題或提出建議，協助 ZDOS Beta 優化</p>
+            <div id="beta-feedback-form" class="space-y-3 text-xs">
+                <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    <div><label class="text-[10px] text-slate-500 block mb-1">回報人姓名</label><input type="text" id="beta-feedback-name" readonly class="w-full bg-slate-950/80 border border-white/[0.06] rounded-lg px-2.5 py-2 text-slate-300" /></div>
+                    <div><label class="text-[10px] text-slate-500 block mb-1">工號</label><input type="text" id="beta-feedback-empid" readonly class="w-full bg-slate-950/80 border border-white/[0.06] rounded-lg px-2.5 py-2 text-slate-300 font-mono" /></div>
+                    <div class="col-span-2 sm:col-span-1"><label class="text-[10px] text-slate-500 block mb-1">門市</label><input type="text" id="beta-feedback-store" readonly class="w-full bg-slate-950/80 border border-white/[0.06] rounded-lg px-2.5 py-2 text-slate-300" /></div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label for="beta-feedback-type" class="text-[10px] text-slate-400 block mb-1">回報類型</label><select id="beta-feedback-type" class="w-full bg-slate-950 border border-white/[0.08] rounded-lg px-2 py-2 text-slate-200"></select></div>
+                    <div><label for="beta-feedback-page" class="text-[10px] text-slate-400 block mb-1">問題發生功能</label><select id="beta-feedback-page" class="w-full bg-slate-950 border border-white/[0.08] rounded-lg px-2 py-2 text-slate-200"></select></div>
+                    <div><label for="beta-feedback-device" class="text-[10px] text-slate-400 block mb-1">使用裝置</label><select id="beta-feedback-device" class="w-full bg-slate-950 border border-white/[0.08] rounded-lg px-2 py-2 text-slate-200"></select></div>
+                    <div><label for="beta-feedback-impact" class="text-[10px] text-slate-400 block mb-1">問題影響程度</label><select id="beta-feedback-impact" class="w-full bg-slate-950 border border-white/[0.08] rounded-lg px-2 py-2 text-slate-200"></select></div>
+                </div>
+                <div><label for="beta-feedback-content" class="text-[10px] text-slate-400 block mb-1">問題／建議內容 <span class="text-rose-400">*</span></label><textarea id="beta-feedback-content" rows="4" placeholder="請描述您遇到的問題或改進建議…" class="w-full bg-slate-950 border border-white/[0.08] rounded-xl px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-500/40 resize-y min-h-[88px]"></textarea></div>
+                <div class="flex gap-2.5 rounded-xl border border-sky-500/20 bg-sky-500/10 backdrop-blur-xl px-3 py-2.5 text-xs text-slate-300 leading-relaxed shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                    <span class="shrink-0 text-base leading-none mt-0.5" aria-hidden="true">💡</span>
+                    <div class="min-w-0 break-words">
+                        <p class="font-bold text-sky-300/90">小提醒</p>
+                        <p class="mt-1 text-slate-400">若遇到畫面異常、排版錯亂或操作問題，建議先截圖，再送出回饋。</p>
+                        <p class="mt-1 text-slate-500">有圖片協助，可大幅縮短修正時間。</p>
+                        <p class="mt-2 pt-2 border-t border-sky-500/15 text-slate-400">🙏 感謝協助測試，每一則回饋，都會讓 ZDOS 變得更好。</p>
+                    </div>
+                </div>
+            </div>
+            <div id="beta-feedback-actions" class="mt-5 flex gap-2">
+                <button type="button" onclick="closeBetaFeedbackModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all">取消</button>
+                <button type="button" id="beta-feedback-submit-btn" onclick="handleBetaFeedbackSubmit()" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white text-xs font-bold transition-all disabled:opacity-50 disabled:pointer-events-none">送出回饋</button>
+            </div>
+        </div>
+    </div>
+
     <div id="root" class="relative z-10 w-full min-w-0 max-w-full min-h-screen flex flex-col justify-between p-2 sm:p-4"></div>
 
     <script>
@@ -436,6 +471,63 @@
         };
 
         const escapeHtmlText = (value) => String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+        const BETA_FEEDBACK_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeC0-fuNL_bhrATN3XVxnVrhg5rrTYJPQBwuWMD5YaDPsqf9w/formResponse';
+        const BETA_FEEDBACK_TYPE_OPTIONS = ['問題回報', '功能建議', '介面／操作體驗', '其他'];
+        const BETA_FEEDBACK_PAGE_OPTIONS = ['Dashboard', '業績申報', '庫存盤點', '業績核對中心', '其他'];
+        const BETA_FEEDBACK_DEVICE_OPTIONS = ['手機', '平板', '桌機'];
+        const BETA_FEEDBACK_IMPACT_OPTIONS = ['是，無法完成工作', '是，但可勉強使用', '否', '不確定'];
+
+        const detectDeviceType = () => {
+            const w = window.innerWidth || 0;
+            const coarse = window.matchMedia('(pointer: coarse)').matches;
+            const touch = (navigator.maxTouchPoints || 0) > 0;
+            if (w < 768 && (coarse || touch)) return '手機';
+            if (w < 1024 && (coarse || touch)) return '平板';
+            return '桌機';
+        };
+
+        const getBetaFeedbackDefaultPage = () => {
+            if (state.currentView === 'review') return '業績核對中心';
+            if (state.currentView === 'module') return state.activeAppTab === 'inventory' ? '庫存盤點' : '業績申報';
+            return 'Dashboard';
+        };
+
+        const fillBetaFeedbackSelect = (el, options, selected) => {
+            if (!el) return;
+            el.innerHTML = options.map(o => `<option value="${escapeHtmlText(o)}">${escapeHtmlText(o)}</option>`).join('');
+            if (selected && options.includes(selected)) el.value = selected;
+        };
+
+        const collectBetaFeedbackFields = () => {
+            const matched = state.accounts.find(a => normalizeEmpId(a.empId) === normalizeEmpId(state.employeeId)) || { name: state.employeeId };
+            return {
+                reporterName: String(matched.name || state.employeeId || '').trim(),
+                employeeId: String(state.employeeId || '').trim(),
+                store: String(state.storeType || '').trim(),
+                feedbackType: String(document.getElementById('beta-feedback-type')?.value || '').trim(),
+                feature: String(document.getElementById('beta-feedback-page')?.value || '').trim(),
+                device: String(document.getElementById('beta-feedback-device')?.value || '').trim(),
+                impact: String(document.getElementById('beta-feedback-impact')?.value || '').trim(),
+                description: String(document.getElementById('beta-feedback-content')?.value || '').trim()
+            };
+        };
+
+        const isBetaFeedbackFieldsComplete = (fields) =>
+            Object.values(fields).every(v => String(v || '').trim());
+
+        const buildBetaFeedbackFormData = (fields) => {
+            const formData = new URLSearchParams();
+            formData.append('entry.703820621', fields.reporterName);
+            formData.append('entry.1528621972', fields.employeeId);
+            formData.append('entry.801007507', fields.store);
+            formData.append('entry.1451086317', fields.feedbackType);
+            formData.append('entry.989541155', fields.feature);
+            formData.append('entry.728858648', fields.device);
+            formData.append('entry.127577855', fields.impact);
+            formData.append('entry.1052142971', fields.description);
+            return formData;
+        };
 
         // ========================================================================
         // 3. 初始狀態與核心數據模型 (🔒 終極鎖定原廠雙軌安全版)
@@ -830,6 +922,76 @@
         window.changeSettingsTabDirect = function(tabName) { state.settingsTab = tabName; updateModalContent(document.getElementById('settings-modal')); };
         window.changeConfigTabDirect = function(tab) { state.activeConfigTab = tab; updateModalContent(document.getElementById('settings-modal')); };
 
+        window.resetBetaFeedbackModal = function() {
+            const content = document.getElementById('beta-feedback-content');
+            if (content) content.value = '';
+            fillBetaFeedbackSelect(document.getElementById('beta-feedback-type'), BETA_FEEDBACK_TYPE_OPTIONS, BETA_FEEDBACK_TYPE_OPTIONS[0]);
+            fillBetaFeedbackSelect(document.getElementById('beta-feedback-page'), BETA_FEEDBACK_PAGE_OPTIONS, 'Dashboard');
+            fillBetaFeedbackSelect(document.getElementById('beta-feedback-device'), BETA_FEEDBACK_DEVICE_OPTIONS, detectDeviceType());
+            fillBetaFeedbackSelect(document.getElementById('beta-feedback-impact'), BETA_FEEDBACK_IMPACT_OPTIONS, BETA_FEEDBACK_IMPACT_OPTIONS[3]);
+            const submitBtn = document.getElementById('beta-feedback-submit-btn');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '送出回饋';
+            }
+        };
+
+        window.openBetaFeedbackModal = function() {
+            if (!state.isLoggedIn) return;
+            resetBetaFeedbackModal();
+            const matched = state.accounts.find(a => normalizeEmpId(a.empId) === normalizeEmpId(state.employeeId)) || { name: state.employeeId || '同仁' };
+            const nameEl = document.getElementById('beta-feedback-name');
+            const empEl = document.getElementById('beta-feedback-empid');
+            const storeEl = document.getElementById('beta-feedback-store');
+            if (nameEl) nameEl.value = matched.name || state.employeeId || '';
+            if (empEl) empEl.value = state.employeeId || '';
+            if (storeEl) storeEl.value = state.storeType || '';
+            fillBetaFeedbackSelect(document.getElementById('beta-feedback-page'), BETA_FEEDBACK_PAGE_OPTIONS, getBetaFeedbackDefaultPage());
+            fillBetaFeedbackSelect(document.getElementById('beta-feedback-device'), BETA_FEEDBACK_DEVICE_OPTIONS, detectDeviceType());
+            const modal = document.getElementById('beta-feedback-modal');
+            if (modal) modal.classList.remove('hidden');
+        };
+
+        window.closeBetaFeedbackModal = function() {
+            resetBetaFeedbackModal();
+            const modal = document.getElementById('beta-feedback-modal');
+            if (modal) modal.classList.add('hidden');
+        };
+
+        window.handleBetaFeedbackSubmit = async function() {
+            if (!state.isLoggedIn) return;
+            const submitBtn = document.getElementById('beta-feedback-submit-btn');
+            if (submitBtn?.disabled) return;
+
+            const fields = collectBetaFeedbackFields();
+            if (!isBetaFeedbackFieldsComplete(fields)) {
+                return showToast('請填寫所有必填欄位。', 'error');
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = '送出中…';
+            }
+            try {
+                const formData = buildBetaFeedbackFormData(fields);
+                await fetch(BETA_FEEDBACK_FORM_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+                showToast('Beta 回饋已送出', 'success');
+                closeBetaFeedbackModal();
+            } catch (_err) {
+                showToast('送出失敗', 'error');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '送出回饋';
+                }
+            }
+        };
+
         // ========================================================================
         // 5.5 Recovery 完整備份與還原
         // ========================================================================
@@ -1104,10 +1266,10 @@
                                     <p class="mt-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">最近更新</p>
                                     <ul class="mt-1.5 space-y-1">${VERSION_INFO.changes.map(c => `<li class="text-[10px] text-slate-500 leading-relaxed flex gap-1.5"><span class="text-teal-500 shrink-0">•</span><span>${c}</span></li>`).join('')}</ul>
                                 </div>` : ''}
-                                <div class="rounded-[22px] border border-white/[0.05] bg-slate-900/35 p-5">
-                                    <div class="flex items-center justify-between"><span class="text-2xl">📢</span><span class="px-2 py-1 rounded-full bg-slate-800 text-[9px] text-slate-500">建置中</span></div>
-                                    <h3 class="mt-4 text-lg font-bold text-slate-300">公告中心</h3><p class="mt-1 text-xs text-slate-500">未來放置最新公告與重要通知</p>
-                                </div>
+                                <button type="button" onclick="openBetaFeedbackModal()" class="zdos-nav-btn group text-left rounded-[22px] border border-rose-500/20 bg-gradient-to-br from-rose-500/10 to-pink-500/5 p-5 hover:border-rose-400/40 transition-all">
+                                    <div class="flex items-center justify-between"><span class="text-2xl">💬</span><span class="text-rose-400 text-lg">→</span></div>
+                                    <h3 class="mt-4 text-lg font-bold text-white">Beta 測試回饋</h3><p class="mt-1 text-xs text-slate-400">回報問題或提出建議，協助 ZDOS 優化</p>
+                                </button>
                             </div>
                         </section>
 
