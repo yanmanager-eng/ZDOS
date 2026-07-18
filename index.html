@@ -180,6 +180,227 @@
                 filter: brightness(1.06);
             }
         }
+
+        .zdos-app-header--home {
+            border-radius: 20px;
+            padding: 0.5rem 0.75rem;
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow:
+                0 6px 24px rgba(0, 0, 0, 0.28),
+                0 1px 0 rgba(255, 255, 255, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .zdos-home-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.2rem;
+            height: 1.625rem;
+            max-width: 100%;
+            padding: 0 0.5rem;
+            border-radius: 9999px;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 1;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(15, 23, 42, 0.5);
+            color: rgb(226 232 240);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .zdos-home-badge-row {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 0.375rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .zdos-home-badge-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .zdos-home-badge--date {
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.45);
+            border-color: rgba(255, 255, 255, 0.05);
+            background: rgba(15, 23, 42, 0.32);
+        }
+
+        .zdos-home-card {
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(15, 23, 42, 0.52);
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .zdos-dashboard--home-polish {
+            --zdos-home-stack: 16px;
+            --zdos-home-card-pad: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--zdos-home-stack);
+        }
+
+        .zdos-dashboard--home-polish .zdos-home-card--pad {
+            padding: var(--zdos-home-card-pad);
+        }
+
+        .zdos-dashboard--home-polish .zdos-view-body {
+            display: flex;
+            flex-direction: column;
+            gap: var(--zdos-home-stack);
+            min-width: 0;
+        }
+
+        .zdos-home-focus-divider {
+            margin-top: 0.625rem;
+            padding-top: 0.625rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .zdos-home-focus-caption {
+            font-size: 10px;
+            line-height: 1.45;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .zdos-home-progress-bar {
+            height: 0.625rem;
+            border-radius: 9999px;
+            background: rgba(15, 23, 42, 0.85);
+            overflow: hidden;
+        }
+
+        .zdos-home-progress-bar-fill {
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 200ms ease;
+        }
+
+        .zdos-glass-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            padding: 0.45rem 0.7rem;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: rgb(226 232 240);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow:
+                0 4px 16px rgba(0, 0, 0, 0.18),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            transition: border-color 150ms ease, transform 150ms ease;
+        }
+
+        .zdos-dept-chips {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 0.375rem;
+        }
+
+        .zdos-glass-chip--dept {
+            width: 100%;
+            height: 2.125rem;
+            padding: 0 0.35rem;
+            font-size: 10px;
+            letter-spacing: 0.02em;
+            gap: 0.2rem;
+            line-height: 1;
+        }
+
+        .zdos-glass-chip--dept .zdos-dept-chip-icon {
+            font-size: 0.8rem;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        @media (hover: hover) {
+            .zdos-glass-chip--dept:hover {
+                border-color: rgba(255, 255, 255, 0.22);
+            }
+        }
+
+        @media (hover: none) {
+            .zdos-glass-chip--dept:active {
+                transform: scale(0.96);
+            }
+        }
+
+        .zdos-ann-shell {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .zdos-ann-card {
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(15, 23, 42, 0.52);
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: border-color 150ms ease, transform 150ms ease, filter 150ms ease;
+        }
+
+        .zdos-ann-card--interactive {
+            cursor: pointer;
+            text-align: left;
+            width: 100%;
+        }
+
+        @media (hover: hover) {
+            .zdos-ann-card--interactive:hover {
+                border-color: rgba(255, 255, 255, 0.16);
+                filter: brightness(1.06);
+            }
+        }
+
+        @media (hover: none) {
+            .zdos-ann-card--interactive:active {
+                transform: scale(0.985);
+            }
+        }
+
+        .zdos-ann-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .zdos-ann-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .zdos-ann-scroll-item {
+            flex: 0 0 min(78vw, 260px);
+            scroll-snap-align: start;
+        }
+
+        .zdos-ann-unread-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 9999px;
+            background: rgb(56 189 248);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.45);
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 premium-grid min-h-screen relative font-sans">
@@ -267,15 +488,93 @@
         // 與 CHANGELOG.md 同步（發版時手動更新）
         const VERSION_INFO = {
             label: 'ZDOS',
-            version: 'v1.1.0',
-            updatedAt: '2026-07-15',
+            version: 'v1.2.0',
+            updatedAt: '2026-07-18',
             changes: [
-                '新增業績核對中心',
-                '新增待核對／已核對／退回修改',
-                '新增業績審核流程',
-                '新增核對權限'
+                '新增公告中心（Announcement Center）',
+                '首頁入口、必讀／本週／最新公告',
+                '公告詳情與已讀狀態（本地）',
+                'Feature-008 Announcement Center v1.0'
             ]
         };
+
+        const ANNOUNCEMENT_SEED = [
+            {
+                id: 'ann-admin-001',
+                category: '行政',
+                categoryIcon: '📑',
+                title: '七月門市營運規範更新',
+                date: '2026-07-17',
+                summary: '請全體同仁確認新版開閉店檢查表與申報時段。',
+                content: '自 7/18 起，各門市須依新版《開閉店檢查表》執行每日三次確認。業績申報截止時間維持閉店後 30 分鐘內完成。若有設備異常，請同步回報店長並於當日申報備註欄註明。',
+                author: '總部行政組',
+                publishedAt: '2026-07-17 09:00',
+                mustRead: true,
+                weekHighlight: false
+            },
+            {
+                id: 'ann-hr-001',
+                category: '人資',
+                categoryIcon: '👥',
+                title: '夏季班表調整說明',
+                date: '2026-07-16',
+                summary: '配合暑期客流，本週起部分班別時間微調。',
+                content: '人資部已更新夏季班表模板。中華店晚班延後 30 分鐘結束，東港店維持原班別。請各店於週五前完成下週班表確認，異動請透過店長統一回覆。',
+                author: '人資部',
+                publishedAt: '2026-07-16 14:30',
+                mustRead: false,
+                weekHighlight: true
+            },
+            {
+                id: 'ann-gen-001',
+                category: '庶務',
+                categoryIcon: '📦',
+                title: '清潔耗材補充通知',
+                date: '2026-07-15',
+                summary: '本週補充垃圾袋、消毒水與手套，請各店簽收。',
+                content: '庶務組已安排 7/16–7/18 配送清潔耗材。請店長指定簽收人，並確認倉儲區域乾燥通風。若數量不足，請於 48 小時內回報採購窗口。',
+                author: '庶務組',
+                publishedAt: '2026-07-15 11:00',
+                mustRead: false,
+                weekHighlight: true
+            },
+            {
+                id: 'ann-purchase-001',
+                category: '採購',
+                categoryIcon: '🛒',
+                title: '原物料叫貨截止時間提醒',
+                date: '2026-07-14',
+                summary: '週五 12:00 前完成叫貨，逾時順延至下週一配送。',
+                content: '為配合供應商排程，各店週五中午 12:00 後提交之叫貨單將順延至下週一配送。請盤點時留意安全庫存，避免週末缺料。',
+                author: '採購部',
+                publishedAt: '2026-07-14 16:00',
+                mustRead: false,
+                weekHighlight: true
+            },
+            {
+                id: 'ann-personal-001',
+                category: '個人',
+                categoryIcon: '🙋',
+                title: '員工福利問卷調查',
+                date: '2026-07-13',
+                summary: '歡迎填寫 Q3 員工滿意度問卷，協助優化排班與福利。',
+                content: '本季員工滿意度問卷已開放，預計填寫 3 分鐘。您的回饋將作為排班彈性、休息空間與教育訓練安排的參考。問卷連結請向店長索取。',
+                author: '人資部',
+                publishedAt: '2026-07-13 10:00',
+                mustRead: false,
+                weekHighlight: false
+            }
+        ];
+
+        const sortAnnouncementsByDate = (list) =>
+            [...list].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+
+        const isAnnouncementRead = (id) => Array.isArray(state.announcementReadIds) && state.announcementReadIds.includes(id);
+
+        const getUnreadAnnouncementCount = () =>
+            ANNOUNCEMENT_SEED.filter(a => !isAnnouncementRead(a.id)).length;
+
+        const getAnnouncementById = (id) => ANNOUNCEMENT_SEED.find(a => a.id === id) || null;
 
         const SVGIcons = {
             User: `<svg class="w-4 h-4 mr-1.5 inline-block align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>`,
@@ -473,10 +772,10 @@
         const escapeHtmlText = (value) => String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
         const BETA_FEEDBACK_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeC0-fuNL_bhrATN3XVxnVrhg5rrTYJPQBwuWMD5YaDPsqf9w/formResponse';
-        const BETA_FEEDBACK_TYPE_OPTIONS = ['問題回報', '功能建議', '介面／操作體驗', '其他'];
-        const BETA_FEEDBACK_PAGE_OPTIONS = ['Dashboard', '業績申報', '庫存盤點', '業績核對中心', '其他'];
-        const BETA_FEEDBACK_DEVICE_OPTIONS = ['手機', '平板', '桌機'];
-        const BETA_FEEDBACK_IMPACT_OPTIONS = ['是，無法完成工作', '是，但可勉強使用', '否', '不確定'];
+        const BETA_FEEDBACK_TYPE_OPTIONS = ['問題回報', '功能建議', '介面體驗', '其他'];
+        const BETA_FEEDBACK_PAGE_OPTIONS = ['首頁', '公告中心', '業績申報', '庫存盤點', '業績核對中心', '其他'];
+        const BETA_FEEDBACK_DEVICE_OPTIONS = ['手機', '平板', '電腦'];
+        const BETA_FEEDBACK_IMPACT_OPTIONS = ['無法完成工作', '可勉強使用', '無影響', '不確定'];
 
         const detectDeviceType = () => {
             const w = window.innerWidth || 0;
@@ -484,13 +783,14 @@
             const touch = (navigator.maxTouchPoints || 0) > 0;
             if (w < 768 && (coarse || touch)) return '手機';
             if (w < 1024 && (coarse || touch)) return '平板';
-            return '桌機';
+            return '電腦';
         };
 
         const getBetaFeedbackDefaultPage = () => {
             if (state.currentView === 'review') return '業績核對中心';
+            if (state.currentView === 'announcements' || state.currentView === 'announcement-detail') return '公告中心';
             if (state.currentView === 'module') return state.activeAppTab === 'inventory' ? '庫存盤點' : '業績申報';
-            return 'Dashboard';
+            return '首頁';
         };
 
         const fillBetaFeedbackSelect = (el, options, selected) => {
@@ -515,6 +815,12 @@
 
         const isBetaFeedbackFieldsComplete = (fields) =>
             Object.values(fields).every(v => String(v || '').trim());
+
+        const isBetaFeedbackChoiceValuesValid = (fields) =>
+            BETA_FEEDBACK_TYPE_OPTIONS.includes(fields.feedbackType)
+            && BETA_FEEDBACK_PAGE_OPTIONS.includes(fields.feature)
+            && BETA_FEEDBACK_DEVICE_OPTIONS.includes(fields.device)
+            && BETA_FEEDBACK_IMPACT_OPTIONS.includes(fields.impact);
 
         const buildBetaFeedbackFormData = (fields) => {
             const formData = new URLSearchParams();
@@ -565,6 +871,9 @@
             coverNotice: safeGetItem('cover_notice_v31_permanent', "傳承職人精神 ‧ 堅持美味品質"),
             coverDesign: safeJsonParse('cover_design_v31_permanent', { title: "大埔中東集團營運回報系統", glowIntensity: "high", theme: "classic-blue", noticeMode: "marquee" }),
 
+            announcementReadIds: safeJsonParse('zdos_announcement_read_v1', []),
+            activeAnnouncementId: null,
+
             newDate: new Date().toISOString().split('T')[0], newShift: '早班', newOverAmount: '', newSalesAmount: '', newExpenseNotes: '', newExpenseAmount: '', newLinaPay: '', newTwqr: '', newApplePay: '', invBarcode: '', invStockQty: '', invOrderQty: ''
         };
 
@@ -614,6 +923,7 @@
             safeSetItem('local_inventory_records_v22', JSON.stringify(state.inventoryRecords));
             safeSetItem('cover_notice_v31_permanent', state.coverNotice);
             safeSetItem('cover_design_v31_permanent', JSON.stringify(state.coverDesign));
+            safeSetItem('zdos_announcement_read_v1', JSON.stringify(state.announcementReadIds || []));
         };
 
         window.addEventListener('beforeunload', function (e) {
@@ -670,6 +980,41 @@
             safeSetItem('zdos_current_view', 'review');
             renderApp();
             zdosAfterViewNav();
+        };
+
+        window.openAnnouncementCenter = function() {
+            state.currentView = 'announcements';
+            state.activeAnnouncementId = null;
+            safeSetItem('zdos_current_view', 'announcements');
+            renderApp();
+            zdosAfterViewNav();
+        };
+
+        window.openAnnouncementDetail = function(id) {
+            if (!getAnnouncementById(id)) return;
+            state.activeAnnouncementId = id;
+            state.currentView = 'announcement-detail';
+            safeSetItem('zdos_current_view', 'announcement-detail');
+            renderApp();
+            zdosAfterViewNav();
+        };
+
+        window.backFromAnnouncementDetail = function() {
+            state.activeAnnouncementId = null;
+            state.currentView = 'announcements';
+            safeSetItem('zdos_current_view', 'announcements');
+            renderApp();
+            zdosAfterViewNav();
+        };
+
+        window.handleToggleAnnouncementRead = function(id) {
+            if (!getAnnouncementById(id)) return;
+            const readSet = new Set(Array.isArray(state.announcementReadIds) ? state.announcementReadIds : []);
+            if (readSet.has(id)) readSet.delete(id);
+            else readSet.add(id);
+            state.announcementReadIds = [...readSet];
+            saveState();
+            renderApp();
         };
 
         window.handleApproveSalesRecord = function(recordId) {
@@ -926,7 +1271,7 @@
             const content = document.getElementById('beta-feedback-content');
             if (content) content.value = '';
             fillBetaFeedbackSelect(document.getElementById('beta-feedback-type'), BETA_FEEDBACK_TYPE_OPTIONS, BETA_FEEDBACK_TYPE_OPTIONS[0]);
-            fillBetaFeedbackSelect(document.getElementById('beta-feedback-page'), BETA_FEEDBACK_PAGE_OPTIONS, 'Dashboard');
+            fillBetaFeedbackSelect(document.getElementById('beta-feedback-page'), BETA_FEEDBACK_PAGE_OPTIONS, '首頁');
             fillBetaFeedbackSelect(document.getElementById('beta-feedback-device'), BETA_FEEDBACK_DEVICE_OPTIONS, detectDeviceType());
             fillBetaFeedbackSelect(document.getElementById('beta-feedback-impact'), BETA_FEEDBACK_IMPACT_OPTIONS, BETA_FEEDBACK_IMPACT_OPTIONS[3]);
             const submitBtn = document.getElementById('beta-feedback-submit-btn');
@@ -967,25 +1312,34 @@
             if (!isBetaFeedbackFieldsComplete(fields)) {
                 return showToast('請填寫所有必填欄位。', 'error');
             }
+            if (!isBetaFeedbackChoiceValuesValid(fields)) {
+                return showToast('下拉選項與 Google 表單不符，請關閉後重新開啟回饋視窗。', 'error');
+            }
 
             if (submitBtn) {
                 submitBtn.disabled = true;
                 submitBtn.textContent = '送出中…';
             }
+            let submitted = false;
             try {
                 const formData = buildBetaFeedbackFormData(fields);
+                console.log(BETA_FEEDBACK_FORM_URL);
+                console.log(formData.toString());
                 await fetch(BETA_FEEDBACK_FORM_URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                    },
                     body: formData.toString()
                 });
+                submitted = true;
                 showToast('Beta 回饋已送出', 'success');
                 closeBetaFeedbackModal();
             } catch (_err) {
-                showToast('送出失敗', 'error');
+                showToast('送出失敗，請稍後再試或檢查網路。', 'error');
             } finally {
-                if (submitBtn) {
+                if (!submitted && submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.textContent = '送出回饋';
                 }
@@ -1057,6 +1411,281 @@
         // ========================================================================
         // 6. 高級 HTML/DOM 雙軌大渲染器 (SPA)
         // ========================================================================
+        function renderDashboard(root, dash) {
+            const {
+                todayLabel, greetingLine, canManage, storeType,
+                todaySalesDone, todayInventoryDone, hasInventoryPrivilege,
+                requiredTaskCount, completedTaskCount, remainingTaskCount, completionPercent,
+                dailyReminder, todayQuote, todayFocusNotice,
+                canReviewSales, pendingZhonghuaCount, pendingDonggangCount,
+                currentMatched, opsStatusLabel, opsStatusTone,
+                announcementUnreadCount
+            } = dash;
+            const storeBadgeTone = storeType === '中華店'
+                ? 'text-sky-300 border-sky-500/25 bg-sky-950/40'
+                : 'text-amber-300 border-amber-500/25 bg-amber-950/35';
+            const progressRemainLine = remainingTaskCount === 0
+                ? '今日任務已全部完成'
+                : `還有 ${remainingTaskCount} 件待完成`;
+            root.innerHTML = `
+                    <div id="zdos-dashboard" class="zdos-dashboard--home-polish w-full min-w-0 max-w-5xl mx-auto px-2 sm:px-3 py-2.5 sm:py-4 font-sans">
+                        <header id="zdos-dashboard-header" class="zdos-app-header zdos-app-header--home relative overflow-hidden max-w-full">
+                            <div class="relative flex items-center justify-between gap-2">
+                                <h1 class="min-w-0 flex-1 text-xl sm:text-2xl font-black text-white leading-tight">${greetingLine}</h1>
+                                <div class="flex shrink-0 gap-1.5">
+                                    ${canManage ? `<button onclick="handleTryOpen()" class="zdos-nav-btn px-2 py-1 rounded-[10px] bg-slate-800/80 hover:bg-slate-700/90 text-[10px] font-bold text-slate-200 border border-white/[0.06]">⚙️ 系統設定</button>` : ''}
+                                    <button onclick="handleLogoutSubmit()" class="zdos-nav-btn px-2 py-1 rounded-[10px] border border-rose-500/25 bg-rose-950/30 text-[10px] font-bold text-rose-400">登出</button>
+                                </div>
+                            </div>
+                            <div class="zdos-home-badge-row mt-1.5">
+                                <span class="zdos-home-badge ${storeBadgeTone}"><span aria-hidden="true">🏪</span>${storeType}</span>
+                                <span class="zdos-home-badge text-indigo-300 border-indigo-500/25 bg-indigo-950/35"><span aria-hidden="true">👔</span>${currentMatched.role}</span>
+                                <span class="zdos-home-badge ${opsStatusTone} border-white/[0.08]"><span aria-hidden="true">🟢</span>${opsStatusLabel}</span>
+                                <span class="zdos-home-badge zdos-home-badge--date font-mono"><span aria-hidden="true">📅</span>${todayLabel}</span>
+                            </div>
+                        </header>
+
+                        <div id="zdos-dashboard-body" class="zdos-view-body">
+
+                        <section id="zdos-dashboard-focus" class="zdos-home-card zdos-home-card--pad border-amber-500/20 bg-amber-500/[0.05]">
+                            <h2 class="text-sm font-bold text-amber-100">今日焦點</h2>
+                            <p class="mt-1.5 text-sm leading-snug text-slate-200">${todayFocusNotice}</p>
+                            <p class="zdos-home-focus-divider zdos-home-focus-caption">今日一句 · ${todayQuote}</p>
+                        </section>
+
+                        <nav id="zdos-dashboard-chips" class="zdos-home-card zdos-home-card--pad" aria-label="部門捷徑">
+                            <p class="text-[10px] uppercase tracking-[0.18em] text-slate-500 mb-2">部門</p>
+                            <div class="zdos-dept-chips">
+                                <span class="zdos-glass-chip zdos-glass-chip--dept"><span class="zdos-dept-chip-icon" aria-hidden="true">📑</span>行政</span>
+                                <span class="zdos-glass-chip zdos-glass-chip--dept"><span class="zdos-dept-chip-icon" aria-hidden="true">👥</span>人資</span>
+                                <span class="zdos-glass-chip zdos-glass-chip--dept"><span class="zdos-dept-chip-icon" aria-hidden="true">📦</span>庶務</span>
+                                <span class="zdos-glass-chip zdos-glass-chip--dept"><span class="zdos-dept-chip-icon" aria-hidden="true">🛒</span>採購</span>
+                                <span class="zdos-glass-chip zdos-glass-chip--dept"><span class="zdos-dept-chip-icon" aria-hidden="true">🙋</span>個人</span>
+                            </div>
+                        </nav>
+
+                        <section id="zdos-dashboard-progress" class="zdos-home-card zdos-home-card--pad border ${remainingTaskCount === 0 ? 'border-emerald-500/25 bg-emerald-500/[0.07]' : 'border-amber-500/25 bg-amber-500/[0.07]'}">
+                            <p class="text-xs font-bold ${remainingTaskCount === 0 ? 'text-emerald-400' : 'text-amber-400'}"><span aria-hidden="true">${remainingTaskCount === 0 ? '✅' : '🟠'}</span> 今日進度</p>
+                            <div class="zdos-home-progress-bar mt-2">
+                                <div class="zdos-home-progress-bar-fill bg-gradient-to-r ${remainingTaskCount === 0 ? 'from-emerald-500 to-sky-500' : 'from-amber-500 to-orange-500'}" style="width:${completionPercent}%"></div>
+                            </div>
+                            <p class="mt-2 text-2xl font-black tabular-nums text-white leading-none"><span class="${remainingTaskCount === 0 ? 'text-emerald-400' : 'text-amber-300'}">${completedTaskCount}</span><span class="text-slate-500 text-lg font-bold"> / ${requiredTaskCount}</span> <span class="text-sm font-bold text-slate-300">完成</span></p>
+                            <p class="mt-1 text-[11px] text-slate-400">${progressRemainLine}</p>
+                        </section>
+
+                        ${canReviewSales ? `
+                        <section id="zdos-dashboard-review">
+                            <button type="button" onclick="openReviewCenter()" class="zdos-nav-btn w-full text-left zdos-home-card zdos-home-card--pad border-orange-500/30 bg-gradient-to-br from-orange-500/10 to-rose-500/5 hover:border-orange-400/45 transition-all">
+                                <div class="flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-[10px] uppercase tracking-[0.22em] text-orange-400">業績核對中心</p>
+                                        <h2 class="mt-0.5 text-base font-bold text-white">待核對</h2>
+                                        <div class="mt-2 flex flex-wrap gap-1.5">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-sky-950/50 border border-sky-500/20 text-[11px] text-sky-300">中華店：${pendingZhonghuaCount} 筆</span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-amber-950/50 border border-amber-500/20 text-[11px] text-amber-300">東港店：${pendingDonggangCount} 筆</span>
+                                        </div>
+                                    </div>
+                                    <span class="text-orange-300 text-2xl shrink-0">→</span>
+                                </div>
+                            </button>
+                        </section>
+                        ` : ''}
+
+                        <section id="zdos-dashboard-todos" class="grid grid-cols-1 lg:grid-cols-12 gap-2.5 sm:gap-3">
+                            <div class="lg:col-span-7 zdos-home-card zdos-home-card--pad">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div><p class="text-[10px] uppercase tracking-[0.22em] text-slate-500">Today</p><h2 class="text-sm font-bold text-slate-100">今日待辦</h2></div>
+                                    <span class="text-[10px] text-slate-500">${storeType}</span>
+                                </div>
+                                <div class="space-y-2.5">
+                                    <button onclick="openZDOSModule('sales')" class="zdos-nav-btn w-full flex items-center justify-between rounded-[12px] border ${todaySalesDone ? 'border-emerald-500/25 bg-emerald-500/[0.07]' : 'border-amber-500/25 bg-amber-500/[0.07]'} px-3.5 py-2.5 text-left">
+                                        <span class="flex items-center gap-3"><span class="text-lg">${todaySalesDone ? '✅' : '◻️'}</span><span><strong class="block text-sm text-slate-100">業績回報</strong><small class="text-[10px] text-slate-500">完成當日門市營收申報</small></span></span>
+                                        <span class="text-[10px] font-bold ${todaySalesDone ? 'text-emerald-400' : 'text-amber-400'}">${todaySalesDone ? '已完成' : '前往處理'}</span>
+                                    </button>
+                                    ${hasInventoryPrivilege ? `<button onclick="openZDOSModule('inventory')" class="zdos-nav-btn w-full flex items-center justify-between rounded-[12px] border ${todayInventoryDone ? 'border-emerald-500/25 bg-emerald-500/[0.07]' : 'border-white/[0.06] bg-slate-950/40'} px-3.5 py-2.5 text-left">
+                                        <span class="flex items-center gap-3"><span class="text-lg">${todayInventoryDone ? '✅' : '◻️'}</span><span><strong class="block text-sm text-slate-100">庫存盤點</strong><small class="text-[10px] text-slate-500">登記盤點與叫貨資料</small></span></span>
+                                        <span class="text-[10px] font-bold ${todayInventoryDone ? 'text-emerald-400' : 'text-slate-400'}">${todayInventoryDone ? '已有紀錄' : '前往處理'}</span>
+                                    </button>` : ''}
+                                </div>
+                            </div>
+                            <div class="lg:col-span-5 grid grid-cols-2 gap-2 sm:gap-2.5">
+                                <div class="zdos-home-card zdos-home-card--pad"><p class="text-[10px] text-slate-500">今日業績</p><p class="mt-1.5 text-sm font-bold ${todaySalesDone ? 'text-emerald-400' : 'text-amber-400'}">${todaySalesDone ? '已完成' : '待回報'}</p></div>
+                                <div class="zdos-home-card zdos-home-card--pad"><p class="text-[10px] text-slate-500">今日庫存</p><p class="mt-1.5 text-sm font-bold ${todayInventoryDone ? 'text-emerald-400' : 'text-slate-500'}">${todayInventoryDone ? '已有紀錄' : '尚無紀錄'}</p></div>
+                                <div class="col-span-2 zdos-home-card zdos-home-card--pad"><p class="text-[10px] text-slate-500">目前身分</p><div class="mt-1.5 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-100 truncate">${currentMatched.name}</p><span class="px-2 py-0.5 rounded-lg bg-indigo-950/50 border border-indigo-500/20 text-[10px] text-indigo-300 shrink-0">${currentMatched.role}</span></div></div>
+                            </div>
+                        </section>
+
+                        <section id="zdos-dashboard-quick" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <button onclick="openZDOSModule('sales')" class="zdos-nav-btn zdos-home-card zdos-home-card--pad border-sky-500/25 bg-sky-500/[0.07] text-left hover:bg-sky-500/10 transition-all"><span class="text-lg">⚡</span><h3 class="mt-1.5 text-sm font-bold text-white">快速回報業績</h3><p class="mt-0.5 text-[10px] text-slate-500">直接開啟當日申報表</p></button>
+                            ${hasInventoryPrivilege ? `<button onclick="openZDOSModule('inventory')" class="zdos-nav-btn zdos-home-card zdos-home-card--pad border-amber-500/25 bg-amber-500/[0.07] text-left hover:bg-amber-500/10 transition-all"><span class="text-lg">📦</span><h3 class="mt-1.5 text-sm font-bold text-white">快速盤點庫存</h3><p class="mt-0.5 text-[10px] text-slate-500">直接開啟盤點與叫貨</p></button>` : `<div class="zdos-home-card zdos-home-card--pad opacity-60"><span class="text-lg">📦</span><h3 class="mt-1.5 text-sm font-bold text-slate-400">庫存盤點</h3><p class="mt-0.5 text-[10px] text-slate-600">目前帳號無權限</p></div>`}
+                        </section>
+
+                        <section id="zdos-dashboard-ops">
+                            <div class="mb-2 flex items-end justify-between">
+                                <div><p class="text-[10px] uppercase tracking-[0.22em] text-slate-500">Operation Center</p><h2 class="text-sm font-bold text-slate-100">功能中心</h2></div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                                <button onclick="openZDOSModule('sales')" class="zdos-nav-btn group text-left zdos-home-card zdos-home-card--pad border-sky-500/25 bg-gradient-to-br from-sky-500/10 to-indigo-500/5 hover:border-sky-400/40 transition-all">
+                                    <div class="flex items-center justify-between"><span class="text-xl">📊</span><span class="text-sky-400 text-lg">→</span></div>
+                                    <h3 class="mt-3 text-base font-bold text-white">營運中心</h3><p class="mt-0.5 text-xs text-slate-400">業績回報、歷史申報與營收資料</p>
+                                </button>
+                                ${hasInventoryPrivilege ? `
+                                <button onclick="openZDOSModule('inventory')" class="zdos-nav-btn group text-left zdos-home-card zdos-home-card--pad border-amber-500/25 bg-gradient-to-br from-amber-500/10 to-orange-500/5 hover:border-amber-400/40 transition-all">
+                                    <div class="flex items-center justify-between"><span class="text-xl">📦</span><span class="text-amber-400 text-lg">→</span></div>
+                                    <h3 class="mt-3 text-base font-bold text-white">庫存中心</h3><p class="mt-0.5 text-xs text-slate-400">盤點、叫貨與庫存雲端同步</p>
+                                </button>` : `
+                                <div class="zdos-home-card zdos-home-card--pad opacity-55">
+                                    <div class="flex items-center justify-between"><span class="text-xl">📦</span><span class="text-slate-600">🔒</span></div>
+                                    <h3 class="mt-3 text-base font-bold text-slate-400">庫存中心</h3><p class="mt-0.5 text-xs text-slate-600">目前帳號無庫存權限</p>
+                                </div>`}
+                                ${canManage ? `
+                                <button onclick="handleTryOpen()" class="zdos-nav-btn group text-left zdos-home-card zdos-home-card--pad border-violet-500/25 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/5 hover:border-violet-400/40 transition-all">
+                                    <div class="flex items-center justify-between"><span class="text-xl">👥</span><span class="text-violet-400 text-lg">→</span></div>
+                                    <h3 class="mt-3 text-base font-bold text-white">人員與系統中心</h3><p class="mt-0.5 text-xs text-slate-400">員工帳密、Google 設定、備份與還原</p>
+                                </button>
+                                <div class="zdos-home-card zdos-home-card--pad border-teal-500/25 bg-gradient-to-br from-teal-500/10 to-cyan-500/5">
+                                    <div class="flex items-center justify-between"><span class="text-xl">📋</span><span class="px-2 py-0.5 rounded-full bg-teal-950/50 border border-teal-500/20 text-[9px] text-teal-300 font-mono">${VERSION_INFO.version}</span></div>
+                                    <h3 class="mt-3 text-base font-bold text-white">版本資訊</h3>
+                                    <p class="mt-0.5 text-xs font-mono text-teal-300/90">${VERSION_INFO.label} · Version：${VERSION_INFO.version}</p>
+                                    <p class="mt-1.5 text-[10px] text-slate-500">更新日期：${VERSION_INFO.updatedAt}</p>
+                                    <p class="mt-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">最近更新</p>
+                                    <ul class="mt-1 space-y-0.5">${VERSION_INFO.changes.map(c => `<li class="text-[10px] text-slate-500 leading-relaxed flex gap-1.5"><span class="text-teal-500 shrink-0">•</span><span>${c}</span></li>`).join('')}</ul>
+                                </div>` : ''}
+                                <button type="button" onclick="openAnnouncementCenter()" class="zdos-nav-btn group text-left zdos-home-card zdos-home-card--pad border-cyan-500/25 bg-gradient-to-br from-cyan-500/10 to-sky-500/5 hover:border-cyan-400/40 transition-all">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-xl">📢</span>
+                                        ${announcementUnreadCount > 0 ? `<span class="px-2 py-0.5 rounded-full bg-rose-500/15 border border-rose-500/25 text-[10px] font-bold text-rose-300">${announcementUnreadCount} 未讀</span>` : '<span class="text-cyan-400 text-lg">→</span>'}
+                                    </div>
+                                    <h3 class="mt-3 text-base font-bold text-white">公告中心</h3><p class="mt-0.5 text-xs text-slate-400">必讀、本週重點與最新公告</p>
+                                </button>
+                                <button type="button" onclick="openBetaFeedbackModal()" class="zdos-nav-btn group text-left zdos-home-card zdos-home-card--pad border-rose-500/25 bg-gradient-to-br from-rose-500/10 to-pink-500/5 hover:border-rose-400/40 transition-all">
+                                    <div class="flex items-center justify-between"><span class="text-xl">💬</span><span class="text-rose-400 text-lg">→</span></div>
+                                    <h3 class="mt-3 text-base font-bold text-white">Beta 測試回饋</h3><p class="mt-0.5 text-xs text-slate-400">回報問題或提出建議，協助 ZDOS 優化</p>
+                                </button>
+                            </div>
+                        </section>
+
+                        <section id="zdos-dashboard-daily-info" class="zdos-home-card zdos-home-card--pad border-sky-500/20 bg-gradient-to-br from-slate-900/80 to-sky-950/25">
+                            <h2 class="text-sm font-bold text-white">今日資訊</h2>
+                            <p class="mt-2 text-sm text-sky-200/90">🌤️ 天氣：多雲時晴</p>
+                            <p class="mt-2 pt-2 border-t border-white/[0.06] text-xs leading-relaxed text-slate-400"><span class="text-violet-300/90 font-bold">今日一句</span> · ${todayQuote}</p>
+                        </section>
+
+                        <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · ZhongDong Operating System</footer>
+                        </div>
+                    </div>`;
+        }
+
+        const renderAnnouncementCardBody = (ann, compact) => `
+            <div class="flex items-start justify-between gap-2">
+                <div class="min-w-0 flex-1">
+                    <p class="text-[10px] text-slate-500 font-mono">${escapeHtmlText(ann.date)}</p>
+                    <h3 class="mt-1 ${compact ? 'text-sm' : 'text-base'} font-bold text-white leading-snug">${escapeHtmlText(ann.title)}</h3>
+                    <p class="mt-1.5 text-xs leading-relaxed text-slate-400 line-clamp-2">${escapeHtmlText(ann.summary)}</p>
+                </div>
+                ${!isAnnouncementRead(ann.id) ? '<span class="zdos-ann-unread-dot mt-1" aria-label="未讀"></span>' : ''}
+            </div>`;
+
+        function renderAnnouncementCenter(root) {
+            const unreadCount = getUnreadAnnouncementCount();
+            const mustReadList = ANNOUNCEMENT_SEED.filter(a => a.mustRead);
+            const weekHighlights = ANNOUNCEMENT_SEED.filter(a => a.weekHighlight).slice(0, 3);
+            const latestList = sortAnnouncementsByDate(ANNOUNCEMENT_SEED);
+            root.innerHTML = `
+                <div class="w-full min-w-0 max-w-5xl mx-auto px-2 sm:px-3 py-3 sm:py-4 font-sans zdos-ann-shell">
+                    <header class="zdos-app-header zdos-ann-card p-4">
+                        <div class="flex items-center justify-between gap-3">
+                            <button type="button" onclick="backToZDOSHome()" class="zdos-nav-btn shrink-0 px-3 py-1.5 rounded-xl bg-slate-800/70 border border-white/[0.06] text-[11px] font-bold text-slate-200">← 返回</button>
+                            <div class="min-w-0 flex-1 text-center">
+                                <h1 class="text-lg font-black text-white">📢 公告中心</h1>
+                            </div>
+                            <span class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full border ${unreadCount > 0 ? 'border-sky-500/25 bg-sky-950/40 text-sky-300' : 'border-white/[0.06] bg-slate-950/40 text-slate-500'} text-[10px] font-bold">🔔 ${unreadCount > 0 ? `${unreadCount} 未讀` : '已讀完'}</span>
+                        </div>
+                    </header>
+
+                    <div class="zdos-view-body zdos-ann-shell">
+                        <section>
+                            <h2 class="text-sm font-bold text-rose-300 mb-2">🔴 必讀公告</h2>
+                            ${mustReadList.length === 0 ? `<div class="zdos-ann-card p-4 text-xs text-slate-500">目前沒有必讀公告。</div>` : mustReadList.map(ann => `
+                                <button type="button" onclick="openAnnouncementDetail('${ann.id}')" class="zdos-nav-btn zdos-ann-card zdos-ann-card--interactive w-full p-5 border-rose-500/20 bg-gradient-to-br from-rose-500/10 to-orange-500/5 text-left">
+                                    <p class="text-[10px] uppercase tracking-[0.18em] text-rose-300/90 mb-2">${escapeHtmlText(ann.categoryIcon)} ${escapeHtmlText(ann.category)} · 必讀</p>
+                                    ${renderAnnouncementCardBody(ann, false)}
+                                </button>
+                            `).join('')}
+                        </section>
+
+                        <section>
+                            <h2 class="text-sm font-bold text-amber-300 mb-2">🟠 本週重點</h2>
+                            ${weekHighlights.length === 0 ? `<div class="zdos-ann-card p-4 text-xs text-slate-500">本週暫無重點公告。</div>` : `
+                            <div class="zdos-ann-scroll">
+                                ${weekHighlights.map(ann => `
+                                    <button type="button" onclick="openAnnouncementDetail('${ann.id}')" class="zdos-nav-btn zdos-ann-scroll-item zdos-ann-card zdos-ann-card--interactive p-4 border-amber-500/20 bg-amber-500/[0.06] text-left">
+                                        <p class="text-[10px] text-amber-300/90 mb-1">${escapeHtmlText(ann.categoryIcon)} ${escapeHtmlText(ann.category)}</p>
+                                        ${renderAnnouncementCardBody(ann, true)}
+                                    </button>
+                                `).join('')}
+                            </div>`}
+                        </section>
+
+                        <section>
+                            <h2 class="text-sm font-bold text-slate-200 mb-2">📋 最新公告</h2>
+                            <div class="space-y-3">
+                                ${latestList.map(ann => `
+                                    <button type="button" onclick="openAnnouncementDetail('${ann.id}')" class="zdos-nav-btn zdos-ann-card zdos-ann-card--interactive w-full p-4 text-left">
+                                        <div class="flex items-start gap-3">
+                                            <span class="text-xl shrink-0" aria-hidden="true">${escapeHtmlText(ann.categoryIcon)}</span>
+                                            <div class="min-w-0 flex-1">
+                                                <div class="flex items-start justify-between gap-2">
+                                                    <div class="min-w-0">
+                                                        <p class="text-[10px] text-slate-500">${escapeHtmlText(ann.category)} · <span class="font-mono">${escapeHtmlText(ann.date)}</span></p>
+                                                        <h3 class="mt-0.5 text-sm font-bold text-white">${escapeHtmlText(ann.title)}</h3>
+                                                        <p class="mt-1 text-xs text-slate-400 leading-relaxed">${escapeHtmlText(ann.summary)}</p>
+                                                    </div>
+                                                    ${!isAnnouncementRead(ann.id) ? '<span class="zdos-ann-unread-dot mt-1"></span>' : ''}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </section>
+
+                        <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · 公告中心</footer>
+                    </div>
+                </div>`;
+        }
+
+        function renderAnnouncementDetail(root, ann) {
+            const isRead = isAnnouncementRead(ann.id);
+            root.innerHTML = `
+                <div class="w-full min-w-0 max-w-5xl mx-auto px-2 sm:px-3 py-3 sm:py-4 font-sans zdos-ann-shell">
+                    <header class="zdos-app-header zdos-ann-card p-4">
+                        <div class="flex items-center gap-3">
+                            <button type="button" onclick="backFromAnnouncementDetail()" class="zdos-nav-btn shrink-0 px-3 py-1.5 rounded-xl bg-slate-800/70 border border-white/[0.06] text-[11px] font-bold text-slate-200">← 返回</button>
+                            <h1 class="min-w-0 flex-1 text-base sm:text-lg font-black text-white truncate">公告詳情</h1>
+                        </div>
+                    </header>
+
+                    <div class="zdos-view-body zdos-ann-shell">
+                        <article class="zdos-ann-card p-5 space-y-4">
+                            <p class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-300"><span class="text-lg">${escapeHtmlText(ann.categoryIcon)}</span>${escapeHtmlText(ann.category)}</p>
+                            <h2 class="text-xl font-black text-white leading-snug">${escapeHtmlText(ann.title)}</h2>
+                            <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                <div><dt class="text-slate-500">發布人</dt><dd class="mt-0.5 font-bold text-slate-200">${escapeHtmlText(ann.author)}</dd></div>
+                                <div><dt class="text-slate-500">發布時間</dt><dd class="mt-0.5 font-bold text-slate-200 font-mono">${escapeHtmlText(ann.publishedAt)}</dd></div>
+                            </dl>
+                            <div class="pt-3 border-t border-white/[0.06] text-sm leading-relaxed text-slate-300 whitespace-pre-wrap">${escapeHtmlText(ann.content)}</div>
+                        </article>
+
+                        <button type="button" onclick="handleToggleAnnouncementRead('${ann.id}')" class="zdos-nav-btn w-full py-3.5 rounded-2xl border ${isRead ? 'border-slate-500/25 bg-slate-800/50 text-slate-300' : 'border-emerald-500/30 bg-emerald-600/15 text-emerald-300'} text-sm font-bold">
+                            ${isRead ? '↩ 標為未讀' : '☑ 我已閱讀'}
+                        </button>
+
+                        <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · 公告詳情</footer>
+                    </div>
+                </div>`;
+        }
+
         function renderApp() {
             const root = document.getElementById('root'); if (!root) return;
             const currentStoreRecords = state.salesRecords.filter(r => r && r.store === state.storeType);
@@ -1145,137 +1774,57 @@
                 const dailyReminder = todaySalesDone
                     ? (hasInventoryPrivilege && !todayInventoryDone ? '業績已完成，記得確認今日庫存盤點。' : '今日核心任務已完成，辛苦了。')
                     : '下班前請確認業績資料與實收現金一致。';
-                root.innerHTML = `
-                    <div class="w-full min-w-0 max-w-5xl mx-auto px-2 py-5 space-y-5 font-sans">
-                        <header class="zdos-app-header relative overflow-hidden rounded-[26px] border border-white/[0.06] p-6 max-w-full">
-                            <div class="absolute top-0 right-0 w-48 h-48 translate-x-1/4 -translate-y-1/2 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none"></div>
-                            <div class="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
-                                <div>
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-12 h-12 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-black font-mono tracking-wider">ZD</div>
-                                        <div>
-                                            <p class="text-[10px] uppercase tracking-[0.28em] text-emerald-400 font-mono">ZDOS ${VERSION_INFO.version}</p>
-                                            <h1 class="text-2xl font-black tracking-[0.12em] text-white">中東營運系統</h1>
-                                        </div>
-                                    </div>
-                                    <p class="mt-5 text-sm text-slate-400">${todayLabel}</p>
-                                    <p class="mt-1 text-lg text-slate-100">歡迎回來，<strong>${currentMatched.name}</strong></p>
-                                    <p class="mt-1 text-xs text-slate-400">${state.storeType} · ${currentMatched.role}</p>
-                                </div>
-                                <div class="flex gap-2">
-                                    ${canManage ? `<button onclick="handleTryOpen()" class="zdos-nav-btn px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200">⚙️ 系統設定</button>` : ''}
-                                    <button onclick="handleLogoutSubmit()" class="zdos-nav-btn px-4 py-2 rounded-xl border border-rose-500/20 bg-rose-950/20 text-xs font-bold text-rose-400">登出</button>
-                                </div>
-                            </div>
-                        </header>
+                const todayQuote = '讓每一筆回報，都成為明天更好的依據。';
+                const todayFocusNotice = state.coverNotice || '目前沒有公告';
+                const greetHour = new Date().getHours();
+                const greetWord = greetHour < 12 ? '早安' : (greetHour < 18 ? '午安' : '晚安');
+                const greetingLine = `🌥️ ${greetWord}，${currentMatched.name}`;
+                const opsStatusLabel = remainingTaskCount === 0 ? '營運正常' : `待完成 ${remainingTaskCount} 項任務`;
+                const opsStatusTone = remainingTaskCount === 0 ? 'text-emerald-400' : 'text-amber-400';
+                const announcementUnreadCount = getUnreadAnnouncementCount();
+                renderDashboard(root, {
+                    todayLabel,
+                    greetingLine,
+                    canManage,
+                    storeType: state.storeType,
+                    todaySalesDone,
+                    todayInventoryDone,
+                    hasInventoryPrivilege,
+                    requiredTaskCount,
+                    completedTaskCount,
+                    remainingTaskCount,
+                    completionPercent,
+                    dailyReminder,
+                    todayQuote,
+                    todayFocusNotice,
+                    canReviewSales,
+                    pendingZhonghuaCount,
+                    pendingDonggangCount,
+                    currentMatched,
+                    opsStatusLabel,
+                    opsStatusTone,
+                    announcementUnreadCount
+                });
+                return;
+            }
 
-                        <div class="zdos-view-body space-y-5">
-                        <section class="rounded-[22px] border ${remainingTaskCount === 0 ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-amber-500/20 bg-amber-500/5'} p-5">
-                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                                <div>
-                                    <p class="text-[10px] uppercase tracking-[0.22em] ${remainingTaskCount === 0 ? 'text-emerald-400' : 'text-amber-400'}">Daily Progress</p>
-                                    <h2 class="mt-1 text-lg font-bold text-white">${remainingTaskCount === 0 ? '今日核心任務已完成' : `今天還有 ${remainingTaskCount} 項工作待完成`}</h2>
-                                    <p class="mt-1 text-xs text-slate-400">${dailyReminder}</p>
-                                </div>
-                                <div class="min-w-[150px]">
-                                    <div class="flex items-center justify-between text-[10px] text-slate-400 mb-1.5"><span>完成進度</span><strong class="text-slate-200">${completedTaskCount}/${requiredTaskCount}</strong></div>
-                                    <div class="h-2 rounded-full bg-slate-950 overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-sky-500 transition-all" style="width:${completionPercent}%"></div></div>
-                                </div>
-                            </div>
-                        </section>
+            // -- VIEW B3: 公告詳情 --
+            if (state.currentView === 'announcement-detail') {
+                const ann = getAnnouncementById(state.activeAnnouncementId);
+                if (!ann) {
+                    state.currentView = 'announcements';
+                    state.activeAnnouncementId = null;
+                    safeSetItem('zdos_current_view', 'announcements');
+                    renderApp();
+                    return;
+                }
+                renderAnnouncementDetail(root, ann);
+                return;
+            }
 
-                        ${canReviewSales ? `
-                        <section>
-                            <button type="button" onclick="openReviewCenter()" class="zdos-nav-btn w-full text-left rounded-[22px] border border-orange-500/25 bg-gradient-to-br from-orange-500/10 to-rose-500/5 p-5 hover:border-orange-400/40 transition-all">
-                                <div class="flex items-center justify-between gap-4">
-                                    <div>
-                                        <p class="text-[10px] uppercase tracking-[0.22em] text-orange-400">業績核對中心</p>
-                                        <h2 class="mt-1 text-lg font-bold text-white">待核對</h2>
-                                        <div class="mt-3 flex flex-wrap gap-2">
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-sky-950/50 border border-sky-500/20 text-[11px] text-sky-300">中華店：${pendingZhonghuaCount} 筆</span>
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-amber-950/50 border border-amber-500/20 text-[11px] text-amber-300">東港店：${pendingDonggangCount} 筆</span>
-                                        </div>
-                                    </div>
-                                    <span class="text-orange-300 text-2xl shrink-0">→</span>
-                                </div>
-                            </button>
-                        </section>
-                        ` : ''}
-
-                        <section class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                            <div class="lg:col-span-7 rounded-[22px] border border-white/[0.05] bg-slate-900/45 p-5">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div><p class="text-[10px] uppercase tracking-[0.22em] text-slate-500">Today</p><h2 class="text-base font-bold text-slate-100">今日待辦</h2></div>
-                                    <span class="text-[10px] text-slate-500">${state.storeType}</span>
-                                </div>
-                                <div class="space-y-3">
-                                    <button onclick="openZDOSModule('sales')" class="zdos-nav-btn w-full flex items-center justify-between rounded-xl border ${todaySalesDone ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-amber-500/20 bg-amber-500/5'} px-4 py-3 text-left">
-                                        <span class="flex items-center gap-3"><span class="text-lg">${todaySalesDone ? '✅' : '◻️'}</span><span><strong class="block text-sm text-slate-100">業績回報</strong><small class="text-[10px] text-slate-500">完成當日門市營收申報</small></span></span>
-                                        <span class="text-[10px] font-bold ${todaySalesDone ? 'text-emerald-400' : 'text-amber-400'}">${todaySalesDone ? '已完成' : '前往處理'}</span>
-                                    </button>
-                                    ${hasInventoryPrivilege ? `<button onclick="openZDOSModule('inventory')" class="zdos-nav-btn w-full flex items-center justify-between rounded-xl border ${todayInventoryDone ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-white/[0.05] bg-slate-950/35'} px-4 py-3 text-left">
-                                        <span class="flex items-center gap-3"><span class="text-lg">${todayInventoryDone ? '✅' : '◻️'}</span><span><strong class="block text-sm text-slate-100">庫存盤點</strong><small class="text-[10px] text-slate-500">登記盤點與叫貨資料</small></span></span>
-                                        <span class="text-[10px] font-bold ${todayInventoryDone ? 'text-emerald-400' : 'text-slate-400'}">${todayInventoryDone ? '已有紀錄' : '前往處理'}</span>
-                                    </button>` : ''}
-                                    <div class="w-full rounded-xl border border-white/[0.05] bg-slate-950/35 px-4 py-3">
-                                        <div class="flex items-start gap-3"><span class="text-lg">📢</span><span><strong class="block text-sm text-slate-200">今日提醒</strong><small class="block mt-1 text-[10px] leading-relaxed text-slate-500">${dailyReminder}</small><small class="block mt-2 text-[10px] leading-relaxed text-slate-600">公告：${state.coverNotice || '目前沒有公告'}</small></span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="lg:col-span-5 grid grid-cols-2 gap-3">
-                                <div class="rounded-2xl border border-white/[0.05] bg-slate-900/45 p-4"><p class="text-[10px] text-slate-500">今日業績</p><p class="mt-2 text-sm font-bold ${todaySalesDone ? 'text-emerald-400' : 'text-amber-400'}">${todaySalesDone ? '已完成' : '待回報'}</p></div>
-                                <div class="rounded-2xl border border-white/[0.05] bg-slate-900/45 p-4"><p class="text-[10px] text-slate-500">今日庫存</p><p class="mt-2 text-sm font-bold ${todayInventoryDone ? 'text-emerald-400' : 'text-slate-500'}">${todayInventoryDone ? '已有紀錄' : '尚無紀錄'}</p></div>
-                                <div class="col-span-2 rounded-2xl border border-white/[0.05] bg-slate-900/45 p-4"><p class="text-[10px] text-slate-500">目前身分</p><div class="mt-2 flex items-center justify-between"><p class="text-sm font-bold text-slate-100">${currentMatched.name}</p><span class="px-2 py-1 rounded-lg bg-indigo-950/50 border border-indigo-500/20 text-[10px] text-indigo-300">${currentMatched.role}</span></div></div>
-                            </div>
-                        </section>
-
-                        <section class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <button onclick="openZDOSModule('sales')" class="zdos-nav-btn rounded-2xl border border-sky-500/20 bg-sky-500/5 p-4 text-left hover:bg-sky-500/10 transition-all"><span class="text-lg">⚡</span><h3 class="mt-2 text-sm font-bold text-white">快速回報業績</h3><p class="mt-1 text-[10px] text-slate-500">直接開啟當日申報表</p></button>
-                            ${hasInventoryPrivilege ? `<button onclick="openZDOSModule('inventory')" class="zdos-nav-btn rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 text-left hover:bg-amber-500/10 transition-all"><span class="text-lg">📦</span><h3 class="mt-2 text-sm font-bold text-white">快速盤點庫存</h3><p class="mt-1 text-[10px] text-slate-500">直接開啟盤點與叫貨</p></button>` : `<div class="rounded-2xl border border-white/[0.05] bg-slate-900/35 p-4 opacity-60"><span class="text-lg">📦</span><h3 class="mt-2 text-sm font-bold text-slate-400">庫存盤點</h3><p class="mt-1 text-[10px] text-slate-600">目前帳號無權限</p></div>`}
-                            <div class="rounded-2xl border border-violet-500/15 bg-violet-500/5 p-4"><span class="text-lg">💬</span><h3 class="mt-2 text-sm font-bold text-white">今日一句</h3><p class="mt-1 text-[10px] leading-relaxed text-slate-500">讓每一筆回報，都成為明天更好的依據。</p></div>
-                        </section>
-
-                        <section>
-                            <div class="mb-3 flex items-end justify-between">
-                                <div><p class="text-[10px] uppercase tracking-[0.22em] text-slate-500">Operation Center</p><h2 class="text-base font-bold text-slate-100">功能中心</h2></div>
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <button onclick="openZDOSModule('sales')" class="zdos-nav-btn group text-left rounded-[22px] border border-sky-500/20 bg-gradient-to-br from-sky-500/10 to-indigo-500/5 p-5 hover:border-sky-400/40 transition-all">
-                                    <div class="flex items-center justify-between"><span class="text-2xl">📊</span><span class="text-sky-400 text-lg">→</span></div>
-                                    <h3 class="mt-4 text-lg font-bold text-white">營運中心</h3><p class="mt-1 text-xs text-slate-400">業績回報、歷史申報與營收資料</p>
-                                </button>
-                                ${hasInventoryPrivilege ? `
-                                <button onclick="openZDOSModule('inventory')" class="zdos-nav-btn group text-left rounded-[22px] border border-amber-500/20 bg-gradient-to-br from-amber-500/10 to-orange-500/5 p-5 hover:border-amber-400/40 transition-all">
-                                    <div class="flex items-center justify-between"><span class="text-2xl">📦</span><span class="text-amber-400 text-lg">→</span></div>
-                                    <h3 class="mt-4 text-lg font-bold text-white">庫存中心</h3><p class="mt-1 text-xs text-slate-400">盤點、叫貨與庫存雲端同步</p>
-                                </button>` : `
-                                <div class="rounded-[22px] border border-white/[0.05] bg-slate-900/35 p-5 opacity-55">
-                                    <div class="flex items-center justify-between"><span class="text-2xl">📦</span><span class="text-slate-600">🔒</span></div>
-                                    <h3 class="mt-4 text-lg font-bold text-slate-400">庫存中心</h3><p class="mt-1 text-xs text-slate-600">目前帳號無庫存權限</p>
-                                </div>`}
-                                ${canManage ? `
-                                <button onclick="handleTryOpen()" class="zdos-nav-btn group text-left rounded-[22px] border border-violet-500/20 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/5 p-5 hover:border-violet-400/40 transition-all">
-                                    <div class="flex items-center justify-between"><span class="text-2xl">👥</span><span class="text-violet-400 text-lg">→</span></div>
-                                    <h3 class="mt-4 text-lg font-bold text-white">人員與系統中心</h3><p class="mt-1 text-xs text-slate-400">員工帳密、Google 設定、備份與還原</p>
-                                </button>
-                                <div class="rounded-[22px] border border-teal-500/20 bg-gradient-to-br from-teal-500/10 to-cyan-500/5 p-5">
-                                    <div class="flex items-center justify-between"><span class="text-2xl">📋</span><span class="px-2 py-1 rounded-full bg-teal-950/50 border border-teal-500/20 text-[9px] text-teal-300 font-mono">${VERSION_INFO.version}</span></div>
-                                    <h3 class="mt-4 text-lg font-bold text-white">版本資訊</h3>
-                                    <p class="mt-1 text-xs font-mono text-teal-300/90">${VERSION_INFO.label} · Version：${VERSION_INFO.version}</p>
-                                    <p class="mt-2 text-[10px] text-slate-500">更新日期：${VERSION_INFO.updatedAt}</p>
-                                    <p class="mt-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">最近更新</p>
-                                    <ul class="mt-1.5 space-y-1">${VERSION_INFO.changes.map(c => `<li class="text-[10px] text-slate-500 leading-relaxed flex gap-1.5"><span class="text-teal-500 shrink-0">•</span><span>${c}</span></li>`).join('')}</ul>
-                                </div>` : ''}
-                                <button type="button" onclick="openBetaFeedbackModal()" class="zdos-nav-btn group text-left rounded-[22px] border border-rose-500/20 bg-gradient-to-br from-rose-500/10 to-pink-500/5 p-5 hover:border-rose-400/40 transition-all">
-                                    <div class="flex items-center justify-between"><span class="text-2xl">💬</span><span class="text-rose-400 text-lg">→</span></div>
-                                    <h3 class="mt-4 text-lg font-bold text-white">Beta 測試回饋</h3><p class="mt-1 text-xs text-slate-400">回報問題或提出建議，協助 ZDOS 優化</p>
-                                </button>
-                            </div>
-                        </section>
-
-                        <footer class="pt-2 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · ZhongDong Operating System</footer>
-                        </div>
-                    </div>`;
+            // -- VIEW B3: 公告中心 --
+            if (state.currentView === 'announcements') {
+                renderAnnouncementCenter(root);
                 return;
             }
 
@@ -1343,7 +1892,7 @@
                 return;
             }
 
-            if (state.currentView !== 'module') {
+            if (state.currentView !== 'module' && state.currentView !== 'announcements' && state.currentView !== 'announcement-detail') {
                 state.currentView = 'dashboard';
                 safeSetItem('zdos_current_view', 'dashboard');
                 renderApp();
