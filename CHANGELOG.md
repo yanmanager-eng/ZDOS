@@ -1,5 +1,20 @@
 # ZDOS 更新紀錄
 
+## v1.2.1
+
+### Feature-008A：Scheduling Center Layout ✅
+
+- Dashboard 功能中心新增「📅 排班中心」入口
+- 新增 Scheduling Center View（Workspace 架構）
+- 左側：員工清單（假資料 8 筆）
+- 右側：月曆版面（當月 Grid，含今日標記）
+- 沿用 Glass UI / Tailwind 風格，Desktop + Mobile RWD
+- 尚未串接資料，不影響其他模組
+
+**驗收：** 可進入 · 左右版面 · Desktop · Mobile RWD · Console 無 Error
+
+---
+
 ## v1.2.0
 
 ### Feature-008：Announcement Center v1.0 ✅

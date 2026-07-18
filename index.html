@@ -257,6 +257,203 @@
             min-width: 0;
         }
 
+        .zdos-dashboard-info-zone {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--zdos-home-stack) - 2px);
+            min-width: 0;
+        }
+
+        .zdos-home-ops-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.5rem;
+        }
+
+        .zdos-home-ops-card {
+            padding: 0.65rem 0.75rem !important;
+            min-height: 5.5rem;
+        }
+
+        .zdos-home-ops-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.35rem;
+        }
+
+        .zdos-home-ops-icon {
+            font-size: 1.125rem;
+            line-height: 1;
+        }
+
+        .zdos-home-ops-arrow {
+            font-size: 0.875rem;
+            line-height: 1;
+            opacity: 0.85;
+        }
+
+        .zdos-home-ops-title {
+            margin-top: 0.375rem;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            line-height: 1.25;
+            color: rgb(248 250 252);
+        }
+
+        .zdos-home-ops-desc {
+            margin-top: 0.125rem;
+            font-size: 0.625rem;
+            line-height: 1.35;
+            color: rgb(148 163 184);
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
+
+        .zdos-home-ops-badge {
+            padding: 0.125rem 0.375rem;
+            border-radius: 9999px;
+            font-size: 0.5625rem;
+            font-weight: 700;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .zdos-home-version-strip {
+            margin-top: 0.5rem;
+            padding: 0.625rem 0.75rem !important;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.375rem 0.625rem;
+        }
+
+        .zdos-home-version-strip-title {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            color: rgb(153 246 228);
+        }
+
+        .zdos-home-version-strip-meta {
+            font-size: 0.625rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            color: rgb(148 163 184);
+        }
+
+        @media (max-width: 639px) {
+            .zdos-home-ops-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .zdos-home-ops-card {
+                min-height: 5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .zdos-home-ops-grid {
+                gap: 0.625rem;
+            }
+
+            .zdos-home-ops-card {
+                min-height: 5.75rem;
+            }
+        }
+
+        .zdos-scheduling-shell {
+            display: grid;
+            grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+            gap: 0.75rem;
+            align-items: start;
+        }
+
+        .zdos-scheduling-panel {
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(15, 23, 42, 0.52);
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .zdos-scheduling-emp-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+            max-height: 28rem;
+            overflow-y: auto;
+        }
+
+        .zdos-scheduling-emp-item {
+            width: 100%;
+            text-align: left;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(15, 23, 42, 0.45);
+            padding: 0.625rem 0.75rem;
+            transition: border-color 150ms ease, background 150ms ease;
+        }
+
+        .zdos-scheduling-emp-item--active {
+            border-color: rgba(129, 140, 248, 0.45);
+            background: rgba(99, 102, 241, 0.14);
+        }
+
+        .zdos-scheduling-calendar-head {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 0.25rem;
+        }
+
+        .zdos-scheduling-calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 0.25rem;
+        }
+
+        .zdos-scheduling-weekday {
+            text-align: center;
+            font-size: 0.625rem;
+            font-weight: 700;
+            color: rgb(148 163 184);
+            padding: 0.375rem 0;
+        }
+
+        .zdos-scheduling-day {
+            min-height: 3.25rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(15, 23, 42, 0.35);
+            padding: 0.375rem;
+            font-size: 0.6875rem;
+            color: rgb(226 232 240);
+        }
+
+        .zdos-scheduling-day--muted {
+            opacity: 0.35;
+        }
+
+        .zdos-scheduling-day--today {
+            border-color: rgba(129, 140, 248, 0.45);
+            background: rgba(99, 102, 241, 0.12);
+        }
+
+        @media (max-width: 767px) {
+            .zdos-scheduling-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .zdos-scheduling-emp-list {
+                max-height: 12rem;
+            }
+
+            .zdos-scheduling-day {
+                min-height: 2.5rem;
+            }
+        }
+
         .zdos-home-focus-divider {
             margin-top: 0.625rem;
             padding-top: 0.625rem;
@@ -400,6 +597,30 @@
             background: rgb(56 189 248);
             box-shadow: 0 0 8px rgba(56, 189, 248, 0.45);
             flex-shrink: 0;
+        }
+
+        .zdos-beta-banner {
+            border-radius: 16px;
+            border: 1px solid rgba(251, 191, 36, 0.45);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(239, 68, 68, 0.14));
+            box-shadow: 0 8px 28px rgba(245, 158, 11, 0.12);
+            padding: 0.75rem 0.875rem;
+            text-align: center;
+        }
+
+        .zdos-beta-banner-title {
+            font-size: 0.8125rem;
+            font-weight: 900;
+            letter-spacing: 0.14em;
+            color: rgb(254 243 199);
+        }
+
+        .zdos-beta-banner-desc {
+            margin-top: 0.25rem;
+            font-size: 0.6875rem;
+            line-height: 1.45;
+            font-weight: 600;
+            color: rgb(253 230 138);
         }
 
         /* Architecture-001：Function Page 工作空間（與 Dashboard 元件分離） */
@@ -579,17 +800,29 @@
         const ROLE_OPTIONS = ['資深員工', '實習幹部', '副領班', '領班', '店經理', '區經理', '人資', '總務', '秘書', '店長', '集團首腦'];
 
         // 與 CHANGELOG.md 同步（發版時手動更新）
+        const ZDOS_PRODUCTION_HOSTS = ['adorable-pudding-0fad91.netlify.app'];
+        const ZDOS_IS_BETA_SITE = (() => {
+            const host = window.location.hostname.toLowerCase();
+            return host.endsWith('.netlify.app') && !ZDOS_PRODUCTION_HOSTS.includes(host);
+        })();
+
         const VERSION_INFO = {
             label: 'ZDOS',
-            version: 'v1.2.0',
-            updatedAt: '2026-07-18',
+            get version() { return ZDOS_IS_BETA_SITE ? 'v1.2.1 Beta' : 'v1.2.1'; },
+            updatedAt: '2026-07-19',
             changes: [
-                '新增公告中心（Announcement Center）',
-                '首頁入口、必讀／本週／最新公告',
-                '公告詳情與已讀狀態（本地）',
-                'Feature-008 Announcement Center v1.0'
+                '新增排班中心（Scheduling Center）基礎框架',
+                'Dashboard 入口、員工清單與月曆版面',
+                'Feature-008A Scheduling Center Layout',
+                'Architecture-001 Workspace Navigation'
             ]
         };
+
+        const renderBetaEnvironmentBanner = () => ZDOS_IS_BETA_SITE ? `
+            <div class="zdos-beta-banner" role="status" aria-live="polite">
+                <p class="zdos-beta-banner-title">BETA 測試環境</p>
+                <p class="zdos-beta-banner-desc">此版本僅供功能測試 · 請勿在此回報正式業績</p>
+            </div>` : '';
 
         const ANNOUNCEMENT_SEED = [
             {
@@ -658,6 +891,33 @@
                 weekHighlight: false
             }
         ];
+
+        const SCHEDULING_EMPLOYEE_SEED = [
+            { id: 'sch-001', name: '顏志添', empId: 'DDP0001', role: '店長', store: '中華店' },
+            { id: 'sch-002', name: '楊政霖', empId: 'CDP0003', role: '領班', store: '中華店' },
+            { id: 'sch-003', name: '陳禹蓁', empId: 'CDP0005', role: '領班', store: '中華店' },
+            { id: 'sch-004', name: '高子懿', empId: 'CDP0010', role: '實習幹部', store: '中華店' },
+            { id: 'sch-005', name: '林泰宇', empId: 'DDP0002', role: '資深員工', store: '東港店' },
+            { id: 'sch-006', name: '林文明', empId: 'DDP0006', role: '資深員工', store: '東港店' },
+            { id: 'sch-007', name: '蔡依珊', empId: 'DDP0011', role: '資深員工', store: '東港店' },
+            { id: 'sch-008', name: '郭志勇', empId: 'DDP0004', role: '一般員工', store: '東港店' }
+        ];
+
+        const SCHEDULING_WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
+
+        const buildSchedulingCalendarCells = (year, month) => {
+            const firstWeekday = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const cells = [];
+            for (let i = 0; i < firstWeekday; i += 1) cells.push({ day: '', muted: true, today: false });
+            const todayStr = new Date().toISOString().split('T')[0];
+            for (let day = 1; day <= daysInMonth; day += 1) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                cells.push({ day, muted: false, today: dateStr === todayStr });
+            }
+            while (cells.length % 7 !== 0) cells.push({ day: '', muted: true, today: false });
+            return cells;
+        };
 
         const sortAnnouncementsByDate = (list) =>
             [...list].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
@@ -866,7 +1126,7 @@
 
         const BETA_FEEDBACK_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeC0-fuNL_bhrATN3XVxnVrhg5rrTYJPQBwuWMD5YaDPsqf9w/formResponse';
         const BETA_FEEDBACK_TYPE_OPTIONS = ['問題回報', '功能建議', '介面體驗', '其他'];
-        const BETA_FEEDBACK_PAGE_OPTIONS = ['首頁', '公告中心', '業績申報', '庫存盤點', '業績核對中心', '其他'];
+        const BETA_FEEDBACK_PAGE_OPTIONS = ['首頁', '公告中心', '排班中心', '業績申報', '庫存盤點', '業績核對中心', '其他'];
         const BETA_FEEDBACK_DEVICE_OPTIONS = ['手機', '平板', '電腦'];
         const BETA_FEEDBACK_IMPACT_OPTIONS = ['無法完成工作', '可勉強使用', '無影響', '不確定'];
 
@@ -881,6 +1141,7 @@
 
         const getBetaFeedbackDefaultPage = () => {
             if (state.currentView === 'review') return '業績核對中心';
+            if (state.currentView === 'scheduling') return '排班中心';
             if (state.currentView === 'announcements' || state.currentView === 'announcement-detail') return '公告中心';
             if (state.currentView === 'module') return state.activeAppTab === 'inventory' ? '庫存盤點' : '業績申報';
             return '首頁';
@@ -966,6 +1227,9 @@
 
             announcementReadIds: safeJsonParse('zdos_announcement_read_v1', []),
             activeAnnouncementId: null,
+            activeSchedulingEmployeeId: SCHEDULING_EMPLOYEE_SEED[0]?.id || null,
+            schedulingCalendarMonth: new Date().getMonth(),
+            schedulingCalendarYear: new Date().getFullYear(),
 
             newDate: new Date().toISOString().split('T')[0], newShift: '早班', newOverAmount: '', newSalesAmount: '', newExpenseNotes: '', newExpenseAmount: '', newLinaPay: '', newTwqr: '', newApplePay: '', invBarcode: '', invStockQty: '', invOrderQty: ''
         };
@@ -1081,6 +1345,22 @@
             safeSetItem('zdos_current_view', 'announcements');
             renderApp();
             zdosAfterViewNav();
+        };
+
+        window.openSchedulingCenter = function() {
+            if (!state.activeSchedulingEmployeeId && SCHEDULING_EMPLOYEE_SEED[0]) {
+                state.activeSchedulingEmployeeId = SCHEDULING_EMPLOYEE_SEED[0].id;
+            }
+            state.currentView = 'scheduling';
+            safeSetItem('zdos_current_view', 'scheduling');
+            renderApp();
+            zdosAfterViewNav();
+        };
+
+        window.selectSchedulingEmployee = function(id) {
+            if (!SCHEDULING_EMPLOYEE_SEED.some(emp => emp.id === id)) return;
+            state.activeSchedulingEmployeeId = id;
+            renderApp();
         };
 
         window.openAnnouncementDetail = function(id) {
@@ -1521,26 +1801,45 @@
 
         function renderDashboard(root, dash) {
             const {
-                greetingLine, storeType,
+                greetingLine, storeType, todayLabel,
                 todaySalesDone, todayInventoryDone, hasInventoryPrivilege,
                 requiredTaskCount, completedTaskCount, remainingTaskCount, completionPercent,
-                todayQuote, todayFocusNotice, todayLabel,
+                todayQuote, todayFocusNotice,
                 canManage, canReviewSales, pendingZhonghuaCount, pendingDonggangCount,
-                announcementUnreadCount
+                announcementUnreadCount, currentMatched
             } = dash;
+            const storeBadgeTone = storeType === '中華店'
+                ? 'text-sky-300 border-sky-500/25 bg-sky-950/40'
+                : 'text-amber-300 border-amber-500/25 bg-amber-950/35';
             const progressRemainLine = remainingTaskCount === 0
                 ? '今日任務已全部完成'
                 : `還有 ${remainingTaskCount} 件待完成`;
             root.innerHTML = `
                     <div id="zdos-dashboard" class="zdos-dashboard--home-polish w-full min-w-0 max-w-5xl mx-auto px-2 sm:px-3 py-2.5 sm:py-4 font-sans">
+                        ${renderBetaEnvironmentBanner()}
+                        <header id="zdos-dashboard-header" class="zdos-app-header zdos-app-header--home relative overflow-hidden max-w-full">
+                            <div class="relative flex items-center justify-between gap-2">
+                                <h1 class="min-w-0 flex-1 text-xl sm:text-2xl font-black text-white leading-tight">${greetingLine}</h1>
+                                <div class="flex shrink-0 gap-1.5">
+                                    ${canManage ? `<button type="button" onclick="handleTryOpen()" class="zdos-nav-btn px-2 py-1 rounded-[10px] bg-slate-800/80 hover:bg-slate-700/90 text-[10px] font-bold text-slate-200 border border-white/[0.06]">⚙️ 系統設定</button>` : ''}
+                                    <button type="button" onclick="handleLogoutSubmit()" class="zdos-nav-btn px-2 py-1 rounded-[10px] border border-rose-500/25 bg-rose-950/30 text-[10px] font-bold text-rose-400">登出</button>
+                                </div>
+                            </div>
+                            <div class="zdos-home-badge-row mt-1.5">
+                                <span class="zdos-home-badge ${storeBadgeTone}"><span aria-hidden="true">🏪</span>${storeType}</span>
+                                <span class="zdos-home-badge text-indigo-300 border-indigo-500/25 bg-indigo-950/35"><span aria-hidden="true">👔</span>${escapeHtmlText(currentMatched.role)}</span>
+                                <span class="zdos-home-badge zdos-home-badge--date font-mono"><span aria-hidden="true">📅</span>${todayLabel}</span>
+                            </div>
+                        </header>
 
                         <div id="zdos-dashboard-body" class="zdos-view-body">
 
+                        <section id="zdos-dashboard-info-zone" class="zdos-dashboard-info-zone" aria-label="首頁資訊區">
+
                         <section id="zdos-dashboard-focus" class="zdos-home-card zdos-home-card--pad border-amber-500/20 bg-amber-500/[0.05]">
-                            <p class="text-base sm:text-lg font-black text-white leading-tight">${greetingLine}</p>
-                            <h2 class="mt-3 text-sm font-bold text-amber-100">今日焦點</h2>
-                            <p class="mt-1.5 text-sm leading-snug text-slate-200">${todayFocusNotice}</p>
-                            <p class="zdos-home-focus-divider zdos-home-focus-caption">今日一句 · ${todayQuote}</p>
+                            <h2 class="text-sm font-bold text-amber-100">今日焦點</h2>
+                            <p class="mt-1.5 text-sm leading-snug text-slate-200">${escapeHtmlText(todayFocusNotice)}</p>
+                            <p class="zdos-home-focus-divider zdos-home-focus-caption">今日一句 · ${escapeHtmlText(todayQuote)}</p>
                         </section>
 
                         <section id="zdos-dashboard-tasks" class="zdos-home-card zdos-home-card--pad">
@@ -1569,61 +1868,70 @@
                             <p class="mt-1 text-[11px] text-slate-400">${progressRemainLine}</p>
                         </section>
 
-                        <section id="zdos-dashboard-ops">
-                            <div class="mb-2 flex items-center justify-between gap-2">
-                                <h2 class="text-sm font-bold text-slate-100">功能中心</h2>
-                                <button onclick="handleLogoutSubmit()" class="zdos-nav-btn px-2.5 py-1 rounded-[10px] border border-rose-500/25 bg-rose-950/30 text-[10px] font-bold text-rose-400">登出</button>
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
-                                <button onclick="openZDOSModule('sales')" class="zdos-nav-btn group text-left zdos-home-card zdos-home-card--pad border-sky-500/25 bg-gradient-to-br from-sky-500/10 to-indigo-500/5 hover:border-sky-400/40 transition-all">
-                                    <div class="flex items-center justify-between"><span class="text-xl">📊</span><span class="text-sky-400 text-lg">→</span></div>
-                                    <h3 class="mt-3 text-base font-bold text-white">營運中心</h3><p class="mt-0.5 text-xs text-slate-400">業績回報、歷史申報與營收資料</p>
-                                </button>
-                                ${hasInventoryPrivilege ? `
-                                <button onclick="openZDOSModule('inventory')" class="zdos-nav-btn group text-left zdos-home-card zdos-home-card--pad border-amber-500/25 bg-gradient-to-br from-amber-500/10 to-orange-500/5 hover:border-amber-400/40 transition-all">
-                                    <div class="flex items-center justify-between"><span class="text-xl">📦</span><span class="text-amber-400 text-lg">→</span></div>
-                                    <h3 class="mt-3 text-base font-bold text-white">庫存中心</h3><p class="mt-0.5 text-xs text-slate-400">盤點、叫貨與庫存雲端同步</p>
-                                </button>` : `
-                                <div class="zdos-home-card zdos-home-card--pad opacity-55">
-                                    <div class="flex items-center justify-between"><span class="text-xl">📦</span><span class="text-slate-600">🔒</span></div>
-                                    <h3 class="mt-3 text-base font-bold text-slate-400">庫存中心</h3><p class="mt-0.5 text-xs text-slate-600">目前帳號無庫存權限</p>
-                                </div>`}
-                                ${canManage ? `
-                                <button onclick="handleTryOpen()" class="zdos-nav-btn group text-left zdos-home-card zdos-home-card--pad border-violet-500/25 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/5 hover:border-violet-400/40 transition-all">
-                                    <div class="flex items-center justify-between"><span class="text-xl">👥</span><span class="text-violet-400 text-lg">→</span></div>
-                                    <h3 class="mt-3 text-base font-bold text-white">人員與系統中心</h3><p class="mt-0.5 text-xs text-slate-400">員工帳密、Google 設定、備份與還原</p>
-                                </button>
-                                <div class="zdos-home-card zdos-home-card--pad border-teal-500/25 bg-gradient-to-br from-teal-500/10 to-cyan-500/5">
-                                    <div class="flex items-center justify-between"><span class="text-xl">📋</span><span class="px-2 py-0.5 rounded-full bg-teal-950/50 border border-teal-500/20 text-[9px] text-teal-300 font-mono">${VERSION_INFO.version}</span></div>
-                                    <h3 class="mt-3 text-base font-bold text-white">版本資訊</h3>
-                                    <p class="mt-0.5 text-xs font-mono text-teal-300/90">${VERSION_INFO.label} · Version：${VERSION_INFO.version}</p>
-                                    <p class="mt-1.5 text-[10px] text-slate-500">更新日期：${VERSION_INFO.updatedAt}</p>
-                                    <p class="mt-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">最近更新</p>
-                                    <ul class="mt-1 space-y-0.5">${VERSION_INFO.changes.map(c => `<li class="text-[10px] text-slate-500 leading-relaxed flex gap-1.5"><span class="text-teal-500 shrink-0">•</span><span>${c}</span></li>`).join('')}</ul>
-                                </div>` : ''}
-                                ${canReviewSales ? `
-                                <button type="button" onclick="openReviewCenter()" class="zdos-nav-btn group text-left zdos-home-card zdos-home-card--pad border-orange-500/25 bg-gradient-to-br from-orange-500/10 to-rose-500/5 hover:border-orange-400/40 transition-all">
-                                    <div class="flex items-center justify-between gap-2"><span class="text-xl">✅</span>${(pendingZhonghuaCount + pendingDonggangCount) > 0 ? `<span class="px-2 py-0.5 rounded-full bg-orange-500/15 border border-orange-500/25 text-[10px] font-bold text-orange-300">${pendingZhonghuaCount + pendingDonggangCount} 待核對</span>` : '<span class="text-orange-400 text-lg">→</span>'}</div>
-                                    <h3 class="mt-3 text-base font-bold text-white">業績核對中心</h3><p class="mt-0.5 text-xs text-slate-400">中華 ${pendingZhonghuaCount} · 東港 ${pendingDonggangCount}</p>
-                                </button>` : ''}
-                                <button type="button" onclick="openAnnouncementCenter()" class="zdos-nav-btn group text-left zdos-home-card zdos-home-card--pad border-cyan-500/25 bg-gradient-to-br from-cyan-500/10 to-sky-500/5 hover:border-cyan-400/40 transition-all">
-                                    <div class="flex items-center justify-between gap-2">
-                                        <span class="text-xl">📢</span>
-                                        ${announcementUnreadCount > 0 ? `<span class="px-2 py-0.5 rounded-full bg-rose-500/15 border border-rose-500/25 text-[10px] font-bold text-rose-300">${announcementUnreadCount} 未讀</span>` : '<span class="text-cyan-400 text-lg">→</span>'}
-                                    </div>
-                                    <h3 class="mt-3 text-base font-bold text-white">公告中心</h3><p class="mt-0.5 text-xs text-slate-400">必讀、本週重點與最新公告</p>
-                                </button>
-                                <button type="button" onclick="openBetaFeedbackModal()" class="zdos-nav-btn group text-left zdos-home-card zdos-home-card--pad border-rose-500/25 bg-gradient-to-br from-rose-500/10 to-pink-500/5 hover:border-rose-400/40 transition-all">
-                                    <div class="flex items-center justify-between"><span class="text-xl">💬</span><span class="text-rose-400 text-lg">→</span></div>
-                                    <h3 class="mt-3 text-base font-bold text-white">Beta 測試回饋</h3><p class="mt-0.5 text-xs text-slate-400">回報問題或提出建議，協助 ZDOS 優化</p>
-                                </button>
-                            </div>
-                        </section>
-
                         <section id="zdos-dashboard-daily-info" class="zdos-home-card zdos-home-card--pad border-sky-500/20 bg-gradient-to-br from-slate-900/80 to-sky-950/25">
                             <h2 class="text-sm font-bold text-white">今日資訊</h2>
                             <p class="mt-1.5 text-[11px] font-mono text-slate-500">${todayLabel} · ${storeType}</p>
                             <p class="mt-2 text-sm text-sky-200/90">🌤️ 天氣：多雲時晴</p>
+                        </section>
+
+                        </section>
+
+                        <section id="zdos-dashboard-ops">
+                            <div class="mb-2 flex items-end justify-between gap-2">
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-[0.22em] text-slate-500">Operation Center</p>
+                                    <h2 class="text-sm font-bold text-slate-100">功能中心</h2>
+                                </div>
+                            </div>
+                            <div class="zdos-home-ops-grid">
+                                <button onclick="openZDOSModule('sales')" class="zdos-nav-btn group text-left zdos-home-card zdos-home-ops-card border-sky-500/25 bg-gradient-to-br from-sky-500/10 to-indigo-500/5 hover:border-sky-400/40 transition-all">
+                                    <div class="zdos-home-ops-card-top"><span class="zdos-home-ops-icon">📊</span><span class="zdos-home-ops-arrow text-sky-400">→</span></div>
+                                    <h3 class="zdos-home-ops-title">營運中心</h3><p class="zdos-home-ops-desc">業績回報、歷史申報</p>
+                                </button>
+                                ${hasInventoryPrivilege ? `
+                                <button onclick="openZDOSModule('inventory')" class="zdos-nav-btn group text-left zdos-home-card zdos-home-ops-card border-amber-500/25 bg-gradient-to-br from-amber-500/10 to-orange-500/5 hover:border-amber-400/40 transition-all">
+                                    <div class="zdos-home-ops-card-top"><span class="zdos-home-ops-icon">📦</span><span class="zdos-home-ops-arrow text-amber-400">→</span></div>
+                                    <h3 class="zdos-home-ops-title">庫存中心</h3><p class="zdos-home-ops-desc">盤點、叫貨與同步</p>
+                                </button>` : `
+                                <div class="zdos-home-card zdos-home-ops-card opacity-55">
+                                    <div class="zdos-home-ops-card-top"><span class="zdos-home-ops-icon">📦</span><span class="zdos-home-ops-arrow text-slate-600">🔒</span></div>
+                                    <h3 class="zdos-home-ops-title text-slate-400">庫存中心</h3><p class="zdos-home-ops-desc text-slate-600">目前帳號無庫存權限</p>
+                                </div>`}
+                                ${canManage ? `
+                                <button onclick="handleTryOpen()" class="zdos-nav-btn group text-left zdos-home-card zdos-home-ops-card border-violet-500/25 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/5 hover:border-violet-400/40 transition-all">
+                                    <div class="zdos-home-ops-card-top"><span class="zdos-home-ops-icon">👥</span><span class="zdos-home-ops-arrow text-violet-400">→</span></div>
+                                    <h3 class="zdos-home-ops-title">人員與系統</h3><p class="zdos-home-ops-desc">帳密、Google、備份</p>
+                                </button>` : ''}
+                                ${canReviewSales ? `
+                                <button type="button" onclick="openReviewCenter()" class="zdos-nav-btn group text-left zdos-home-card zdos-home-ops-card border-orange-500/25 bg-gradient-to-br from-orange-500/10 to-rose-500/5 hover:border-orange-400/40 transition-all">
+                                    <div class="zdos-home-ops-card-top">
+                                        <span class="zdos-home-ops-icon">✅</span>
+                                        ${(pendingZhonghuaCount + pendingDonggangCount) > 0 ? `<span class="zdos-home-ops-badge bg-orange-500/15 border border-orange-500/25 text-orange-300">${pendingZhonghuaCount + pendingDonggangCount} 待核對</span>` : '<span class="zdos-home-ops-arrow text-orange-400">→</span>'}
+                                    </div>
+                                    <h3 class="zdos-home-ops-title">業績核對</h3><p class="zdos-home-ops-desc">中華 ${pendingZhonghuaCount} · 東港 ${pendingDonggangCount}</p>
+                                </button>` : ''}
+                                <button type="button" onclick="openAnnouncementCenter()" class="zdos-nav-btn group text-left zdos-home-card zdos-home-ops-card border-cyan-500/25 bg-gradient-to-br from-cyan-500/10 to-sky-500/5 hover:border-cyan-400/40 transition-all">
+                                    <div class="zdos-home-ops-card-top">
+                                        <span class="zdos-home-ops-icon">📢</span>
+                                        ${announcementUnreadCount > 0 ? `<span class="zdos-home-ops-badge bg-rose-500/15 border border-rose-500/25 text-rose-300">${announcementUnreadCount} 未讀</span>` : '<span class="zdos-home-ops-arrow text-cyan-400">→</span>'}
+                                    </div>
+                                    <h3 class="zdos-home-ops-title">公告中心</h3><p class="zdos-home-ops-desc">必讀、本週重點、最新</p>
+                                </button>
+                                <button type="button" onclick="openSchedulingCenter()" class="zdos-nav-btn group text-left zdos-home-card zdos-home-ops-card border-indigo-500/25 bg-gradient-to-br from-indigo-500/10 to-violet-500/5 hover:border-indigo-400/40 transition-all">
+                                    <div class="zdos-home-ops-card-top"><span class="zdos-home-ops-icon">📅</span><span class="zdos-home-ops-arrow text-indigo-400">→</span></div>
+                                    <h3 class="zdos-home-ops-title">排班中心</h3><p class="zdos-home-ops-desc">員工清單、月曆版面</p>
+                                </button>
+                                <button type="button" onclick="openBetaFeedbackModal()" class="zdos-nav-btn group text-left zdos-home-card zdos-home-ops-card border-rose-500/25 bg-gradient-to-br from-rose-500/10 to-pink-500/5 hover:border-rose-400/40 transition-all">
+                                    <div class="zdos-home-ops-card-top"><span class="zdos-home-ops-icon">💬</span><span class="zdos-home-ops-arrow text-rose-400">→</span></div>
+                                    <h3 class="zdos-home-ops-title">Beta 回饋</h3><p class="zdos-home-ops-desc">回報問題或建議</p>
+                                </button>
+                            </div>
+                            ${canManage ? `
+                            <div class="zdos-home-card zdos-home-version-strip border-teal-500/20 bg-gradient-to-r from-teal-500/10 to-cyan-500/5">
+                                <span class="zdos-home-version-strip-title">📋 版本資訊</span>
+                                <span class="zdos-home-version-strip-meta">${VERSION_INFO.label} ${VERSION_INFO.version}</span>
+                                <span class="zdos-home-version-strip-meta">更新 ${VERSION_INFO.updatedAt}</span>
+                            </div>` : ''}
                         </section>
 
                         <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · ZhongDong Operating System</footer>
@@ -1728,6 +2036,61 @@
             root.innerHTML = wrapFunctionPage(header, body);
         }
 
+        function renderSchedulingCenter(root) {
+            const activeId = state.activeSchedulingEmployeeId || SCHEDULING_EMPLOYEE_SEED[0]?.id;
+            const activeEmployee = SCHEDULING_EMPLOYEE_SEED.find(emp => emp.id === activeId) || SCHEDULING_EMPLOYEE_SEED[0];
+            const year = state.schedulingCalendarYear;
+            const month = state.schedulingCalendarMonth;
+            const monthLabel = new Intl.DateTimeFormat('zh-TW', { year: 'numeric', month: 'long' }).format(new Date(year, month, 1));
+            const calendarCells = buildSchedulingCalendarCells(year, month);
+            const header = renderFunctionPageHeader({
+                backOnclick: 'backToZDOSHome()',
+                title: '📅 排班中心',
+                rightHtml: `<span class="zdos-workspace-btn border-indigo-500/25 bg-indigo-950/40 text-indigo-300">${escapeHtmlText(state.storeType || '門市')}</span>`
+            });
+            const body = `
+                        <p class="text-xs text-slate-400">排班中心 Layout 預覽 · 假資料 · 尚未串接</p>
+                        <div class="zdos-scheduling-shell">
+                            <aside class="zdos-scheduling-panel p-3 sm:p-4">
+                                <div class="flex items-center justify-between gap-2 mb-3">
+                                    <h2 class="text-sm font-bold text-slate-100">員工清單</h2>
+                                    <span class="text-[10px] text-slate-500">${SCHEDULING_EMPLOYEE_SEED.length} 人</span>
+                                </div>
+                                <div class="zdos-scheduling-emp-list" role="list">
+                                    ${SCHEDULING_EMPLOYEE_SEED.map(emp => `
+                                        <button type="button" role="listitem" onclick="selectSchedulingEmployee('${emp.id}')" class="zdos-nav-btn zdos-scheduling-emp-item ${emp.id === activeEmployee?.id ? 'zdos-scheduling-emp-item--active' : ''}">
+                                            <p class="text-sm font-bold text-slate-100">${escapeHtmlText(emp.name)}</p>
+                                            <p class="mt-0.5 text-[10px] text-slate-500 font-mono">${escapeHtmlText(emp.empId)}</p>
+                                            <p class="mt-1 text-[10px] text-indigo-300">${escapeHtmlText(emp.role)} · ${escapeHtmlText(emp.store)}</p>
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </aside>
+                            <section class="zdos-scheduling-panel p-3 sm:p-4 min-w-0">
+                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+                                    <div>
+                                        <p class="text-[10px] uppercase tracking-[0.18em] text-slate-500">Monthly Calendar</p>
+                                        <h2 class="text-sm font-bold text-slate-100">${monthLabel}</h2>
+                                    </div>
+                                    ${activeEmployee ? `<div class="text-right"><p class="text-[10px] text-slate-500">目前選取</p><p class="text-xs font-bold text-indigo-300">${escapeHtmlText(activeEmployee.name)}</p></div>` : ''}
+                                </div>
+                                <div class="zdos-scheduling-calendar-head mb-1">
+                                    ${SCHEDULING_WEEKDAYS.map(label => `<div class="zdos-scheduling-weekday">${label}</div>`).join('')}
+                                </div>
+                                <div class="zdos-scheduling-calendar-grid">
+                                    ${calendarCells.map(cell => `
+                                        <div class="zdos-scheduling-day ${cell.muted ? 'zdos-scheduling-day--muted' : ''} ${cell.today ? 'zdos-scheduling-day--today' : ''}">
+                                            ${cell.day ? `<span class="font-bold">${cell.day}</span>` : ''}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <p class="mt-3 text-[10px] text-slate-500">月曆區為版面預覽，後續 Sprint 再接入排班資料。</p>
+                            </section>
+                        </div>
+                        <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · 排班中心</footer>`;
+            root.innerHTML = wrapFunctionPage(header, body, 'max-w-6xl');
+        }
+
         function renderApp() {
             const root = document.getElementById('root'); if (!root) return;
             const currentStoreRecords = state.salesRecords.filter(r => r && r.store === state.storeType);
@@ -1756,6 +2119,7 @@
                     <div class="absolute top-3 right-4 z-50 select-none"><span class="px-2.5 py-0.5 text-[9px] font-mono font-bold tracking-wider rounded-md bg-slate-900/60 border border-white/[0.06] text-slate-500 backdrop-blur-md">${VERSION_INFO.version}</span></div>
                     <div class="flex-grow flex items-center justify-center w-full animate-fade-in py-2">
                         <div class="w-full max-w-[420px] flex flex-col items-center gap-3 relative z-20">
+                            ${renderBetaEnvironmentBanner()}
                             <div class="flex flex-col items-center select-none text-center w-full">
                                 <div class="w-[100px] h-[104px] flex items-center justify-center overflow-hidden mb-1 animate-subtle">
                                     <div id="fallback-logo-text" class="font-mono font-black text-2xl text-emerald-400 tracking-widest">ZDOS</div>
@@ -1836,7 +2200,8 @@
                     canReviewSales,
                     pendingZhonghuaCount,
                     pendingDonggangCount,
-                    announcementUnreadCount
+                    announcementUnreadCount,
+                    currentMatched
                 });
                 return;
             }
@@ -1858,6 +2223,12 @@
             // -- VIEW B3: 公告中心 --
             if (state.currentView === 'announcements') {
                 renderAnnouncementCenter(root);
+                return;
+            }
+
+            // -- VIEW B4: 排班中心 --
+            if (state.currentView === 'scheduling') {
+                renderSchedulingCenter(root);
                 return;
             }
 
@@ -1914,7 +2285,7 @@
                 return;
             }
 
-            if (state.currentView !== 'module' && state.currentView !== 'announcements' && state.currentView !== 'announcement-detail') {
+            if (state.currentView !== 'module' && state.currentView !== 'announcements' && state.currentView !== 'announcement-detail' && state.currentView !== 'scheduling') {
                 state.currentView = 'dashboard';
                 safeSetItem('zdos_current_view', 'dashboard');
                 renderApp();
