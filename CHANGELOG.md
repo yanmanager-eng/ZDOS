@@ -12,6 +12,13 @@
 
 **驗收：** Home 可進入 · 公告可閱讀 · 已讀可切換 · 手機 RWD · 不影響其他 View
 
+### Architecture-001：Workspace Navigation ✅
+
+- Dashboard 與 Function Workspace 完全分離
+- 全站 Function Header 統一
+- 所有功能頁採 Workspace 架構
+- 保持既有資料與功能不變
+
 ---
 
 ## v1.1.0
