@@ -163,9 +163,16 @@ isLoggedIn === true
 
 ### Employee Registry 與排班跨店規則
 
-**位置：** `index.html` → `EMPLOYEE_REGISTRY`
+**位置：** `index.html` → `EMPLOYEE_REGISTRY`（與 `DEFAULT_ACCOUNTS` 正式登入名單同步，共 **27 人**）
 
-排班中心員工清單**必須**讀取 Registry，並依目前登入門市（`state.storeType` → `storeId`）過濾：
+| 類別 | 說明 |
+|------|------|
+| 資料來源 | `DEFAULT_ACCOUNTS` 為正式名單；Registry 欄位含 `id`、`employeeNo`、`name`、`storeId`、`role`、`status`、`canSchedule`、`canCrossStore`、`sortOrder` |
+| 預設 | 正式員工 `status = active`、`canSchedule = true`、`canCrossStore = false` |
+| 跨店排班 | `canCrossStore = true`：顏志添（DDP0001）、郭家豪（DDP0017） |
+| 特殊 | 集團首腦（工號 `1`）：`canSchedule = false`；雙店檢視依帳號 `store` + `store2` membership |
+
+排班中心員工清單**必須**讀取 Registry，並依目前排班中心門市（`getSchedulingViewStoreId()`）過濾：
 
 | 規則 | 說明 |
 |------|------|
@@ -196,6 +203,18 @@ isLoggedIn === true
 | 寫入 | `createSchedule()`、`updateSchedule()`、`deleteSchedule()`、`saveSchedules()` |
 | 驗證 | 儲存前必須呼叫 `validateScheduleAssignment()` |
 
+### Baseline Schedule（Feature-009A.2）
+
+**位置：** `index.html` → `SCHEDULE_BASELINE_202607` + `loadScheduleRegistry()`
+
+| 項目 | 說明 |
+|------|------|
+| 資料來源 | 創辦人正式班表（2026/07 中華店、東港店 PDF） |
+| 首次載入 | 合併至 `zdos_schedule_registry_v1`，標記 `zdos_schedule_baseline_202607_applied` |
+| 範圍 | v1：`2026-07-01`～`2026-07-06`（來源 PDF 涵蓋區間） |
+| 筆數 | CH 42 · DG 50（共 92） |
+| 限制 | **非 Import Tool**；後續補齊僅更新 Baseline 陣列與 version |
+
 ### localStorage Keys（不可更名）
 
 | Key | 用途 |
@@ -211,6 +230,7 @@ isLoggedIn === true
 | `cover_notice_v31_permanent` | 封面公告 |
 | `cover_design_v31_permanent` | 封面外觀 |
 | `zdos_schedule_registry_v1` | 排班紀錄（Schedule Registry） |
+| `zdos_schedule_baseline_202607_applied` | Baseline 202607 是否已套用 |
 
 ---
 

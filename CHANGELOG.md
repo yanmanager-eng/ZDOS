@@ -11,7 +11,27 @@
 - 已有排班：點擊班別可修改或刪除；月曆即時更新、換月資料正常
 - **驗收修正**：雙店 membership（`store` + `store2`）使用者可切換中華店／東港店；單店使用者不可切換；排班 CRUD 以排班中心目前選取 `storeId` 為準
 
-**驗收：** 新增／修改／刪除排班 · localStorage 保存 · 不刷新即更新 · 依 Registry 取資料 · 雙店切換不混資料 · Console 無 Error
+### Feature-009A.1：Complete Employee Registry ✅
+
+- `EMPLOYEE_REGISTRY` 由 8 人假資料補齊為 `DEFAULT_ACCOUNTS` 正式 **27 人**
+- 工號、姓名、主店（`storeId`）與正式登入名單一致；既有 8 人 `id` 保留
+- 雙店跨店排班：`DDP0001` 顏志添、`DDP0017` 郭家豪 → `canCrossStore = true`
+- 集團首腦（工號 `1`）納入 Registry，`canSchedule = false`（可雙店檢視班表，不列入一般排班清單）
+- 其餘正式員工：`status = active`、`canSchedule = true`、`canCrossStore = false`
+
+**驗收：** Registry 27 人 · CH/DG 主店正確 · 排班中心顯示完整正式人員 · 集團首腦不可被排班 · Console 無 Error
+
+**驗收（009A）：** 新增／修改／刪除排班 · localStorage 保存 · 不刷新即更新 · 依 Registry 取資料 · 雙店切換不混資料 · Console 無 Error
+
+### Feature-009A.2：Baseline Schedule Data ✅
+
+- 建立 2026/07 第一份正式 Baseline Schedule（**非 Import Tool**）
+- 資料來源：創辦人提供 `中華20260701.pdf`、`東港20260701.pdf`
+- 內嵌 `SCHEDULE_BASELINE_202607` + 首次載入合併至 `zdos_schedule_registry_v1`（`zdos_schedule_baseline_202607_applied`）
+- 新增東港店晚班模板 `DG-N1`（配合正式班表晚班資料）
+- 暱稱對照：小豬→詹勝瑀、言吉→張言吉、小瑄→高禹瑄、阿泰→林泰宇、小郭→郭志勇、文明→林文明、阿威→伍志威
+
+**驗收：** CH/DG 可檢視 7 月排班 · CRUD · Refresh 保留 · 雙店不混 · Registry 工號全匹配 · Console 無 Error
 
 ---
 

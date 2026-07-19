@@ -554,6 +554,25 @@
             color: rgb(199 210 254);
         }
 
+        .zdos-scheduling-emp-item--inactive {
+            opacity: 0.72;
+            border-color: rgba(251, 191, 36, 0.22);
+            cursor: not-allowed;
+        }
+
+        .zdos-scheduling-inactive-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.375rem;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: rgb(253 230 138);
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
         .zdos-scheduling-month-btn {
             width: 1.75rem;
             height: 1.75rem;
@@ -1030,7 +1049,8 @@
             { id: 'CH-M1', storeId: 'CH', shiftCode: 'M', name: '早班', startTime: '10:00', endTime: '19:00', breakMinutes: 60, defaultPosition: null, isDefault: true, status: 'active', sortOrder: 1 },
             { id: 'CH-A1', storeId: 'CH', shiftCode: 'A', name: '中班', startTime: '15:00', endTime: '00:00', breakMinutes: 0, defaultPosition: null, isDefault: true, status: 'active', sortOrder: 2 },
             { id: 'CH-N1', storeId: 'CH', shiftCode: 'N', name: '晚班', startTime: '22:00', endTime: '02:00', breakMinutes: 0, defaultPosition: null, isDefault: true, status: 'active', sortOrder: 3 },
-            { id: 'DG-M1', storeId: 'DG', shiftCode: 'M', name: '早班', startTime: '10:00', endTime: '19:00', breakMinutes: 0, defaultPosition: null, isDefault: true, status: 'active', sortOrder: 1 }
+            { id: 'DG-M1', storeId: 'DG', shiftCode: 'M', name: '早班', startTime: '10:00', endTime: '19:00', breakMinutes: 0, defaultPosition: null, isDefault: true, status: 'active', sortOrder: 1 },
+            { id: 'DG-N1', storeId: 'DG', shiftCode: 'N', name: '晚班', startTime: '22:00', endTime: '02:00', breakMinutes: 0, defaultPosition: null, isDefault: true, status: 'active', sortOrder: 2 }
         ];
 
         const sortShiftTemplates = list => [...list].sort((a, b) => a.sortOrder - b.sortOrder);
@@ -1088,7 +1108,7 @@
                 name: '東港店',
                 status: 'active',
                 configKey: 'donggang',
-                features: { mobilePay: false, shiftCodes: ['M'] },
+                features: { mobilePay: false, shiftCodes: ['M', 'N'] },
                 ui: {
                     loginBtn: 'border-amber-500/40 bg-gradient-to-b from-amber-500/20 to-amber-600/10 hover:from-amber-500/30 hover:to-amber-600/20 text-amber-200',
                     badge: 'text-amber-300 border-amber-500/25 bg-amber-950/35',
@@ -1191,18 +1211,38 @@
             leader: '領班',
             intern: '實習幹部',
             senior: '資深員工',
-            staff: '一般員工'
+            staff: '一般員工',
+            secretary: '秘書'
         };
 
         const EMPLOYEE_REGISTRY = [
-            { id: 'emp-001', employeeNo: 'DDP0001', name: '顏志添', storeId: 'CH', role: 'manager', status: 'active', canSchedule: true, canCrossStore: true, sortOrder: 1 },
-            { id: 'emp-002', employeeNo: 'CDP0003', name: '楊政霖', storeId: 'CH', role: 'leader', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 2 },
-            { id: 'emp-003', employeeNo: 'CDP0005', name: '陳禹蓁', storeId: 'CH', role: 'leader', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 3 },
-            { id: 'emp-004', employeeNo: 'CDP0010', name: '高子懿', storeId: 'CH', role: 'intern', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 4 },
-            { id: 'emp-005', employeeNo: 'DDP0002', name: '林泰宇', storeId: 'DG', role: 'senior', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 5 },
+            { id: 'emp-009', employeeNo: '1', name: '集團首腦', storeId: 'CH', role: 'owner', status: 'active', canSchedule: false, canCrossStore: false, sortOrder: 1 },
+            { id: 'emp-001', employeeNo: 'DDP0001', name: '顏志添', storeId: 'CH', role: 'manager', status: 'active', canSchedule: true, canCrossStore: true, sortOrder: 2 },
+            { id: 'emp-005', employeeNo: 'DDP0002', name: '林泰宇', storeId: 'DG', role: 'senior', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 3 },
+            { id: 'emp-008', employeeNo: 'DDP0004', name: '郭志勇', storeId: 'DG', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 4 },
+            { id: 'emp-010', employeeNo: 'DDP0005', name: '林育琪', storeId: 'DG', role: 'staff', status: 'active', canSchedule: false, canCrossStore: false, note: '職災休養中', sortOrder: 5 },
             { id: 'emp-006', employeeNo: 'DDP0006', name: '林文明', storeId: 'DG', role: 'senior', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 6 },
-            { id: 'emp-007', employeeNo: 'DDP0011', name: '蔡依珊', storeId: 'DG', role: 'senior', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 7 },
-            { id: 'emp-008', employeeNo: 'DDP0004', name: '郭志勇', storeId: 'DG', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 8 }
+            { id: 'emp-011', employeeNo: 'DDP0007', name: '蔡語晴', storeId: 'DG', role: 'senior', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 7 },
+            { id: 'emp-012', employeeNo: 'DDPT0009', name: '蔡博安', storeId: 'DG', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 8 },
+            { id: 'emp-013', employeeNo: 'DDPT0010', name: '蕭雍哲', storeId: 'DG', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 9 },
+            { id: 'emp-007', employeeNo: 'DDP0011', name: '蔡依珊', storeId: 'DG', role: 'senior', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 10 },
+            { id: 'emp-014', employeeNo: 'DDP0012', name: '許堤尹', storeId: 'DG', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 11 },
+            { id: 'emp-015', employeeNo: 'DDPT0013', name: '李彥宇', storeId: 'DG', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 12 },
+            { id: 'emp-016', employeeNo: 'DDP0014', name: '林展宇', storeId: 'DG', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 13 },
+            { id: 'emp-017', employeeNo: 'DDP0015', name: '高禹瑄', storeId: 'CH', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 14 },
+            { id: 'emp-018', employeeNo: 'DDP0016', name: '謝柔珍', storeId: 'CH', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 15 },
+            { id: 'emp-019', employeeNo: 'DDP0017', name: '郭家豪', storeId: 'CH', role: 'secretary', status: 'active', canSchedule: true, canCrossStore: true, sortOrder: 16 },
+            { id: 'emp-020', employeeNo: 'DDP0018', name: '伍志威', storeId: 'DG', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 17 },
+            { id: 'emp-002', employeeNo: 'CDP0003', name: '楊政霖', storeId: 'CH', role: 'leader', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 18 },
+            { id: 'emp-021', employeeNo: 'CDP0013', name: '張言吉', storeId: 'CH', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 19 },
+            { id: 'emp-022', employeeNo: 'CDP0004', name: '詹勝瑀', storeId: 'CH', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 20 },
+            { id: 'emp-003', employeeNo: 'CDP0005', name: '陳禹蓁', storeId: 'CH', role: 'leader', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 21 },
+            { id: 'emp-023', employeeNo: 'CDP0007', name: '許家傑', storeId: 'CH', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 22 },
+            { id: 'emp-004', employeeNo: 'CDP0010', name: '高子懿', storeId: 'CH', role: 'intern', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 23 },
+            { id: 'emp-024', employeeNo: 'CDP0011', name: '張弘洋', storeId: 'CH', role: 'leader', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 24 },
+            { id: 'emp-025', employeeNo: 'CDP0012', name: '李宜峯', storeId: 'CH', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 25 },
+            { id: 'emp-026', employeeNo: 'CDP0015', name: '張岷賦', storeId: 'CH', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 26 },
+            { id: 'emp-027', employeeNo: 'CDP0016', name: '陳立科', storeId: 'CH', role: 'staff', status: 'active', canSchedule: true, canCrossStore: false, sortOrder: 27 }
         ];
 
         const getEmployeeRegistry = () => EMPLOYEE_REGISTRY;
@@ -1284,11 +1324,25 @@
             if (!target || !isStoreActive(target)) return [];
             return sortEmployees(EMPLOYEE_REGISTRY.filter(emp => canEmployeeScheduleAtStore(emp, target)));
         };
+        const getSchedulingInactiveEmployeesForStore = currentStoreId => {
+            const target = normalizeStoreIdCode(currentStoreId);
+            if (!target || !isStoreActive(target)) return [];
+            return sortEmployees(EMPLOYEE_REGISTRY.filter(emp =>
+                emp.status === 'active' &&
+                !emp.canSchedule &&
+                normalizeStoreIdCode(emp.storeId) === target &&
+                String(emp.note || '').trim()
+            ));
+        };
         const getSchedulingEmployeeListMeta = (emp, viewingStoreId) => {
             const target = normalizeStoreIdCode(viewingStoreId);
             const homeName = getEmployeeStoreName(emp);
             const roleLabel = getEmployeeRoleLabel(emp);
             const home = String(emp?.storeId || '').trim().toUpperCase();
+            const note = String(emp?.note || '').trim();
+            if (note) {
+                return { isSupport: false, badge: null, subtitle: note, isInactive: true };
+            }
             if (target && home !== target && emp.canCrossStore === true) {
                 return { isSupport: true, badge: '支援', subtitle: `${roleLabel} · 原屬 ${homeName}` };
             }
@@ -1300,7 +1354,10 @@
             if (!target || !isStoreActive(target)) return { ok: false, message: '門市無效或尚未開放。' };
             if (!emp) return { ok: false, message: '找不到員工資料。' };
             if (emp.status !== 'active') return { ok: false, message: '此員工狀態不可排班。' };
-            if (!emp.canSchedule) return { ok: false, message: '此員工不可排班。' };
+            if (!emp.canSchedule) {
+                const note = String(emp.note || '').trim();
+                return { ok: false, message: note ? `此員工不可排班（${note}）。` : '此員工不可排班。' };
+            }
             if (!canEmployeeScheduleAtStore(emp, target)) {
                 const storeName = getStoreByCode(target)?.name || target;
                 return { ok: false, message: `${emp.name} 不可排班至 ${storeName}（未授權跨店）。` };
@@ -1311,6 +1368,164 @@
         const getEmployeeStoreName = emp => getStoreByCode(emp?.storeId)?.name || emp?.storeId || '';
 
         const SCHEDULE_STORAGE_KEY = 'zdos_schedule_registry_v1';
+        const SCHEDULE_BASELINE_APPLIED_KEY = 'zdos_schedule_baseline_202607_applied';
+        const SCHEDULE_BASELINE_VERSION = '202607-v1';
+        // Feature-009A.2 — 2026/07 正式班表（來源：Desktop 中華20260701.pdf、東港20260701.pdf）
+        const SCHEDULE_BASELINE_202607 = [
+            { storeId: 'CH', employeeNo: 'CDP0010', date: '2026-07-01', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0010', date: '2026-07-02', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0010', date: '2026-07-03', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0010', date: '2026-07-04', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0010', date: '2026-07-05', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0010', date: '2026-07-06', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0007', date: '2026-07-01', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0007', date: '2026-07-02', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0007', date: '2026-07-03', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0007', date: '2026-07-04', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0003', date: '2026-07-01', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0003', date: '2026-07-02', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0003', date: '2026-07-03', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0003', date: '2026-07-04', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0003', date: '2026-07-05', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0003', date: '2026-07-06', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0005', date: '2026-07-01', templateId: 'CH-M1' },
+            { storeId: 'CH', employeeNo: 'CDP0005', date: '2026-07-02', templateId: 'CH-M1' },
+            { storeId: 'CH', employeeNo: 'CDP0005', date: '2026-07-03', templateId: 'CH-M1' },
+            { storeId: 'CH', employeeNo: 'CDP0005', date: '2026-07-04', templateId: 'CH-M1' },
+            { storeId: 'CH', employeeNo: 'CDP0005', date: '2026-07-05', templateId: 'CH-M1' },
+            { storeId: 'CH', employeeNo: 'CDP0004', date: '2026-07-01', templateId: 'CH-M1' },
+            { storeId: 'CH', employeeNo: 'CDP0004', date: '2026-07-02', templateId: 'CH-M1' },
+            { storeId: 'CH', employeeNo: 'CDP0004', date: '2026-07-03', templateId: 'CH-M1' },
+            { storeId: 'CH', employeeNo: 'CDP0004', date: '2026-07-04', templateId: 'CH-M1' },
+            { storeId: 'CH', employeeNo: 'CDP0004', date: '2026-07-05', templateId: 'CH-M1' },
+            { storeId: 'CH', employeeNo: 'CDP0004', date: '2026-07-06', templateId: 'CH-M1' },
+            { storeId: 'CH', employeeNo: 'CDP0013', date: '2026-07-01', templateId: 'CH-A1' },
+            { storeId: 'CH', employeeNo: 'CDP0013', date: '2026-07-02', templateId: 'CH-A1' },
+            { storeId: 'CH', employeeNo: 'CDP0013', date: '2026-07-03', templateId: 'CH-A1' },
+            { storeId: 'CH', employeeNo: 'CDP0013', date: '2026-07-04', templateId: 'CH-A1' },
+            { storeId: 'CH', employeeNo: 'CDP0013', date: '2026-07-05', templateId: 'CH-A1' },
+            { storeId: 'CH', employeeNo: 'CDP0011', date: '2026-07-01', templateId: 'CH-A1' },
+            { storeId: 'CH', employeeNo: 'CDP0011', date: '2026-07-02', templateId: 'CH-A1' },
+            { storeId: 'CH', employeeNo: 'CDP0011', date: '2026-07-03', templateId: 'CH-A1' },
+            { storeId: 'CH', employeeNo: 'CDP0011', date: '2026-07-04', templateId: 'CH-A1' },
+            { storeId: 'CH', employeeNo: 'CDP0011', date: '2026-07-05', templateId: 'CH-A1' },
+            { storeId: 'CH', employeeNo: 'CDP0016', date: '2026-07-01', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'CDP0016', date: '2026-07-02', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'DDP0015', date: '2026-07-03', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'DDP0015', date: '2026-07-04', templateId: 'CH-N1' },
+            { storeId: 'CH', employeeNo: 'DDP0015', date: '2026-07-05', templateId: 'CH-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0014', date: '2026-07-01', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0014', date: '2026-07-02', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0014', date: '2026-07-03', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0014', date: '2026-07-04', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0014', date: '2026-07-05', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0014', date: '2026-07-06', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDPT0013', date: '2026-07-01', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDPT0013', date: '2026-07-02', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDPT0013', date: '2026-07-03', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDPT0013', date: '2026-07-04', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDPT0013', date: '2026-07-05', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDPT0013', date: '2026-07-06', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0002', date: '2026-07-01', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0002', date: '2026-07-02', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0002', date: '2026-07-03', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0002', date: '2026-07-04', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0002', date: '2026-07-05', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0002', date: '2026-07-06', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0011', date: '2026-07-01', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0011', date: '2026-07-02', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0011', date: '2026-07-03', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0011', date: '2026-07-04', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0011', date: '2026-07-05', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0011', date: '2026-07-06', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0007', date: '2026-07-01', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0007', date: '2026-07-02', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0007', date: '2026-07-03', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0007', date: '2026-07-04', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0004', date: '2026-07-01', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0004', date: '2026-07-02', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0004', date: '2026-07-03', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0004', date: '2026-07-04', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0004', date: '2026-07-05', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0004', date: '2026-07-06', templateId: 'DG-N1' },
+            { storeId: 'DG', employeeNo: 'DDP0018', date: '2026-07-02', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0018', date: '2026-07-03', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0018', date: '2026-07-04', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0018', date: '2026-07-05', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0018', date: '2026-07-06', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0006', date: '2026-07-01', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0006', date: '2026-07-02', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0006', date: '2026-07-03', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0006', date: '2026-07-04', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0006', date: '2026-07-05', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0006', date: '2026-07-06', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0012', date: '2026-07-01', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0012', date: '2026-07-02', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0012', date: '2026-07-03', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0012', date: '2026-07-04', templateId: 'DG-M1' },
+            { storeId: 'DG', employeeNo: 'DDP0012', date: '2026-07-05', templateId: 'DG-M1' }
+        ];
+
+        const scheduleRecordKey = record => {
+            const storeCode = normalizeStoreIdCode(record?.storeId);
+            const employeeId = String(record?.employeeId || '').trim();
+            const date = String(record?.date || '').trim();
+            return storeCode && employeeId && date ? `${storeCode}|${employeeId}|${date}` : '';
+        };
+
+        const buildScheduleRecordsFromBaseline = () => {
+            const seededAt = '2026-07-19T08:00:00.000Z';
+            const records = [];
+            SCHEDULE_BASELINE_202607.forEach((entry, idx) => {
+                const storeId = normalizeStoreIdCode(entry.storeId);
+                const employeeNo = String(entry.employeeNo || '').trim();
+                const date = String(entry.date || '').trim();
+                const template = getShiftTemplate(entry.templateId);
+                const emp = getEmployee(employeeNo);
+                if (!storeId || !employeeNo || !date || !template || !emp) {
+                    console.warn('[ZDOS] Schedule baseline skipped row', idx + 1, entry);
+                    return;
+                }
+                if (normalizeStoreIdCode(template.storeId) !== storeId) {
+                    console.warn('[ZDOS] Schedule baseline template/store mismatch', entry);
+                    return;
+                }
+                records.push({
+                    id: `sched-baseline-202607-${storeId}-${employeeNo}-${date}`,
+                    employeeId: emp.id,
+                    storeId,
+                    date,
+                    shiftCode: template.shiftCode,
+                    templateId: template.id,
+                    note: '',
+                    createdAt: seededAt,
+                    updatedAt: seededAt
+                });
+            });
+            return records;
+        };
+
+        const loadScheduleRegistry = () => {
+            const existing = safeJsonParse(SCHEDULE_STORAGE_KEY, []);
+            const rows = Array.isArray(existing) ? existing : [];
+            const appliedVersion = safeGetItem(SCHEDULE_BASELINE_APPLIED_KEY, '');
+            if (appliedVersion === SCHEDULE_BASELINE_VERSION) return rows;
+            if (!SCHEDULE_BASELINE_202607.length) return rows;
+            const baselineRecords = buildScheduleRecordsFromBaseline();
+            const merged = new Map();
+            rows.forEach(row => {
+                const key = scheduleRecordKey(row);
+                if (key) merged.set(key, row);
+            });
+            baselineRecords.forEach(row => {
+                const key = scheduleRecordKey(row);
+                if (key) merged.set(key, row);
+            });
+            const next = [...merged.values()];
+            safeSetItem(SCHEDULE_STORAGE_KEY, JSON.stringify(next));
+            safeSetItem(SCHEDULE_BASELINE_APPLIED_KEY, SCHEDULE_BASELINE_VERSION);
+            return next;
+        };
 
         // 與 CHANGELOG.md 同步（發版時手動更新）
         const ZDOS_PRODUCTION_HOSTS = ['adorable-pudding-0fad91.netlify.app'];
@@ -1325,9 +1540,10 @@
             updatedAt: '2026-07-19',
             changes: [
                 '排班中心可新增、修改、刪除排班（Schedule Registry）',
+                'EMPLOYEE_REGISTRY 補齊 DEFAULT_ACCOUNTS 正式 27 人',
                 '雙店 membership 使用者可切換中華店／東港店檢視排班',
-                '月曆即時更新，localStorage 持久化',
-                'Feature-009A Schedule Registry'
+                'Feature-009A / 009A.1 Schedule & Employee Registry',
+                'Feature-009A.2 2026/07 正式 Baseline Schedule（CH/DG）'
             ]
         };
 
@@ -1750,10 +1966,7 @@
                 year: new Date().getFullYear(),
                 month: new Date().getMonth() + 1
             },
-            schedules: (() => {
-                const rows = safeJsonParse(SCHEDULE_STORAGE_KEY, []);
-                return Array.isArray(rows) ? rows : [];
-            })(),
+            schedules: loadScheduleRegistry(),
             schedulingModal: null,
 
             newDate: new Date().toISOString().split('T')[0], newShift: getDefaultShiftName(), newOverAmount: '', newSalesAmount: '', newExpenseNotes: '', newExpenseAmount: '', newLinaPay: '', newTwqr: '', newApplePay: '', invBarcode: '', invStockQty: '', invOrderQty: ''
@@ -2878,6 +3091,7 @@
             const viewStoreId = getSchedulingViewStoreId();
             const schedulingStoreName = getStoreByCode(viewStoreId)?.name || state.storeType || '門市';
             const schedulableEmployees = viewStoreId ? getSchedulableEmployeesForStore(viewStoreId) : [];
+            const inactiveEmployees = viewStoreId ? getSchedulingInactiveEmployeesForStore(viewStoreId) : [];
             let activeId = state.activeSchedulingEmployeeId;
             if (!viewStoreId || !validateScheduleAssignment(activeId, viewStoreId).ok) {
                 activeId = schedulableEmployees[0]?.id || null;
@@ -2906,10 +3120,10 @@
                             <aside class="zdos-scheduling-panel p-3 sm:p-4">
                                 <div class="flex items-center justify-between gap-2 mb-3">
                                     <h2 class="text-sm font-bold text-slate-100">員工清單</h2>
-                                    <span class="text-[10px] text-slate-500">${schedulableEmployees.length} 人</span>
+                                    <span class="text-[10px] text-slate-500">${schedulableEmployees.length} 人可排班${inactiveEmployees.length ? ` · ${inactiveEmployees.length} 人暫不可排` : ''}</span>
                                 </div>
                                 <div class="zdos-scheduling-emp-list" role="list">
-                                    ${schedulableEmployees.length === 0 ? `<p class="text-[11px] text-slate-500 p-2">${viewStoreId ? '此門市尚無可排班員工。' : '請重新登入以指定門市。'}</p>` : schedulableEmployees.map(emp => {
+                                    ${schedulableEmployees.length === 0 && inactiveEmployees.length === 0 ? `<p class="text-[11px] text-slate-500 p-2">${viewStoreId ? '此門市尚無可排班員工。' : '請重新登入以指定門市。'}</p>` : schedulableEmployees.map(emp => {
                                         const meta = getSchedulingEmployeeListMeta(emp, viewStoreId);
                                         return `
                                         <button type="button" role="listitem" onclick="selectSchedulingEmployee('${emp.id}')" class="zdos-nav-btn zdos-scheduling-emp-item ${emp.id === activeEmployee?.id ? 'zdos-scheduling-emp-item--active' : ''} ${meta.isSupport ? 'zdos-scheduling-emp-item--support' : ''}">
@@ -2920,6 +3134,17 @@
                                             <p class="mt-0.5 text-[10px] text-slate-500 font-mono">${escapeHtmlText(emp.employeeNo)}</p>
                                             <p class="mt-1 text-[10px] text-indigo-300">${escapeHtmlText(meta.subtitle)}</p>
                                         </button>`;
+                                    }).join('')}${inactiveEmployees.map(emp => {
+                                        const meta = getSchedulingEmployeeListMeta(emp, viewStoreId);
+                                        return `
+                                        <div role="listitem" class="zdos-scheduling-emp-item zdos-scheduling-emp-item--inactive" aria-disabled="true">
+                                            <div class="flex items-start justify-between gap-2 w-full">
+                                                <p class="text-sm font-bold text-slate-300">${escapeHtmlText(emp.name)}</p>
+                                                <span class="zdos-scheduling-inactive-badge shrink-0">不可排班</span>
+                                            </div>
+                                            <p class="mt-0.5 text-[10px] text-slate-500 font-mono">${escapeHtmlText(emp.employeeNo)}</p>
+                                            <p class="mt-1 text-[10px] text-amber-300/90">${escapeHtmlText(meta.subtitle)}</p>
+                                        </div>`;
                                     }).join('')}
                                 </div>
                             </aside>
