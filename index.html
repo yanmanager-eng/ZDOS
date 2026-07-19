@@ -1023,12 +1023,14 @@
         ];
 
         const getStoreRegistry = () => STORE_REGISTRY;
-        const getStoreByCode = code => STORE_REGISTRY.find(s => s.code === code) || null;
+        const getStoreByCode = code => STORE_REGISTRY.find(s => s.code === String(code || '').trim().toUpperCase()) || null;
         const getStoreByName = name => STORE_REGISTRY.find(s => s.name === name) || null;
         const resolveStore = ref => {
             if (!ref) return null;
-            return getStoreByCode(ref) || getStoreByName(ref);
+            const key = String(ref).trim();
+            return getStoreByCode(key.toUpperCase()) || getStoreByName(key) || null;
         };
+        const normalizeStoreIdCode = ref => resolveStore(ref)?.code || null;
         const getActiveStores = () => STORE_REGISTRY.filter(s => s.status === 'active');
         const getStoresWithConfig = () => getActiveStores().filter(s => s.configKey);
         const getDefaultActiveStoreName = () => getActiveStores()[0]?.name || '';
@@ -1125,31 +1127,37 @@
             return sortEmployees(EMPLOYEE_REGISTRY.filter(e => e.storeId === code));
         };
         const getActiveEmployees = () => sortEmployees(EMPLOYEE_REGISTRY.filter(e => e.status === 'active'));
-        const getSchedulableEmployees = () => getActiveEmployees().filter(e => e.canSchedule && isStoreActive(e.storeId));
-        const resolveStoreId = ref => resolveStore(ref)?.code || String(ref || '').trim().toUpperCase();
-        const getSchedulingStoreId = () => resolveStoreId(state.storeType);
-        const canEmployeeScheduleAtStore = (employee, targetStoreId) => {
-            if (!employee || employee.status !== 'active' || !employee.canSchedule) return false;
-            const target = resolveStoreId(targetStoreId);
-            if (!isStoreActive(target)) return false;
-            if (employee.storeId === target) return true;
-            return !!employee.canCrossStore;
+        const getSchedulingStoreId = () => {
+            // 排班門市 = 登入 session 的 storeType（shield_store_type），不可用員工主檔 storeId
+            const code = normalizeStoreIdCode(state.storeType);
+            return code && isStoreActive(code) ? code : null;
         };
-        const getSchedulableEmployeesForStore = storeId => sortEmployees(
-            getActiveEmployees().filter(e => canEmployeeScheduleAtStore(e, storeId))
-        );
+        const canEmployeeScheduleAtStore = (employee, currentStoreId) => {
+            if (!employee || employee.status !== 'active' || !employee.canSchedule) return false;
+            const target = normalizeStoreIdCode(currentStoreId);
+            if (!target || !isStoreActive(target)) return false;
+            const home = String(employee.storeId || '').trim().toUpperCase();
+            if (home === target) return true;
+            return employee.canCrossStore === true;
+        };
+        const getSchedulableEmployeesForStore = currentStoreId => {
+            const target = normalizeStoreIdCode(currentStoreId);
+            if (!target || !isStoreActive(target)) return [];
+            return sortEmployees(EMPLOYEE_REGISTRY.filter(emp => canEmployeeScheduleAtStore(emp, target)));
+        };
         const getSchedulingEmployeeListMeta = (emp, viewingStoreId) => {
-            const target = resolveStoreId(viewingStoreId);
+            const target = normalizeStoreIdCode(viewingStoreId);
             const homeName = getEmployeeStoreName(emp);
             const roleLabel = getEmployeeRoleLabel(emp);
-            if (emp.storeId !== target && emp.canCrossStore) {
+            const home = String(emp?.storeId || '').trim().toUpperCase();
+            if (target && home !== target && emp.canCrossStore === true) {
                 return { isSupport: true, badge: '支援', subtitle: `${roleLabel} · 原屬 ${homeName}` };
             }
             return { isSupport: false, badge: null, subtitle: `${roleLabel} · ${homeName}` };
         };
         const validateScheduleAssignment = (employeeId, targetStoreId) => {
             const emp = getEmployee(employeeId);
-            const target = resolveStoreId(targetStoreId);
+            const target = normalizeStoreIdCode(targetStoreId);
             if (!target || !isStoreActive(target)) return { ok: false, message: '門市無效或尚未開放。' };
             if (!emp) return { ok: false, message: '找不到員工資料。' };
             if (emp.status !== 'active') return { ok: false, message: '此員工狀態不可排班。' };
@@ -1172,12 +1180,12 @@
 
         const VERSION_INFO = {
             label: 'ZDOS',
-            get version() { return ZDOS_IS_BETA_SITE ? 'v1.2.8 Beta' : 'v1.2.8'; },
+            get version() { return ZDOS_IS_BETA_SITE ? 'v1.2.9 Beta' : 'v1.2.9'; },
             updatedAt: '2026-07-19',
             changes: [
-                '排班中心依門市過濾員工，跨店須 canCrossStore',
-                'validateScheduleAssignment 儲存前驗證 storeId',
-                'Scheduling Cross-Store Guard',
+                '修正排班員工清單 storeId 過濾（normalizeStoreIdCode）',
+                '東港店僅 DG 員工 + 授權跨店支援',
+                'Scheduling Store Filter Hotfix',
                 'Feature-008F Shift Template'
             ]
         };
@@ -1619,6 +1627,7 @@
             state.storeType = storeType;
             state.isLoggedIn = true;
             state.newShift = getDefaultShiftName();
+            state.activeSchedulingEmployeeId = null;
             pendingLoginUser = null;
             safeSetItem('shield_is_logged_in', 'true');
             safeSetItem('shield_store_type', storeType);
@@ -1714,10 +1723,11 @@
         };
 
         window.openSchedulingCenter = function() {
-            const storeId = getSchedulingStoreId();
-            const schedulable = getSchedulableEmployeesForStore(storeId);
+            const currentStoreId = getSchedulingStoreId();
+            if (!currentStoreId) return showToast('無法判斷目前登入門市，請重新登入。', 'error');
+            const schedulable = getSchedulableEmployeesForStore(currentStoreId);
             const current = getEmployee(state.activeSchedulingEmployeeId);
-            if (!current || !canEmployeeScheduleAtStore(current, storeId)) {
+            if (!current || !canEmployeeScheduleAtStore(current, currentStoreId)) {
                 state.activeSchedulingEmployeeId = schedulable[0]?.id || null;
             }
             state.currentView = 'scheduling';
@@ -1727,7 +1737,9 @@
         };
 
         window.selectSchedulingEmployee = function(id) {
-            const check = validateScheduleAssignment(id, getSchedulingStoreId());
+            const currentStoreId = getSchedulingStoreId();
+            if (!currentStoreId) return showToast('無法判斷目前登入門市，請重新登入。', 'error');
+            const check = validateScheduleAssignment(id, currentStoreId);
             if (!check.ok) return showToast(check.message, 'error');
             state.activeSchedulingEmployeeId = id;
             renderApp();
@@ -2444,25 +2456,25 @@
         }
 
         function renderSchedulingCenter(root) {
-            const schedulingStoreId = getSchedulingStoreId();
-            const schedulingStoreName = getStoreByCode(schedulingStoreId)?.name || state.storeType || '門市';
-            const schedulableEmployees = getSchedulableEmployeesForStore(schedulingStoreId);
+            const currentStoreId = getSchedulingStoreId();
+            const schedulingStoreName = getStoreByCode(currentStoreId)?.name || state.storeType || '門市';
+            const schedulableEmployees = currentStoreId ? getSchedulableEmployeesForStore(currentStoreId) : [];
             let activeId = state.activeSchedulingEmployeeId;
-            if (!validateScheduleAssignment(activeId, schedulingStoreId).ok) {
+            if (!currentStoreId || !validateScheduleAssignment(activeId, currentStoreId).ok) {
                 activeId = schedulableEmployees[0]?.id || null;
                 state.activeSchedulingEmployeeId = activeId;
             }
             const activeEmployee = getEmployee(activeId) || null;
-            const activeMeta = activeEmployee ? getSchedulingEmployeeListMeta(activeEmployee, schedulingStoreId) : null;
+            const activeMeta = activeEmployee ? getSchedulingEmployeeListMeta(activeEmployee, currentStoreId) : null;
             const { year, month } = state.schedule;
             const calendarCells = generateCalendar(year, month);
             const header = renderFunctionPageHeader({
                 backOnclick: 'backToZDOSHome()',
                 title: `<span class="zdos-workspace-title--scheduling">${renderSchedulingMonthNav(year, month)}</span>`,
-                rightHtml: `<span class="zdos-workspace-btn border-indigo-500/25 bg-indigo-950/40 text-indigo-300">${escapeHtmlText(schedulingStoreName)}</span>`
+                rightHtml: `<span class="zdos-workspace-btn border-indigo-500/25 bg-indigo-950/40 text-indigo-300">${escapeHtmlText(schedulingStoreName)}${currentStoreId ? ` · ${currentStoreId}` : ''}</span>`
             });
             const body = `
-                        <p class="text-xs text-slate-400">排班中心 · ${escapeHtmlText(schedulingStoreName)} · 僅顯示所屬員工與授權跨店（canCrossStore）同仁</p>
+                        <p class="text-xs text-slate-400">排班中心 · ${escapeHtmlText(schedulingStoreName)}${currentStoreId ? `（${currentStoreId}）` : ''} · 僅顯示所屬員工與授權跨店（canCrossStore）同仁</p>
                         <div class="flex flex-wrap gap-1.5 mb-2" aria-label="班別分類說明">${renderShiftCategoryLegend()}</div>
                         <p class="text-[10px] text-slate-600 mb-3">班別為分類標籤，非固定工時；跨店排班須 Employee Registry 授權，店長／集團首腦亦不可繞過。</p>
                         <div class="zdos-scheduling-shell">
@@ -2472,8 +2484,8 @@
                                     <span class="text-[10px] text-slate-500">${schedulableEmployees.length} 人</span>
                                 </div>
                                 <div class="zdos-scheduling-emp-list" role="list">
-                                    ${schedulableEmployees.length === 0 ? `<p class="text-[11px] text-slate-500 p-2">此門市尚無可排班員工。</p>` : schedulableEmployees.map(emp => {
-                                        const meta = getSchedulingEmployeeListMeta(emp, schedulingStoreId);
+                                    ${schedulableEmployees.length === 0 ? `<p class="text-[11px] text-slate-500 p-2">${currentStoreId ? '此門市尚無可排班員工。' : '請重新登入以指定門市。'}</p>` : schedulableEmployees.map(emp => {
+                                        const meta = getSchedulingEmployeeListMeta(emp, currentStoreId);
                                         return `
                                         <button type="button" role="listitem" onclick="selectSchedulingEmployee('${emp.id}')" class="zdos-nav-btn zdos-scheduling-emp-item ${emp.id === activeEmployee?.id ? 'zdos-scheduling-emp-item--active' : ''} ${meta.isSupport ? 'zdos-scheduling-emp-item--support' : ''}">
                                             <div class="flex items-start justify-between gap-2 w-full">

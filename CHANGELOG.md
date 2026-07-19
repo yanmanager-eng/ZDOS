@@ -1,5 +1,17 @@
 # ZDOS 更新紀錄
 
+## v1.2.9
+
+### Hotfix：排班中心門市過濾 ✅
+
+- 修正 `normalizeStoreIdCode()`，移除錯誤 fallback 字串比對
+- `getSchedulingStoreId()` 僅讀登入 session 的 `state.storeType`
+- `getSchedulableEmployeesForStore(currentStoreId)` 直接過濾 `EMPLOYEE_REGISTRY`
+- 登入時清除 `activeSchedulingEmployeeId`，避免跨 session 殘留
+- 東港店（DG）僅 4 位所屬員工 + 顏志添（支援）
+
+---
+
 ## v1.2.8
 
 ### 排班中心：跨店排班限制 ✅
