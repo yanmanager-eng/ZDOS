@@ -440,6 +440,39 @@
             background: rgba(99, 102, 241, 0.12);
         }
 
+        .zdos-scheduling-month-nav {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.625rem;
+            min-width: 0;
+        }
+
+        .zdos-scheduling-month-btn {
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(30, 41, 59, 0.65);
+            font-size: 0.875rem;
+            font-weight: 800;
+            line-height: 1;
+            color: rgb(199 210 254);
+        }
+
+        .zdos-scheduling-month-label {
+            font-size: 0.9375rem;
+            font-weight: 800;
+            color: #fff;
+            white-space: nowrap;
+            letter-spacing: 0.02em;
+        }
+
+        .zdos-workspace-title--scheduling {
+            display: flex;
+            justify-content: center;
+        }
+
         @media (max-width: 767px) {
             .zdos-scheduling-shell {
                 grid-template-columns: 1fr;
@@ -808,13 +841,13 @@
 
         const VERSION_INFO = {
             label: 'ZDOS',
-            get version() { return ZDOS_IS_BETA_SITE ? 'v1.2.1 Beta' : 'v1.2.1'; },
+            get version() { return ZDOS_IS_BETA_SITE ? 'v1.2.2 Beta' : 'v1.2.2'; },
             updatedAt: '2026-07-19',
             changes: [
-                '新增排班中心（Scheduling Center）基礎框架',
-                'Dashboard 入口、員工清單與月曆版面',
-                'Feature-008A Scheduling Center Layout',
-                'Architecture-001 Workspace Navigation'
+                '排班中心月份切換（上一月／下一月）',
+                'state.schedule 月份狀態與 generateCalendar',
+                'Feature-008B Month Navigation',
+                'Feature-008A Scheduling Center Layout'
             ]
         };
 
@@ -905,19 +938,28 @@
 
         const SCHEDULING_WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
 
-        const buildSchedulingCalendarCells = (year, month) => {
-            const firstWeekday = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const generateCalendar = (year, month) => {
+            const monthIndex = month - 1;
+            const firstWeekday = new Date(year, monthIndex, 1).getDay();
+            const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
             const cells = [];
             for (let i = 0; i < firstWeekday; i += 1) cells.push({ day: '', muted: true, today: false });
-            const todayStr = new Date().toISOString().split('T')[0];
+            const now = new Date();
+            const isCurrentMonth = now.getFullYear() === year && (now.getMonth() + 1) === month;
+            const todayDay = isCurrentMonth ? now.getDate() : null;
             for (let day = 1; day <= daysInMonth; day += 1) {
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                cells.push({ day, muted: false, today: dateStr === todayStr });
+                cells.push({ day, muted: false, today: todayDay === day });
             }
             while (cells.length % 7 !== 0) cells.push({ day: '', muted: true, today: false });
             return cells;
         };
+
+        const renderSchedulingMonthNav = (year, month) => `
+            <nav class="zdos-scheduling-month-nav" aria-label="月份切換">
+                <button type="button" onclick="shiftSchedulingMonth(-1)" class="zdos-nav-btn zdos-scheduling-month-btn" aria-label="上一月">＜</button>
+                <span class="zdos-scheduling-month-label">${year} 年 ${month} 月</span>
+                <button type="button" onclick="shiftSchedulingMonth(1)" class="zdos-nav-btn zdos-scheduling-month-btn" aria-label="下一月">＞</button>
+            </nav>`;
 
         const sortAnnouncementsByDate = (list) =>
             [...list].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
@@ -1228,8 +1270,10 @@
             announcementReadIds: safeJsonParse('zdos_announcement_read_v1', []),
             activeAnnouncementId: null,
             activeSchedulingEmployeeId: SCHEDULING_EMPLOYEE_SEED[0]?.id || null,
-            schedulingCalendarMonth: new Date().getMonth(),
-            schedulingCalendarYear: new Date().getFullYear(),
+            schedule: {
+                year: new Date().getFullYear(),
+                month: new Date().getMonth() + 1
+            },
 
             newDate: new Date().toISOString().split('T')[0], newShift: '早班', newOverAmount: '', newSalesAmount: '', newExpenseNotes: '', newExpenseAmount: '', newLinaPay: '', newTwqr: '', newApplePay: '', invBarcode: '', invStockQty: '', invOrderQty: ''
         };
@@ -1360,6 +1404,19 @@
         window.selectSchedulingEmployee = function(id) {
             if (!SCHEDULING_EMPLOYEE_SEED.some(emp => emp.id === id)) return;
             state.activeSchedulingEmployeeId = id;
+            renderApp();
+        };
+
+        window.shiftSchedulingMonth = function(delta) {
+            if (!state.schedule) {
+                const now = new Date();
+                state.schedule = { year: now.getFullYear(), month: now.getMonth() + 1 };
+            }
+            let { year, month } = state.schedule;
+            month += delta;
+            if (month > 12) { month = 1; year += 1; }
+            else if (month < 1) { month = 12; year -= 1; }
+            state.schedule = { year, month };
             renderApp();
         };
 
@@ -2039,17 +2096,15 @@
         function renderSchedulingCenter(root) {
             const activeId = state.activeSchedulingEmployeeId || SCHEDULING_EMPLOYEE_SEED[0]?.id;
             const activeEmployee = SCHEDULING_EMPLOYEE_SEED.find(emp => emp.id === activeId) || SCHEDULING_EMPLOYEE_SEED[0];
-            const year = state.schedulingCalendarYear;
-            const month = state.schedulingCalendarMonth;
-            const monthLabel = new Intl.DateTimeFormat('zh-TW', { year: 'numeric', month: 'long' }).format(new Date(year, month, 1));
-            const calendarCells = buildSchedulingCalendarCells(year, month);
+            const { year, month } = state.schedule;
+            const calendarCells = generateCalendar(year, month);
             const header = renderFunctionPageHeader({
                 backOnclick: 'backToZDOSHome()',
-                title: '📅 排班中心',
+                title: `<span class="zdos-workspace-title--scheduling">${renderSchedulingMonthNav(year, month)}</span>`,
                 rightHtml: `<span class="zdos-workspace-btn border-indigo-500/25 bg-indigo-950/40 text-indigo-300">${escapeHtmlText(state.storeType || '門市')}</span>`
             });
             const body = `
-                        <p class="text-xs text-slate-400">排班中心 Layout 預覽 · 假資料 · 尚未串接</p>
+                        <p class="text-xs text-slate-400">排班中心 · 月份切換預覽 · 假資料 · 尚未串接</p>
                         <div class="zdos-scheduling-shell">
                             <aside class="zdos-scheduling-panel p-3 sm:p-4">
                                 <div class="flex items-center justify-between gap-2 mb-3">
@@ -2070,7 +2125,7 @@
                                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
                                     <div>
                                         <p class="text-[10px] uppercase tracking-[0.18em] text-slate-500">Monthly Calendar</p>
-                                        <h2 class="text-sm font-bold text-slate-100">${monthLabel}</h2>
+                                        <h2 class="text-sm font-bold text-slate-100">${year} 年 ${month} 月</h2>
                                     </div>
                                     ${activeEmployee ? `<div class="text-right"><p class="text-[10px] text-slate-500">目前選取</p><p class="text-xs font-bold text-indigo-300">${escapeHtmlText(activeEmployee.name)}</p></div>` : ''}
                                 </div>
@@ -2084,7 +2139,7 @@
                                         </div>
                                     `).join('')}
                                 </div>
-                                <p class="mt-3 text-[10px] text-slate-500">月曆區為版面預覽，後續 Sprint 再接入排班資料。</p>
+                                <p class="mt-3 text-[10px] text-slate-500">使用 Header ＜ ＞ 切換月份，月曆會依年月重新生成。</p>
                             </section>
                         </div>
                         <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · 排班中心</footer>`;

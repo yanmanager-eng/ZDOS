@@ -1,5 +1,19 @@
 # ZDOS 更新紀錄
 
+## v1.2.2
+
+### Feature-008B：Month Navigation ✅
+
+- 新增 `state.schedule { year, month }` 月份狀態
+- 排班中心 Header：`＜ YYYY 年 M 月 ＞` 上一月／下一月
+- 新增 `generateCalendar(year, month)` 重新產生月曆
+- 支援跨年（12→1、1→12）與閏年天數
+- 尚未串接排班資料、localStorage 或 API
+
+**驗收：** Header 年月 · 上一月／下一月 · 跨年 · 閏年 · 月曆重生 · RWD · Console 無 Error
+
+---
+
 ## v1.2.1
 
 ### Feature-008A：Scheduling Center Layout ✅
