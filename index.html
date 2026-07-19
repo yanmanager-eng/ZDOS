@@ -456,6 +456,71 @@
             background: rgba(99, 102, 241, 0.12);
         }
 
+        .zdos-scheduling-day--has-shift {
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .zdos-scheduling-day-btn {
+            width: 100%;
+            min-height: 3.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+            text-align: left;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            padding: 0;
+            color: inherit;
+            font: inherit;
+        }
+
+        .zdos-scheduling-shift-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.125rem;
+            max-width: 100%;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.375rem;
+            font-size: 9px;
+            font-weight: 700;
+            line-height: 1.2;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.65);
+            color: rgb(226 232 240);
+            cursor: pointer;
+        }
+
+        .zdos-scheduling-shift-chip--M {
+            border-color: rgba(251, 191, 36, 0.35);
+            background: rgba(245, 158, 11, 0.14);
+            color: rgb(253 230 138);
+        }
+
+        .zdos-scheduling-shift-chip--A {
+            border-color: rgba(56, 189, 248, 0.35);
+            background: rgba(14, 165, 233, 0.14);
+            color: rgb(186 230 253);
+        }
+
+        .zdos-scheduling-shift-chip--N {
+            border-color: rgba(129, 140, 248, 0.35);
+            background: rgba(99, 102, 241, 0.14);
+            color: rgb(199 210 254);
+        }
+
+        .zdos-schedule-modal-panel {
+            width: 100%;
+            max-width: 24rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
         .zdos-scheduling-month-nav {
             display: inline-flex;
             align-items: center;
@@ -1171,6 +1236,8 @@
         const getEmployeeRoleLabel = emp => EMPLOYEE_ROLE_LABELS[emp?.role] || emp?.role || '';
         const getEmployeeStoreName = emp => getStoreByCode(emp?.storeId)?.name || emp?.storeId || '';
 
+        const SCHEDULE_STORAGE_KEY = 'zdos_schedule_registry_v1';
+
         // 與 CHANGELOG.md 同步（發版時手動更新）
         const ZDOS_PRODUCTION_HOSTS = ['adorable-pudding-0fad91.netlify.app'];
         const ZDOS_IS_BETA_SITE = (() => {
@@ -1180,13 +1247,13 @@
 
         const VERSION_INFO = {
             label: 'ZDOS',
-            get version() { return ZDOS_IS_BETA_SITE ? 'v1.2.9 Beta' : 'v1.2.9'; },
+            get version() { return ZDOS_IS_BETA_SITE ? 'v1.3.0 Beta' : 'v1.3.0'; },
             updatedAt: '2026-07-19',
             changes: [
-                '修正排班員工清單 storeId 過濾（normalizeStoreIdCode）',
-                '東港店僅 DG 員工 + 授權跨店支援',
-                'Scheduling Store Filter Hotfix',
-                'Feature-008F Shift Template'
+                '排班中心可新增、修改、刪除排班（Schedule Registry）',
+                '月曆即時更新，localStorage 持久化',
+                '班別模板讀取 SHIFT_TEMPLATE，員工讀取 Registry 過濾',
+                'Feature-009A Schedule Registry'
             ]
         };
 
@@ -1277,7 +1344,12 @@
             const isCurrentMonth = now.getFullYear() === year && (now.getMonth() + 1) === month;
             const todayDay = isCurrentMonth ? now.getDate() : null;
             for (let day = 1; day <= daysInMonth; day += 1) {
-                cells.push({ day, muted: false, today: todayDay === day });
+                cells.push({
+                    day,
+                    muted: false,
+                    today: todayDay === day,
+                    dateStr: `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+                });
             }
             while (cells.length % 7 !== 0) cells.push({ day: '', muted: true, today: false });
             return cells;
@@ -1603,11 +1675,121 @@
                 year: new Date().getFullYear(),
                 month: new Date().getMonth() + 1
             },
+            schedules: (() => {
+                const rows = safeJsonParse(SCHEDULE_STORAGE_KEY, []);
+                return Array.isArray(rows) ? rows : [];
+            })(),
+            schedulingModal: null,
 
             newDate: new Date().toISOString().split('T')[0], newShift: getDefaultShiftName(), newOverAmount: '', newSalesAmount: '', newExpenseNotes: '', newExpenseAmount: '', newLinaPay: '', newTwqr: '', newApplePay: '', invBarcode: '', invStockQty: '', invOrderQty: ''
         };
 
         let pendingLoginUser = null;
+
+        const buildScheduleDate = (year, month, day) =>
+            `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+        const getSchedules = () => (Array.isArray(state.schedules) ? state.schedules : []);
+
+        const saveSchedules = () => {
+            state.schedules = Array.isArray(state.schedules) ? state.schedules : [];
+            safeSetItem(SCHEDULE_STORAGE_KEY, JSON.stringify(state.schedules));
+        };
+
+        const getSchedulesByMonth = (storeId, year, month) => {
+            const code = normalizeStoreIdCode(storeId);
+            if (!code) return [];
+            const prefix = `${year}-${String(month).padStart(2, '0')}-`;
+            return getSchedules().filter(s =>
+                normalizeStoreIdCode(s.storeId) === code && String(s.date || '').startsWith(prefix)
+            );
+        };
+
+        const getSchedule = (employeeId, date) =>
+            getSchedules().find(s => s.employeeId === employeeId && s.date === date) || null;
+
+        const getScheduleById = id => getSchedules().find(s => s.id === id) || null;
+
+        const getScheduleShiftLabel = schedule => {
+            if (!schedule) return '';
+            const shift = getShiftByCode(schedule.shiftCode);
+            const icon = shift?.ui?.icon ? `${shift.ui.icon} ` : '';
+            const name = shift?.name || schedule.shiftCode;
+            return `${icon}${schedule.shiftCode} ${name}`.trim();
+        };
+
+        const getScheduleShiftChipClass = shiftCode => {
+            const code = String(shiftCode || '').trim().toUpperCase();
+            return code === 'M' || code === 'A' || code === 'N' ? `zdos-scheduling-shift-chip--${code}` : '';
+        };
+
+        const createSchedule = ({ employeeId, storeId, date, templateId, note }) => {
+            const storeCode = normalizeStoreIdCode(storeId);
+            if (!storeCode) return { ok: false, message: '門市無效。' };
+            const check = validateScheduleAssignment(employeeId, storeCode);
+            if (!check.ok) return { ok: false, message: check.message };
+            const template = getShiftTemplate(templateId);
+            if (!template) return { ok: false, message: '請選擇班別模板。' };
+            if (normalizeStoreIdCode(template.storeId) !== storeCode) {
+                return { ok: false, message: '班別模板與門市不符。' };
+            }
+            if (getSchedule(employeeId, date)) return { ok: false, message: '此員工當日已有排班。' };
+            const now = new Date().toISOString();
+            const record = {
+                id: `sched-${Date.now()}`,
+                employeeId,
+                storeId: storeCode,
+                date,
+                shiftCode: template.shiftCode,
+                templateId: template.id,
+                note: String(note || '').trim(),
+                createdAt: now,
+                updatedAt: now
+            };
+            state.schedules = getSchedules();
+            state.schedules.push(record);
+            saveSchedules();
+            return { ok: true, schedule: record };
+        };
+
+        const updateSchedule = (id, { employeeId, storeId, date, templateId, note }) => {
+            const idx = getSchedules().findIndex(s => s.id === id);
+            if (idx < 0) return { ok: false, message: '找不到排班紀錄。' };
+            const storeCode = normalizeStoreIdCode(storeId);
+            if (!storeCode) return { ok: false, message: '門市無效。' };
+            const check = validateScheduleAssignment(employeeId, storeCode);
+            if (!check.ok) return { ok: false, message: check.message };
+            const template = getShiftTemplate(templateId);
+            if (!template) return { ok: false, message: '請選擇班別模板。' };
+            if (normalizeStoreIdCode(template.storeId) !== storeCode) {
+                return { ok: false, message: '班別模板與門市不符。' };
+            }
+            const duplicate = getSchedules().find(s =>
+                s.id !== id && s.employeeId === employeeId && s.date === date && normalizeStoreIdCode(s.storeId) === storeCode
+            );
+            if (duplicate) return { ok: false, message: '此員工當日已有其他排班。' };
+            const now = new Date().toISOString();
+            state.schedules[idx] = {
+                ...state.schedules[idx],
+                employeeId,
+                storeId: storeCode,
+                date,
+                shiftCode: template.shiftCode,
+                templateId: template.id,
+                note: String(note || '').trim(),
+                updatedAt: now
+            };
+            saveSchedules();
+            return { ok: true, schedule: state.schedules[idx] };
+        };
+
+        const deleteSchedule = id => {
+            const before = getSchedules().length;
+            state.schedules = getSchedules().filter(s => s.id !== id);
+            if (state.schedules.length === before) return { ok: false, message: '找不到排班紀錄。' };
+            saveSchedules();
+            return { ok: true };
+        };
 
         const isEmptyStore2 = value => { const s = String(value || '').trim(); return !s || s === '無'; };
         const needsLoginStoreChoice = user => user.role === '集團首腦' || !isEmptyStore2(user.store2);
@@ -1693,6 +1875,7 @@
             zdosAfterViewNav();
         };
         window.backToZDOSHome = function() {
+            state.schedulingModal = null;
             state.currentView = 'dashboard';
             safeSetItem('zdos_current_view', 'dashboard');
             renderApp();
@@ -1742,17 +1925,76 @@
             const check = validateScheduleAssignment(id, currentStoreId);
             if (!check.ok) return showToast(check.message, 'error');
             state.activeSchedulingEmployeeId = id;
+            state.schedulingModal = null;
             renderApp();
         };
 
         window.saveScheduleAssignment = function(employeeId, storeId, assignmentPayload) {
-            const check = validateScheduleAssignment(employeeId, storeId);
-            if (!check.ok) {
-                showToast(check.message, 'error');
-                return { ok: false, message: check.message };
+            if (!assignmentPayload) {
+                const check = validateScheduleAssignment(employeeId, storeId);
+                if (!check.ok) {
+                    showToast(check.message, 'error');
+                    return { ok: false, message: check.message };
+                }
+                return { ok: true, employee: check.employee, storeId: check.storeId, payload: null };
             }
-            // 排班資料持久化尚未實作；儲存前強制驗證 storeId 與 canCrossStore
-            return { ok: true, employee: check.employee, storeId: check.storeId, payload: assignmentPayload || null };
+            return createSchedule({
+                employeeId,
+                storeId,
+                date: assignmentPayload.date,
+                templateId: assignmentPayload.templateId,
+                note: assignmentPayload.note
+            });
+        };
+
+        window.handleSchedulingDayClick = function(dateStr) {
+            const currentStoreId = getSchedulingStoreId();
+            if (!currentStoreId) return showToast('無法判斷目前登入門市，請重新登入。', 'error');
+            const empId = state.activeSchedulingEmployeeId;
+            if (!empId) return showToast('請先選擇員工。', 'error');
+            const existing = getSchedule(empId, dateStr);
+            if (existing) openScheduleModal('edit', dateStr, existing.id);
+            else openScheduleModal('create', dateStr);
+        };
+
+        window.openScheduleModal = function(mode, dateStr, scheduleId) {
+            state.schedulingModal = { mode, date: dateStr, scheduleId: scheduleId || null };
+            renderScheduleModalOverlay();
+        };
+
+        window.closeScheduleModal = function() {
+            state.schedulingModal = null;
+            document.getElementById('schedule-modal')?.remove();
+        };
+
+        window.submitScheduleForm = function(event) {
+            event.preventDefault();
+            const currentStoreId = getSchedulingStoreId();
+            if (!currentStoreId) return showToast('無法判斷目前登入門市，請重新登入。', 'error');
+            const modal = state.schedulingModal;
+            if (!modal) return;
+            const employeeId = document.getElementById('schedule-form-employee')?.value;
+            const templateId = document.getElementById('schedule-form-template')?.value;
+            const note = document.getElementById('schedule-form-note')?.value || '';
+            const date = modal.date;
+            if (!employeeId || !templateId || !date) return showToast('請完整填寫排班資料。', 'error');
+            const payload = { employeeId, storeId: currentStoreId, date, templateId, note };
+            const result = modal.mode === 'edit' && modal.scheduleId
+                ? updateSchedule(modal.scheduleId, payload)
+                : createSchedule(payload);
+            if (!result.ok) return showToast(result.message, 'error');
+            showToast(modal.mode === 'edit' ? '排班已更新。' : '排班已建立。', 'success');
+            state.schedulingModal = null;
+            renderApp();
+        };
+
+        window.handleDeleteSchedule = function(scheduleId) {
+            if (!confirm('確定刪除此排班？')) return;
+            const result = deleteSchedule(scheduleId);
+            if (!result.ok) return showToast(result.message, 'error');
+            showToast('排班已刪除。', 'success');
+            state.schedulingModal = null;
+            renderApp();
         };
 
         window.shiftSchedulingMonth = function(delta) {
@@ -1765,6 +2007,7 @@
             if (month > 12) { month = 1; year += 1; }
             else if (month < 1) { month = 12; year -= 1; }
             state.schedule = { year, month };
+            state.schedulingModal = null;
             renderApp();
         };
 
@@ -2455,6 +2698,77 @@
             root.innerHTML = wrapFunctionPage(header, body);
         }
 
+        function renderScheduleModalOverlay() {
+            document.getElementById('schedule-modal')?.remove();
+            const modalState = state.schedulingModal;
+            if (!modalState) return;
+            const currentStoreId = getSchedulingStoreId();
+            if (!currentStoreId) return;
+            const schedulableEmployees = getSchedulableEmployeesForStore(currentStoreId);
+            const shiftTemplates = getShiftTemplatesByStore(currentStoreId);
+            const existing = modalState.scheduleId
+                ? getScheduleById(modalState.scheduleId)
+                : (modalState.mode === 'edit' && state.activeSchedulingEmployeeId
+                    ? getSchedule(state.activeSchedulingEmployeeId, modalState.date)
+                    : null);
+            const isEdit = modalState.mode === 'edit' && !!existing;
+            const defaultEmployeeId = existing?.employeeId || state.activeSchedulingEmployeeId || schedulableEmployees[0]?.id || '';
+            const defaultTemplateId = existing?.templateId || shiftTemplates[0]?.id || '';
+            const defaultNote = existing?.note || '';
+            const title = isEdit ? '修改排班' : '新增排班';
+            const dateLabel = modalState.date || '';
+            const employeeOptions = schedulableEmployees.map(emp => {
+                const meta = getSchedulingEmployeeListMeta(emp, currentStoreId);
+                const suffix = meta.isSupport ? ' · 支援' : '';
+                return `<option value="${emp.id}" ${emp.id === defaultEmployeeId ? 'selected' : ''}>${escapeHtmlText(emp.name)}（${escapeHtmlText(emp.employeeNo)}）${escapeHtmlText(suffix)}</option>`;
+            }).join('');
+            const templateOptions = shiftTemplates.map(tmpl => {
+                const shift = getShiftByCode(tmpl.shiftCode);
+                const shiftLabel = shift ? `${shift.code} ${shift.name}` : tmpl.shiftCode;
+                const timeLabel = formatShiftTemplateWorkingTime(tmpl);
+                return `<option value="${tmpl.id}" ${tmpl.id === defaultTemplateId ? 'selected' : ''}>${escapeHtmlText(tmpl.id)} · ${escapeHtmlText(shiftLabel)} · ${escapeHtmlText(timeLabel)}</option>`;
+            }).join('');
+            const modal = document.createElement('div');
+            modal.id = 'schedule-modal';
+            modal.className = 'fixed inset-0 z-[999] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl animate-fade-in';
+            modal.innerHTML = `
+                <div class="zdos-schedule-modal-panel p-5 space-y-4" role="dialog" aria-modal="true" aria-labelledby="schedule-modal-title">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <p class="text-[10px] uppercase tracking-[0.18em] text-indigo-300/90">Schedule Registry</p>
+                            <h2 id="schedule-modal-title" class="text-lg font-black text-white">${title}</h2>
+                            <p class="mt-1 text-xs text-slate-400 font-mono">${escapeHtmlText(dateLabel)} · ${escapeHtmlText(getStoreByCode(currentStoreId)?.name || currentStoreId)}</p>
+                        </div>
+                        <button type="button" onclick="closeScheduleModal()" class="zdos-nav-btn px-2 py-1 rounded-lg text-slate-400 hover:text-white text-sm" aria-label="關閉">✕</button>
+                    </div>
+                    <form onsubmit="submitScheduleForm(event)" class="space-y-3">
+                        <div>
+                            <label for="schedule-form-employee" class="block text-[10px] font-bold text-slate-400 mb-1">員工</label>
+                            <select id="schedule-form-employee" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-400/50" ${schedulableEmployees.length === 0 ? 'disabled' : ''}>
+                                ${employeeOptions || '<option value="">無可排班員工</option>'}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="schedule-form-template" class="block text-[10px] font-bold text-slate-400 mb-1">Shift Template</label>
+                            <select id="schedule-form-template" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-400/50" ${shiftTemplates.length === 0 ? 'disabled' : ''}>
+                                ${templateOptions || '<option value="">此門市尚無班別模板</option>'}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="schedule-form-note" class="block text-[10px] font-bold text-slate-400 mb-1">備註（可空白）</label>
+                            <textarea id="schedule-form-note" rows="2" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-400/50 resize-none" placeholder="選填">${escapeHtmlText(defaultNote)}</textarea>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-2 pt-1">
+                            <button type="submit" class="zdos-nav-btn flex-1 py-3 rounded-xl border border-indigo-500/35 bg-indigo-600/20 text-indigo-200 text-sm font-bold" ${(!schedulableEmployees.length || !shiftTemplates.length) ? 'disabled' : ''}>儲存</button>
+                            ${isEdit ? `<button type="button" onclick="handleDeleteSchedule('${existing.id}')" class="zdos-nav-btn py-3 px-4 rounded-xl border border-rose-500/30 bg-rose-950/40 text-rose-300 text-sm font-bold">刪除</button>` : ''}
+                            <button type="button" onclick="closeScheduleModal()" class="zdos-nav-btn py-3 px-4 rounded-xl border border-white/[0.08] bg-slate-900/50 text-slate-400 text-sm font-bold">取消</button>
+                        </div>
+                    </form>
+                </div>`;
+            modal.addEventListener('click', (e) => { if (e.target === modal) closeScheduleModal(); });
+            document.body.appendChild(modal);
+        }
+
         function renderSchedulingCenter(root) {
             const currentStoreId = getSchedulingStoreId();
             const schedulingStoreName = getStoreByCode(currentStoreId)?.name || state.storeType || '門市';
@@ -2468,6 +2782,10 @@
             const activeMeta = activeEmployee ? getSchedulingEmployeeListMeta(activeEmployee, currentStoreId) : null;
             const { year, month } = state.schedule;
             const calendarCells = generateCalendar(year, month);
+            const monthSchedules = activeEmployee && currentStoreId
+                ? getSchedulesByMonth(currentStoreId, year, month).filter(s => s.employeeId === activeEmployee.id)
+                : [];
+            const scheduleByDate = Object.fromEntries(monthSchedules.map(s => [s.date, s]));
             const header = renderFunctionPageHeader({
                 backOnclick: 'backToZDOSHome()',
                 title: `<span class="zdos-workspace-title--scheduling">${renderSchedulingMonthNav(year, month)}</span>`,
@@ -2510,17 +2828,26 @@
                                     ${SCHEDULING_WEEKDAYS.map(label => `<div class="zdos-scheduling-weekday">${label}</div>`).join('')}
                                 </div>
                                 <div class="zdos-scheduling-calendar-grid">
-                                    ${calendarCells.map(cell => `
-                                        <div class="zdos-scheduling-day ${cell.muted ? 'zdos-scheduling-day--muted' : ''} ${cell.today ? 'zdos-scheduling-day--today' : ''}">
-                                            ${cell.day ? `<span class="font-bold">${cell.day}</span>` : ''}
-                                        </div>
-                                    `).join('')}
+                                    ${calendarCells.map(cell => {
+                                        const daySchedule = cell.dateStr ? scheduleByDate[cell.dateStr] : null;
+                                        const chipClass = daySchedule ? getScheduleShiftChipClass(daySchedule.shiftCode) : '';
+                                        return `
+                                        <div class="zdos-scheduling-day ${cell.muted ? 'zdos-scheduling-day--muted' : ''} ${cell.today ? 'zdos-scheduling-day--today' : ''} ${daySchedule ? 'zdos-scheduling-day--has-shift' : ''}">
+                                            ${cell.day ? `
+                                                <button type="button" class="zdos-scheduling-day-btn" onclick="handleSchedulingDayClick('${cell.dateStr}')" ${!activeEmployee ? 'disabled' : ''}>
+                                                    <span class="font-bold">${cell.day}</span>
+                                                    ${daySchedule ? `<span type="button" class="zdos-scheduling-shift-chip ${chipClass}" onclick="event.stopPropagation(); openScheduleModal('edit', '${cell.dateStr}', '${daySchedule.id}')">${escapeHtmlText(getScheduleShiftLabel(daySchedule))}</span>` : ''}
+                                                </button>
+                                            ` : ''}
+                                        </div>`;
+                                    }).join('')}
                                 </div>
-                                <p class="mt-3 text-[10px] text-slate-500">使用 Header ＜ ＞ 切換月份，月曆會依年月重新生成。</p>
+                                <p class="mt-3 text-[10px] text-slate-500">點擊日期新增排班；若已有班別，點擊班別可修改或刪除。使用 Header ＜ ＞ 切換月份。</p>
                             </section>
                         </div>
                         <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · 排班中心</footer>`;
             root.innerHTML = wrapFunctionPage(header, body, 'max-w-6xl');
+            if (state.schedulingModal) renderScheduleModalOverlay();
         }
 
         function renderApp() {

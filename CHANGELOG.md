@@ -1,5 +1,19 @@
 # ZDOS 更新紀錄
 
+## v1.3.0
+
+### Feature-009A：Schedule Registry（排班建立）✅
+
+- 建立 `SCHEDULE_REGISTRY` 資料結構（`id`、`employeeId`、`storeId`、`date`、`shiftCode`、`templateId`、`note`、`createdAt`、`updatedAt`）
+- 持久化：`localStorage` key `zdos_schedule_registry_v1`（不串 Supabase）
+- Helper：`getSchedules()`、`getSchedulesByMonth()`、`getSchedule()`、`createSchedule()`、`updateSchedule()`、`deleteSchedule()`、`saveSchedules()`
+- 排班中心：點擊日期新增排班（員工來自 `getSchedulableEmployeesForStore`，班別來自 `SHIFT_TEMPLATE`）
+- 已有排班：點擊班別可修改或刪除；月曆即時更新、換月資料正常
+
+**驗收：** 新增／修改／刪除排班 · localStorage 保存 · 不刷新即更新 · 依 Registry 取資料 · Console 無 Error
+
+---
+
 ## v1.2.9
 
 ### Hotfix：排班中心門市過濾 ✅

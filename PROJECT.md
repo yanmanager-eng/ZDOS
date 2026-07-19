@@ -7,7 +7,7 @@
 
 ## 1. ZDOS 是什麼
 
-**ZDOS（ZhongDong Operating System）** 是大埔中東集團的門市營運回報系統，目前版本 **v1.0.2**。
+**ZDOS（ZhongDong Operating System）** 是大埔中東集團的門市營運回報系統，目前版本 **v1.3.0 Beta**。
 
 - **形式：** 單檔 HTML 應用（`index.html`），無後端、無 bundler
 - **部署：** 以靜態檔案開啟或托管即可（手機／平板／桌面瀏覽器）
@@ -176,6 +176,25 @@ isLoggedIn === true
 
 **常用 Helper：** `getSchedulableEmployeesForStore()`、`canEmployeeScheduleAtStore()`、`validateScheduleAssignment()`
 
+### Schedule Registry（Feature-009A）
+
+**位置：** `index.html` → `state.schedules` + `localStorage` key `zdos_schedule_registry_v1`
+
+排班紀錄**必須**透過 Schedule Registry Helper 讀寫，禁止在 UI 寫死班別或直接遍歷 `EMPLOYEE_REGISTRY`：
+
+| 欄位 | 說明 |
+|------|------|
+| `employeeId` | 關聯 `EMPLOYEE_REGISTRY` |
+| `storeId` | 關聯 `STORE_REGISTRY` |
+| `shiftCode` / `templateId` | 班別分類來自 `SHIFT_REGISTRY`，工時來自 `SHIFT_TEMPLATE` |
+| `date` | `YYYY-MM-DD` |
+
+| 操作 | Helper |
+|------|--------|
+| 讀取 | `getSchedules()`、`getSchedulesByMonth()`、`getSchedule()` |
+| 寫入 | `createSchedule()`、`updateSchedule()`、`deleteSchedule()`、`saveSchedules()` |
+| 驗證 | 儲存前必須呼叫 `validateScheduleAssignment()` |
+
 ### localStorage Keys（不可更名）
 
 | Key | 用途 |
@@ -190,6 +209,7 @@ isLoggedIn === true
 | `local_inventory_records_v22` | 庫存歷史 |
 | `cover_notice_v31_permanent` | 封面公告 |
 | `cover_design_v31_permanent` | 封面外觀 |
+| `zdos_schedule_registry_v1` | 排班紀錄（Schedule Registry） |
 
 ---
 
