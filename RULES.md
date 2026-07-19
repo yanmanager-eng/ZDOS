@@ -18,4 +18,5 @@
 16. **Store Registry 規則**：所有店別選單、篩選、報表等 UI 必須讀取 `STORE_REGISTRY`；禁止各模組寫死店別名稱或代碼。
 17. **Shift Registry 規則（Rule #003）**：班別為分類（M/A/N），`timeRange` 不得視為實際上下班時間；工時由 Schedule / Shift Template 決定。
 18. **排班跨店規則**：排班須依 `EMPLOYEE_REGISTRY.canCrossStore` 過濾；儲存前必須呼叫 `validateScheduleAssignment()`，店長／集團首腦不可繞過。
-19. **Schedule Registry 規則**：排班資料須讀寫 `SCHEDULE_REGISTRY`（`zdos_schedule_registry_v1`）；禁止 UI 寫死班別、禁止直接使用 `EMPLOYEE_REGISTRY` 全量；員工須經 `getSchedulableEmployeesForStore()`，班別工時須讀 `SHIFT_TEMPLATE`。
+19. **Schedule Registry 規則**：排班資料須讀寫 `SCHEDULE_REGISTRY`（`zdos_schedule_registry_v1`）；禁止 UI 寫死班別、禁止直接使用 `EMPLOYEE_REGISTRY` 全量；員工須經 `getSchedulableEmployeesForStore()`，班別工時須讀 `SHIFT_TEMPLATE`；CRUD 的 `storeId` 須用排班中心目前選取門市（`getSchedulingViewStoreId()`）。
+20. **排班門市切換**：僅帳號具雙店 membership（`store` + `store2` 皆 active）可見切換；單店使用者不可查看其他門市班表；切換後須重載該門市員工、Template 與排班，不可混入上一間店資料。

@@ -173,8 +173,9 @@ isLoggedIn === true
 | 跨店 | 僅 `canCrossStore = true` 可出現於其他門市，UI 標示「支援／原屬門市」 |
 | 權限 | 店長／集團首腦可查看，**不可**繞過 `canCrossStore` |
 | 儲存 | `validateScheduleAssignment()` / `saveScheduleAssignment()` 強制驗證 |
+| 門市切換 | 僅雙店 membership（帳號 `store` + `store2` 皆 active）可切換；排班資料以 `getSchedulingViewStoreId()` 為準，非登入預設門市 |
 
-**常用 Helper：** `getSchedulableEmployeesForStore()`、`canEmployeeScheduleAtStore()`、`validateScheduleAssignment()`
+**常用 Helper：** `getSchedulableEmployeesForStore()`、`canEmployeeScheduleAtStore()`、`validateScheduleAssignment()`、`getSchedulingViewStoreId()`、`hasDualStoreSchedulingAccess()`
 
 ### Schedule Registry（Feature-009A）
 

@@ -9,8 +9,9 @@
 - Helper：`getSchedules()`、`getSchedulesByMonth()`、`getSchedule()`、`createSchedule()`、`updateSchedule()`、`deleteSchedule()`、`saveSchedules()`
 - 排班中心：點擊日期新增排班（員工來自 `getSchedulableEmployeesForStore`，班別來自 `SHIFT_TEMPLATE`）
 - 已有排班：點擊班別可修改或刪除；月曆即時更新、換月資料正常
+- **驗收修正**：雙店 membership（`store` + `store2`）使用者可切換中華店／東港店；單店使用者不可切換；排班 CRUD 以排班中心目前選取 `storeId` 為準
 
-**驗收：** 新增／修改／刪除排班 · localStorage 保存 · 不刷新即更新 · 依 Registry 取資料 · Console 無 Error
+**驗收：** 新增／修改／刪除排班 · localStorage 保存 · 不刷新即更新 · 依 Registry 取資料 · 雙店切換不混資料 · Console 無 Error
 
 ---
 
