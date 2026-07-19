@@ -1,0 +1,3 @@
+-- Sprint 1 | Migration 001: ZDOS Supabase baseline
+-- Prerequisites: Supabase project with auth schema (auth.users) enabled.
+-- Migrations 002–010 build public schema on this baseline.
