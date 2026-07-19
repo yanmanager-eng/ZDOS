@@ -396,6 +396,22 @@
             transition: border-color 150ms ease, background 150ms ease;
         }
 
+        .zdos-scheduling-emp-item--support {
+            border-color: rgba(245, 158, 11, 0.25);
+        }
+        .zdos-scheduling-support-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.375rem;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: rgb(252, 211, 77);
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
         .zdos-scheduling-emp-item--active {
             border-color: rgba(129, 140, 248, 0.45);
             background: rgba(99, 102, 241, 0.14);
@@ -1110,6 +1126,40 @@
         };
         const getActiveEmployees = () => sortEmployees(EMPLOYEE_REGISTRY.filter(e => e.status === 'active'));
         const getSchedulableEmployees = () => getActiveEmployees().filter(e => e.canSchedule && isStoreActive(e.storeId));
+        const resolveStoreId = ref => resolveStore(ref)?.code || String(ref || '').trim().toUpperCase();
+        const getSchedulingStoreId = () => resolveStoreId(state.storeType);
+        const canEmployeeScheduleAtStore = (employee, targetStoreId) => {
+            if (!employee || employee.status !== 'active' || !employee.canSchedule) return false;
+            const target = resolveStoreId(targetStoreId);
+            if (!isStoreActive(target)) return false;
+            if (employee.storeId === target) return true;
+            return !!employee.canCrossStore;
+        };
+        const getSchedulableEmployeesForStore = storeId => sortEmployees(
+            getActiveEmployees().filter(e => canEmployeeScheduleAtStore(e, storeId))
+        );
+        const getSchedulingEmployeeListMeta = (emp, viewingStoreId) => {
+            const target = resolveStoreId(viewingStoreId);
+            const homeName = getEmployeeStoreName(emp);
+            const roleLabel = getEmployeeRoleLabel(emp);
+            if (emp.storeId !== target && emp.canCrossStore) {
+                return { isSupport: true, badge: '支援', subtitle: `${roleLabel} · 原屬 ${homeName}` };
+            }
+            return { isSupport: false, badge: null, subtitle: `${roleLabel} · ${homeName}` };
+        };
+        const validateScheduleAssignment = (employeeId, targetStoreId) => {
+            const emp = getEmployee(employeeId);
+            const target = resolveStoreId(targetStoreId);
+            if (!target || !isStoreActive(target)) return { ok: false, message: '門市無效或尚未開放。' };
+            if (!emp) return { ok: false, message: '找不到員工資料。' };
+            if (emp.status !== 'active') return { ok: false, message: '此員工狀態不可排班。' };
+            if (!emp.canSchedule) return { ok: false, message: '此員工不可排班。' };
+            if (!canEmployeeScheduleAtStore(emp, target)) {
+                const storeName = getStoreByCode(target)?.name || target;
+                return { ok: false, message: `${emp.name} 不可排班至 ${storeName}（未授權跨店）。` };
+            }
+            return { ok: true, employee: emp, storeId: target };
+        };
         const getEmployeeRoleLabel = emp => EMPLOYEE_ROLE_LABELS[emp?.role] || emp?.role || '';
         const getEmployeeStoreName = emp => getStoreByCode(emp?.storeId)?.name || emp?.storeId || '';
 
@@ -1122,13 +1172,13 @@
 
         const VERSION_INFO = {
             label: 'ZDOS',
-            get version() { return ZDOS_IS_BETA_SITE ? 'v1.2.7 Beta' : 'v1.2.7'; },
+            get version() { return ZDOS_IS_BETA_SITE ? 'v1.2.8 Beta' : 'v1.2.8'; },
             updatedAt: '2026-07-19',
             changes: [
-                'Shift Template 各門市實際上下班時間',
-                'SHIFT_REGISTRY 班別分類 · SHIFT_TEMPLATE 工時模板',
-                'Feature-008F Shift Template',
-                'Architecture Rule #003 Shift Category'
+                '排班中心依門市過濾員工，跨店須 canCrossStore',
+                'validateScheduleAssignment 儲存前驗證 storeId',
+                'Scheduling Cross-Store Guard',
+                'Feature-008F Shift Template'
             ]
         };
 
@@ -1540,7 +1590,7 @@
 
             announcementReadIds: safeJsonParse('zdos_announcement_read_v1', []),
             activeAnnouncementId: null,
-            activeSchedulingEmployeeId: getSchedulableEmployees()[0]?.id || null,
+            activeSchedulingEmployeeId: null,
             schedule: {
                 year: new Date().getFullYear(),
                 month: new Date().getMonth() + 1
@@ -1664,9 +1714,11 @@
         };
 
         window.openSchedulingCenter = function() {
-            const schedulable = getSchedulableEmployees();
-            if (!state.activeSchedulingEmployeeId && schedulable[0]) {
-                state.activeSchedulingEmployeeId = schedulable[0].id;
+            const storeId = getSchedulingStoreId();
+            const schedulable = getSchedulableEmployeesForStore(storeId);
+            const current = getEmployee(state.activeSchedulingEmployeeId);
+            if (!current || !canEmployeeScheduleAtStore(current, storeId)) {
+                state.activeSchedulingEmployeeId = schedulable[0]?.id || null;
             }
             state.currentView = 'scheduling';
             safeSetItem('zdos_current_view', 'scheduling');
@@ -1675,9 +1727,20 @@
         };
 
         window.selectSchedulingEmployee = function(id) {
-            if (!getSchedulableEmployees().some(emp => emp.id === id)) return;
+            const check = validateScheduleAssignment(id, getSchedulingStoreId());
+            if (!check.ok) return showToast(check.message, 'error');
             state.activeSchedulingEmployeeId = id;
             renderApp();
+        };
+
+        window.saveScheduleAssignment = function(employeeId, storeId, assignmentPayload) {
+            const check = validateScheduleAssignment(employeeId, storeId);
+            if (!check.ok) {
+                showToast(check.message, 'error');
+                return { ok: false, message: check.message };
+            }
+            // 排班資料持久化尚未實作；儲存前強制驗證 storeId 與 canCrossStore
+            return { ok: true, employee: check.employee, storeId: check.storeId, payload: assignmentPayload || null };
         };
 
         window.shiftSchedulingMonth = function(delta) {
@@ -2381,20 +2444,27 @@
         }
 
         function renderSchedulingCenter(root) {
-            const schedulableEmployees = getSchedulableEmployees();
-            const activeId = state.activeSchedulingEmployeeId || schedulableEmployees[0]?.id;
-            const activeEmployee = getEmployee(activeId) || schedulableEmployees[0] || null;
+            const schedulingStoreId = getSchedulingStoreId();
+            const schedulingStoreName = getStoreByCode(schedulingStoreId)?.name || state.storeType || '門市';
+            const schedulableEmployees = getSchedulableEmployeesForStore(schedulingStoreId);
+            let activeId = state.activeSchedulingEmployeeId;
+            if (!validateScheduleAssignment(activeId, schedulingStoreId).ok) {
+                activeId = schedulableEmployees[0]?.id || null;
+                state.activeSchedulingEmployeeId = activeId;
+            }
+            const activeEmployee = getEmployee(activeId) || null;
+            const activeMeta = activeEmployee ? getSchedulingEmployeeListMeta(activeEmployee, schedulingStoreId) : null;
             const { year, month } = state.schedule;
             const calendarCells = generateCalendar(year, month);
             const header = renderFunctionPageHeader({
                 backOnclick: 'backToZDOSHome()',
                 title: `<span class="zdos-workspace-title--scheduling">${renderSchedulingMonthNav(year, month)}</span>`,
-                rightHtml: `<span class="zdos-workspace-btn border-indigo-500/25 bg-indigo-950/40 text-indigo-300">${escapeHtmlText(state.storeType || '門市')}</span>`
+                rightHtml: `<span class="zdos-workspace-btn border-indigo-500/25 bg-indigo-950/40 text-indigo-300">${escapeHtmlText(schedulingStoreName)}</span>`
             });
             const body = `
-                        <p class="text-xs text-slate-400">排班中心 · 月份切換預覽 · Employee Registry · 尚未串接排班資料</p>
+                        <p class="text-xs text-slate-400">排班中心 · ${escapeHtmlText(schedulingStoreName)} · 僅顯示所屬員工與授權跨店（canCrossStore）同仁</p>
                         <div class="flex flex-wrap gap-1.5 mb-2" aria-label="班別分類說明">${renderShiftCategoryLegend()}</div>
-                        <p class="text-[10px] text-slate-600 mb-3">班別為分類標籤，非固定工時；實際上下班時間由 Schedule／Shift Template 決定。</p>
+                        <p class="text-[10px] text-slate-600 mb-3">班別為分類標籤，非固定工時；跨店排班須 Employee Registry 授權，店長／集團首腦亦不可繞過。</p>
                         <div class="zdos-scheduling-shell">
                             <aside class="zdos-scheduling-panel p-3 sm:p-4">
                                 <div class="flex items-center justify-between gap-2 mb-3">
@@ -2402,13 +2472,18 @@
                                     <span class="text-[10px] text-slate-500">${schedulableEmployees.length} 人</span>
                                 </div>
                                 <div class="zdos-scheduling-emp-list" role="list">
-                                    ${schedulableEmployees.map(emp => `
-                                        <button type="button" role="listitem" onclick="selectSchedulingEmployee('${emp.id}')" class="zdos-nav-btn zdos-scheduling-emp-item ${emp.id === activeEmployee?.id ? 'zdos-scheduling-emp-item--active' : ''}">
-                                            <p class="text-sm font-bold text-slate-100">${escapeHtmlText(emp.name)}</p>
+                                    ${schedulableEmployees.length === 0 ? `<p class="text-[11px] text-slate-500 p-2">此門市尚無可排班員工。</p>` : schedulableEmployees.map(emp => {
+                                        const meta = getSchedulingEmployeeListMeta(emp, schedulingStoreId);
+                                        return `
+                                        <button type="button" role="listitem" onclick="selectSchedulingEmployee('${emp.id}')" class="zdos-nav-btn zdos-scheduling-emp-item ${emp.id === activeEmployee?.id ? 'zdos-scheduling-emp-item--active' : ''} ${meta.isSupport ? 'zdos-scheduling-emp-item--support' : ''}">
+                                            <div class="flex items-start justify-between gap-2 w-full">
+                                                <p class="text-sm font-bold text-slate-100">${escapeHtmlText(emp.name)}</p>
+                                                ${meta.badge ? `<span class="zdos-scheduling-support-badge shrink-0">${meta.badge}</span>` : ''}
+                                            </div>
                                             <p class="mt-0.5 text-[10px] text-slate-500 font-mono">${escapeHtmlText(emp.employeeNo)}</p>
-                                            <p class="mt-1 text-[10px] text-indigo-300">${escapeHtmlText(getEmployeeRoleLabel(emp))} · ${escapeHtmlText(getEmployeeStoreName(emp))}</p>
-                                        </button>
-                                    `).join('')}
+                                            <p class="mt-1 text-[10px] text-indigo-300">${escapeHtmlText(meta.subtitle)}</p>
+                                        </button>`;
+                                    }).join('')}
                                 </div>
                             </aside>
                             <section class="zdos-scheduling-panel p-3 sm:p-4 min-w-0">
@@ -2417,7 +2492,7 @@
                                         <p class="text-[10px] uppercase tracking-[0.18em] text-slate-500">Monthly Calendar</p>
                                         <h2 class="text-sm font-bold text-slate-100">${year} 年 ${month} 月</h2>
                                     </div>
-                                    ${activeEmployee ? `<div class="text-right"><p class="text-[10px] text-slate-500">目前選取</p><p class="text-xs font-bold text-indigo-300">${escapeHtmlText(activeEmployee.name)}</p></div>` : ''}
+                                    ${activeEmployee ? `<div class="text-right"><p class="text-[10px] text-slate-500">目前選取</p><p class="text-xs font-bold text-indigo-300">${escapeHtmlText(activeEmployee.name)}${activeMeta?.isSupport ? ` <span class="zdos-scheduling-support-badge">支援</span>` : ''}</p></div>` : ''}
                                 </div>
                                 <div class="zdos-scheduling-calendar-head mb-1">
                                     ${SCHEDULING_WEEKDAYS.map(label => `<div class="zdos-scheduling-weekday">${label}</div>`).join('')}

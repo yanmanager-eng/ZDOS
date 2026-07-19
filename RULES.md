@@ -16,3 +16,5 @@
 14. 修改完成後說明影響範圍。
 15. 若可能造成白屏，先停止並提出方案。
 16. **Store Registry 規則**：所有店別選單、篩選、報表等 UI 必須讀取 `STORE_REGISTRY`；禁止各模組寫死店別名稱或代碼。
+17. **Shift Registry 規則（Rule #003）**：班別為分類（M/A/N），`timeRange` 不得視為實際上下班時間；工時由 Schedule / Shift Template 決定。
+18. **排班跨店規則**：排班須依 `EMPLOYEE_REGISTRY.canCrossStore` 過濾；儲存前必須呼叫 `validateScheduleAssignment()`，店長／集團首腦不可繞過。

@@ -139,6 +139,43 @@ isLoggedIn === true
 
 **擴充新門市：** 僅在 `STORE_REGISTRY` 新增一筆；選單與相關 UI 自動出現（`coming_soon` 則僅預留入口）。
 
+### Shift Registry（Architecture Rule #003）
+
+班別為**分類標籤**，不是固定工時。所有班別相關 UI 與邏輯必須讀取 `SHIFT_REGISTRY`。
+
+**位置：** `index.html` → `SHIFT_REGISTRY`（在 `STORE_REGISTRY` 之前）
+
+| code | name | 分類 timeRange |
+|------|------|----------------|
+| M | 早班 | 10:00 ~ 14:59 |
+| A | 中班 | 15:00 ~ 21:59 |
+| N | 晚班 | 22:00 ~ 翌日 09:59 |
+
+**Architecture Rule：班別（Category）≠ 工時（Working Time）**
+
+- `timeRange` → 排班分類、報表統計、AI 分析、班次篩選
+- 實際上下班 → `Schedule` 或 `Shift Template`（尚未實作）
+- 例：工時 10:30~19:30 仍可指派為 **M 早班**
+
+**常用 Helper：** `getShiftByCode()`、`classifyShiftByTime()`、`renderShiftSelectOptions()`、`getStoreShiftCodes()`
+
+門市可用班別由 `STORE_REGISTRY.features.shiftCodes` 指定（如 CH: M/A/N，DG: M）。
+
+### Employee Registry 與排班跨店規則
+
+**位置：** `index.html` → `EMPLOYEE_REGISTRY`
+
+排班中心員工清單**必須**讀取 Registry，並依目前登入門市（`state.storeType` → `storeId`）過濾：
+
+| 規則 | 說明 |
+|------|------|
+| 預設 | 只顯示 `storeId` 等於目前門市的員工 |
+| 跨店 | 僅 `canCrossStore = true` 可出現於其他門市，UI 標示「支援／原屬門市」 |
+| 權限 | 店長／集團首腦可查看，**不可**繞過 `canCrossStore` |
+| 儲存 | `validateScheduleAssignment()` / `saveScheduleAssignment()` 強制驗證 |
+
+**常用 Helper：** `getSchedulableEmployeesForStore()`、`canEmployeeScheduleAtStore()`、`validateScheduleAssignment()`
+
 ### localStorage Keys（不可更名）
 
 | Key | 用途 |

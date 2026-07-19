@@ -1,5 +1,18 @@
 # ZDOS 更新紀錄
 
+## v1.2.8
+
+### 排班中心：跨店排班限制 ✅
+
+- 員工清單依**目前登入門市**過濾（`getSchedulableEmployeesForStore`）
+- 僅 `canCrossStore = true` 員工可出現於非所屬門市，並標示「支援／原屬門市」
+- 一般員工不可跨店排班；店長／集團首腦亦不可繞過 `canCrossStore`
+- 新增 `validateScheduleAssignment()`、`saveScheduleAssignment()` 儲存前驗證
+
+**驗收：** 中華店 4 人 + 顏志添跨店支援 · 東港店 4 人 + 顏志添支援 · DG 員工不在 CH 清單 · RWD · Console 無 Error
+
+---
+
 ## v1.2.7
 
 ### Feature-008F：Shift Template ✅

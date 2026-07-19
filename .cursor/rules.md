@@ -51,6 +51,24 @@ ZDOS 是營運系統。
 
 詳見 `PROJECT.md` § Store Registry。
 
+## Shift Registry（Architecture Rule #003）
+
+**唯一來源：** `index.html` → `SHIFT_REGISTRY`
+
+| code | name | 分類 timeRange（非工時） |
+|------|------|-------------------------|
+| M | 早班 | 10:00 ~ 14:59 |
+| A | 中班 | 15:00 ~ 21:59 |
+| N | 晚班 | 22:00 ~ 翌日 09:59 |
+
+**核心原則：班別（Category）≠ 工時（Working Time）**
+
+- `timeRange` 僅供：排班分類、報表、AI 分析、班次篩選
+- 實際上下班（例：早班 10:30~19:30）由 **Schedule** 或 **Shift Template** 決定
+- 禁止將 `timeRange` 當作打卡或排班工時
+
+**必用 Helper：** `getShiftByCode()`、`classifyShiftByTime()`、`renderShiftSelectOptions()`、`getStoreShiftCodes()`
+
 ## 開發方式
 
 - 修改前先唯讀分析；最小 diff；優先改現有程式，不重構
