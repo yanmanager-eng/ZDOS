@@ -32,6 +32,24 @@ ZDOS 是營運系統。
 4. 不可修改中華店／東港店現金公式
 5. 不可修改 `salesRecords`、`inventoryRecords` 結構
 6. 不可重新生成整個 `index.html`
+7. **Store Registry**：店別相關 UI 必須讀取 `STORE_REGISTRY`（`index.html`）；禁止寫死店別。新增門市只擴充 Registry 一筆。
+
+## Store Registry（Architecture Rule）
+
+**唯一來源：** `index.html` 內 `STORE_REGISTRY`
+
+| code | name | status |
+|------|------|--------|
+| CH | 中華店 | active |
+| DG | 東港店 | active |
+| HJ | 後勁店 | coming_soon |
+
+- **active** → 可登入、可選、可載入資料
+- **coming_soon** → 選單顯示「尚未開放」；點擊 Toast；不切換、不建功能
+
+**必用 Helper（勿重複實作）：** `getActiveStores()`、`renderStoreSelectOptions()`、`renderLoginStorePickerButtons()`、`isStoreActive()`、`getComingSoonToast()`、`storeHasMobilePay()` 等
+
+詳見 `PROJECT.md` § Store Registry。
 
 ## 開發方式
 

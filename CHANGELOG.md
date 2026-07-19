@@ -1,5 +1,45 @@
 # ZDOS 更新紀錄
 
+## v1.2.5
+
+### Feature-008D：Employee Registry ✅
+
+- 建立 `EMPLOYEE_REGISTRY` 全系統唯一員工主檔（假資料）
+- 欄位：`id`、`employeeNo`、`name`、`storeId`（CH/DG/HJ）、`role`、`status`、`canSchedule`、`canCrossStore`、`sortOrder`
+- Helper：`getEmployee()`、`getEmployeesByStore()`、`getActiveEmployees()`、`getSchedulableEmployees()`
+- 排班中心員工清單改讀 Registry；`storeId` 關聯 `STORE_REGISTRY`
+- 尚未串接 Supabase / API；不含新增／編輯／刪除員工 UI
+
+**驗收：** Registry 建立 · Store 關聯 · Helper · 排班中心 · RWD · Console 無 Error
+
+---
+
+## v1.2.4
+
+### Architecture：Store Registry ✅
+
+- 建立 `STORE_REGISTRY` 唯一門市清單（CH / DG / HJ）
+- `status: active` 正常使用；`coming_soon` 顯示尚未開放、Toast 提示、不切換資料
+- 登入選單、帳號店別、核對中心、業績統計、雲端設定分頁改由 Registry 動態產生
+- 禁止各模組寫死店別；新增門市僅需擴充 Registry
+
+**驗收：** Registry 單一來源 · 三店選單 · HJ 提示 · CH/DG 正常 · 架構文件同步
+
+---
+
+## v1.2.3
+
+### Feature-008C：後勁店預留入口 ✅
+
+- 所有店別選單新增「後勁店（HJ）」選項
+- 後勁店標示「尚未開放」，點擊僅顯示 Toast 提示
+- 不切換店別、不載入資料、不建立假員工／排班資料
+- 中華店（CH）與東港店（DG）既有功能維持正常
+
+**驗收：** 三店顯示 · 後勁店提示 · 不切換資料 · CH/DG 正常 · RWD · Console 無 Error
+
+---
+
 ## v1.2.2
 
 ### Feature-008B：Month Navigation ✅

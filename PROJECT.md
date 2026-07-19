@@ -13,7 +13,7 @@
 - **部署：** 以靜態檔案開啟或托管即可（手機／平板／桌面瀏覽器）
 - **資料流：** 門市填寫表單 → POST 至 Google Forms → 匯入 Google 試算表
 - **本地持久化：** 全部資料存於瀏覽器 `localStorage`
-- **支援店別：** 中華店、東港店（規格略有差異）
+- **支援店別：** 由 `STORE_REGISTRY` 統一管理（中華店 CH、東港店 DG、後勁店 HJ 籌備中）
 
 前身為 DAPU OS v6.x 系列；ZDOS 為 v1.x 重新命名的正式版。
 
@@ -104,6 +104,40 @@ isLoggedIn === true
 | `handleUploadInventoryToCloud()` | 庫存批次上傳 |
 | `calculateLiveNetProfit()` | 中華／東港現金試算 |
 | `updateModalContent()` | 系統設定 Modal |
+
+### Store Registry（Architecture Rule）
+
+所有涉及「店別」的功能模組（登入、帳號、篩選、報表、排班、業績、庫存、設定等）**必須**讀取同一份 `STORE_REGISTRY`，禁止各模組寫死店別。
+
+**位置：** `index.html` → `STORE_REGISTRY` 常數（約 ROLE_OPTIONS 之後）
+
+**資料結構：**
+
+```javascript
+{ code: 'CH', name: '中華店', status: 'active', configKey: 'zhonghua', features: { ... }, ui: { ... } }
+{ code: 'HJ', name: '後勁店', status: 'coming_soon', comingSoonToast: '...' }
+```
+
+**status 行為：**
+
+| status | 行為 |
+|--------|------|
+| `active` | 正常登入、選單可選、可載入資料 |
+| `coming_soon` | 選單顯示「尚未開放」；點擊 Toast；不切換店別、不載入資料、不建功能 |
+
+**常用 Helper：**
+
+| 函式 | 用途 |
+|------|------|
+| `getActiveStores()` | 取得已開放門市 |
+| `getStoreByCode` / `getStoreByName` | 查詢門市 |
+| `isStoreActive()` / `isStoreComingSoon()` | 狀態判斷 |
+| `renderStoreSelectOptions()` | 帳號店別下拉 |
+| `renderLoginStorePickerButtons()` | 登入門市選擇 |
+| `storeHasMobilePay()` | 店別功能差異（如行動支付欄位） |
+| `getStoreGoogleConfig()` | 雲端設定對應 |
+
+**擴充新門市：** 僅在 `STORE_REGISTRY` 新增一筆；選單與相關 UI 自動出現（`coming_soon` 則僅預留入口）。
 
 ### localStorage Keys（不可更名）
 
