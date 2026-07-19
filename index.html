@@ -833,6 +833,130 @@
         const ROLE_OPTIONS = ['資深員工', '實習幹部', '副領班', '領班', '店經理', '區經理', '人資', '總務', '秘書', '店長', '集團首腦'];
 
         // ========================================================================
+        // Shift Registry（Architecture Rule #003）— 班別分類 ≠ 實際工時
+        // timeRange 僅供排班分類、報表、AI 分析、班次篩選；實際上下班由 Schedule / Shift Template 決定
+        // ========================================================================
+        const SHIFT_REGISTRY = [
+            {
+                code: 'M',
+                name: '早班',
+                sortOrder: 1,
+                timeRange: { start: '10:00', end: '14:59', wrapsDay: false },
+                ui: { icon: '☀️' }
+            },
+            {
+                code: 'A',
+                name: '中班',
+                sortOrder: 2,
+                timeRange: { start: '15:00', end: '21:59', wrapsDay: false },
+                ui: { icon: '⛅' }
+            },
+            {
+                code: 'N',
+                name: '晚班',
+                sortOrder: 3,
+                timeRange: { start: '22:00', end: '09:59', wrapsDay: true },
+                ui: { icon: '🌙' }
+            }
+        ];
+
+        const parseTimeToMinutes = hm => {
+            const parts = String(hm || '').trim().split(':');
+            const h = parseInt(parts[0], 10);
+            const m = parseInt(parts[1], 10) || 0;
+            if (Number.isNaN(h)) return null;
+            return h * 60 + m;
+        };
+
+        const getShiftRegistry = () => SHIFT_REGISTRY;
+        const getShiftByCode = code => SHIFT_REGISTRY.find(s => s.code === String(code || '').trim().toUpperCase()) || null;
+        const getShiftByName = name => SHIFT_REGISTRY.find(s => s.name === String(name || '').trim()) || null;
+        const resolveShift = ref => {
+            if (!ref) return null;
+            const key = String(ref).trim();
+            return getShiftByCode(key) || getShiftByName(key);
+        };
+        const getDefaultShiftName = () => getShiftByCode('M')?.name || '早班';
+        const formatShiftCategoryTimeRange = shift => {
+            if (!shift?.timeRange) return '';
+            const { start, end, wrapsDay } = shift.timeRange;
+            return wrapsDay ? `${start} ~ 翌日 ${end}` : `${start} ~ ${end}`;
+        };
+        const isTimeInShiftCategoryRange = (minutes, timeRange) => {
+            if (minutes == null || !timeRange) return false;
+            const start = parseTimeToMinutes(timeRange.start);
+            const end = parseTimeToMinutes(timeRange.end);
+            if (start == null || end == null) return false;
+            if (timeRange.wrapsDay) return minutes >= start || minutes <= end;
+            return minutes >= start && minutes <= end;
+        };
+        const classifyShiftByTime = input => {
+            const minutes = typeof input === 'number' ? input : parseTimeToMinutes(input);
+            if (minutes == null) return null;
+            for (const shift of SHIFT_REGISTRY) {
+                if (isTimeInShiftCategoryRange(minutes, shift.timeRange)) return shift.code;
+            }
+            return null;
+        };
+        const getStoreShiftCodes = storeRef => {
+            const store = resolveStore(storeRef);
+            const codes = store?.features?.shiftCodes;
+            return Array.isArray(codes) && codes.length ? codes : ['M'];
+        };
+        const renderShiftSelectOptions = (shiftCodes, selectedName = '') => {
+            const selected = resolveShift(selectedName);
+            return shiftCodes.map(code => {
+                const shift = getShiftByCode(code);
+                if (!shift) return '';
+                const isSelected = selected ? selected.code === shift.code : selectedName === shift.name;
+                return `<option value="${shift.name}" ${isSelected ? 'selected' : ''}>${shift.name}（${shift.code}） ${shift.ui.icon}</option>`;
+            }).join('');
+        };
+        const renderStoreShiftOptions = (storeName, selected) => renderShiftSelectOptions(getStoreShiftCodes(storeName), selected);
+        const renderShiftCategoryLegend = () => SHIFT_REGISTRY.map(shift =>
+            `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-950/60 border border-white/[0.05] text-[10px] text-slate-400"><span aria-hidden="true">${shift.ui.icon}</span><span class="font-mono text-slate-300">${shift.code}</span><span>${shift.name}</span><span class="text-slate-500">· 分類 ${formatShiftCategoryTimeRange(shift)}</span></span>`
+        ).join('');
+
+        // ========================================================================
+        // Shift Template（Feature-008F）— 各門市實際上下班時間；班別分類仍由 SHIFT_REGISTRY 負責
+        // ========================================================================
+        const SHIFT_TEMPLATE = [
+            { id: 'CH-M1', storeId: 'CH', shiftCode: 'M', name: '早班', startTime: '10:00', endTime: '19:00', breakMinutes: 60, defaultPosition: null, isDefault: true, status: 'active', sortOrder: 1 },
+            { id: 'CH-A1', storeId: 'CH', shiftCode: 'A', name: '中班', startTime: '15:00', endTime: '00:00', breakMinutes: 0, defaultPosition: null, isDefault: true, status: 'active', sortOrder: 2 },
+            { id: 'CH-N1', storeId: 'CH', shiftCode: 'N', name: '晚班', startTime: '22:00', endTime: '02:00', breakMinutes: 0, defaultPosition: null, isDefault: true, status: 'active', sortOrder: 3 },
+            { id: 'DG-M1', storeId: 'DG', shiftCode: 'M', name: '早班', startTime: '10:00', endTime: '19:00', breakMinutes: 0, defaultPosition: null, isDefault: true, status: 'active', sortOrder: 1 }
+        ];
+
+        const sortShiftTemplates = list => [...list].sort((a, b) => a.sortOrder - b.sortOrder);
+        const isShiftTemplateOvernight = template => {
+            if (!template) return false;
+            const start = parseTimeToMinutes(template.startTime);
+            const end = parseTimeToMinutes(template.endTime);
+            if (start == null || end == null) return false;
+            return end <= start;
+        };
+        const formatShiftTemplateWorkingTime = template => {
+            if (!template) return '';
+            return isShiftTemplateOvernight(template)
+                ? `${template.startTime} ~ 翌日 ${template.endTime}`
+                : `${template.startTime} ~ ${template.endTime}`;
+        };
+        const getShiftTemplates = () => sortShiftTemplates(SHIFT_TEMPLATE.filter(t => t.status === 'active'));
+        const getShiftTemplatesByStore = storeId => {
+            const code = String(storeId || '').trim().toUpperCase();
+            return sortShiftTemplates(SHIFT_TEMPLATE.filter(t => t.storeId === code && t.status === 'active'));
+        };
+        const getShiftTemplate = id => SHIFT_TEMPLATE.find(t => t.id === String(id || '').trim()) || null;
+        const getDefaultShiftTemplate = (storeId, shiftCode) => {
+            const store = String(storeId || '').trim().toUpperCase();
+            const shift = String(shiftCode || '').trim().toUpperCase();
+            const matches = sortShiftTemplates(SHIFT_TEMPLATE.filter(t =>
+                t.storeId === store && t.shiftCode === shift && t.status === 'active'
+            ));
+            return matches.find(t => t.isDefault) || matches[0] || null;
+        };
+
+        // ========================================================================
         // Store Registry（Architecture Rule）— 唯一門市來源，禁止各模組寫死店別
         // ========================================================================
         const STORE_REGISTRY = [
@@ -841,7 +965,7 @@
                 name: '中華店',
                 status: 'active',
                 configKey: 'zhonghua',
-                features: { mobilePay: true, shiftOptions: ['早班', '中班', '晚班'] },
+                features: { mobilePay: true, shiftCodes: ['M', 'A', 'N'] },
                 ui: {
                     loginBtn: 'border-sky-500/40 bg-gradient-to-b from-sky-500/20 to-sky-600/10 hover:from-sky-500/30 hover:to-sky-600/20 text-sky-200',
                     badge: 'text-sky-300 border-sky-500/25 bg-sky-950/40',
@@ -858,7 +982,7 @@
                 name: '東港店',
                 status: 'active',
                 configKey: 'donggang',
-                features: { mobilePay: false, shiftOptions: ['早班'] },
+                features: { mobilePay: false, shiftCodes: ['M'] },
                 ui: {
                     loginBtn: 'border-amber-500/40 bg-gradient-to-b from-amber-500/20 to-amber-600/10 hover:from-amber-500/30 hover:to-amber-600/20 text-amber-200',
                     badge: 'text-amber-300 border-amber-500/25 bg-amber-950/35',
@@ -896,11 +1020,6 @@
         const isStoreComingSoon = ref => resolveStore(ref)?.status === 'coming_soon';
         const getComingSoonToast = ref => resolveStore(ref)?.comingSoonToast || `${resolveStore(ref)?.name || '此門市'}目前尚未開放`;
         const storeHasMobilePay = name => !!resolveStore(name)?.features?.mobilePay;
-        const getStoreShiftOptions = name => resolveStore(name)?.features?.shiftOptions || ['早班'];
-        const renderStoreShiftOptions = (storeName, selected) => getStoreShiftOptions(storeName).map(shift => {
-            const icon = shift === '早班' ? '☀️' : shift === '中班' ? '⛅' : '🌙';
-            return `<option value="${shift}" ${selected === shift ? 'selected' : ''}>${shift} ${icon}</option>`;
-        }).join('');
         const getStoreGoogleConfigKey = name => resolveStore(name)?.configKey || null;
         const getStoreGoogleConfig = name => {
             const key = getStoreGoogleConfigKey(name);
@@ -1003,13 +1122,13 @@
 
         const VERSION_INFO = {
             label: 'ZDOS',
-            get version() { return ZDOS_IS_BETA_SITE ? 'v1.2.5 Beta' : 'v1.2.5'; },
+            get version() { return ZDOS_IS_BETA_SITE ? 'v1.2.7 Beta' : 'v1.2.7'; },
             updatedAt: '2026-07-19',
             changes: [
-                'Employee Registry 全系統唯一員工主檔',
-                '排班中心改讀 getSchedulableEmployees()',
-                'Feature-008D Employee Registry',
-                'Feature-008C Store Registry 後勁店預留'
+                'Shift Template 各門市實際上下班時間',
+                'SHIFT_REGISTRY 班別分類 · SHIFT_TEMPLATE 工時模板',
+                'Feature-008F Shift Template',
+                'Architecture Rule #003 Shift Category'
             ]
         };
 
@@ -1427,7 +1546,7 @@
                 month: new Date().getMonth() + 1
             },
 
-            newDate: new Date().toISOString().split('T')[0], newShift: '早班', newOverAmount: '', newSalesAmount: '', newExpenseNotes: '', newExpenseAmount: '', newLinaPay: '', newTwqr: '', newApplePay: '', invBarcode: '', invStockQty: '', invOrderQty: ''
+            newDate: new Date().toISOString().split('T')[0], newShift: getDefaultShiftName(), newOverAmount: '', newSalesAmount: '', newExpenseNotes: '', newExpenseAmount: '', newLinaPay: '', newTwqr: '', newApplePay: '', invBarcode: '', invStockQty: '', invOrderQty: ''
         };
 
         let pendingLoginUser = null;
@@ -1449,7 +1568,7 @@
             state.employeeId = String(user.empId);
             state.storeType = storeType;
             state.isLoggedIn = true;
-            state.newShift = '早班';
+            state.newShift = getDefaultShiftName();
             pendingLoginUser = null;
             safeSetItem('shield_is_logged_in', 'true');
             safeSetItem('shield_store_type', storeType);
@@ -2274,6 +2393,8 @@
             });
             const body = `
                         <p class="text-xs text-slate-400">排班中心 · 月份切換預覽 · Employee Registry · 尚未串接排班資料</p>
+                        <div class="flex flex-wrap gap-1.5 mb-2" aria-label="班別分類說明">${renderShiftCategoryLegend()}</div>
+                        <p class="text-[10px] text-slate-600 mb-3">班別為分類標籤，非固定工時；實際上下班時間由 Schedule／Shift Template 決定。</p>
                         <div class="zdos-scheduling-shell">
                             <aside class="zdos-scheduling-panel p-3 sm:p-4">
                                 <div class="flex items-center justify-between gap-2 mb-3">

@@ -1,5 +1,33 @@
 # ZDOS 更新紀錄
 
+## v1.2.7
+
+### Feature-008F：Shift Template ✅
+
+- 建立 `SHIFT_TEMPLATE` 管理各門市實際上下班時間
+- 欄位：`id`、`storeId`、`shiftCode`、`startTime`、`endTime`、`breakMinutes` 等
+- 預設：CH-M1 / CH-A1 / CH-N1 / DG-M1（假資料）
+- Helper：`getShiftTemplates()`、`getShiftTemplatesByStore()`、`getShiftTemplate()`、`getDefaultShiftTemplate()`
+- `storeId` 關聯 `STORE_REGISTRY`；`shiftCode` 關聯 `SHIFT_REGISTRY`
+- 尚未修改排班 UI、不串 API／Supabase、無編輯畫面
+
+**驗收：** Template 建立 · Helper · Store/Shift 關聯 · 不影響既有功能 · Console 無 Error
+
+---
+
+## v1.2.6
+
+### Architecture Rule #003：Shift Registry ✅
+
+- 建立 `SHIFT_REGISTRY` 班別分類（M 早班 / A 中班 / N 晚班）
+- `timeRange` 僅供排班分類、報表統計、AI 分析、班次篩選
+- **班別（Category）≠ 工時（Working Time）**；實際上下班由 Schedule / Shift Template 決定
+- 業績班別下拉、Store `shiftCodes` 改讀 Registry；新增 `classifyShiftByTime()` 等 Helper
+
+**驗收：** Registry 建立 · 分類時間窗 · 不綁定工時 · 既有業績申報正常 · RWD
+
+---
+
 ## v1.2.5
 
 ### Feature-008D：Employee Registry ✅
