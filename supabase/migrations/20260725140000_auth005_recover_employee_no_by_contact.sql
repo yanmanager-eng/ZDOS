@@ -16,12 +16,18 @@ AS $$
     ELSE x
   END
   FROM (
-    SELECT regexp_replace(coalesce(p_phone, ''), '[\s\-]', '', 'g') AS x
+    -- Strip spaces, half/full-width hyphens, and parentheses before country-code mapping.
+    SELECT regexp_replace(
+      coalesce(p_phone, ''),
+      '[[:space:]\-－﹣()\（\）]',
+      '',
+      'g'
+    ) AS x
   ) s;
 $$;
 
 COMMENT ON FUNCTION public.zdos_normalize_phone(text) IS
-  'AUTH-005 internal phone normalizer: strip spaces/dashes; map +886/886 to 0-leading local form.';
+  'AUTH-005 internal phone normalizer: strip spaces/hyphens/parentheses; map +886/886 to 0-leading local form.';
 
 REVOKE ALL ON FUNCTION public.zdos_normalize_phone(text) FROM PUBLIC;
 
