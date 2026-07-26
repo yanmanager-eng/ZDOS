@@ -1167,7 +1167,7 @@
                                             <div><p class="text-[10px] text-slate-500">建立時間</p><p class="mt-1 text-xs font-bold text-slate-300 font-mono">${escapeHtmlText(formatSalesRecordCreatedAt(r.id))}</p></div>
                                         </div>
                                         <div class="flex flex-col sm:flex-row lg:flex-col gap-2 shrink-0">
-                                            <button type="button" onclick="handleApproveSalesRecord(${r.id})" class="px-4 py-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-300 text-xs font-bold">✅ 核對完成</button>
+                                            <button type="button" onclick="handleApproveSalesRecord(${JSON.stringify(r.id)})" class="px-4 py-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-300 text-xs font-bold">✅ 核對完成</button>
                                             <button type="button" onclick="handleReturnSalesRecord(${r.id})" class="px-4 py-2.5 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/30 text-rose-300 text-xs font-bold">↩ 退回修改</button>
                                         </div>
                                     </div>
