@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="ZhongDong hexagonal gold Z logo">
+  <defs>
+    <linearGradient id="zdosGoldStroke" x1="12" y1="8" x2="84" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F3E0A0"/>
+      <stop offset="40%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#9A7718"/>
+    </linearGradient>
+    <linearGradient id="zdosGoldFill" x1="24" y1="24" x2="72" y2="72" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E8C96A"/>
+      <stop offset="55%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#B8912A"/>
+    </linearGradient>
+  </defs>
+  <path fill="none" stroke="url(#zdosGoldStroke)" stroke-width="8" stroke-linejoin="round"
+        d="M48 10 L80 28.5 V67.5 L48 86 L16 67.5 V28.5 Z"/>
+  <path fill="url(#zdosGoldFill)"
+        d="M29 30 H67 L43 46 H65 V54 H29 L53 38 H31 V30 Z"/>
+</svg>

@@ -1,5 +1,19 @@
 # ZDOS 更新紀錄
 
+## UI-016｜排班中心 Compact Mode（正式版）
+
+- 今日排班總覽改 Compact List（每人一列 40~44px；取消大型資訊卡）
+- 早／中／晚班區塊可收合（預設展開）；標題旁顯示人數與已到／未到
+- 姓名左側 4px 固定識別色（`getEmployeeColor`）
+- 【今天】立即定位；今日日期藍色高亮
+- 搜尋姓名／工號立即定位
+- 長按 500ms Bottom Sheet；主管可「編輯班表」「幫忙排假」
+- 統計共用 Snapshot，不重複掃描班表
+- 未改排班邏輯／資料來源／權限／Supabase／班別規則
+- 未 Deploy Production
+
+---
+
 ## v1.1.0
 
 ### Feature-005B：業績核對中心 🔒 Locked
