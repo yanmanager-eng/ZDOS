@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZDOS v1.0.2 中東營運系統</title>
+    <!-- UI-999｜維護模式入口閘道（不修改登入／Auth／Supabase／API） -->
+    <script src="ui/maintenance-config.js"></script>
+    <script>
+        (function () {
+            if (window.MAINTENANCE_MODE !== true) return;
+            var file = (location.pathname.split('/').pop() || 'index.html').split('?')[0];
+            if (file === 'maintenance.html') return;
+            location.replace('maintenance.html' + (location.search || '') + (location.hash || ''));
+        })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* 隱藏滾動條但保持功能 */
