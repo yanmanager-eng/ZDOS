@@ -20015,8 +20015,12 @@
         };
         /** UI-016：搜尋姓名／工號 → 立即定位 */
         window.setHrTodaySearchQuery = function(value) {
-            const q = String(value || '').trim();
-            state.hrTodaySearchQuery = q;
+            const raw = String(value || '');
+            const q = raw.trim();
+            const active = document.activeElement;
+            const selStart = active && active.id === 'hr-today-search-input' ? active.selectionStart : null;
+            const selEnd = active && active.id === 'hr-today-search-input' ? active.selectionEnd : null;
+            state.hrTodaySearchQuery = raw;
             state.hrTodayLocateEmployeeId = '';
             if (q) {
                 const snap = buildHrTodayOverviewSnapshot();
@@ -20033,8 +20037,14 @@
             }
             renderApp();
             requestAnimationFrame(() => {
-                const el = document.querySelector('.zdos-hr-compact-row.is-match')
-                    || document.getElementById('zdos-hr-today-compact');
+                const input = document.getElementById('hr-today-search-input');
+                if (input) {
+                    input.focus();
+                    if (selStart != null && selEnd != null) {
+                        try { input.setSelectionRange(selStart, selEnd); } catch (_) { /* ignore */ }
+                    }
+                }
+                const el = document.querySelector('.zdos-hr-compact-row.is-match');
                 el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             });
         };
