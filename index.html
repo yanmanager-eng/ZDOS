@@ -2769,45 +2769,56 @@
         .zdos-hr-day-names .zdos-emp-id{font-size:inherit;line-height:inherit;font-weight:700}
         .zdos-emp-id-sep{color:rgb(100 116 139);font-weight:600}
         .zdos-hr-today-empty{color:rgb(100 116 139);font-size:.78rem;line-height:1.4}
-        /* UI-016：排班中心 Compact Mode */
-        .zdos-hr-today--compact{padding:.7rem .65rem;border-radius:1rem;overflow-x:hidden;max-width:100%}
-        .zdos-hr-today-toolbar{display:flex;flex-direction:column;gap:.45rem;min-width:0}
-        .zdos-hr-today-search{width:100%;min-width:0;box-sizing:border-box;height:2.15rem;border-radius:.7rem;border:1px solid rgba(125,211,252,.28);background:rgba(2,6,23,.55);color:#e2e8f0;padding:0 .75rem;font-size:.78rem;font-weight:700;outline:none}
+        /* UI-016A：排班中心 · 班別三段看板 */
+        .zdos-hr-today--compact{padding:.65rem .6rem;border-radius:1rem;overflow-x:hidden;max-width:100%}
+        .zdos-hr-today-toolbar{display:flex;flex-direction:column;gap:.4rem;min-width:0}
+        .zdos-hr-today-search{width:100%;min-width:0;box-sizing:border-box;height:2.1rem;border-radius:.7rem;border:1px solid rgba(125,211,252,.28);background:rgba(2,6,23,.55);color:#e2e8f0;padding:0 .75rem;font-size:.78rem;font-weight:700;outline:none}
         .zdos-hr-today-search:focus{border-color:rgba(56,189,248,.65);box-shadow:0 0 0 2px rgba(56,189,248,.15)}
         .zdos-hr-today-search::placeholder{color:rgb(100 116 139);font-weight:600}
-        .zdos-hr-compact-shift{margin-top:.4rem;min-width:0;border-radius:.75rem;border:1px solid rgba(255,255,255,.05);background:rgba(2,6,23,.28);overflow:hidden}
-        .zdos-hr-compact-shift-head{width:100%;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.45rem .55rem;text-align:left;background:transparent;border:0;color:inherit;cursor:pointer}
-        .zdos-hr-compact-shift-title{min-width:0;font-size:.72rem;font-weight:900;color:rgb(125 211 252);letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .zdos-hr-compact-shift-stats{flex:0 0 auto;display:inline-flex;align-items:center;gap:.35rem;font-size:.62rem;font-weight:800;color:rgb(148 163 184);white-space:nowrap}
-        .zdos-hr-compact-shift-stats .ok{color:rgb(110 231 183)}
-        .zdos-hr-compact-shift-stats .miss{color:rgb(252 165 165)}
-        .zdos-hr-compact-shift-chevron{flex:0 0 auto;width:.9rem;height:.9rem;color:rgb(148 163 184);transition:transform .15s ease}
-        .zdos-hr-compact-shift.is-collapsed .zdos-hr-compact-shift-chevron{transform:rotate(-90deg)}
-        .zdos-hr-compact-shift-body{display:flex;flex-direction:column;min-width:0}
-        .zdos-hr-compact-shift.is-collapsed .zdos-hr-compact-shift-body{display:none}
-        .zdos-hr-compact-row{display:flex;align-items:center;gap:.45rem;min-width:0;max-width:100%;height:42px;padding:0 .5rem 0 0;box-sizing:border-box;border-top:1px solid rgba(255,255,255,.04);touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-        .zdos-hr-compact-row.is-self{background:rgba(14,116,144,.12)}
-        .zdos-hr-compact-row.is-match{background:rgba(56,189,248,.16);box-shadow:inset 0 0 0 1px rgba(56,189,248,.35)}
-        .zdos-hr-compact-row.is-hidden{display:none}
-        .zdos-hr-compact-bar{flex:0 0 4px;align-self:stretch;width:4px;border-radius:0 2px 2px 0}
-        .zdos-hr-compact-name{flex:1 1 auto;min-width:0;font-size:.82rem;font-weight:800;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .zdos-hr-compact-time{flex:0 1 auto;min-width:0;max-width:42%;font-size:.72rem;font-weight:700;color:rgb(203 213 225);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
-        .zdos-hr-compact-icons{flex:0 0 auto;display:inline-flex;align-items:center;gap:.2rem;min-width:0}
-        .zdos-hr-compact-ico{display:inline-flex;align-items:center;justify-content:center;min-width:1.05rem;height:1.05rem;padding:0 .18rem;border-radius:.3rem;font-size:.55rem;font-weight:900;line-height:1;border:1px solid transparent}
-        .zdos-hr-compact-ico--leave{color:rgb(253 164 175);background:rgba(76,5,25,.45);border-color:rgba(251,113,133,.28)}
-        .zdos-hr-compact-ico--sub{color:rgb(253 224 71);background:rgba(66,32,6,.45);border-color:rgba(250,204,21,.28)}
-        .zdos-hr-compact-ico--cross{color:rgb(147 197 253);background:rgba(23,37,84,.5);border-color:rgba(96,165,250,.3)}
-        .zdos-hr-compact-empty{padding:.55rem .65rem;font-size:.72rem;color:rgb(100 116 139)}
+        .zdos-hr-board-shift{margin-top:.45rem;min-width:0;border-radius:.9rem;border:1px solid rgba(255,255,255,.06);background:linear-gradient(165deg,rgba(8,47,73,.35),rgba(2,6,23,.45));overflow:hidden}
+        .zdos-hr-board-shift[data-shift="M"]{border-color:rgba(56,189,248,.22)}
+        .zdos-hr-board-shift[data-shift="A"]{border-color:rgba(251,191,36,.22)}
+        .zdos-hr-board-shift[data-shift="N"]{border-color:rgba(167,139,250,.22)}
+        .zdos-hr-board-shift-head{width:100%;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:.45rem;padding:.5rem .6rem;text-align:left;background:transparent;border:0;color:inherit;cursor:pointer}
+        .zdos-hr-board-shift-title{min-width:0;font-size:.78rem;font-weight:900;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .zdos-hr-board-shift[data-shift="M"] .zdos-hr-board-shift-title{color:rgb(125 211 252)}
+        .zdos-hr-board-shift[data-shift="A"] .zdos-hr-board-shift-title{color:rgb(253 224 71)}
+        .zdos-hr-board-shift[data-shift="N"] .zdos-hr-board-shift-title{color:rgb(196 181 253)}
+        .zdos-hr-board-shift-stats{flex:0 0 auto;display:inline-flex;align-items:center;gap:.35rem;font-size:.62rem;font-weight:800;color:rgb(148 163 184);white-space:nowrap}
+        .zdos-hr-board-shift-stats .ok{color:rgb(110 231 183)}
+        .zdos-hr-board-shift-stats .miss{color:rgb(252 165 165)}
+        .zdos-hr-board-shift-chevron{flex:0 0 auto;width:.9rem;height:.9rem;color:rgb(148 163 184);transition:transform .15s ease}
+        .zdos-hr-board-shift.is-collapsed .zdos-hr-board-shift-chevron{transform:rotate(-90deg)}
+        .zdos-hr-board-shift-body{padding:0 .45rem .55rem;min-width:0}
+        .zdos-hr-board-shift.is-collapsed .zdos-hr-board-shift-body{display:none}
+        .zdos-hr-board-grid{display:flex;flex-wrap:wrap;gap:.35rem;min-width:0;max-width:100%}
+        .zdos-hr-board-chip{display:inline-flex;align-items:center;gap:.28rem;min-width:0;max-width:100%;height:2rem;padding:0 .45rem 0 .35rem;box-sizing:border-box;border-radius:.55rem;border:1px solid rgba(255,255,255,.07);background:rgba(15,23,42,.72);touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+        .zdos-hr-board-chip.is-self{border-color:rgba(56,189,248,.4);background:rgba(14,116,144,.22)}
+        .zdos-hr-board-chip.is-match{border-color:rgba(56,189,248,.7);box-shadow:0 0 0 1px rgba(56,189,248,.35);background:rgba(30,64,175,.28)}
+        .zdos-hr-board-chip.is-hidden{display:none}
+        .zdos-hr-board-dot{flex:0 0 auto;width:.45rem;height:.45rem;border-radius:999px}
+        .zdos-hr-board-name{min-width:0;max-width:4.8rem;font-size:.74rem;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .zdos-hr-board-time{flex:0 0 auto;font-size:.62rem;font-weight:700;color:rgb(148 163 184);font-variant-numeric:tabular-nums;white-space:nowrap}
+        .zdos-hr-board-icons{flex:0 0 auto;display:inline-flex;align-items:center;gap:.12rem}
+        .zdos-hr-board-ico{display:inline-flex;align-items:center;justify-content:center;min-width:.85rem;height:.85rem;padding:0 .12rem;border-radius:.25rem;font-size:.5rem;font-weight:900;line-height:1;border:1px solid transparent}
+        .zdos-hr-board-ico--leave{color:rgb(253 164 175);background:rgba(76,5,25,.45);border-color:rgba(251,113,133,.28)}
+        .zdos-hr-board-ico--sub{color:rgb(253 224 71);background:rgba(66,32,6,.45);border-color:rgba(250,204,21,.28)}
+        .zdos-hr-board-ico--cross{color:rgb(147 197 253);background:rgba(23,37,84,.5);border-color:rgba(96,165,250,.3)}
+        .zdos-hr-board-empty{padding:.35rem .2rem;font-size:.72rem;color:rgb(100 116 139)}
         .zdos-sched-info-actions{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.9rem}
         .zdos-sched-info-action{min-height:2.4rem;border-radius:.8rem;border:1px solid rgba(255,255,255,.1);background:rgba(15,23,42,.9);color:#e2e8f0;font-size:.72rem;font-weight:800}
         .zdos-sched-info-action--edit{border-color:rgba(56,189,248,.35);color:rgb(186 230 253);background:rgba(8,47,73,.55)}
         .zdos-sched-info-action--leave{border-color:rgba(251,113,133,.35);color:rgb(254 205 211);background:rgba(76,5,25,.4)}
         .zdos-hr-day--today{border-color:rgb(59 130 246 /.85)!important;box-shadow:inset 0 0 0 1px rgb(59 130 246 /.35),0 0 0 1px rgb(59 130 246 /.2)!important;background:linear-gradient(160deg,rgb(30 64 175/.35),rgb(15 23 42/.8))!important}
         .zdos-hr-day--today .zdos-hr-day-num{color:rgb(191 219 254)}
-        @media (max-width:430px){
-            .zdos-hr-compact-row{height:40px;gap:.35rem}
-            .zdos-hr-compact-name{font-size:.78rem}
-            .zdos-hr-compact-time{font-size:.68rem;max-width:46%}
+        @media (max-width:374px){
+            .zdos-hr-board-name{max-width:3.8rem;font-size:.7rem}
+            .zdos-hr-board-time{font-size:.58rem}
+            .zdos-hr-board-chip{height:1.9rem;padding:0 .35rem 0 .28rem;gap:.22rem}
+        }
+        @media (min-width:390px){
+            .zdos-hr-board-grid{gap:.4rem}
+            .zdos-hr-board-name{max-width:5.4rem}
         }
         .zdos-hr-cal-toggle{display:inline-flex;flex-wrap:wrap;gap:.35rem;max-width:100%}
         .zdos-hr-cal-toggle .zdos-nav-btn{min-width:0}
@@ -6051,7 +6062,7 @@
             get version() { return ZDOS_IS_BETA_SITE ? 'v1.4.5 Beta' : 'v1.3.0'; },
             updatedAt: '2026/07/29',
             changes: [
-                'UI-016：排班中心 Compact Mode（高密度列、班別收合、今日定位、搜尋、長按操作）',
+                'UI-016A：排班中心班別三段看板（色點＋短時間、收合、今日定位、搜尋、長按）',
                 '導入 ZDOS MP4 開場動畫（含 AI 小天・正式規格 4 秒）',
                 '開場動畫與 Supabase Auth 並行載入',
                 '新增 Skip 與播放失敗 fallback',
@@ -20044,7 +20055,7 @@
                         try { input.setSelectionRange(selStart, selEnd); } catch (_) { /* ignore */ }
                     }
                 }
-                const el = document.querySelector('.zdos-hr-compact-row.is-match');
+                const el = document.querySelector('.zdos-hr-board-chip.is-match');
                 el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             });
         };
@@ -20327,39 +20338,50 @@
         const getHrTodayShiftCount = (storeSnapshot, shiftCode) =>
             Number(storeSnapshot?.counts?.[shiftCode] || 0);
 
-        const formatHrCompactWorkingTime = (row) => {
+        /** UI-016A：看板短時間 10-19（細節仍在長按 Sheet） */
+        const formatHrBoardShortTime = (row) => {
             const raw = typeof formatSchedulePersonWorkingTime === 'function'
                 ? formatSchedulePersonWorkingTime(row)
                 : '';
-            return String(raw || '')
+            const normalized = String(raw || '')
                 .replace(/\s*～\s*/g, '-')
                 .replace(/\s*~\s*/g, '-')
                 .replace(/翌日\s*/g, '')
                 .trim();
+            if (!normalized) {
+                const start = String(row?.startTime || '').trim().slice(0, 5);
+                const end = String(row?.endTime || '').trim().slice(0, 5);
+                if (start && end) return `${start.slice(0, 2)}-${end.slice(0, 2)}`;
+                return start ? start.slice(0, 2) : '—';
+            }
+            // 10:00-19:00 → 10-19
+            const m = normalized.match(/(\d{1,2}):?(\d{2})?-(\d{1,2}):?(\d{2})?/);
+            if (m) return `${String(m[1]).padStart(2, '0')}-${String(m[3]).padStart(2, '0')}`;
+            return normalized.length > 9 ? normalized.slice(0, 9) : normalized;
         };
 
-        const renderHrCompactRowIconsHtml = (row, leaveIds) => {
+        const renderHrBoardChipIconsHtml = (row, leaveIds) => {
             const icons = [];
             const empId = String(row?.employeeId || '').trim();
             const hasLeave = (leaveIds && leaveIds.has(empId))
                 || !!(typeof findScheduleLeaveForRow === 'function' && findScheduleLeaveForRow(row));
-            if (hasLeave) icons.push('<span class="zdos-hr-compact-ico zdos-hr-compact-ico--leave" title="假別">假</span>');
+            if (hasLeave) icons.push('<span class="zdos-hr-board-ico zdos-hr-board-ico--leave" title="假別">假</span>');
             if (row?.isSubstitute || row?.changeType === 'substitute') {
-                icons.push('<span class="zdos-hr-compact-ico zdos-hr-compact-ico--sub" title="代班">代</span>');
+                icons.push('<span class="zdos-hr-board-ico zdos-hr-board-ico--sub" title="代班">代</span>');
             }
             if (row?.isCrossStore || row?.changeType === 'cross_store') {
-                icons.push('<span class="zdos-hr-compact-ico zdos-hr-compact-ico--cross" title="跨店">跨</span>');
+                icons.push('<span class="zdos-hr-board-ico zdos-hr-board-ico--cross" title="跨店">跨</span>');
             }
-            return icons.length ? `<span class="zdos-hr-compact-icons">${icons.join('')}</span>` : '<span class="zdos-hr-compact-icons" aria-hidden="true"></span>';
+            return icons.length ? `<span class="zdos-hr-board-icons">${icons.join('')}</span>` : '';
         };
 
-        /** UI-016 Compact List：每位員工一列 40~44px；長按沿用 UI-014C Bottom Sheet */
-        const renderHrTodayCompactRowsHtml = (rows, selfKeys, leaveIds, locateEmployeeId, searchQuery) => {
+        /** UI-016A 班別三段看板：色點＋姓名＋短時間，flex wrap */
+        const renderHrTodayBoardChipsHtml = (rows, selfKeys, leaveIds, locateEmployeeId, searchQuery) => {
             if (!rows?.length) {
-                return `<p class="zdos-hr-compact-empty">尚未排班</p>`;
+                return `<p class="zdos-hr-board-empty">尚未排班</p>`;
             }
             const q = String(searchQuery || '').trim().toLowerCase();
-            return rows.map(row => {
+            return `<div class="zdos-hr-board-grid">${rows.map(row => {
                 const empId = String(row?.employeeId || '').trim();
                 const emp = typeof getEmployee === 'function' ? getEmployee(empId) : null;
                 const name = String(emp?.name || '').trim() || '未知';
@@ -20367,7 +20389,7 @@
                 const empNo = String(emp?.employeeNo || emp?.empId || '').trim();
                 const isSelf = isHrTodaySelfScheduleRow(row, selfKeys);
                 const color = typeof getEmployeeColor === 'function' ? getEmployeeColor(empId) : '#94A3B8';
-                const timeLabel = formatHrCompactWorkingTime(row) || '—';
+                const timeLabel = formatHrBoardShortTime(row);
                 const storeId = escapeHtmlText(normalizeStoreIdCode(row?.storeId) || '');
                 const date = escapeHtmlText(String(row?.date || '').slice(0, 10));
                 const match = !!locateEmployeeId && locateEmployeeId === empId;
@@ -20377,24 +20399,23 @@
                     empId.toLowerCase().includes(q)
                 );
                 const classes = [
-                    'zdos-hr-compact-row',
+                    'zdos-hr-board-chip',
                     'zdos-sched-person',
                     isSelf ? 'is-self' : '',
                     match ? 'is-match' : '',
                     filterHide ? 'is-hidden' : ''
                 ].filter(Boolean).join(' ');
                 return `<div class="${classes}" data-zdos-sched-person="1" data-employee-id="${escapeHtmlText(empId)}" data-store-id="${storeId}" data-date="${date}" data-employee-no="${escapeHtmlText(empNo)}" tabindex="0">
-                    <span class="zdos-hr-compact-bar" style="background:${color}" aria-hidden="true"></span>
-                    <span class="zdos-hr-compact-name" style="color:${color}">${isSelf ? '✓ ' : ''}${escapeHtmlText(displayName)}</span>
-                    <span class="zdos-hr-compact-time">${escapeHtmlText(timeLabel)}</span>
-                    ${renderHrCompactRowIconsHtml(row, leaveIds)}
+                    <span class="zdos-hr-board-dot" style="background:${color}" aria-hidden="true"></span>
+                    <span class="zdos-hr-board-name" style="color:${color}">${isSelf ? '✓' : ''}${escapeHtmlText(displayName)}</span>
+                    <span class="zdos-hr-board-time">${escapeHtmlText(timeLabel)}</span>
+                    ${renderHrBoardChipIconsHtml(row, leaveIds)}
                 </div>`;
-            }).join('');
+            }).join('')}</div>`;
         };
 
         const renderHrTodayShiftPeopleHtml = (rows, selfKeys) => {
-            // 相容保留：導向 Compact List
-            return renderHrTodayCompactRowsHtml(rows, selfKeys, null, '', '');
+            return renderHrTodayBoardChipsHtml(rows, selfKeys, null, '', '');
         };
 
         const renderHrTodayOverviewSection = (snapshot = buildHrTodayOverviewSnapshot()) => {
@@ -20412,7 +20433,7 @@
                 <div class="zdos-hr-today-toolbar">
                     <div class="flex items-start justify-between gap-2">
                         <div class="min-w-0">
-                            <p class="text-[10px] font-black text-cyan-300">今日排班總覽 · Compact</p>
+                            <p class="text-[10px] font-black text-cyan-300">今日排班 · 班別看板</p>
                             <p class="mt-1 text-[10px] text-slate-500 font-mono">${escapeHtmlText(snapshot.todayIso)}</p>
                         </div>
                     </div>
@@ -20428,14 +20449,14 @@
                             const count = getHrTodayShiftCount(storeSnap, shift.code);
                             const key = `${storeSnap.storeId}:${shift.code}`;
                             const isCollapsed = !!collapsed[key];
-                            return `<div class="zdos-hr-compact-shift ${isCollapsed ? 'is-collapsed' : ''}" data-shift="${escapeHtmlText(shift.code)}">
-                                <button type="button" class="zdos-hr-compact-shift-head" onclick="toggleHrTodayShiftCollapse('${escapeHtmlText(storeSnap.storeId)}','${escapeHtmlText(shift.code)}')" aria-expanded="${isCollapsed ? 'false' : 'true'}">
-                                    <span class="zdos-hr-compact-shift-title">${escapeHtmlText(shift.label)}（${count}）</span>
-                                    <span class="zdos-hr-compact-shift-stats"><span class="ok">已到：${arrival.arrived}</span><span class="miss">未到：${arrival.missing}</span></span>
-                                    <svg class="zdos-hr-compact-shift-chevron" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                            return `<div class="zdos-hr-board-shift ${isCollapsed ? 'is-collapsed' : ''}" data-shift="${escapeHtmlText(shift.code)}">
+                                <button type="button" class="zdos-hr-board-shift-head" onclick="toggleHrTodayShiftCollapse('${escapeHtmlText(storeSnap.storeId)}','${escapeHtmlText(shift.code)}')" aria-expanded="${isCollapsed ? 'false' : 'true'}">
+                                    <span class="zdos-hr-board-shift-title">${escapeHtmlText(shift.label)}（${count}）</span>
+                                    <span class="zdos-hr-board-shift-stats"><span class="ok">已到 ${arrival.arrived}</span><span class="miss">未到 ${arrival.missing}</span></span>
+                                    <svg class="zdos-hr-board-shift-chevron" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
                                 </button>
-                                <div class="zdos-hr-compact-shift-body">
-                                    ${renderHrTodayCompactRowsHtml(rows, selfKeys, snapshot.leaveIds, locateId, searchQuery)}
+                                <div class="zdos-hr-board-shift-body">
+                                    ${renderHrTodayBoardChipsHtml(rows, selfKeys, snapshot.leaveIds, locateId, searchQuery)}
                                 </div>
                             </div>`;
                         }).join('')}
