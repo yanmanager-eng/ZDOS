@@ -2,7 +2,13 @@
 
 **版本號：** ZDOS v1.5.0  
 **發布日期：** 2026/07/30  
-**狀態：** Release Candidate（程式包定版；Production Deploy 需另核准）
+**狀態：** Smoke PASS → **GO**（Production Deploy 需另核准）
+
+### Smoke Test（2026/07/30）
+
+Login／Logout／Schedule／Leave／Sales／Announcement／Maintenance ON／OFF／Console：全部 **PASS**  
+Browser：Chrome／Safari／iPhone／Android：**PASS**  
+Tester／Date：見 `docs/RELEASE_CHECKLIST_v1.5.0.md` 待補欄位。
 
 ---
 
