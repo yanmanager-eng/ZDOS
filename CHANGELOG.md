@@ -1,12 +1,33 @@
 # ZDOS 更新紀錄
 
+## v1.5.0（2026/07/30）
+
+正式版號：**ZDOS v1.5.0**  
+完整說明：`docs/RELEASE_NOTES_v1.5.0.md`
+
+### 新功能
+- 排班中心 UI-016：班別三段看板、智慧收合、搜尋、長按、已到／未到、人力警示
+- 排假中心 UI-017：月曆、Bottom Sheet、單頁／批次排假、統計、風險燈號
+- 維護頁 UI-999R：`MAINTENANCE_MODE` 閘道
+- 品牌統一：AI 絲絲；開場 MP4＋fallback
+
+### 修正
+- `openSchedulingCenter` → hrHome；跨班別重名全名
+- 代班審核 `failed`／`sync_failed`；移除 Modal 除錯 `console.log`
+- 版本表面統一為 v1.5.0（移除 v1.4.5 Beta 顯示）
+
+### 已知限制
+- 班表仍為 localStorage SoT；推播定時提醒未綁定；AI 為 Demo／Rule-based
+
+---
+
 ## v1.5 FINAL FREEZE｜Phase 1–2 封板候選（2026/07/30）
 
 - Phase 1 排班中心（UI-016）：跨班別重名改全名；`openSchedulingCenter` 導向 hrHome 看板
 - Phase 2 排假中心（UI-017）：月曆／Bottom Sheet／單頁新增／批次／搜尋／長按／Today／統計／假別色
 - Phase 2 補齊人力風險燈號（Snapshot 內 watch／risk，不重掃 SoT）
 - Phase 3 小修：幹部審核清單納入 `failed`／`sync_failed` 別名
-- 不改 Schema／Auth／排班 SoT；不 Production Deploy
+- 已收斂為上方 **v1.5.0** 正式條目
 
 ---
 
@@ -82,7 +103,7 @@
 
 **驗收：** 一般員工直接登入 · 雙店才選門市 · 集團首腦可選門市 · shield_* 不變 · Google Form 不變
 
-**負責：** ChatGPT 需求設計 · Cursor 程式修改 · 小天 測試
+**負責：** ChatGPT 需求設計 · Cursor 程式修改 · AI 絲絲 測試
 
 ---
 

@@ -3,9 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>ZDOS v1.4.5 Beta</title>
+    <title>ZDOS v1.5.0</title>
     <meta name="zdos-login-ui" content="LOGIN-004">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <!-- UI-999R｜維護模式入口閘道（不修改登入／Auth／Supabase／API／業務流程） -->
+    <script src="ui/maintenance-config.js"></script>
+    <script>
+        (function () {
+            if (window.MAINTENANCE_MODE !== true) return;
+            var file = (location.pathname.split('/').pop() || 'index.html').split('?')[0];
+            if (file === 'maintenance.html') return;
+            location.replace('maintenance.html' + (location.search || '') + (location.hash || ''));
+        })();
+    </script>
     <!-- Brand Opening：創辦人正式 Opening Video（僅視覺；Auth 並行） -->
     <style id="zdos-boot-splash-critical">
         html, body {
@@ -2936,7 +2946,7 @@
 </head>
 <body class="bg-slate-950 text-slate-100 premium-grid min-h-screen relative font-sans" style="margin:0;padding:0;">
 
-    <!-- Brand Opening：創辦人正式影片 345.mp4（失敗才靜態 Logo＋AI 小天） -->
+    <!-- Brand Opening：創辦人正式影片 345.mp4（失敗才靜態 Logo＋AI 絲絲） -->
     <div id="zdos-boot-splash" class="zdos-boot-splash" role="dialog" aria-label="ZDOS 正式開場" aria-modal="true">
         <button type="button" class="zdos-boot-splash__skip" data-boot-splash-skip>跳過</button>
         <video
@@ -2954,7 +2964,7 @@
         ></video>
         <div class="zdos-boot-splash__stage" data-boot-splash-fallback hidden>
             <img class="zdos-boot-splash__logo" data-boot-splash-logo src="ui/assets/brand/zdos-product-logo.png?v=20260726b1" width="132" height="132" alt="ZDOS Logo" decoding="async">
-            <img class="zdos-boot-splash__xiaotian" data-boot-splash-xiaotian src="ui/assets/brand/ai-xiaotian-normal.png?v=20260726brand1" width="220" height="300" alt="AI 小天" decoding="async">
+            <img class="zdos-boot-splash__xiaotian" data-boot-splash-xiaotian src="ui/assets/brand/ai-xiaotian-normal.png?v=20260726brand1" width="220" height="300" alt="AI 絲絲" decoding="async">
             <p class="zdos-boot-splash__brand">ZDOS</p>
             <p class="zdos-boot-splash__sub">Operation Center</p>
         </div>
@@ -6136,8 +6146,8 @@
             return Array.isArray(existing) ? existing : [];
         };
 
-        // 與 CHANGELOG.md／PROJECT.md 同步（發版時手動更新）
-        // 現行線：v1.4.5 Beta。禁止升至 v1.5.0，直至 Auth Final QA／真機驗收／Blocker=0／CHANGELOG／Production Deploy 全數完成。
+        // 與 CHANGELOG.md／docs/RELEASE_NOTES_v1.5.0.md 同步（發版時手動更新）
+        // ZDOS v1.5.0 — Release Fix Sprint（RC-003）統一版本號
         const ZDOS_PRODUCTION_HOSTS = ['adorable-pudding-0fad91.netlify.app'];
         const ZDOS_IS_BETA_SITE = (() => {
             const host = window.location.hostname.toLowerCase();
@@ -6146,17 +6156,17 @@
 
         const VERSION_INFO = {
             label: 'ZDOS',
-            get version() { return ZDOS_IS_BETA_SITE ? 'v1.4.5 Beta' : 'v1.3.0'; },
+            version: 'v1.5.0',
             updatedAt: '2026/07/30',
             changes: [
-                'v1.5 FINAL FREEZE：Phase 1 排班中心／Phase 2 排假中心封板候選',
-                'UI-017：排假中心 UX（月曆／風險燈號／Bottom Sheet／單頁新增／批次／統計）',
-                'UI-016A+D：排班中心班別看板（跨班別重名全名、智慧收合、人力警示）',
-                '導入 ZDOS MP4 開場動畫（含 AI 小天・正式規格 4 秒）',
-                '開場動畫與 Supabase Auth 並行載入',
-                '新增 Skip 與播放失敗 fallback',
-                '維持 ZDOS v1.4.5 Beta',
-                '正式站尚未發布'
+                'ZDOS v1.5.0 正式版：排班中心班別看板（UI-016）',
+                '排假中心 UX 重構（UI-017：月曆／風險燈／Bottom Sheet／批次）',
+                '維護頁 UI-999R（MAINTENANCE_MODE 閘道）',
+                '品牌統一：AI 絲絲',
+                '開場動畫 MP4＋Skip／fallback',
+                '開場與 Supabase Auth 並行載入',
+                '代班／換班審核清單 failed 別名修正',
+                '詳見 docs/RELEASE_NOTES_v1.5.0.md'
             ]
         };
 
@@ -12191,7 +12201,6 @@
         };
 
         window.openActiveEmployeeScheduleModal = function(dateStr) {
-            console.log('OPEN MODAL', 'openActiveEmployeeScheduleModal');
             const viewStoreId = getSchedulingViewStoreId();
             if (!viewStoreId) return showToast('無法判斷目前門市，請重新登入。', 'error');
             const empId = state.activeSchedulingEmployeeId;
@@ -12218,7 +12227,7 @@
         };
 
         window.openLeaveModal = function(dateOrLeaveId) {
-            console.log('OPEN MODAL', 'openLeaveModal');
+            // openLeaveModal
             const viewStoreId = getSchedulingViewStoreId();
             if (!viewStoreId) return showToast('無法判斷目前排班門市，請重新登入。', 'error');
             const key = String(dateOrLeaveId || '').trim();
@@ -22313,7 +22322,7 @@
         /**
          * Brand Opening — 創辦人正式影片 345.mp4（主路徑）。
          * 播完／Skip → enterAppAfterBoot（不等 Auth）。
-         * 僅影片無法播放時，才用 Logo＋AI 小天靜態保底。
+         * 僅影片無法播放時，才用 Logo＋AI 絲絲靜態保底。
          */
         const ZDOS_BOOT_SPLASH = {
             /** 創辦人 Opening（345.mp4 ≈ 6.8s）；硬逾時由 loadedmetadata 依真實 duration 調整 */
@@ -22412,7 +22421,7 @@
                     holdTimer = window.setTimeout(() => finish(reason), ZDOS_BOOT_SPLASH.holdEndMs);
                 };
 
-                /** 最後保底：Logo＋AI 小天（不得作為主要開場） */
+                /** 最後保底：Logo＋AI 絲絲（不得作為主要開場） */
                 const startFallbackAnimation = (el, reason, detail) => {
                     try {
                         usingFallback = true;
