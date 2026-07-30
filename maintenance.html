@@ -18,13 +18,32 @@
 
     <!-- 1. Header -->
     <header id="block-header">
-      <img
-        class="logo"
-        src="./ui/assets/brand/zdos-product-logo.png"
-        alt="ZDOS"
-        width="56"
-        height="56"
-      />
+      <span class="logo" role="img" aria-label="ZDOS">
+        <svg viewBox="0 0 64 64" width="56" height="56" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="zdosLogoGrad" x1="10" y1="8" x2="54" y2="56" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#bae6fd"/>
+              <stop offset="40%" stop-color="#38bdf8"/>
+              <stop offset="100%" stop-color="#1d4ed8"/>
+            </linearGradient>
+            <filter id="zdosLogoGlow" x="-35%" y="-35%" width="170%" height="170%">
+              <feGaussianBlur stdDeviation="1.8" result="b"/>
+              <feMerge>
+                <feMergeNode in="b"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <rect x="2.5" y="2.5" width="59" height="59" rx="14" fill="rgba(2,18,46,0.95)" stroke="rgba(56,189,248,0.6)" stroke-width="1.6"/>
+          <path
+            filter="url(#zdosLogoGlow)"
+            fill="url(#zdosLogoGrad)"
+            d="M15 17h34v8.2L28.6 39.8H49V47H15v-8.2L35.4 24.2H15V17z"
+          />
+          <circle cx="18" cy="21" r="1.4" fill="#e0f2fe"/>
+          <circle cx="46" cy="43" r="1.4" fill="#e0f2fe"/>
+        </svg>
+      </span>
       <div class="brand-wrap">
         <span class="brand">ZDOS</span>
         <span class="sub-zh">中東營運系統</span>
@@ -44,36 +63,27 @@
 
     <!-- 3. Huge Title -->
     <section id="block-title">
-      <h1>ZDOS v1.5.0<br />正式版上線</h1>
+      <h1>ZDOS v1.5.0<br />系統維護中</h1>
     </section>
 
     <!-- 4. Description -->
     <section id="block-desc">
       <p>
-        為了提供更穩定、更強大、更智慧的服務，<br />
-        ZDOS 正在進行系統升級與全面優化。<br />
-        造成不便，敬請見諒，感謝您的耐心等候！
+        我們正在進行系統升級，<br />
+        提供更穩定、更安全、更完善的服務。
       </p>
     </section>
 
-    <!-- 5. AI Hero（G01：左小天、右絲絲） -->
-    <section id="block-ai" aria-label="AI 角色">
-      <div class="ai-slot">
-        <div class="bubble">有問題，找 AI 小天！</div>
+    <!-- 5. AI Hero：官方雙人圖（小天＋絲絲） -->
+    <section id="block-ai" aria-label="AI 小天與 AI 絲絲">
+      <div class="maintenance-ai-hero">
         <img
-          src="./ui/assets/brand/ai-xiaotian-normal.png"
-          alt="AI 小天"
-          width="158"
-          height="158"
-        />
-      </div>
-      <div class="ai-slot">
-        <div class="bubble">我來陪著你學習，一起變得更厲害！</div>
-        <img
-          src="./ui/assets/brand/ai-sisi-welcome.jpg"
-          alt="AI 絲絲"
-          width="158"
-          height="158"
+          class="maintenance-ai-hero__image"
+          src="./ui/ZDOS%20Brand%20Center/%E5%B0%8F%E5%A4%A9%EF%BC%86%E7%B5%B2%E7%B5%B2/95d85c1d-9151-4e4c-b506-224de8b02322.png"
+          alt="AI 小天與 AI 絲絲"
+          width="500"
+          height="625"
+          decoding="async"
         />
       </div>
     </section>
@@ -87,7 +97,7 @@
           </span>
           <span class="label">預計完成時間</span>
           <p class="value">2025 / 07 / 30 (三)<br />下午 15:00</p>
-          <p class="foot">正式版全面上線！</p>
+          <p class="foot">升級完成後將恢復服務</p>
         </div>
         <div class="divider" aria-hidden="true"></div>
         <div class="col">
