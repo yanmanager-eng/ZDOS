@@ -29,7 +29,7 @@
 ## UI-016A+D 正式版｜A + D
 1. 三段看板（早／中／晚）
 2. 標題：班別、人數、已到／未到
-3. 兩欄 Compact 人名；`getEmployeeColor`；去姓，重名全名
+3. 兩欄 Compact 人名；`getEmployeeColor`；去姓，**同店跨班別**重名全名
 4. 長按 Bottom Sheet 不變
 5. 依 `SHIFT_REGISTRY` 時段自動展開當前班別
 6. 全部展開／全部收合／目前班別
@@ -37,3 +37,7 @@
 8. 今日跨店支援獨立區塊
 9. 390px 手機優先；避免灰字牆
 10. 不改 SoT／權限／資料來源
+
+## v1.5 FREEZE
+- `openSchedulingCenter` → `openHrCenterHome`（看板為正式排班入口）
+- Phase 1 功能清單封板候選；待 Beta 驗收後標 100%

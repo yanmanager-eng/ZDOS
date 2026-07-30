@@ -1,5 +1,15 @@
 # ZDOS 更新紀錄
 
+## v1.5 FINAL FREEZE｜Phase 1–2 封板候選（2026/07/30）
+
+- Phase 1 排班中心（UI-016）：跨班別重名改全名；`openSchedulingCenter` 導向 hrHome 看板
+- Phase 2 排假中心（UI-017）：月曆／Bottom Sheet／單頁新增／批次／搜尋／長按／Today／統計／假別色
+- Phase 2 補齊人力風險燈號（Snapshot 內 watch／risk，不重掃 SoT）
+- Phase 3 小修：幹部審核清單納入 `failed`／`sync_failed` 別名
+- 不改 Schema／Auth／排班 SoT；不 Production Deploy
+
+---
+
 ## UI-016A+D｜班別三段看板正式版（A+D）
 
 - 正式版型：早／中／晚三段看板

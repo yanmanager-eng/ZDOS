@@ -751,10 +751,11 @@
             color: rgb(191 219 254);
         }
 
+        /* UI-017：自選休改綠（與假別色票一致；舊紫票作廢） */
         .zdos-scheduling-leave-chip--vacation-choice {
-            border-color: rgba(167, 139, 250, 0.45);
-            background: rgba(124, 58, 237, 0.16);
-            color: rgb(221 214 254);
+            border-color: rgba(74, 222, 128, 0.5);
+            background: rgba(22, 163, 74, 0.2);
+            color: rgb(187 247 208);
         }
 
         /* Feature-011.2：假別色彩（chip + legend 共用，避免 legend 基底樣式覆蓋色票） */
@@ -767,9 +768,9 @@
 
         .zdos-scheduling-leave-chip.zdos-leave-type--vacation-choice,
         .zdos-scheduling-leave-legend-chip.zdos-leave-type--vacation-choice {
-            border-color: rgba(56, 189, 248, 0.45);
-            background: rgba(37, 99, 235, 0.16);
-            color: rgb(191 219 254);
+            border-color: rgba(74, 222, 128, 0.5);
+            background: rgba(22, 163, 74, 0.2);
+            color: rgb(187 247 208);
         }
 
         .zdos-scheduling-leave-chip.zdos-leave-type--personal,
@@ -781,9 +782,9 @@
 
         .zdos-scheduling-leave-chip.zdos-leave-type--official,
         .zdos-scheduling-leave-legend-chip.zdos-leave-type--official {
-            border-color: rgba(192, 132, 252, 0.4);
-            background: rgba(168, 85, 247, 0.14);
-            color: rgb(233 213 255);
+            border-color: rgba(96, 165, 250, 0.5);
+            background: rgba(37, 99, 235, 0.18);
+            color: rgb(191 219 254);
         }
 
         .zdos-scheduling-leave-chip.zdos-leave-type--sick,
@@ -791,6 +792,20 @@
             border-color: rgba(248, 113, 113, 0.45);
             background: rgba(239, 68, 68, 0.16);
             color: rgb(254 202 202);
+        }
+
+        .zdos-scheduling-leave-chip.zdos-leave-type--marriage,
+        .zdos-scheduling-leave-legend-chip.zdos-leave-type--marriage {
+            border-color: rgba(192, 132, 252, 0.5);
+            background: rgba(126, 34, 206, 0.18);
+            color: rgb(233 213 255);
+        }
+
+        .zdos-scheduling-leave-chip.zdos-leave-type--funeral,
+        .zdos-scheduling-leave-legend-chip.zdos-leave-type--funeral {
+            border-color: rgba(148, 163, 184, 0.45);
+            background: rgba(71, 85, 105, 0.28);
+            color: rgb(203 213 225);
         }
 
         .zdos-scheduling-leave-chip.zdos-leave-type--annual,
@@ -1903,6 +1918,64 @@
         .zdos-leave-form-hint { margin-top:.45rem; padding:.55rem .65rem; border-radius:10px; border:1px solid rgba(56,189,248,.16); background:rgba(14,165,233,.08); color:rgb(148 163 184); font-size:10px; line-height:1.5; }
         @media (min-width:520px){ .zdos-leave-date-range{grid-template-columns:repeat(2,minmax(0,1fr));} }
 
+        /* UI-017：排假中心 UX 正式版 */
+        .zdos-lc17{display:flex;flex-direction:column;gap:.65rem;min-width:0;max-width:100%;overflow-x:hidden}
+        .zdos-lc17-toolbar{display:flex;flex-direction:column;gap:.4rem;min-width:0}
+        .zdos-lc17-toolbar-row{display:flex;align-items:center;justify-content:space-between;gap:.4rem;min-width:0}
+        .zdos-lc17-actions{display:inline-flex;align-items:center;gap:.3rem;flex:0 0 auto}
+        .zdos-lc17-btn{height:1.85rem;padding:0 .6rem;border-radius:.55rem;border:1px solid rgba(255,255,255,.1);background:rgba(15,23,42,.8);color:#e2e8f0;font-size:.62rem;font-weight:800;white-space:nowrap}
+        .zdos-lc17-btn--today{border-color:rgba(56,189,248,.45);background:rgba(8,47,73,.55);color:rgb(186 230 253)}
+        .zdos-lc17-btn--batch{border-color:rgba(251,113,133,.4);background:rgba(136,19,55,.35);color:rgb(254 205 211)}
+        .zdos-lc17-search{width:100%;min-width:0;box-sizing:border-box;height:2rem;border-radius:.65rem;border:1px solid rgba(244,63,94,.28);background:rgba(2,6,23,.55);color:#f8fafc;padding:0 .7rem;font-size:.76rem;font-weight:700;outline:none}
+        .zdos-lc17-search:focus{border-color:rgba(244,63,94,.55);box-shadow:0 0 0 2px rgba(244,63,94,.12)}
+        .zdos-lc17-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.35rem}
+        .zdos-lc17-kpi{min-width:0;padding:.55rem .5rem;border-radius:.7rem;border:1px solid rgba(255,255,255,.08);background:rgba(15,23,42,.7)}
+        .zdos-lc17-kpi-label{font-size:.58rem;font-weight:800;color:rgb(226 232 240);letter-spacing:.04em}
+        .zdos-lc17-kpi-value{margin-top:.15rem;font-size:1.05rem;font-weight:900;color:#fff;line-height:1.1}
+        .zdos-lc17-month-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.3rem}
+        .zdos-lc17-stat{min-width:0;display:flex;align-items:center;gap:.28rem;padding:.4rem .45rem;border-radius:.55rem;border:1px solid rgba(255,255,255,.07);background:rgba(2,6,23,.45);font-size:.62rem;font-weight:800;color:#e2e8f0}
+        .zdos-lc17-stat-emoji{flex:0 0 auto}
+        .zdos-lc17-stat-count{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:900}
+        .zdos-lc17-cal{border-radius:1rem;border:1px solid rgba(255,255,255,.08);background:rgba(15,23,42,.55);padding:.5rem;min-width:0;overflow:hidden}
+        .zdos-lc17-day{min-height:3.35rem;border-radius:.65rem;border:1px solid rgba(255,255,255,.05);background:rgba(2,6,23,.4);padding:.22rem;min-width:0;overflow:hidden;box-sizing:border-box}
+        .zdos-lc17-day--today{border-color:rgba(59,130,246,.75);background:linear-gradient(160deg,rgba(30,64,175,.35),rgba(15,23,42,.75));box-shadow:inset 0 0 0 1px rgba(59,130,246,.25)}
+        .zdos-lc17-day--has{border-color:rgba(255,255,255,.1);background:rgba(15,23,42,.72)}
+        .zdos-lc17-day--match{box-shadow:0 0 0 1px rgba(251,113,133,.55)}
+        .zdos-lc17-day--watch{border-color:rgba(251,191,36,.45);box-shadow:inset 0 0 0 1px rgba(251,191,36,.18)}
+        .zdos-lc17-day--risk{border-color:rgba(248,113,113,.55);background:rgba(127,29,29,.18);box-shadow:inset 0 0 0 1px rgba(248,113,113,.22)}
+        .zdos-lc17-day-risk{margin-top:auto;font-size:.48rem;font-weight:900;line-height:1.1;letter-spacing:.02em}
+        .zdos-lc17-day--watch .zdos-lc17-day-risk{color:rgb(253 224 71)}
+        .zdos-lc17-day--risk .zdos-lc17-day-risk{color:rgb(254 202 202)}
+        .zdos-lc17-day-btn{width:100%;height:100%;min-height:2.95rem;min-width:0;border:0;background:transparent;color:inherit;padding:0;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:.12rem;overflow:hidden}
+        .zdos-lc17-day-num{font-size:.7rem;font-weight:900;color:#f1f5f9;line-height:1}
+        .zdos-lc17-day-tags{display:flex;flex-wrap:wrap;gap:.12rem;min-width:0}
+        .zdos-lc17-tag{display:inline-flex;align-items:center;gap:.05rem;padding:.05rem .18rem;border-radius:.3rem;font-size:.55rem;font-weight:900;line-height:1.15;border:1px solid transparent;max-width:100%}
+        .zdos-lc17-tag--vacation,.zdos-lc17-tag--vacation-choice{background:rgba(22,163,74,.22);border-color:rgba(74,222,128,.35);color:rgb(187 247 208)}
+        .zdos-lc17-tag--sick{background:rgba(185,28,28,.28);border-color:rgba(248,113,113,.4);color:rgb(254 202 202)}
+        .zdos-lc17-tag--personal{background:rgba(194,65,12,.25);border-color:rgba(251,146,60,.4);color:rgb(254 215 170)}
+        .zdos-lc17-tag--official{background:rgba(29,78,216,.25);border-color:rgba(96,165,250,.4);color:rgb(191 219 254)}
+        .zdos-lc17-tag--marriage{background:rgba(126,34,206,.25);border-color:rgba(192,132,252,.4);color:rgb(233 213 255)}
+        .zdos-lc17-tag--funeral{background:rgba(71,85,105,.35);border-color:rgba(148,163,184,.4);color:rgb(203 213 225)}
+        .zdos-lc17-tag--other{background:rgba(51,65,85,.35);border-color:rgba(148,163,184,.3);color:rgb(226 232 240)}
+        .zdos-lc17-sheet-group{margin-top:.65rem;padding-top:.55rem;border-top:1px solid rgba(255,255,255,.08)}
+        .zdos-lc17-sheet-group:first-of-type{margin-top:.2rem;padding-top:0;border-top:0}
+        .zdos-lc17-sheet-group-title{display:flex;align-items:center;gap:.35rem;font-size:.72rem;font-weight:900;margin-bottom:.35rem}
+        .zdos-lc17-person{display:flex;align-items:center;justify-content:space-between;gap:.5rem;width:100%;padding:.55rem .6rem;border-radius:.7rem;border:1px solid rgba(255,255,255,.07);background:rgba(2,6,23,.5);text-align:left;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+        .zdos-lc17-person.is-match{border-color:rgba(251,113,133,.55);background:rgba(136,19,55,.25)}
+        .zdos-lc17-info-sheet{position:fixed;inset:0;z-index:1003;display:flex;align-items:flex-end;justify-content:center;background:rgba(2,6,23,.72);backdrop-filter:blur(8px)}
+        .zdos-lc17-info-panel{width:100%;max-width:28rem;max-height:min(78dvh,calc(100dvh - 3rem));overflow:auto;border-radius:22px 22px 0 0;border:1px solid rgba(255,255,255,.09);border-bottom:0;background:rgba(15,23,42,.98);padding:1rem 1rem max(1rem,env(safe-area-inset-bottom,0px));box-shadow:0 -18px 50px rgba(0,0,0,.5)}
+        .zdos-lc17-info-row{display:flex;gap:.45rem;align-items:flex-start;font-size:11px;line-height:1.35;margin-top:.3rem}
+        .zdos-lc17-info-k{flex:0 0 auto;min-width:3.6rem;color:rgb(148 163 184);font-weight:700}
+        .zdos-lc17-info-v{min-width:0;color:#f1f5f9;font-weight:700;word-break:break-word}
+        .zdos-lc17-info-actions{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.85rem}
+        .zdos-leave-create-shell.zdos-lc17-compact .zdos-lc17-hide-advanced{display:none!important}
+        @media (max-width:390px){
+            .zdos-lc17-day{min-height:3.05rem;padding:.16rem}
+            .zdos-lc17-day-btn{min-height:2.7rem}
+            .zdos-lc17-day-num{font-size:.64rem}
+            .zdos-lc17-tag{font-size:.5rem;padding:.04rem .14rem}
+            .zdos-lc17-month-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+        }
         /* UI-010A：排假中心當月總覽（Mobile First） */
         .zdos-leave-overview { display:flex; flex-direction:column; gap:.75rem; min-width:0; max-width:100%; overflow-x:hidden; }
         .zdos-leave-summary-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.5rem; }
@@ -6074,13 +6147,14 @@
         const VERSION_INFO = {
             label: 'ZDOS',
             get version() { return ZDOS_IS_BETA_SITE ? 'v1.4.5 Beta' : 'v1.3.0'; },
-            updatedAt: '2026/07/29',
+            updatedAt: '2026/07/30',
             changes: [
-                'UI-016A+D：排班中心班別看板正式版（兩欄去姓、目前班別自動展開、跨店區塊、人力警示）',
+                'v1.5 FINAL FREEZE：Phase 1 排班中心／Phase 2 排假中心封板候選',
+                'UI-017：排假中心 UX（月曆／風險燈號／Bottom Sheet／單頁新增／批次／統計）',
+                'UI-016A+D：排班中心班別看板（跨班別重名全名、智慧收合、人力警示）',
                 '導入 ZDOS MP4 開場動畫（含 AI 小天・正式規格 4 秒）',
                 '開場動畫與 Supabase Auth 並行載入',
                 '新增 Skip 與播放失敗 fallback',
-                '修正開場資源快取問題',
                 '維持 ZDOS v1.4.5 Beta',
                 '正式站尚未發布'
             ]
@@ -7312,6 +7386,9 @@
             leaveOverviewEmployeeFilter: 'all',
             leaveOverviewTypeFilter: 'all',
             leaveOverviewTimeFilter: 'all',
+            leaveCenterSearchQuery: '',
+            leaveCenterLocateDate: '',
+            leaveCenterLocateLeaveId: '',
             hrCalendarMode: 'store',
             hrTodaySearchQuery: '',
             hrTodayCollapsedShifts: {},
@@ -9617,7 +9694,9 @@
                 storageValues: [LEAVE_TYPE_VACATION, LEAVE_TYPE_VACATION_GENERAL, '休'],
                 enabled: true,
                 formOrder: 1,
-                compactLabel: '休假'
+                compactLabel: '休假',
+                emoji: '🌴',
+                statKey: 'vacation'
             },
             {
                 id: 'vacation_choice',
@@ -9626,7 +9705,9 @@
                 storageValues: [LEAVE_TYPE_VACATION_CHOICE],
                 enabled: true,
                 formOrder: 2,
-                compactLabel: '自選休'
+                compactLabel: '自選休',
+                emoji: '🌴',
+                statKey: 'choice'
             },
             {
                 id: 'personal',
@@ -9635,7 +9716,9 @@
                 storageValues: ['事假', 'PERSONAL', '事'],
                 enabled: true,
                 formOrder: 3,
-                compactLabel: '事假'
+                compactLabel: '事假',
+                emoji: '📄',
+                statKey: 'personal'
             },
             {
                 id: 'official',
@@ -9644,7 +9727,9 @@
                 storageValues: ['公假', 'PUBLIC', '公'],
                 enabled: true,
                 formOrder: 4,
-                compactLabel: '公假'
+                compactLabel: '公假',
+                emoji: '🟦',
+                statKey: 'official'
             },
             {
                 id: 'sick',
@@ -9653,7 +9738,31 @@
                 storageValues: ['病假', 'SICK', '病'],
                 enabled: true,
                 formOrder: 5,
-                compactLabel: '病假'
+                compactLabel: '病假',
+                emoji: '🏥',
+                statKey: 'sick'
+            },
+            {
+                id: 'marriage',
+                cssKey: 'marriage',
+                label: '婚假',
+                storageValues: ['婚假', 'MARRIAGE', '婚'],
+                enabled: true,
+                formOrder: 6,
+                compactLabel: '婚假',
+                emoji: '💍',
+                statKey: 'marriage'
+            },
+            {
+                id: 'funeral',
+                cssKey: 'funeral',
+                label: '喪假',
+                storageValues: ['喪假', 'FUNERAL', '喪'],
+                enabled: true,
+                formOrder: 7,
+                compactLabel: '喪假',
+                emoji: '⚫',
+                statKey: 'funeral'
             },
             {
                 id: 'special_annual_closed',
@@ -9700,6 +9809,8 @@
             if (/事假|事/.test(t)) return 'personal';
             if (/病假|病/.test(t)) return 'sick';
             if (/公假|公/.test(t)) return 'official';
+            if (/婚假|婚|MARRIAGE/i.test(t)) return 'marriage';
+            if (/喪假|喪|FUNERAL/i.test(t)) return 'funeral';
             return 'other';
         };
 
@@ -9774,6 +9885,8 @@
                 date: String(row?.leave_date || '').trim(),
                 leaveType: String(row?.leave_type || '').trim(),
                 note: String(row?.note || '').trim(),
+                status: String(row?.status || row?.approval_status || '').trim(),
+                createdBy: row?.created_by || row?.createdBy || null,
                 createdAt: row?.created_at || null,
                 updatedAt: row?.updated_at || null,
                 cloudStoreId: row?.store_id || null,
@@ -11913,29 +12026,18 @@
         };
 
         window.openSchedulingCenter = async function() {
+            // v1.5 freeze：排班中心正式入口為 hrHome（UI-016 班別看板）；避免誤入排假月曆
+            if (typeof openHrCenterHome === 'function') return openHrCenterHome();
             const loginStoreId = getSchedulingStoreId();
             if (!loginStoreId) return showToast('無法判斷目前登入門市，請重新登入。', 'error');
             if (!isLeaveCloudReady()) {
                 return showToast('請假／排假需雲端登入後才能使用（資料存於雲端）。', 'error');
             }
             ensureSchedulingViewStoreId();
-            const viewStoreId = getSchedulingViewStoreId();
-            const schedulable = getSchedulableEmployeesForStore(viewStoreId);
-            const current = getEmployee(state.activeSchedulingEmployeeId);
-            if (!canCurrentUserEditStoreSchedule(viewStoreId)) {
-                const self = getCurrentUserPersonnel();
-                state.activeSchedulingEmployeeId = self?.id || null;
-            } else if (!current || !canEmployeeScheduleAtStore(current, viewStoreId)) {
-                state.activeSchedulingEmployeeId = schedulable[0]?.id || null;
-            }
-            state.currentView = 'scheduling';
-            safeSetItem('zdos_current_view', 'scheduling');
+            state.currentView = 'hrHome';
+            safeSetItem('zdos_current_view', 'hrHome');
             renderApp();
             zdosAfterViewNav();
-            const load = await fetchLeaveRequestsForCurrentView();
-            if (!load.ok) showToast(load.message || '載入雲端請假失敗。', 'error');
-            else renderApp();
-            subscribeLeaveRequestsRealtime();
         };
 
         window.switchSchedulingStore = async function(storeCode) {
@@ -12015,11 +12117,13 @@
         window.openLeaveOverviewAdd = function() {
             const viewStoreId = getSchedulingViewStoreId();
             if (!viewStoreId) return showToast('無法判斷目前門市，請重新登入。', 'error');
-            const target = `${state.schedule.year}-${String(state.schedule.month).padStart(2, '0')}-01`;
+            const today = (typeof getDeviceTodayIso === 'function' ? getDeviceTodayIso() : new Date().toISOString().slice(0, 10));
+            const ym = `${state.schedule.year}-${String(state.schedule.month).padStart(2, '0')}`;
+            const target = today.startsWith(ym) ? today : `${ym}-01`;
             if (!state.activeSchedulingEmployeeId) {
                 state.activeSchedulingEmployeeId = getCurrentUserPersonnel()?.id || getSchedulableEmployeesForStore(viewStoreId)[0]?.id || null;
             }
-            openLeaveModal(target);
+            return openLeaveCenterCreate(target);
         };
 
         window.closeLeaveDayOverview = function() {
@@ -12028,29 +12132,62 @@
 
         window.openLeaveDayOverview = function(dateStr) {
             closeLeaveDayOverview();
+            if (typeof closeLeavePersonInfoSheet === 'function') closeLeavePersonInfoSheet();
             const viewStoreId = getSchedulingViewStoreId();
             if (!viewStoreId) return showToast('無法判斷目前門市，請重新登入。', 'error');
             const isManager = canCurrentUserEditStoreSchedule(viewStoreId);
             const self = getCurrentUserPersonnel();
-            const rows = getLeaveRegistry().filter(row => row.storeId === viewStoreId && row.date === dateStr && (isManager || row.employeeId === self?.id));
-            const workforcePool = getSchedulableEmployeesForStore(viewStoreId);
-            const manpower = getLeaveCenterWorkforceSnapshot(viewStoreId, dateStr, workforcePool);
+            const day = String(dateStr || '').slice(0, 10);
+            const rows = getLeaveRegistry().filter(row =>
+                normalizeStoreIdCode(row.storeId) === normalizeStoreIdCode(viewStoreId)
+                && String(row.date || '').slice(0, 10) === day
+                && (isManager || row.employeeId === self?.id)
+            );
+            const groups = groupLeaveRowsByType(rows);
+            const locateId = String(state.leaveCenterLocateLeaveId || '');
+            const groupsHtml = groups.length ? groups.map(group => `
+                <section class="zdos-lc17-sheet-group" aria-label="${escapeHtmlText(group.label)}">
+                    <p class="zdos-lc17-sheet-group-title">${group.emoji} ${escapeHtmlText(group.label)}</p>
+                    <div class="space-y-1.5">${group.rows.map(row => {
+                        const emp = getEmployee(row.employeeId);
+                        const match = locateId && locateId === String(row.id || '');
+                        const color = typeof getEmployeeColor === 'function' ? getEmployeeColor(row.employeeId) : '#e2e8f0';
+                        return `<button type="button" data-zdos-leave-person="1" data-leave-id="${escapeHtmlText(row.id)}" onclick="openLeavePersonInfoSheet('${escapeHtmlText(row.id)}')" class="zdos-nav-btn zdos-lc17-person ${match ? 'is-match' : ''}">
+                            <span class="min-w-0 text-sm font-black truncate" style="color:${color}">${escapeHtmlText(emp?.name || row.employeeId)}</span>
+                            <span class="text-[10px] text-slate-400 shrink-0">詳情</span>
+                        </button>`;
+                    }).join('')}</div>
+                </section>`).join('') : `<div class="py-8 text-center text-sm text-slate-300">這一天目前沒有人休假</div>`;
             const sheet = document.createElement('div');
             sheet.id = 'leave-day-overview';
             sheet.className = 'zdos-leave-bottom-sheet animate-fade-in';
-            sheet.innerHTML = `<div class="zdos-leave-bottom-sheet-panel" role="dialog" aria-modal="true">
+            sheet.innerHTML = `<div class="zdos-leave-bottom-sheet-panel" role="dialog" aria-modal="true" aria-label="本日休假">
                 <div class="w-12 h-1 rounded-full bg-slate-700 mx-auto mb-4"></div>
-                <div class="flex items-start justify-between gap-3 mb-4"><div><p class="text-[10px] uppercase tracking-[0.18em] text-rose-300/80">Daily Leave</p><h2 class="text-lg font-black text-white">${escapeHtmlText(dateStr)}</h2><p class="text-xs text-slate-500 mt-1">當日休假 ${rows.length} 人</p></div><button type="button" onclick="closeLeaveDayOverview()" class="px-2 py-1 text-slate-400">✕</button></div>
-                <div class="zdos-leave-manpower-strip">
-                    <div class="zdos-leave-ops-metric"><p class="zdos-leave-ops-metric-label">可排人員</p><p class="zdos-leave-ops-metric-value">${manpower.total}</p></div>
-                    <div class="zdos-leave-ops-metric"><p class="zdos-leave-ops-metric-label">休假人員</p><p class="zdos-leave-ops-metric-value">${manpower.leavePeople}</p></div>
-                    <div class="zdos-leave-ops-metric"><p class="zdos-leave-ops-metric-label">預估可用</p><p class="zdos-leave-ops-metric-value">${manpower.available}</p>${renderLeaveCapacityBadge(manpower)}</div>
+                <div class="flex items-start justify-between gap-3 mb-3">
+                    <div class="min-w-0">
+                        <p class="text-[10px] uppercase tracking-[0.18em] text-rose-300/80">Daily Leave</p>
+                        <h2 class="text-lg font-black text-white">${escapeHtmlText(day)}</h2>
+                        <p class="text-xs text-slate-300 mt-1">本日休假名單 · ${rows.length} 人</p>
+                    </div>
+                    <button type="button" onclick="closeLeaveDayOverview()" class="px-2 py-1 text-slate-400" aria-label="關閉">✕</button>
                 </div>
-                <div class="space-y-2">${rows.length ? rows.map(row => { const emp=getEmployee(row.employeeId); return `<button type="button" onclick="closeLeaveDayOverview(); openLeaveModal('${row.id}')" class="zdos-nav-btn zdos-leave-person-row w-full text-left"><div><p class="text-sm font-bold">${renderEmployeeIdentityHtml(row.employeeId, emp?.name || row.employeeId)}</p><p class="text-[10px] text-slate-500 mt-1">${escapeHtmlText(row.note || '無備註')}</p></div><span class="zdos-scheduling-leave-legend-chip ${getLeaveTypeColorClasses(row.leaveType)}">${escapeHtmlText(getLeaveTypeLabel(row.leaveType))}</span></button>`; }).join('') : `<div class="py-8 text-center text-sm text-slate-500">這一天目前沒有人休假</div>`}</div>
-                <button type="button" onclick="closeLeaveDayOverview(); openLeaveModal('${dateStr}')" class="zdos-nav-btn w-full mt-4 py-3 rounded-xl border border-rose-500/35 bg-rose-600/20 text-rose-200 text-sm font-black">＋ 新增這一天的休假</button>
+                <div>${groupsHtml}</div>
+                <button type="button" onclick="closeLeaveDayOverview(); openLeaveCenterCreate('${escapeHtmlText(day)}')" class="zdos-nav-btn w-full mt-4 py-3 rounded-xl border border-rose-500/35 bg-rose-600/20 text-rose-200 text-sm font-black">＋新增排假</button>
             </div>`;
             sheet.addEventListener('click', e => { if (e.target === sheet) closeLeaveDayOverview(); });
             document.body.appendChild(sheet);
+        };
+
+        window.openLeaveCenterCreate = function(dateStr) {
+            const viewStoreId = getSchedulingViewStoreId();
+            if (!viewStoreId) return showToast('無法判斷目前門市，請重新登入。', 'error');
+            if (!isLeaveCloudReady()) {
+                return showToast('請假／排假需雲端登入後才能使用（資料存於雲端）。', 'error');
+            }
+            const day = String(dateStr || (typeof getDeviceTodayIso === 'function' ? getDeviceTodayIso() : new Date().toISOString().slice(0, 10))).slice(0, 10);
+            state.leaveModal = { date: day, mode: 'create', preferredScope: 'current', compactUi: true };
+            state.schedulingModal = null;
+            renderLeaveModalOverlay();
         };
 
         window.openActiveEmployeeScheduleModal = function(dateStr) {
@@ -13666,7 +13803,10 @@
                 const visibleIds = new Set(rows.map(r => r.id));
                 rows = filtered.filter(r => visibleIds.has(r.id));
                 if (filters.status === 'all') {
-                    rows = rows.filter(r => ['pending_manager', 'sync_failed', 'conflict'].includes(r.status));
+                    rows = rows.filter(r =>
+                        ['pending_manager', 'sync_failed', 'failed', 'conflict'].includes(r.status)
+                        || (typeof isScheduleChangeFailed === 'function' && isScheduleChangeFailed(r.status))
+                    );
                 }
             } else if (tab === 'pending_me') {
                 rows = ScheduleChangeRequestService.listVisibleForActor('pending_me');
@@ -17411,28 +17551,29 @@
                 return `<span id="leave-form-type-preview" class="zdos-scheduling-leave-legend-chip zdos-leave-form-type-preview ${cls}"><span class="zdos-scheduling-leave-chip-type">${escapeHtmlText(label)}</span></span>`;
             })();
             const selectionHint = getLeaveSelectionWindowHintForForm(defaultEmployeeId, viewStoreId);
+            const compactUi = !!modalState.compactUi;
             const modal = document.createElement('div');
             modal.id = 'leave-modal';
-            modal.className = 'zdos-leave-create-shell animate-fade-in';
+            modal.className = `zdos-leave-create-shell animate-fade-in${compactUi ? ' zdos-lc17-compact' : ''}`;
             modal.innerHTML = `
                 <div class="zdos-leave-create-panel" role="dialog" aria-modal="true" aria-labelledby="leave-modal-title">
                     <form onsubmit="submitLeaveForm(event)" class="zdos-leave-create-form">
                         <div class="zdos-leave-create-header">
                             <div>
-                                <p class="text-[10px] uppercase tracking-[0.18em] text-rose-300/90">Leave Registry</p>
-                                <h2 id="leave-modal-title" class="text-lg font-black text-white">${title}</h2>
+                                <p class="text-[10px] uppercase tracking-[0.18em] text-rose-300/90">${compactUi ? 'Quick Leave' : 'Leave Registry'}</p>
+                                <h2 id="leave-modal-title" class="text-lg font-black text-white">${compactUi ? '新增排假' : title}</h2>
                                 <p class="mt-1 text-xs text-slate-400 font-mono">${escapeHtmlText(getStoreByCode(viewStoreId)?.name || viewStoreId)}</p>
                             </div>
                             <button type="button" id="leave-create-close-btn" class="zdos-nav-btn px-2 py-1 rounded-lg text-slate-400 hover:text-white text-sm" aria-label="關閉">✕</button>
                         </div>
                         <div class="zdos-leave-create-body">
                             <div>
-                                <label for="leave-form-employee" class="block text-[10px] font-bold text-slate-400 mb-1">員工</label>
+                                <label for="leave-form-employee" class="block text-[10px] font-bold text-slate-400 mb-1">${compactUi ? '① 員工' : '員工'}</label>
                                 <select id="leave-form-employee" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50" ${hasEmployeeOptions ? '' : 'disabled'}>
                                     ${employeeOptions || '<option value="">無可排班員工</option>'}
                                 </select>
                             </div>
-                            <div class="zdos-leave-form-section">
+                            <div class="zdos-leave-form-section zdos-lc17-hide-advanced">
                                 <p class="block text-[10px] font-bold text-slate-400 mb-2">排假類型</p>
                                 <div class="zdos-leave-segment">
                                     <input id="leave-scope-current" type="radio" name="leave-form-scope" value="current" ${defaultScope === 'current' ? 'checked' : ''}><label for="leave-scope-current">本月休假</label>
@@ -17440,40 +17581,40 @@
                                 </div>
                             </div>
                             <div class="zdos-leave-form-section">
-                                <p class="block text-[10px] font-bold text-slate-400 mb-2">日期方式</p>
-                                <div class="zdos-leave-segment mb-3">
+                                <p class="block text-[10px] font-bold text-slate-400 mb-2 zdos-lc17-hide-advanced">日期方式</p>
+                                <div class="zdos-leave-segment mb-3 zdos-lc17-hide-advanced">
                                     <input id="leave-date-single" type="radio" name="leave-form-date-mode" value="single" checked onchange="toggleLeaveDateRange()"><label for="leave-date-single">單日</label>
                                     <input id="leave-date-range" type="radio" name="leave-form-date-mode" value="range" onchange="toggleLeaveDateRange()"><label for="leave-date-range">連續日期</label>
                                 </div>
                                 <div class="zdos-leave-date-range">
-                                    <div><label for="leave-form-date" class="block text-[10px] font-bold text-slate-500 mb-1">開始日期</label><input id="leave-form-date" type="date" value="${escapeHtmlText(defaultDate)}" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50"></div>
+                                    <div><label for="leave-form-date" class="block text-[10px] font-bold text-slate-500 mb-1">${compactUi ? '② 日期' : '開始日期'}</label><input id="leave-form-date" type="date" value="${escapeHtmlText(defaultDate)}" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50"></div>
                                     <div id="leave-form-end-wrap" class="hidden"><label for="leave-form-end-date" class="block text-[10px] font-bold text-slate-500 mb-1">結束日期</label><input id="leave-form-end-date" type="date" value="${escapeHtmlText(defaultDate)}" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50"></div>
                                 </div>
                             </div>
-                            <div class="zdos-leave-form-section">
+                            <div class="zdos-leave-form-section zdos-lc17-hide-advanced">
                                 <p class="block text-[10px] font-bold text-slate-400 mb-2">休假時段</p>
                                 <div class="zdos-leave-segment zdos-leave-segment--three">
                                     ${['全天','上午','下午'].map(v => `<input id="leave-period-${v}" type="radio" name="leave-form-period" value="${v}" ${defaultPeriod===v?'checked':''}><label for="leave-period-${v}">${v}</label>`).join('')}
                                 </div>
                             </div>
                             <div>
-                                <label for="leave-form-type" class="block text-[10px] font-bold text-slate-400 mb-1">假別</label>
+                                <label for="leave-form-type" class="block text-[10px] font-bold text-slate-400 mb-1">${compactUi ? '③ 假別' : '假別'}</label>
                                 ${selectionHint}
                                 <select id="leave-form-type" onchange="updateLeaveFormTypePreview()" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50 mt-1">
                                     ${typeOptions}
                                 </select>
                                 ${leaveTypePreviewHtml}
                             </div>
-                            <section class="zdos-leave-create-quota" aria-label="休假額度提示"><div id="leave-form-quota-content"></div></section>
+                            <section class="zdos-leave-create-quota zdos-lc17-hide-advanced" aria-label="休假額度提示"><div id="leave-form-quota-content"></div></section>
                             <div id="leave-form-conflict" class="zdos-leave-conflict-card" role="alert"></div>
                             <div>
-                                <label for="leave-form-note" class="block text-[10px] font-bold text-slate-400 mb-1">備註（可空白）</label>
+                                <label for="leave-form-note" class="block text-[10px] font-bold text-slate-400 mb-1">${compactUi ? '④ 備註（選填）' : '備註（可空白）'}</label>
                                 <textarea id="leave-form-note" rows="2" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50 resize-none" placeholder="選填">${escapeHtmlText(defaultNote)}</textarea>
                             </div>
                         </div>
                         <div class="zdos-leave-create-footer">
                             <button type="button" id="leave-create-cancel-btn" class="zdos-nav-btn py-3 px-4 rounded-xl border border-white/[0.08] bg-slate-900/50 text-slate-400 text-sm font-bold">取消</button>
-                            <button type="submit" class="zdos-nav-btn zdos-leave-create-submit py-3 rounded-xl border border-rose-500/35 bg-rose-600/20 text-rose-200 text-sm font-bold" ${hasEmployeeOptions ? '' : 'disabled'}>儲存休假</button>
+                            <button type="submit" class="zdos-nav-btn zdos-leave-create-submit py-3 rounded-xl border border-rose-500/35 bg-rose-600/20 text-rose-200 text-sm font-bold" ${hasEmployeeOptions ? '' : 'disabled'}>${compactUi ? '⑤ 完成' : '儲存休假'}</button>
                         </div>
                     </form>
                 </div>`;
@@ -20486,12 +20627,12 @@
         };
 
         /** UI-016A+D：兩欄 Compact 人名（色點＋去姓；重名全名） */
-        const renderHrTodayBoardChipsHtml = (rows, selfKeys, leaveIds, locateEmployeeId, searchQuery, { hideCross = false } = {}) => {
+        const renderHrTodayBoardChipsHtml = (rows, selfKeys, leaveIds, locateEmployeeId, searchQuery, { hideCross = false, nameMap: sharedNameMap = null } = {}) => {
             if (!rows?.length) {
                 return `<p class="zdos-hr-board-empty">尚未排班</p>`;
             }
             const q = String(searchQuery || '').trim().toLowerCase();
-            const nameMap = buildHrBoardDisplayNameMap(rows);
+            const nameMap = sharedNameMap || buildHrBoardDisplayNameMap(rows);
             return `<div class="zdos-hr-board-grid">${rows.map(row => {
                 const empId = String(row?.employeeId || '').trim();
                 const emp = typeof getEmployee === 'function' ? getEmployee(empId) : null;
@@ -20559,6 +20700,11 @@
                 </div>
                 ${snapshot.stores.map(storeSnap => {
                     const staffingRisk = storeSnap.staffing?.level === 'risk';
+                    const storeWideRows = [
+                        ...HR_TODAY_SHIFT_ORDER.flatMap(shift => storeSnap.buckets?.[shift.code] || []),
+                        ...(storeSnap.crossStore || [])
+                    ];
+                    const storeNameMap = buildHrBoardDisplayNameMap(storeWideRows);
                     return `
                     <div class="zdos-hr-today-store">
                         <h2 class="text-sm font-black text-white">${escapeHtmlText(storeSnap.storeName)}</h2>
@@ -20586,7 +20732,7 @@
                                     </span>
                                 </button>
                                 <div class="zdos-hr-board-shift-body">
-                                    ${renderHrTodayBoardChipsHtml(rows, selfKeys, snapshot.leaveIds, locateId, searchQuery)}
+                                    ${renderHrTodayBoardChipsHtml(rows, selfKeys, snapshot.leaveIds, locateId, searchQuery, { nameMap: storeNameMap })}
                                 </div>
                             </div>`;
                         }).join('')}
@@ -20597,7 +20743,7 @@
                                 <span class="zdos-hr-board-cross-note">獨立區塊</span>
                             </div>
                             <div class="zdos-hr-board-cross-body">
-                                ${renderHrTodayBoardChipsHtml(storeSnap.crossStore, selfKeys, snapshot.leaveIds, locateId, searchQuery, { hideCross: true })}
+                                ${renderHrTodayBoardChipsHtml(storeSnap.crossStore, selfKeys, snapshot.leaveIds, locateId, searchQuery, { hideCross: true, nameMap: storeNameMap })}
                             </div>
                         </div>` : ''}
                     </div>`;
@@ -20790,6 +20936,354 @@
             if (state.hrPreLeaveBatch?.open) renderHrPreLeaveBatchOverlay();
         }
 
+        // ========================================================================
+        // UI-017｜排假中心 UX（Official）— Snapshot／月曆／Bottom Sheet
+        // 不改 leave SoT／權限／Supabase Schema／Auth
+        // ========================================================================
+        const LEAVE_CENTER_STAT_ORDER = Object.freeze([
+            { key: 'choice', label: '自選休', emoji: '🌴' },
+            { key: 'sick', label: '病假', emoji: '🏥' },
+            { key: 'personal', label: '事假', emoji: '📄' },
+            { key: 'marriage', label: '婚假', emoji: '💍' },
+            { key: 'funeral', label: '喪假', emoji: '⚫' },
+            { key: 'official', label: '公假', emoji: '🟦' }
+        ]);
+
+        const getLeaveTypeEmoji = (leaveType) => {
+            const def = typeof getLeaveTypeDefinition === 'function' ? getLeaveTypeDefinition(leaveType) : null;
+            if (def?.emoji) return def.emoji;
+            const css = typeof resolveLeaveTypeCssKey === 'function' ? resolveLeaveTypeCssKey(leaveType) : '';
+            if (css === 'vacation' || css === 'vacation-choice') return '🌴';
+            if (css === 'sick') return '🏥';
+            if (css === 'personal') return '📄';
+            if (css === 'marriage') return '💍';
+            if (css === 'funeral') return '⚫';
+            if (css === 'official') return '🟦';
+            return '📄';
+        };
+
+        const getLeaveCenterStatKey = (leaveType) => {
+            const def = typeof getLeaveTypeDefinition === 'function' ? getLeaveTypeDefinition(leaveType) : null;
+            if (def?.statKey) return def.statKey;
+            const css = typeof resolveLeaveTypeCssKey === 'function' ? resolveLeaveTypeCssKey(leaveType) : '';
+            if (css === 'vacation-choice') return 'choice';
+            if (css === 'vacation') return 'vacation';
+            if (css === 'sick') return 'sick';
+            if (css === 'personal') return 'personal';
+            if (css === 'marriage') return 'marriage';
+            if (css === 'funeral') return 'funeral';
+            if (css === 'official') return 'official';
+            return 'other';
+        };
+
+        const isLeaveCenterVacationType = (leaveType) => {
+            const key = getLeaveCenterStatKey(leaveType);
+            return key === 'choice' || key === 'vacation';
+        };
+
+        const isLeaveCenterPendingRow = (row) => {
+            const s = String(row?.status || '').trim().toLowerCase();
+            return s === 'pending' || s === 'submitted' || s === 'awaiting' || s === 'in_review';
+        };
+
+        const formatLeaveCenterCreatedBy = (row) => {
+            const by = row?.createdBy;
+            if (!by) return '';
+            const asEmp = typeof getEmployee === 'function' ? getEmployee(by) : null;
+            if (asEmp?.name) return asEmp.name;
+            const raw = String(by).trim();
+            if (raw.length > 12) return `建立者 ${raw.slice(0, 8)}…`;
+            return raw;
+        };
+
+        const formatLeaveCenterDateTime = (iso) => {
+            const s = String(iso || '').trim();
+            if (!s) return '';
+            return s.replace('T', ' ').slice(0, 19);
+        };
+
+        /** UI-017 Snapshot：單次掃描本月 leaveRegistry。 */
+        const buildLeaveCenterHomeSnapshot = ({
+            viewStoreId,
+            year,
+            month,
+            visibleIds,
+            todayIso = (typeof getDeviceTodayIso === 'function' ? getDeviceTodayIso() : new Date().toISOString().slice(0, 10))
+        } = {}) => {
+            const storeId = normalizeStoreIdCode(viewStoreId);
+            const monthPrefix = `${year}-${String(month).padStart(2, '0')}`;
+            const ids = visibleIds instanceof Set ? visibleIds : new Set(visibleIds || []);
+            const byDate = Object.create(null);
+            const monthTypeCounts = {
+                choice: 0, vacation: 0, sick: 0, personal: 0, marriage: 0, funeral: 0, official: 0, other: 0
+            };
+            let todayVacation = 0;
+            let todayLeaveReq = 0;
+            let todayPending = 0;
+            let pendingCount = 0;
+            const monthRows = [];
+
+            getLeaveRegistry().forEach(row => {
+                if (normalizeStoreIdCode(row?.storeId) !== storeId) return;
+                const empId = String(row?.employeeId || '').trim();
+                if (ids.size && empId && !ids.has(empId)) return;
+                const date = String(row?.date || '').slice(0, 10);
+                if (!date.startsWith(monthPrefix)) return;
+                monthRows.push(row);
+                const statKey = getLeaveCenterStatKey(row.leaveType);
+                if (Object.prototype.hasOwnProperty.call(monthTypeCounts, statKey)) monthTypeCounts[statKey] += 1;
+                else monthTypeCounts.other += 1;
+                if (isLeaveCenterPendingRow(row)) pendingCount += 1;
+                if (date === todayIso) {
+                    if (isLeaveCenterVacationType(row.leaveType)) todayVacation += 1;
+                    else todayLeaveReq += 1;
+                    if (isLeaveCenterPendingRow(row)) todayPending += 1;
+                }
+                if (!byDate[date]) byDate[date] = { date, total: 0, typeCounts: Object.create(null), rows: [] };
+                const day = byDate[date];
+                day.total += 1;
+                day.rows.push(row);
+                const css = typeof resolveLeaveTypeCssKey === 'function' ? resolveLeaveTypeCssKey(row.leaveType) : 'other';
+                day.typeCounts[css] = (day.typeCounts[css] || 0) + 1;
+            });
+
+            const days = Object.create(null);
+            const poolTotal = ids.size;
+            Object.keys(byDate).forEach(date => {
+                const daySnap = byDate[date];
+                const entries = Object.entries(daySnap.typeCounts)
+                    .map(([css, count]) => ({ css, count }))
+                    .sort((a, b) => b.count - a.count || a.css.localeCompare(b.css));
+                // 每日最多顯示 3 人份標籤；超出以 +N（不堆姓名）
+                let budget = 3;
+                const tags = [];
+                for (const item of entries) {
+                    if (budget <= 0) break;
+                    const showCount = Math.min(item.count, budget);
+                    if (showCount <= 0) continue;
+                    const sample = daySnap.rows.find(r => resolveLeaveTypeCssKey(r.leaveType) === item.css);
+                    tags.push({
+                        css: item.css,
+                        count: showCount,
+                        emoji: getLeaveTypeEmoji(sample?.leaveType || item.css)
+                    });
+                    budget -= showCount;
+                }
+                const shownCount = tags.reduce((n, x) => n + x.count, 0);
+                const morePeople = Math.max(0, daySnap.total - shownCount);
+                const leavePeople = new Set((daySnap.rows || []).map(r => String(r.employeeId || '').trim()).filter(Boolean)).size;
+                const available = Math.max(0, poolTotal - leavePeople);
+                const ratio = poolTotal > 0 ? available / poolTotal : 0;
+                let workforceLevel = 'good';
+                let workforceLabel = '人力充足';
+                if (poolTotal === 0 || ratio < 0.5) { workforceLevel = 'risk'; workforceLabel = '人力不足'; }
+                else if (ratio < 0.7) { workforceLevel = 'watch'; workforceLabel = '接近不足'; }
+                days[date] = {
+                    ...daySnap,
+                    tags,
+                    morePeople,
+                    workforce: {
+                        total: poolTotal,
+                        leavePeople,
+                        available,
+                        ratio,
+                        level: workforceLevel,
+                        label: workforceLabel
+                    }
+                };
+            });
+
+            return {
+                storeId, year, month, todayIso, monthPrefix, monthRows, days,
+                today: { vacation: todayVacation, leaveRequest: todayLeaveReq, pending: todayPending },
+                monthStats: monthTypeCounts,
+                pendingCount
+            };
+        };
+
+        const renderLeaveCenterDayTagsHtml = (daySnap) => {
+            if (!daySnap?.total) return '';
+            const chips = (daySnap.tags || []).map(tag =>
+                `<span class="zdos-lc17-tag zdos-lc17-tag--${escapeHtmlText(tag.css)}">${tag.emoji}${tag.count}</span>`
+            ).join('');
+            const more = daySnap.morePeople > 0
+                ? `<span class="zdos-lc17-tag zdos-lc17-tag--other">+${daySnap.morePeople}</span>`
+                : '';
+            return `<span class="zdos-lc17-day-tags">${chips}${more}</span>`;
+        };
+
+        const groupLeaveRowsByType = (rows) => {
+            const order = ['vacation-choice', 'vacation', 'sick', 'personal', 'marriage', 'funeral', 'official', 'other'];
+            const groups = Object.create(null);
+            (rows || []).forEach(row => {
+                const css = typeof resolveLeaveTypeCssKey === 'function' ? resolveLeaveTypeCssKey(row.leaveType) : 'other';
+                if (!groups[css]) {
+                    groups[css] = {
+                        css,
+                        label: (typeof getLeaveTypeCompactLabel === 'function'
+                            ? getLeaveTypeCompactLabel(row.leaveType, row)
+                            : getLeaveTypeLabel(row.leaveType, row)) || css,
+                        emoji: getLeaveTypeEmoji(row.leaveType),
+                        rows: []
+                    };
+                }
+                groups[css].rows.push(row);
+            });
+            return order.filter(k => groups[k]).map(k => groups[k])
+                .concat(Object.keys(groups).filter(k => !order.includes(k)).map(k => groups[k]));
+        };
+
+        window.setLeaveCenterSearchQuery = function(value) {
+            const raw = String(value || '');
+            const q = raw.trim().toLowerCase();
+            const active = document.activeElement;
+            const selStart = active && active.id === 'leave-center-search' ? active.selectionStart : null;
+            const selEnd = active && active.id === 'leave-center-search' ? active.selectionEnd : null;
+            state.leaveCenterSearchQuery = raw;
+            state.leaveCenterLocateDate = '';
+            state.leaveCenterLocateLeaveId = '';
+            if (q) {
+                const viewStoreId = getSchedulingViewStoreId();
+                const isManager = canCurrentUserEditStoreSchedule(viewStoreId);
+                const self = getCurrentUserPersonnel();
+                const visible = viewStoreId
+                    ? (isManager ? getSchedulableEmployeesForStore(viewStoreId) : (self ? [self] : []))
+                    : [];
+                const { year, month } = state.schedule || {};
+                const snap = buildLeaveCenterHomeSnapshot({
+                    viewStoreId, year, month,
+                    visibleIds: new Set(visible.map(e => e.id))
+                });
+                for (const row of snap.monthRows) {
+                    const emp = getEmployee(row.employeeId);
+                    const name = String(emp?.name || '').toLowerCase();
+                    const no = String(emp?.employeeNo || emp?.empId || row.employeeId || '').toLowerCase();
+                    if ((name && name.includes(q)) || (no && no.includes(q))) {
+                        state.leaveCenterLocateDate = String(row.date || '').slice(0, 10);
+                        state.leaveCenterLocateLeaveId = String(row.id || '');
+                        break;
+                    }
+                }
+            }
+            renderApp();
+            requestAnimationFrame(() => {
+                const input = document.getElementById('leave-center-search');
+                if (input) {
+                    input.focus();
+                    if (selStart != null && selEnd != null) {
+                        try { input.setSelectionRange(selStart, selEnd); } catch (_) {}
+                    }
+                }
+                const dayEl = document.querySelector('.zdos-lc17-day--match')
+                    || document.querySelector('.zdos-lc17-day--today');
+                dayEl?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        };
+
+        window.jumpLeaveCenterToToday = async function() {
+            await jumpSchedulingToCurrentMonth();
+            requestAnimationFrame(() => {
+                document.querySelector('.zdos-lc17-day--today')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        };
+
+        window.closeLeavePersonInfoSheet = function() {
+            document.getElementById('zdos-lc17-info-sheet')?.remove();
+        };
+
+        window.openLeavePersonInfoSheet = function(leaveId) {
+            const row = getLeaveRegistry().find(r => String(r?.id || '') === String(leaveId || '').trim());
+            if (!row) return showToast('找不到假單。', 'info');
+            closeLeavePersonInfoSheet();
+            closeLeaveDayOverview();
+            const emp = getEmployee(row.employeeId);
+            const viewStoreId = getSchedulingViewStoreId();
+            const canManage = typeof canCurrentUserEditStoreSchedule === 'function'
+                && canCurrentUserEditStoreSchedule(viewStoreId);
+            const canCancel = typeof canCurrentUserCancelLeave === 'function' && canCurrentUserCancelLeave(row);
+            const rows = [
+                ['姓名', emp?.name || row.employeeId],
+                ['假別', getLeaveTypeLabel(row.leaveType, row)],
+                ['日期', String(row.date || '').slice(0, 10)],
+                ['建立人', formatLeaveCenterCreatedBy(row)],
+                ['建立時間', formatLeaveCenterDateTime(row.createdAt)],
+                ['備註', row.note || '']
+            ].filter(([, v]) => String(v || '').trim());
+            const actions = canManage ? `<div class="zdos-lc17-info-actions">
+                <button type="button" class="zdos-nav-btn zdos-sched-info-action zdos-sched-info-action--edit" onclick="closeLeavePersonInfoSheet(); openLeaveModal('${escapeHtmlText(row.id)}')">編輯</button>
+                ${canCancel ? `<button type="button" class="zdos-nav-btn zdos-sched-info-action zdos-sched-info-action--leave" onclick="closeLeavePersonInfoSheet(); handleDeleteLeave('${escapeHtmlText(row.id)}')">取消</button>` : ''}
+            </div>` : '';
+            const sheet = document.createElement('div');
+            sheet.id = 'zdos-lc17-info-sheet';
+            sheet.className = 'zdos-lc17-info-sheet animate-fade-in';
+            sheet.innerHTML = `<div class="zdos-lc17-info-panel" role="dialog" aria-modal="true" aria-label="假單資訊">
+                <div class="w-12 h-1 rounded-full bg-slate-700 mx-auto mb-3" aria-hidden="true"></div>
+                <div class="flex items-start justify-between gap-3 mb-2">
+                    <div class="min-w-0">
+                        <p class="text-[10px] uppercase tracking-[0.16em] text-rose-300/80">Leave Info</p>
+                        <h2 class="text-base font-black text-white mt-1 truncate">${escapeHtmlText(emp?.name || row.employeeId)}</h2>
+                    </div>
+                    <button type="button" onclick="closeLeavePersonInfoSheet()" class="zdos-nav-btn px-2 py-1 text-slate-400" aria-label="關閉">✕</button>
+                </div>
+                <div>${rows.map(([k,v]) => `<div class="zdos-lc17-info-row"><span class="zdos-lc17-info-k">${escapeHtmlText(k)}</span><span class="zdos-lc17-info-v">${escapeHtmlText(v)}</span></div>`).join('')}</div>
+                ${actions}
+            </div>`;
+            sheet.addEventListener('click', e => { if (e.target === sheet) closeLeavePersonInfoSheet(); });
+            document.body.appendChild(sheet);
+        };
+
+        const LEAVE_PERSON_LONGPRESS_MS = 500;
+        const installLeavePersonInfoInteractions = () => {
+            if (window.__zdosLeavePersonInfoBound) return;
+            window.__zdosLeavePersonInfoBound = true;
+            let pressTimer = null;
+            let pressTarget = null;
+            let startX = 0;
+            let startY = 0;
+            let suppressNextClick = false;
+            const clearPress = () => {
+                if (pressTimer) clearTimeout(pressTimer);
+                pressTimer = null;
+                pressTarget = null;
+            };
+            document.addEventListener('contextmenu', (e) => {
+                if (e.target?.closest?.('[data-zdos-leave-person="1"]')) e.preventDefault();
+            }, true);
+            document.addEventListener('pointerdown', (e) => {
+                const host = e.target?.closest?.('[data-zdos-leave-person="1"]');
+                if (!host) return;
+                if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+                pressTarget = host;
+                startX = e.clientX;
+                startY = e.clientY;
+                pressTimer = setTimeout(() => {
+                    suppressNextClick = true;
+                    openLeavePersonInfoSheet(pressTarget.getAttribute('data-leave-id'));
+                    clearPress();
+                }, LEAVE_PERSON_LONGPRESS_MS);
+            }, true);
+            document.addEventListener('pointermove', (e) => {
+                if (!pressTimer || !pressTarget) return;
+                if (Math.abs(e.clientX - startX) > 10 || Math.abs(e.clientY - startY) > 10) clearPress();
+            }, true);
+            document.addEventListener('pointerup', () => clearPress(), true);
+            document.addEventListener('pointercancel', () => clearPress(), true);
+            document.addEventListener('click', (e) => {
+                if (!suppressNextClick) return;
+                e.preventDefault();
+                e.stopPropagation();
+                suppressNextClick = false;
+            }, true);
+            document.addEventListener('dblclick', (e) => {
+                const host = e.target?.closest?.('[data-zdos-leave-person="1"]');
+                if (!host) return;
+                e.preventDefault();
+                openLeavePersonInfoSheet(host.getAttribute('data-leave-id'));
+            }, true);
+        };
+        installLeavePersonInfoInteractions();
+
+
         function renderSchedulingCenter(root) {
             ensureSchedulingViewStoreId();
             const viewStoreId = getSchedulingViewStoreId();
@@ -20800,134 +21294,90 @@
             const { year, month } = state.schedule;
             const calendarCells = generateCalendar(year, month);
             const storeSwitcherHtml = renderSchedulingStoreSwitcher(viewStoreId);
-            const monthPrefix = `${year}-${String(month).padStart(2, '0')}`;
             const visibleEmployees = viewStoreId
                 ? (isScheduleManager ? getSchedulableEmployeesForStore(viewStoreId) : (selfPersonnel ? [selfPersonnel] : []))
                 : [];
             const visibleIds = new Set(visibleEmployees.map(e => e.id));
-            const monthLeaves = getLeaveRegistry().filter(row =>
-                row.storeId === viewStoreId &&
-                String(row.date || '').startsWith(monthPrefix) &&
-                visibleIds.has(row.employeeId)
-            );
-            const leaveFilters = getLeaveOverviewFilters();
-            const todayIso = new Date().toISOString().slice(0, 10);
-            const filteredMonthLeaves = monthLeaves.filter(row => {
-                if (leaveFilters.employeeId !== 'all' && row.employeeId !== leaveFilters.employeeId) return false;
-                if (leaveFilters.leaveType !== 'all' && String(row.leaveType || '') !== leaveFilters.leaveType) return false;
-                if (leaveFilters.timeScope === 'upcoming' && String(row.date || '') < todayIso) return false;
-                if (leaveFilters.timeScope === 'past' && String(row.date || '') >= todayIso) return false;
-                return true;
-            }).sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')) || String(a.employeeId || '').localeCompare(String(b.employeeId || '')));
-            const uniquePeople = new Set(monthLeaves.map(row => row.employeeId)).size;
-            const todayStr = new Date().toISOString().slice(0, 10);
-            const todayLeaves = monthLeaves.filter(row => row.date === todayStr);
-            const daysWithLeave = new Set(monthLeaves.map(row => row.date)).size;
-            const workforcePool = viewStoreId ? getSchedulableEmployeesForStore(viewStoreId) : [];
-            const todayWorkforce = getLeaveCenterWorkforceSnapshot(viewStoreId, todayStr, workforcePool);
+            const todayIso = typeof getDeviceTodayIso === 'function'
+                ? getDeviceTodayIso()
+                : new Date().toISOString().slice(0, 10);
+            const leaveSnap = buildLeaveCenterHomeSnapshot({
+                viewStoreId, year, month, visibleIds, todayIso
+            });
+            const searchQuery = String(state.leaveCenterSearchQuery || '');
+            const locateDate = String(state.leaveCenterLocateDate || '');
             const isLeavePage = state.currentView === 'leaveCenter';
             const batchBtn = isScheduleManager
-                ? `<button type="button" onclick="openPreLeaveBatch()" class="zdos-nav-btn px-2.5 py-2 rounded-xl border border-rose-500/30 bg-rose-600/15 text-rose-200 text-[10px] font-bold" ${viewStoreId ? '' : 'disabled'}>批次排假</button>`
+                ? `<button type="button" onclick="openPreLeaveBatch()" class="zdos-nav-btn zdos-lc17-btn zdos-lc17-btn--batch" ${viewStoreId ? '' : 'disabled'}>【批次】</button>`
                 : '';
             const header = renderFunctionPageHeader({
                 backOnclick: isLeavePage ? 'openHrCenterHome()' : 'backToZDOSHome()',
-                title: `<span class="zdos-workspace-title--scheduling">${isLeavePage ? '請假 · ' : ''}${renderSchedulingMonthNav(year, month)}</span>`,
-                rightHtml: `<div class="flex items-center gap-1.5">${batchBtn}<button type="button" onclick="openLeaveOverviewAdd()" class="zdos-nav-btn zdos-leave-primary-add" ${viewStoreId ? '' : 'disabled'}>＋ 新增</button></div>`
+                title: `<span class="zdos-workspace-title--scheduling">排假中心</span>`,
+                rightHtml: `<div class="zdos-lc17-actions">${batchBtn}<button type="button" onclick="jumpLeaveCenterToToday()" class="zdos-nav-btn zdos-lc17-btn zdos-lc17-btn--today">【今天】</button></div>`
             });
+            const monthStatsHtml = LEAVE_CENTER_STAT_ORDER.map(item => {
+                const count = Number(leaveSnap.monthStats?.[item.key] || 0);
+                return `<div class="zdos-lc17-stat"><span class="zdos-lc17-stat-emoji">${item.emoji}</span><span class="truncate">${escapeHtmlText(item.label)}</span><span class="zdos-lc17-stat-count">${count}</span></div>`;
+            }).join('');
+            const calendarHtml = calendarCells.map(cell => {
+                if (!cell.day) return `<div class="zdos-lc17-day opacity-20"></div>`;
+                const daySnap = leaveSnap.days[cell.dateStr] || null;
+                const isToday = !!cell.today || cell.dateStr === todayIso;
+                const isMatch = locateDate && locateDate === cell.dateStr;
+                const wfLevel = daySnap?.workforce?.level || '';
+                const classes = [
+                    'zdos-lc17-day',
+                    isToday ? 'zdos-lc17-day--today' : '',
+                    daySnap?.total ? 'zdos-lc17-day--has' : '',
+                    isMatch ? 'zdos-lc17-day--match' : '',
+                    wfLevel === 'watch' ? 'zdos-lc17-day--watch' : '',
+                    wfLevel === 'risk' ? 'zdos-lc17-day--risk' : ''
+                ].filter(Boolean).join(' ');
+                const riskHint = (wfLevel === 'watch' || wfLevel === 'risk')
+                    ? `<span class="zdos-lc17-day-risk">${wfLevel === 'risk' ? '不足' : '警戒'}</span>`
+                    : '';
+                return `<div class="${classes}" data-date="${escapeHtmlText(cell.dateStr)}" data-workforce="${escapeHtmlText(wfLevel || 'good')}">
+                    <button type="button" class="zdos-lc17-day-btn" onclick="openLeaveDayOverview('${escapeHtmlText(cell.dateStr)}')" aria-label="${escapeHtmlText(cell.dateStr)}${daySnap?.workforce?.label ? ` · ${daySnap.workforce.label}` : ''}">
+                        <span class="zdos-lc17-day-num">${cell.day}</span>
+                        ${daySnap?.total ? renderLeaveCenterDayTagsHtml(daySnap) : ''}
+                        ${riskHint}
+                    </button>
+                </div>`;
+            }).join('');
             const body = `
-                <div class="zdos-leave-overview">
-                    <div class="flex items-center justify-between gap-3">
-                        <div>
-                            <p class="text-[10px] uppercase tracking-[0.18em] text-rose-300/80">Leave Center</p>
-                            <h1 class="text-lg font-black text-white">當月休假總覽</h1>
-                            <p class="mt-1 text-[11px] text-slate-500">${escapeHtmlText(schedulingStoreName)}${isScheduleManager ? ' · 全店模式' : ' · 我的休假'}</p>
+                <div class="zdos-lc17">
+                    <div class="zdos-lc17-toolbar">
+                        <div class="zdos-lc17-toolbar-row">
+                            <div class="min-w-0">
+                                <p class="text-[10px] font-black text-rose-300">3 秒看懂 · 10 秒排假</p>
+                                <p class="mt-0.5 text-[10px] text-slate-300">${escapeHtmlText(schedulingStoreName)} · ${year}/${String(month).padStart(2, '0')}${isScheduleManager ? ' · 全店' : ' · 我的'}</p>
+                            </div>
+                            <button type="button" onclick="openLeaveCenterCreate()" class="zdos-nav-btn zdos-leave-primary-add" ${viewStoreId ? '' : 'disabled'}>＋新增</button>
                         </div>
-                        <div class="flex items-center gap-2">
-                        ${isScheduleManager ? `<button type="button" onclick="openActiveEmployeeScheduleModal()" class="zdos-nav-btn px-3 py-2 rounded-xl border border-indigo-500/35 bg-indigo-600/15 text-indigo-200 text-[10px] font-bold" ${viewStoreId ? '' : 'disabled'}>選班</button>` : ''}
-                        <button type="button" onclick="jumpSchedulingToCurrentMonth()" class="zdos-nav-btn px-3 py-2 rounded-xl border border-white/[0.08] bg-slate-900/55 text-[10px] font-bold text-slate-300">今天</button>
-                        </div>
+                        ${storeSwitcherHtml}
+                        <label class="sr-only" for="leave-center-search">搜尋姓名或工號</label>
+                        <input id="leave-center-search" type="search" inputmode="search" autocomplete="off" placeholder="搜尋姓名／工號" value="${escapeHtmlText(searchQuery)}" oninput="setLeaveCenterSearchQuery(this.value)" class="zdos-lc17-search" />
                     </div>
-                    ${storeSwitcherHtml}
+                    <section class="zdos-lc17-kpis" aria-label="今日概況">
+                        <div class="zdos-lc17-kpi"><p class="zdos-lc17-kpi-label">今日休假</p><p class="zdos-lc17-kpi-value">${leaveSnap.today.vacation}</p></div>
+                        <div class="zdos-lc17-kpi"><p class="zdos-lc17-kpi-label">今日請假</p><p class="zdos-lc17-kpi-value">${leaveSnap.today.leaveRequest}</p></div>
+                        <div class="zdos-lc17-kpi"><p class="zdos-lc17-kpi-label">待審核</p><p class="zdos-lc17-kpi-value">${leaveSnap.today.pending}</p></div>
+                    </section>
+                    <section aria-label="本月統計">
+                        <p class="text-[10px] font-black text-slate-200 mb-1.5">本月統計</p>
+                        <div class="zdos-lc17-month-stats">${monthStatsHtml}</div>
+                    </section>
                     ${viewStoreId && isScheduleManager ? renderLeaveSelectionWindowAdminPanel(viewStoreId) : ''}
-                    ${selfPersonnel ? (() => { const snap=getEmployeeLeaveQuotaSnapshot(selfPersonnel.id,viewStoreId,year,month); const future=snap.rows.filter(r=>String(r.date||'')>=todayIso).length; return `<section class="zdos-leave-self-card"><div class="flex items-center justify-between gap-3"><div><p class="text-[10px] font-black text-emerald-300">我的休假與額度</p><p class="mt-1 text-[10px] text-slate-500">${escapeHtmlText(selfPersonnel.name)} · ${year}/${String(month).padStart(2,'0')}</p></div><span class="text-[10px] text-slate-400">剩餘 ${snap.remainTotal} 天</span></div><div class="zdos-leave-self-grid"><div class="zdos-leave-self-metric"><p class="zdos-leave-self-metric-label">本月已排</p><p class="zdos-leave-self-metric-value">${snap.usedTotal} 天</p></div><div class="zdos-leave-self-metric"><p class="zdos-leave-self-metric-label">未來休假</p><p class="zdos-leave-self-metric-value">${future} 筆</p></div><div class="zdos-leave-self-metric"><p class="zdos-leave-self-metric-label">自選休剩餘</p><p class="zdos-leave-self-metric-value">${snap.remainChoice} 天</p></div></div></section>`; })() : ''}
-                    <div class="zdos-leave-summary-grid">
-                        <div class="zdos-leave-summary-card"><p class="zdos-leave-summary-label">本月休假</p><p class="zdos-leave-summary-value">${monthLeaves.length}<span class="text-[10px] text-slate-500 ml-1">筆</span></p></div>
-                        <div class="zdos-leave-summary-card"><p class="zdos-leave-summary-label">休假人員</p><p class="zdos-leave-summary-value">${uniquePeople}<span class="text-[10px] text-slate-500 ml-1">人</span></p></div>
-                        <div class="zdos-leave-summary-card"><p class="zdos-leave-summary-label">休假日期</p><p class="zdos-leave-summary-value">${daysWithLeave}<span class="text-[10px] text-slate-500 ml-1">天</span></p></div>
-                    </div>
-                    <section class="zdos-leave-ops-card">
-                        <div class="flex items-center justify-between gap-3">
-                            <div><p class="text-[10px] font-black text-sky-300">今日營運人力</p><p class="mt-1 text-[10px] text-slate-500">依在職可排人員扣除今日休假推估，不代表實際出勤。</p></div>
-                            ${renderLeaveCapacityBadge(todayWorkforce)}
+                    <section class="zdos-lc17-cal" aria-label="月曆總覽">
+                        <div class="flex items-center justify-between gap-2 mb-1.5">
+                            <p class="text-[10px] font-black text-white">月曆總覽</p>
+                            <div class="text-[10px]">${renderSchedulingMonthNav(year, month)}</div>
                         </div>
-                        <div class="zdos-leave-ops-grid">
-                            <div class="zdos-leave-ops-metric"><p class="zdos-leave-ops-metric-label">可排人員</p><p class="zdos-leave-ops-metric-value">${todayWorkforce.total}<span class="text-[9px] text-slate-500 ml-1">人</span></p></div>
-                            <div class="zdos-leave-ops-metric"><p class="zdos-leave-ops-metric-label">今日休假</p><p class="zdos-leave-ops-metric-value">${todayWorkforce.leavePeople}<span class="text-[9px] text-slate-500 ml-1">人</span></p></div>
-                            <div class="zdos-leave-ops-metric"><p class="zdos-leave-ops-metric-label">預估可用</p><p class="zdos-leave-ops-metric-value">${todayWorkforce.available}<span class="text-[9px] text-slate-500 ml-1">人</span></p></div>
-                        </div>
-                        ${todayLeaves.length ? `<p class="mt-2 text-[10px] text-slate-400">今日休假：${todayLeaves.map(r => renderEmployeeIdentityHtml(r.employeeId, getEmployee(r.employeeId)?.name || r.employeeId)).join('<span class="zdos-emp-id-sep">、</span>')}</p>` : ''}
-                    </section>
-                    <div class="zdos-scheduling-leave-legend-card" aria-label="假別說明">${renderLeaveTypeLegend()}</div>
-                    <section class="zdos-leave-calendar-card">
                         <div class="zdos-scheduling-calendar-head mb-1">${SCHEDULING_WEEKDAYS.map(label => `<div class="zdos-scheduling-weekday">${label}</div>`).join('')}</div>
-                        <div class="zdos-leave-calendar-grid">
-                            ${calendarCells.map(cell => {
-                                if (!cell.day) return `<div class="zdos-leave-day opacity-20"></div>`;
-                                const dayRows = monthLeaves.filter(row => row.date === cell.dateStr);
-                                const names = dayRows.map(row => ({
-                                    employeeId: row.employeeId,
-                                    name: getEmployee(row.employeeId)?.name || row.employeeId
-                                }));
-                                const manpower = getLeaveCenterWorkforceSnapshot(viewStoreId, cell.dateStr, workforcePool);
-                                const manpowerClass = manpower.level === 'risk' ? 'zdos-leave-day--risk' : (manpower.level === 'watch' ? 'zdos-leave-day--watch' : '');
-                                return `<div class="zdos-leave-day ${cell.today ? 'zdos-leave-day--today' : ''} ${dayRows.length ? 'zdos-leave-day--has' : ''} ${manpowerClass}">
-                                    <button type="button" class="zdos-leave-day-btn" onclick="openLeaveDayOverview('${cell.dateStr}')">
-                                        <span class="zdos-leave-day-num">${cell.day}</span>
-                                        ${dayRows.length ? `<span class="zdos-leave-day-count">休 ${dayRows.length}</span>${renderLeaveDayNamePreview(names, 2)}` : ''}
-                                        ${renderLeaveCapacityBadge(manpower)}
-                                    </button>
-                                </div>`;
-                            }).join('')}
-                        </div>
-                        <p class="mt-3 text-[10px] text-slate-500">點日期查看當日休假；點右上角「＋新增」進入本月休假或預排假。</p>
+                        <div class="zdos-leave-calendar-grid">${calendarHtml}</div>
+                        <p class="mt-2 text-[10px] text-slate-300">點日期看名單 · 長按員工看詳情</p>
                     </section>
-
-                    <section class="zdos-leave-filter-card">
-                        <div class="flex items-center justify-between gap-3 mb-2">
-                            <div><p class="text-[10px] font-black text-violet-300">休假清單篩選</p><p class="mt-1 text-[10px] text-slate-500">快速查找本月假單，不影響正式資料。</p></div>
-                            <button type="button" onclick="resetLeaveOverviewFilters()" class="zdos-nav-btn px-2.5 py-1.5 rounded-lg border border-white/[0.08] bg-slate-900/60 text-[10px] font-bold text-slate-400">重設</button>
-                        </div>
-                        <div class="zdos-leave-filter-grid">
-                            <select class="zdos-leave-filter-select" onchange="setLeaveOverviewFilter('employee', this.value)" aria-label="依員工篩選">
-                                <option value="all">全部員工</option>
-                                ${visibleEmployees.map(emp => `<option value="${escapeHtmlText(emp.id)}" ${leaveFilters.employeeId === emp.id ? 'selected' : ''}>${escapeHtmlText(emp.name)}</option>`).join('')}
-                            </select>
-                            <select class="zdos-leave-filter-select" onchange="setLeaveOverviewFilter('type', this.value)" aria-label="依假別篩選">
-                                <option value="all">全部假別</option>
-                                ${[...new Set(monthLeaves.map(row => String(row.leaveType || '').trim()).filter(Boolean))].map(type => `<option value="${escapeHtmlText(type)}" ${leaveFilters.leaveType === type ? 'selected' : ''}>${escapeHtmlText(type)}</option>`).join('')}
-                            </select>
-                            <select class="zdos-leave-filter-select" onchange="setLeaveOverviewFilter('time', this.value)" aria-label="依日期狀態篩選">
-                                <option value="all" ${leaveFilters.timeScope === 'all' ? 'selected' : ''}>全部日期</option>
-                                <option value="upcoming" ${leaveFilters.timeScope === 'upcoming' ? 'selected' : ''}>今天起／未來</option>
-                                <option value="past" ${leaveFilters.timeScope === 'past' ? 'selected' : ''}>已過日期</option>
-                            </select>
-                        </div>
-                    </section>
-                    <section class="zdos-leave-list-card">
-                        <div class="px-3.5 py-3 border-b border-white/[0.05] flex items-center justify-between gap-3">
-                            <div><p class="text-[11px] font-black text-white">本月休假清單</p><p class="mt-0.5 text-[10px] text-slate-500">目前顯示 ${filteredMonthLeaves.length} 筆</p></div>
-                        </div>
-                        ${filteredMonthLeaves.length ? filteredMonthLeaves.map(row => {
-                            const emp = getEmployee(row.employeeId);
-                            const periodLabel = String(row.period || '').trim() || '全天';
-                            return `<button type="button" class="zdos-leave-list-row zdos-nav-btn" onclick="openLeaveDayOverview('${escapeHtmlText(row.date)}')">
-                                <span class="zdos-leave-list-date">${escapeHtmlText(String(row.date || '').slice(5))}</span>
-                                <span class="min-w-0">${renderEmployeeIdentityHtml(row.employeeId, emp?.name || row.employeeId, { className: 'zdos-leave-list-person' })}<span class="zdos-leave-list-note">${escapeHtmlText(periodLabel)}${row.note ? ` · ${String(row.note)}` : ''}</span></span>
-                                <span class="${getLeaveTypeBadgeClasses(row.leaveType)}">${escapeHtmlText(row.leaveType || '休假')}</span>
-                            </button>`;
-                        }).join('') : `<div class="zdos-leave-list-empty">目前篩選條件沒有休假紀錄</div>`}
-                    </section>
-                    <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · ${isLeavePage ? '請假' : '排假中心'}</footer>
+                    <footer class="pt-1 text-center text-[10px] text-slate-500 font-mono">ZDOS ${VERSION_INFO.version} · 排假中心 UI-017</footer>
                 </div>`;
             root.innerHTML = wrapFunctionPage(header, body, 'max-w-5xl');
             if (state.schedulingModal) renderAddScheduleModalOverlay();
