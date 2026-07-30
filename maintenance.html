@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#061428">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>ZDOS v1.5.0 正式版上線</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="ui/assets/brand/zdos-product-logo.png?v=20260726b1" type="image/png">
+  <link rel="stylesheet" href="ui/maintenance.css">
+  <script src="ui/maintenance-config.js"></script>
+  <script>
+    (function () {
+      if (window.MAINTENANCE_MODE === false) {
+        location.replace('index.html' + (location.search || '') + (location.hash || ''));
+      }
+    })();
+  </script>
+</head>
+<body>
+  <main class="zdos-maint" role="main" aria-label="ZDOS v1.5.0 正式版上線維護頁">
+    <div class="zdos-maint__grid" aria-hidden="true"></div>
+    <div class="zdos-maint__inner">
+      <header class="zdos-maint__hero">
+        <img
+          class="zdos-maint__logo"
+          src="ui/assets/brand/zdos-product-logo.png?v=20260726b1"
+          width="84"
+          height="84"
+          alt="ZDOS"
+          decoding="async"
+        >
+        <p class="zdos-maint__eyebrow">Official Launch</p>
+        <h1 class="zdos-maint__title">
+          <span>ZDOS v1.5.0</span>
+          <em>正式版上線</em>
+        </h1>
+        <p class="zdos-maint__lead">
+          我們正在進行最後部署與系統最佳化，<br>
+          正式版即將全面開放。<br>
+          感謝您的耐心等待。
+        </p>
+      </header>
+
+      <div class="zdos-maint__duo" aria-label="AI 絲絲">
+        <figure class="zdos-maint__char zdos-maint__char--left">
+          <img
+            src="ui/assets/brand/ai-xiaotian-normal.png?v=20260726brand1"
+            width="150"
+            height="270"
+            alt="AI 絲絲"
+            decoding="async"
+          >
+          <figcaption class="zdos-maint__char-label">AI 絲絲</figcaption>
+        </figure>
+        <figure class="zdos-maint__char zdos-maint__char--right">
+          <img
+            src="ui/assets/brand/ai-xiaotian-completed.png?v=20260726brand1"
+            width="150"
+            height="270"
+            alt="AI 絲絲"
+            decoding="async"
+          >
+          <figcaption class="zdos-maint__char-label">AI 絲絲</figcaption>
+        </figure>
+      </div>
+
+      <section class="zdos-maint__card" aria-labelledby="maint-s1">
+        <h2 id="maint-s1">ZDOS v1.5.0 正式版上線</h2>
+        <p>我們正在完成最後部署。</p>
+        <p>正式版開放後，將提供更穩定、更快速、更智慧的營運體驗。</p>
+      </section>
+
+      <section class="zdos-maint__card" aria-labelledby="maint-s2">
+        <h2 id="maint-s2">本次更新重點</h2>
+        <ul class="zdos-maint__list">
+          <li>全新首頁</li>
+          <li>排班中心升級</li>
+          <li>業績中心升級</li>
+          <li>AI 絲絲</li>
+          <li>能力學院</li>
+          <li>系統最佳化</li>
+          <li>效能提升</li>
+          <li>安全強化</li>
+        </ul>
+      </section>
+
+      <section class="zdos-maint__card" aria-labelledby="maint-s3">
+        <h2 id="maint-s3">您的資料不受影響</h2>
+        <p>本次更新不會影響：</p>
+        <ul class="zdos-maint__bullets">
+          <li>帳號</li>
+          <li>密碼</li>
+          <li>排班</li>
+          <li>業績</li>
+          <li>員工資料</li>
+          <li>系統設定</li>
+        </ul>
+      </section>
+
+      <section class="zdos-maint__card" aria-labelledby="maint-s4">
+        <h2 id="maint-s4">正式版完成後</h2>
+        <p>系統將自動恢復。</p>
+        <div class="zdos-maint__pulse" role="status" aria-live="polite">
+          <span class="zdos-maint__pulse-dot" aria-hidden="true"></span>
+          <span>DEPLOYING · PLEASE STAND BY</span>
+        </div>
+      </section>
+
+      <footer class="zdos-maint__footer">
+        <p>感謝每一位夥伴的支持。</p>
+        <strong>ZDOS Team</strong>
+      </footer>
+    </div>
+  </main>
+</body>
+</html>
