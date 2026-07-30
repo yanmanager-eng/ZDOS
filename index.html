@@ -11,7 +11,7 @@
             if (window.MAINTENANCE_MODE !== true) return;
             var file = (location.pathname.split('/').pop() || 'index.html').split('?')[0];
             if (file === 'maintenance.html') return;
-            location.replace('maintenance.html' + (location.search || '') + (location.hash || ''));
+            location.replace('./maintenance.html' + (location.search || '') + (location.hash || ''));
         })();
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
