@@ -2769,56 +2769,70 @@
         .zdos-hr-day-names .zdos-emp-id{font-size:inherit;line-height:inherit;font-weight:700}
         .zdos-emp-id-sep{color:rgb(100 116 139);font-weight:600}
         .zdos-hr-today-empty{color:rgb(100 116 139);font-size:.78rem;line-height:1.4}
-        /* UI-016A：排班中心 · 班別三段看板 */
-        .zdos-hr-today--compact{padding:.65rem .6rem;border-radius:1rem;overflow-x:hidden;max-width:100%}
-        .zdos-hr-today-toolbar{display:flex;flex-direction:column;gap:.4rem;min-width:0}
-        .zdos-hr-today-search{width:100%;min-width:0;box-sizing:border-box;height:2.1rem;border-radius:.7rem;border:1px solid rgba(125,211,252,.28);background:rgba(2,6,23,.55);color:#e2e8f0;padding:0 .75rem;font-size:.78rem;font-weight:700;outline:none}
-        .zdos-hr-today-search:focus{border-color:rgba(56,189,248,.65);box-shadow:0 0 0 2px rgba(56,189,248,.15)}
-        .zdos-hr-today-search::placeholder{color:rgb(100 116 139);font-weight:600}
-        .zdos-hr-board-shift{margin-top:.45rem;min-width:0;border-radius:.9rem;border:1px solid rgba(255,255,255,.06);background:linear-gradient(165deg,rgba(8,47,73,.35),rgba(2,6,23,.45));overflow:hidden}
-        .zdos-hr-board-shift[data-shift="M"]{border-color:rgba(56,189,248,.22)}
-        .zdos-hr-board-shift[data-shift="A"]{border-color:rgba(251,191,36,.22)}
-        .zdos-hr-board-shift[data-shift="N"]{border-color:rgba(167,139,250,.22)}
-        .zdos-hr-board-shift-head{width:100%;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:.45rem;padding:.5rem .6rem;text-align:left;background:transparent;border:0;color:inherit;cursor:pointer}
-        .zdos-hr-board-shift-title{min-width:0;font-size:.78rem;font-weight:900;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        /* UI-016A+D：排班中心正式版 · 班別三段看板 */
+        .zdos-hr-today--board{padding:.55rem .5rem .65rem;border-radius:.95rem;overflow-x:hidden;max-width:100%;border:1px solid rgba(56,189,248,.2);background:linear-gradient(165deg,rgba(8,47,73,.5),rgba(2,6,23,.88))}
+        .zdos-hr-today-toolbar{display:flex;flex-direction:column;gap:.35rem;min-width:0}
+        .zdos-hr-today-toolbar-row{display:flex;align-items:center;justify-content:space-between;gap:.4rem;min-width:0}
+        .zdos-hr-today-actions{display:inline-flex;align-items:center;gap:.28rem;flex:0 0 auto}
+        .zdos-hr-today-action{height:1.7rem;padding:0 .55rem;border-radius:.55rem;border:1px solid rgba(255,255,255,.1);background:rgba(15,23,42,.75);color:#e2e8f0;font-size:.62rem;font-weight:800;white-space:nowrap}
+        .zdos-hr-today-action.is-active{border-color:rgba(56,189,248,.45);background:rgba(8,47,73,.65);color:rgb(186 230 253)}
+        .zdos-hr-today-search{width:100%;min-width:0;box-sizing:border-box;height:2rem;border-radius:.65rem;border:1px solid rgba(125,211,252,.28);background:rgba(2,6,23,.55);color:#f8fafc;padding:0 .7rem;font-size:.76rem;font-weight:700;outline:none}
+        .zdos-hr-today-search:focus{border-color:rgba(56,189,248,.7);box-shadow:0 0 0 2px rgba(56,189,248,.16)}
+        .zdos-hr-today-search::placeholder{color:rgb(148 163 184);font-weight:600}
+        .zdos-hr-board-staffing{margin-top:.35rem;padding:.4rem .55rem;border-radius:.65rem;border:1px solid rgba(248,113,113,.45);background:rgba(127,29,29,.35);color:rgb(254 202 202);font-size:.68rem;font-weight:800;line-height:1.3}
+        .zdos-hr-board-shift{margin-top:.4rem;min-width:0;border-radius:.8rem;border:1px solid rgba(255,255,255,.08);background:rgba(2,6,23,.4);overflow:hidden}
+        .zdos-hr-board-shift.is-current{border-color:rgba(56,189,248,.45);box-shadow:inset 0 0 0 1px rgba(56,189,248,.12)}
+        .zdos-hr-board-shift.is-risk{border-color:rgba(248,113,113,.55);background:rgba(69,10,10,.28)}
+        .zdos-hr-board-shift[data-shift="M"]{border-color:rgba(56,189,248,.25)}
+        .zdos-hr-board-shift[data-shift="A"]{border-color:rgba(251,191,36,.25)}
+        .zdos-hr-board-shift[data-shift="N"]{border-color:rgba(167,139,250,.25)}
+        .zdos-hr-board-shift[data-shift="M"].is-current{border-color:rgba(56,189,248,.55)}
+        .zdos-hr-board-shift[data-shift="A"].is-current{border-color:rgba(251,191,36,.55)}
+        .zdos-hr-board-shift[data-shift="N"].is-current{border-color:rgba(167,139,250,.55)}
+        .zdos-hr-board-shift-head{width:100%;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:.35rem;padding:.42rem .5rem;text-align:left;background:transparent;border:0;color:inherit;cursor:pointer}
+        .zdos-hr-board-shift-title{min-width:0;font-size:.76rem;font-weight:900;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .zdos-hr-board-shift[data-shift="M"] .zdos-hr-board-shift-title{color:rgb(125 211 252)}
         .zdos-hr-board-shift[data-shift="A"] .zdos-hr-board-shift-title{color:rgb(253 224 71)}
         .zdos-hr-board-shift[data-shift="N"] .zdos-hr-board-shift-title{color:rgb(196 181 253)}
-        .zdos-hr-board-shift-stats{flex:0 0 auto;display:inline-flex;align-items:center;gap:.35rem;font-size:.62rem;font-weight:800;color:rgb(148 163 184);white-space:nowrap}
+        .zdos-hr-board-shift-meta{flex:0 0 auto;display:inline-flex;align-items:center;gap:.28rem;min-width:0}
+        .zdos-hr-board-shift-stats{display:inline-flex;align-items:center;gap:.28rem;font-size:.6rem;font-weight:800;white-space:nowrap}
         .zdos-hr-board-shift-stats .ok{color:rgb(110 231 183)}
         .zdos-hr-board-shift-stats .miss{color:rgb(252 165 165)}
-        .zdos-hr-board-shift-chevron{flex:0 0 auto;width:.9rem;height:.9rem;color:rgb(148 163 184);transition:transform .15s ease}
+        .zdos-hr-board-risk-tag{display:inline-flex;align-items:center;height:1.1rem;padding:0 .35rem;border-radius:.35rem;border:1px solid rgba(248,113,113,.5);background:rgba(153,27,27,.45);color:rgb(254 202 202);font-size:.55rem;font-weight:900}
+        .zdos-hr-board-shift-chevron{flex:0 0 auto;width:.85rem;height:.85rem;color:rgb(203 213 225);transition:transform .15s ease}
         .zdos-hr-board-shift.is-collapsed .zdos-hr-board-shift-chevron{transform:rotate(-90deg)}
-        .zdos-hr-board-shift-body{padding:0 .45rem .55rem;min-width:0}
+        .zdos-hr-board-shift-body{padding:0 .4rem .45rem;min-width:0}
         .zdos-hr-board-shift.is-collapsed .zdos-hr-board-shift-body{display:none}
-        .zdos-hr-board-grid{display:flex;flex-wrap:wrap;gap:.35rem;min-width:0;max-width:100%}
-        .zdos-hr-board-chip{display:inline-flex;align-items:center;gap:.28rem;min-width:0;max-width:100%;height:2rem;padding:0 .45rem 0 .35rem;box-sizing:border-box;border-radius:.55rem;border:1px solid rgba(255,255,255,.07);background:rgba(15,23,42,.72);touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-        .zdos-hr-board-chip.is-self{border-color:rgba(56,189,248,.4);background:rgba(14,116,144,.22)}
-        .zdos-hr-board-chip.is-match{border-color:rgba(56,189,248,.7);box-shadow:0 0 0 1px rgba(56,189,248,.35);background:rgba(30,64,175,.28)}
+        .zdos-hr-board-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.28rem .35rem;min-width:0;max-width:100%}
+        .zdos-hr-board-chip{display:flex;align-items:center;gap:.3rem;min-width:0;max-width:100%;height:2rem;padding:0 .4rem 0 .32rem;box-sizing:border-box;border-radius:.5rem;border:1px solid rgba(255,255,255,.08);background:rgba(15,23,42,.82);touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+        .zdos-hr-board-chip.is-self{border-color:rgba(56,189,248,.45);background:rgba(14,116,144,.28)}
+        .zdos-hr-board-chip.is-match{border-color:rgba(56,189,248,.75);box-shadow:0 0 0 1px rgba(56,189,248,.35);background:rgba(30,64,175,.35)}
         .zdos-hr-board-chip.is-hidden{display:none}
-        .zdos-hr-board-dot{flex:0 0 auto;width:.45rem;height:.45rem;border-radius:999px}
-        .zdos-hr-board-name{min-width:0;max-width:4.8rem;font-size:.74rem;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .zdos-hr-board-time{flex:0 0 auto;font-size:.62rem;font-weight:700;color:rgb(148 163 184);font-variant-numeric:tabular-nums;white-space:nowrap}
-        .zdos-hr-board-icons{flex:0 0 auto;display:inline-flex;align-items:center;gap:.12rem}
-        .zdos-hr-board-ico{display:inline-flex;align-items:center;justify-content:center;min-width:.85rem;height:.85rem;padding:0 .12rem;border-radius:.25rem;font-size:.5rem;font-weight:900;line-height:1;border:1px solid transparent}
-        .zdos-hr-board-ico--leave{color:rgb(253 164 175);background:rgba(76,5,25,.45);border-color:rgba(251,113,133,.28)}
-        .zdos-hr-board-ico--sub{color:rgb(253 224 71);background:rgba(66,32,6,.45);border-color:rgba(250,204,21,.28)}
-        .zdos-hr-board-ico--cross{color:rgb(147 197 253);background:rgba(23,37,84,.5);border-color:rgba(96,165,250,.3)}
-        .zdos-hr-board-empty{padding:.35rem .2rem;font-size:.72rem;color:rgb(100 116 139)}
+        .zdos-hr-board-dot{flex:0 0 auto;width:.42rem;height:.42rem;border-radius:999px}
+        .zdos-hr-board-name{min-width:0;flex:1 1 auto;font-size:.78rem;font-weight:900;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .zdos-hr-board-icons{flex:0 0 auto;display:inline-flex;align-items:center;gap:.1rem}
+        .zdos-hr-board-ico{display:inline-flex;align-items:center;justify-content:center;min-width:.82rem;height:.82rem;padding:0 .1rem;border-radius:.22rem;font-size:.48rem;font-weight:900;line-height:1;border:1px solid transparent}
+        .zdos-hr-board-ico--leave{color:rgb(254 205 211);background:rgba(127,29,29,.55);border-color:rgba(248,113,113,.35)}
+        .zdos-hr-board-ico--sub{color:rgb(254 240 138);background:rgba(113,63,18,.5);border-color:rgba(250,204,21,.35)}
+        .zdos-hr-board-ico--cross{color:rgb(191 219 254);background:rgba(30,58,138,.55);border-color:rgba(96,165,250,.35)}
+        .zdos-hr-board-empty{padding:.3rem .15rem;font-size:.7rem;font-weight:700;color:rgb(226 232 240)}
+        .zdos-hr-board-cross{margin-top:.45rem;min-width:0;border-radius:.8rem;border:1px solid rgba(96,165,250,.35);background:linear-gradient(165deg,rgba(30,58,138,.35),rgba(2,6,23,.5));overflow:hidden}
+        .zdos-hr-board-cross-head{padding:.42rem .5rem;display:flex;align-items:center;justify-content:space-between;gap:.35rem}
+        .zdos-hr-board-cross-title{font-size:.74rem;font-weight:900;color:rgb(147 197 253)}
+        .zdos-hr-board-cross-body{padding:0 .4rem .45rem;min-width:0}
+        .zdos-hr-board-cross-note{font-size:.58rem;font-weight:700;color:rgb(191 219 254);opacity:.9;margin-left:.2rem}
         .zdos-sched-info-actions{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.9rem}
         .zdos-sched-info-action{min-height:2.4rem;border-radius:.8rem;border:1px solid rgba(255,255,255,.1);background:rgba(15,23,42,.9);color:#e2e8f0;font-size:.72rem;font-weight:800}
         .zdos-sched-info-action--edit{border-color:rgba(56,189,248,.35);color:rgb(186 230 253);background:rgba(8,47,73,.55)}
         .zdos-sched-info-action--leave{border-color:rgba(251,113,133,.35);color:rgb(254 205 211);background:rgba(76,5,25,.4)}
         .zdos-hr-day--today{border-color:rgb(59 130 246 /.85)!important;box-shadow:inset 0 0 0 1px rgb(59 130 246 /.35),0 0 0 1px rgb(59 130 246 /.2)!important;background:linear-gradient(160deg,rgb(30 64 175/.35),rgb(15 23 42/.8))!important}
         .zdos-hr-day--today .zdos-hr-day-num{color:rgb(191 219 254)}
-        @media (max-width:374px){
-            .zdos-hr-board-name{max-width:3.8rem;font-size:.7rem}
-            .zdos-hr-board-time{font-size:.58rem}
-            .zdos-hr-board-chip{height:1.9rem;padding:0 .35rem 0 .28rem;gap:.22rem}
-        }
-        @media (min-width:390px){
-            .zdos-hr-board-grid{gap:.4rem}
-            .zdos-hr-board-name{max-width:5.4rem}
+        @media (max-width:390px){
+            .zdos-hr-today--board{padding:.48rem .42rem .55rem}
+            .zdos-hr-board-chip{height:1.85rem}
+            .zdos-hr-board-name{font-size:.74rem}
+            .zdos-hr-board-grid{gap:.24rem .28rem}
+            .zdos-hr-board-shift-body,.zdos-hr-board-cross-body{padding:0 .32rem .38rem}
         }
         .zdos-hr-cal-toggle{display:inline-flex;flex-wrap:wrap;gap:.35rem;max-width:100%}
         .zdos-hr-cal-toggle .zdos-nav-btn{min-width:0}
@@ -6062,7 +6076,7 @@
             get version() { return ZDOS_IS_BETA_SITE ? 'v1.4.5 Beta' : 'v1.3.0'; },
             updatedAt: '2026/07/29',
             changes: [
-                'UI-016A：排班中心班別三段看板（色點＋短時間、收合、今日定位、搜尋、長按）',
+                'UI-016A+D：排班中心班別看板正式版（兩欄去姓、目前班別自動展開、跨店區塊、人力警示）',
                 '導入 ZDOS MP4 開場動畫（含 AI 小天・正式規格 4 秒）',
                 '開場動畫與 Supabase Auth 並行載入',
                 '新增 Skip 與播放失敗 fallback',
@@ -7301,6 +7315,7 @@
             hrCalendarMode: 'store',
             hrTodaySearchQuery: '',
             hrTodayCollapsedShifts: {},
+            hrTodayExpandMode: 'auto',
             hrTodayLocateEmployeeId: '',
             reportModal: null,
             accountingExportInFlight: false,
@@ -20013,15 +20028,64 @@
             if (empId) state.activeSchedulingEmployeeId = empId;
             if (typeof openLeaveModal === 'function') return openLeaveModal(day);
         };
-        /** UI-016：班別區塊收合（預設展開） */
+                /** UI-016A+D：依 SHIFT_REGISTRY 時段判斷目前班別 */
+        const getCurrentHrShiftCode = (now = new Date()) => {
+            const minutes = now.getHours() * 60 + now.getMinutes();
+            if (typeof classifyShiftByTime === 'function') {
+                return classifyShiftByTime(minutes) || 'M';
+            }
+            return 'M';
+        };
+
+        const isHrTodayShiftCollapsed = (storeId, shiftCode, currentCode = getCurrentHrShiftCode()) => {
+            const mode = String(state.hrTodayExpandMode || 'auto');
+            const key = `${normalizeStoreIdCode(storeId)}:${String(shiftCode || '').toUpperCase()}`;
+            if (mode === 'all') return false;
+            if (mode === 'none') return true;
+            if (mode === 'manual') return !!(state.hrTodayCollapsedShifts || {})[key];
+            // auto：僅展開當前班別
+            return String(shiftCode || '').toUpperCase() !== String(currentCode || '').toUpperCase();
+        };
+
+        /** UI-016A+D：單班收合 → 進入 manual */
         window.toggleHrTodayShiftCollapse = function(storeId, shiftCode) {
             const key = `${normalizeStoreIdCode(storeId)}:${String(shiftCode || '').toUpperCase()}`;
+            const currentCode = getCurrentHrShiftCode();
+            const mode = String(state.hrTodayExpandMode || 'auto');
             const map = { ...(state.hrTodayCollapsedShifts || {}) };
+            // 從 auto/all/none 切入 manual 時，先物化目前展開狀態
+            if (mode !== 'manual') {
+                const storeCodes = (typeof getHrTodayOverviewStoreCodes === 'function'
+                    ? getHrTodayOverviewStoreCodes()
+                    : [normalizeStoreIdCode(storeId)]).filter(Boolean);
+                storeCodes.forEach(code => {
+                    HR_TODAY_SHIFT_ORDER.forEach(shift => {
+                        const k = `${code}:${shift.code}`;
+                        map[k] = isHrTodayShiftCollapsed(code, shift.code, currentCode);
+                    });
+                });
+            }
             map[key] = !map[key];
             state.hrTodayCollapsedShifts = map;
+            state.hrTodayExpandMode = 'manual';
             renderApp();
             requestAnimationFrame(() => {
                 document.getElementById('zdos-hr-today-compact')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        };
+
+        /** UI-016A+D：全部展開／全部收合 */
+        window.setHrTodayExpandMode = function(mode) {
+            const next = String(mode || 'auto');
+            if (!['auto', 'all', 'none'].includes(next)) return;
+            state.hrTodayExpandMode = next;
+            state.hrTodayCollapsedShifts = {};
+            renderApp();
+            requestAnimationFrame(() => {
+                const el = next === 'auto'
+                    ? document.querySelector('.zdos-hr-board-shift.is-current')
+                    : document.getElementById('zdos-hr-today-compact');
+                el?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             });
         };
         /** UI-016：搜尋姓名／工號 → 立即定位 */
@@ -20039,11 +20103,22 @@
                 if (hit) {
                     state.hrTodayLocateEmployeeId = hit.employeeId;
                     const key = `${normalizeStoreIdCode(hit.storeId)}:${String(hit.shiftCode || '').toUpperCase()}`;
+                    // 搜尋命中：切 manual 並強制展開該班（跨店用 CROSS）
+                    const currentCode = getCurrentHrShiftCode();
                     const map = { ...(state.hrTodayCollapsedShifts || {}) };
-                    if (map[key]) {
-                        map[key] = false;
-                        state.hrTodayCollapsedShifts = map;
-                    }
+                    const storeCodes = (typeof getHrTodayOverviewStoreCodes === 'function'
+                        ? getHrTodayOverviewStoreCodes()
+                        : [normalizeStoreIdCode(hit.storeId)]).filter(Boolean);
+                    storeCodes.forEach(code => {
+                        HR_TODAY_SHIFT_ORDER.forEach(shift => {
+                            const k = `${code}:${shift.code}`;
+                            map[k] = isHrTodayShiftCollapsed(code, shift.code, currentCode);
+                        });
+                        map[`${code}:CROSS`] = false;
+                    });
+                    map[key] = false;
+                    state.hrTodayCollapsedShifts = map;
+                    state.hrTodayExpandMode = 'manual';
                 }
             }
             renderApp();
@@ -20231,23 +20306,28 @@
          * 同時產出人數與名單，禁止另建快取／第二套資料。
          */
         /**
-         * UI-016／今日排班總覽 Snapshot：單次掃描正式班表 SoT。
-         * 同時產出班別桶、人數、已到／未到；禁止為統計再掃班表。
+         * UI-016A+D Snapshot：單次掃描正式班表 SoT。
+         * 產出班別桶、跨店支援、已到／未到、人力警示；禁止為統計再掃班表。
          */
         const buildHrTodayOverviewSnapshot = (todayIso = getDeviceTodayIso()) => {
             const storeCodes = getHrTodayOverviewStoreCodes();
             const bucketsByStore = Object.create(null);
+            const crossByStore = Object.create(null);
             storeCodes.forEach(code => {
                 bucketsByStore[code] = { M: [], A: [], N: [] };
+                crossByStore[code] = [];
             });
-            // 單迴圈：依 SoT 既有順序推入，不重排姓名
             getSchedules().forEach(row => {
                 if (String(row?.date || '') !== todayIso) return;
                 const code = normalizeStoreIdCode(row.storeId);
                 if (!code || !bucketsByStore[code]) return;
+                const isCross = !!(row?.isCrossStore || row?.changeType === 'cross_store');
+                if (isCross) {
+                    crossByStore[code].push(row);
+                    return;
+                }
                 bucketsByStore[code][resolveScheduleShiftBucketCode(row)].push(row);
             });
-            // 出勤集合（非班表掃描）：供已到／未到統計
             const arrivedIds = new Set();
             if (typeof getAttendanceRecords === 'function') {
                 getAttendanceRecords().forEach(rec => {
@@ -20273,12 +20353,15 @@
                     if (empId) leaveIds.add(empId);
                 });
             }
+            const currentShiftCode = getCurrentHrShiftCode();
             return {
                 todayIso,
+                currentShiftCode,
                 arrivedIds,
                 leaveIds,
                 stores: storeCodes.map(code => {
                     const buckets = bucketsByStore[code];
+                    const crossStore = crossByStore[code] || [];
                     const stats = { M: { total: 0, arrived: 0, missing: 0 }, A: { total: 0, arrived: 0, missing: 0 }, N: { total: 0, arrived: 0, missing: 0 } };
                     ['M', 'A', 'N'].forEach(shiftCode => {
                         const rows = buckets[shiftCode] || [];
@@ -20293,74 +20376,101 @@
                             missing: Math.max(0, rows.length - arrived)
                         };
                     });
+                    const storeShiftCodes = new Set(
+                        (typeof getStoreShiftCodes === 'function' ? getStoreShiftCodes(code) : ['M', 'A', 'N'])
+                            .map(c => String(c || '').toUpperCase())
+                    );
+                    const understaffedShifts = {};
+                    ['M', 'A', 'N'].forEach(shiftCode => {
+                        // 沿用既有「人力不足」語意：門市支援的班別卻 0 人
+                        understaffedShifts[shiftCode] = storeShiftCodes.has(shiftCode) && stats[shiftCode].total === 0;
+                    });
+                    const staffing = typeof getLeaveCenterWorkforceSnapshot === 'function'
+                        ? getLeaveCenterWorkforceSnapshot(code, todayIso)
+                        : { level: 'good', label: '人力充足', total: 0, available: 0 };
                     return {
                         storeId: code,
                         storeName: getStoreByCode(code)?.name || code,
                         buckets,
+                        crossStore,
                         counts: {
                             M: stats.M.total,
                             A: stats.A.total,
-                            N: stats.N.total
+                            N: stats.N.total,
+                            CROSS: crossStore.length
                         },
-                        arrival: stats
+                        arrival: stats,
+                        understaffedShifts,
+                        staffing
                     };
                 })
             };
         };
 
-        /** UI-016：搜尋命中（姓名／工號），讀共用 Snapshot，不重掃班表 */
+        /** UI-016A+D：去姓顯示；同屏重名自動回全名 */
+        const stripHrBoardSurname = (fullName) => {
+            const name = String(fullName || '').trim();
+            if (!name) return '未知';
+            if (/^[\u4e00-\u9fff]/.test(name) && name.length >= 2) return name.slice(1);
+            return name;
+        };
+
+        const buildHrBoardDisplayNameMap = (rows) => {
+            const meta = rows.map(row => {
+                const emp = typeof getEmployee === 'function' ? getEmployee(row?.employeeId) : null;
+                const full = String(emp?.name || '').trim() || '未知';
+                const short = stripHrBoardSurname(full);
+                return { empId: String(row?.employeeId || '').trim(), full, short };
+            });
+            const shortCount = Object.create(null);
+            meta.forEach(item => {
+                shortCount[item.short] = (shortCount[item.short] || 0) + 1;
+            });
+            const map = Object.create(null);
+            meta.forEach(item => {
+                map[item.empId] = shortCount[item.short] > 1 ? item.full : item.short;
+            });
+            return map;
+        };
+
+        /** UI-016：搜尋命中（姓名／工號／去姓），讀共用 Snapshot */
         const findHrTodaySearchMatch = (snapshot, query) => {
             const q = String(query || '').trim().toLowerCase();
             if (!q || !snapshot?.stores?.length) return null;
+            const matchRow = (row, storeId, shiftCode) => {
+                const emp = typeof getEmployee === 'function' ? getEmployee(row.employeeId) : null;
+                const name = String(emp?.name || '').trim().toLowerCase();
+                const short = stripHrBoardSurname(emp?.name || '').toLowerCase();
+                const no = String(emp?.employeeNo || emp?.empId || row.employeeId || '').trim().toLowerCase();
+                if ((name && name.includes(q)) || (short && short.includes(q)) || (no && no.includes(q))) {
+                    return {
+                        employeeId: String(row.employeeId || '').trim(),
+                        storeId,
+                        shiftCode,
+                        row
+                    };
+                }
+                return null;
+            };
             for (const storeSnap of snapshot.stores) {
                 for (const shift of HR_TODAY_SHIFT_ORDER) {
-                    const rows = storeSnap.buckets?.[shift.code] || [];
-                    for (const row of rows) {
-                        const emp = typeof getEmployee === 'function' ? getEmployee(row.employeeId) : null;
-                        const name = String(emp?.name || '').trim().toLowerCase();
-                        const no = String(emp?.employeeNo || emp?.empId || row.employeeId || '').trim().toLowerCase();
-                        if ((name && name.includes(q)) || (no && no.includes(q))) {
-                            return {
-                                employeeId: String(row.employeeId || '').trim(),
-                                storeId: storeSnap.storeId,
-                                shiftCode: shift.code,
-                                row
-                            };
-                        }
+                    for (const row of (storeSnap.buckets?.[shift.code] || [])) {
+                        const hit = matchRow(row, storeSnap.storeId, shift.code);
+                        if (hit) return hit;
                     }
+                }
+                for (const row of (storeSnap.crossStore || [])) {
+                    const hit = matchRow(row, storeSnap.storeId, 'CROSS');
+                    if (hit) return hit;
                 }
             }
             return null;
         };
 
-        /** 人數統計 helper：讀 snapshot.counts（已由 SoT 單次計算）。 */
-        /** 人數統計 helper：讀 snapshot.counts（已由 SoT 單次計算）。 */
         const getHrTodayShiftCount = (storeSnapshot, shiftCode) =>
             Number(storeSnapshot?.counts?.[shiftCode] || 0);
 
-        /** UI-016A：看板短時間 10-19（細節仍在長按 Sheet） */
-        const formatHrBoardShortTime = (row) => {
-            const raw = typeof formatSchedulePersonWorkingTime === 'function'
-                ? formatSchedulePersonWorkingTime(row)
-                : '';
-            const normalized = String(raw || '')
-                .replace(/\s*～\s*/g, '-')
-                .replace(/\s*~\s*/g, '-')
-                .replace(/翌日\s*/g, '')
-                .trim();
-            if (!normalized) {
-                const start = String(row?.startTime || '').trim().slice(0, 5);
-                const end = String(row?.endTime || '').trim().slice(0, 5);
-                if (start && end) return `${start.slice(0, 2)}-${end.slice(0, 2)}`;
-                return start ? start.slice(0, 2) : '—';
-            }
-            // 10:00-19:00 → 10-19
-            const m = normalized.match(/(\d{1,2}):?(\d{2})?-(\d{1,2}):?(\d{2})?/);
-            if (m) return `${String(m[1]).padStart(2, '0')}-${String(m[3]).padStart(2, '0')}`;
-            return normalized.length > 9 ? normalized.slice(0, 9) : normalized;
-        };
-
-        const renderHrBoardChipIconsHtml = (row, leaveIds) => {
+        const renderHrBoardChipIconsHtml = (row, leaveIds, { hideCross = false } = {}) => {
             const icons = [];
             const empId = String(row?.employeeId || '').trim();
             const hasLeave = (leaveIds && leaveIds.has(empId))
@@ -20369,32 +20479,34 @@
             if (row?.isSubstitute || row?.changeType === 'substitute') {
                 icons.push('<span class="zdos-hr-board-ico zdos-hr-board-ico--sub" title="代班">代</span>');
             }
-            if (row?.isCrossStore || row?.changeType === 'cross_store') {
+            if (!hideCross && (row?.isCrossStore || row?.changeType === 'cross_store')) {
                 icons.push('<span class="zdos-hr-board-ico zdos-hr-board-ico--cross" title="跨店">跨</span>');
             }
             return icons.length ? `<span class="zdos-hr-board-icons">${icons.join('')}</span>` : '';
         };
 
-        /** UI-016A 班別三段看板：色點＋姓名＋短時間，flex wrap */
-        const renderHrTodayBoardChipsHtml = (rows, selfKeys, leaveIds, locateEmployeeId, searchQuery) => {
+        /** UI-016A+D：兩欄 Compact 人名（色點＋去姓；重名全名） */
+        const renderHrTodayBoardChipsHtml = (rows, selfKeys, leaveIds, locateEmployeeId, searchQuery, { hideCross = false } = {}) => {
             if (!rows?.length) {
                 return `<p class="zdos-hr-board-empty">尚未排班</p>`;
             }
             const q = String(searchQuery || '').trim().toLowerCase();
+            const nameMap = buildHrBoardDisplayNameMap(rows);
             return `<div class="zdos-hr-board-grid">${rows.map(row => {
                 const empId = String(row?.employeeId || '').trim();
                 const emp = typeof getEmployee === 'function' ? getEmployee(empId) : null;
-                const name = String(emp?.name || '').trim() || '未知';
-                const displayName = formatHrSchedulePersonLabel(row);
+                const fullName = String(emp?.name || '').trim() || '未知';
+                let displayName = nameMap[empId] || stripHrBoardSurname(fullName);
+                if (row?.isSubstitute || row?.changeType === 'substitute') displayName = `${displayName}〔代〕`;
                 const empNo = String(emp?.employeeNo || emp?.empId || '').trim();
                 const isSelf = isHrTodaySelfScheduleRow(row, selfKeys);
                 const color = typeof getEmployeeColor === 'function' ? getEmployeeColor(empId) : '#94A3B8';
-                const timeLabel = formatHrBoardShortTime(row);
                 const storeId = escapeHtmlText(normalizeStoreIdCode(row?.storeId) || '');
                 const date = escapeHtmlText(String(row?.date || '').slice(0, 10));
                 const match = !!locateEmployeeId && locateEmployeeId === empId;
                 const filterHide = q && !(
-                    name.toLowerCase().includes(q) ||
+                    fullName.toLowerCase().includes(q) ||
+                    displayName.toLowerCase().includes(q) ||
                     empNo.toLowerCase().includes(q) ||
                     empId.toLowerCase().includes(q)
                 );
@@ -20408,8 +20520,7 @@
                 return `<div class="${classes}" data-zdos-sched-person="1" data-employee-id="${escapeHtmlText(empId)}" data-store-id="${storeId}" data-date="${date}" data-employee-no="${escapeHtmlText(empNo)}" tabindex="0">
                     <span class="zdos-hr-board-dot" style="background:${color}" aria-hidden="true"></span>
                     <span class="zdos-hr-board-name" style="color:${color}">${isSelf ? '✓' : ''}${escapeHtmlText(displayName)}</span>
-                    <span class="zdos-hr-board-time">${escapeHtmlText(timeLabel)}</span>
-                    ${renderHrBoardChipIconsHtml(row, leaveIds)}
+                    ${renderHrBoardChipIconsHtml(row, leaveIds, { hideCross })}
                 </div>`;
             }).join('')}</div>`;
         };
@@ -20422,45 +20533,75 @@
             const selfKeys = getHrTodaySelfEmployeeKeys();
             const searchQuery = String(state.hrTodaySearchQuery || '');
             const locateId = String(state.hrTodayLocateEmployeeId || '');
-            const collapsed = state.hrTodayCollapsedShifts || {};
+            const expandMode = String(state.hrTodayExpandMode || 'auto');
+            const currentShiftCode = snapshot.currentShiftCode || getCurrentHrShiftCode();
             if (!snapshot.stores.length) {
-                return `<section id="zdos-hr-today-compact" class="zdos-hr-today zdos-hr-today--compact" aria-label="今日排班總覽">
+                return `<section id="zdos-hr-today-compact" class="zdos-hr-today zdos-hr-today--board" aria-label="今日排班總覽">
                     <p class="text-[10px] font-black text-cyan-300">今日排班總覽</p>
-                    <p class="mt-2 text-xs text-slate-500">無法判斷可檢視門市。</p>
+                    <p class="mt-2 text-xs text-slate-300">無法判斷可檢視門市。</p>
                 </section>`;
             }
-            return `<section id="zdos-hr-today-compact" class="zdos-hr-today zdos-hr-today--compact" aria-label="今日排班總覽">
+            return `<section id="zdos-hr-today-compact" class="zdos-hr-today zdos-hr-today--board" aria-label="今日排班總覽">
                 <div class="zdos-hr-today-toolbar">
-                    <div class="flex items-start justify-between gap-2">
+                    <div class="zdos-hr-today-toolbar-row">
                         <div class="min-w-0">
                             <p class="text-[10px] font-black text-cyan-300">今日排班 · 班別看板</p>
-                            <p class="mt-1 text-[10px] text-slate-500 font-mono">${escapeHtmlText(snapshot.todayIso)}</p>
+                            <p class="mt-0.5 text-[10px] text-slate-300 font-mono">${escapeHtmlText(snapshot.todayIso)} · 目前${escapeHtmlText((HR_TODAY_SHIFT_ORDER.find(s => s.code === currentShiftCode) || {}).label || currentShiftCode)}</p>
+                        </div>
+                        <div class="zdos-hr-today-actions" role="group" aria-label="展開收合">
+                            <button type="button" class="zdos-nav-btn zdos-hr-today-action ${expandMode === 'all' ? 'is-active' : ''}" onclick="setHrTodayExpandMode('all')">全部展開</button>
+                            <button type="button" class="zdos-nav-btn zdos-hr-today-action ${expandMode === 'none' ? 'is-active' : ''}" onclick="setHrTodayExpandMode('none')">全部收合</button>
+                            <button type="button" class="zdos-nav-btn zdos-hr-today-action ${expandMode === 'auto' ? 'is-active' : ''}" onclick="setHrTodayExpandMode('auto')">目前班別</button>
                         </div>
                     </div>
                     <label class="sr-only" for="hr-today-search-input">搜尋姓名或工號</label>
                     <input id="hr-today-search-input" type="search" inputmode="search" autocomplete="off" placeholder="搜尋姓名／工號" value="${escapeHtmlText(searchQuery)}" oninput="setHrTodaySearchQuery(this.value)" class="zdos-hr-today-search" />
                 </div>
-                ${snapshot.stores.map(storeSnap => `
+                ${snapshot.stores.map(storeSnap => {
+                    const staffingRisk = storeSnap.staffing?.level === 'risk';
+                    return `
                     <div class="zdos-hr-today-store">
                         <h2 class="text-sm font-black text-white">${escapeHtmlText(storeSnap.storeName)}</h2>
+                        ${staffingRisk ? `<div class="zdos-hr-board-staffing" role="status">⚠ ${escapeHtmlText(storeSnap.staffing?.label || '人力不足')} · 可排 ${Number(storeSnap.staffing?.available || 0)}／${Number(storeSnap.staffing?.total || 0)}</div>` : ''}
                         ${HR_TODAY_SHIFT_ORDER.map(shift => {
                             const rows = storeSnap.buckets[shift.code] || [];
                             const arrival = storeSnap.arrival?.[shift.code] || { total: rows.length, arrived: 0, missing: rows.length };
                             const count = getHrTodayShiftCount(storeSnap, shift.code);
-                            const key = `${storeSnap.storeId}:${shift.code}`;
-                            const isCollapsed = !!collapsed[key];
-                            return `<div class="zdos-hr-board-shift ${isCollapsed ? 'is-collapsed' : ''}" data-shift="${escapeHtmlText(shift.code)}">
+                            const isCollapsed = isHrTodayShiftCollapsed(storeSnap.storeId, shift.code, currentShiftCode);
+                            const isCurrent = shift.code === currentShiftCode;
+                            const isRisk = !!(storeSnap.understaffedShifts || {})[shift.code];
+                            const classes = [
+                                'zdos-hr-board-shift',
+                                isCollapsed ? 'is-collapsed' : '',
+                                isCurrent ? 'is-current' : '',
+                                isRisk ? 'is-risk' : ''
+                            ].filter(Boolean).join(' ');
+                            return `<div class="${classes}" data-shift="${escapeHtmlText(shift.code)}">
                                 <button type="button" class="zdos-hr-board-shift-head" onclick="toggleHrTodayShiftCollapse('${escapeHtmlText(storeSnap.storeId)}','${escapeHtmlText(shift.code)}')" aria-expanded="${isCollapsed ? 'false' : 'true'}">
                                     <span class="zdos-hr-board-shift-title">${escapeHtmlText(shift.label)}（${count}）</span>
-                                    <span class="zdos-hr-board-shift-stats"><span class="ok">已到 ${arrival.arrived}</span><span class="miss">未到 ${arrival.missing}</span></span>
-                                    <svg class="zdos-hr-board-shift-chevron" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                                    <span class="zdos-hr-board-shift-meta">
+                                        ${isRisk ? '<span class="zdos-hr-board-risk-tag">人力不足</span>' : ''}
+                                        <span class="zdos-hr-board-shift-stats"><span class="ok">已到 ${arrival.arrived}</span><span class="miss">未到 ${arrival.missing}</span></span>
+                                        <svg class="zdos-hr-board-shift-chevron" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                                    </span>
                                 </button>
                                 <div class="zdos-hr-board-shift-body">
                                     ${renderHrTodayBoardChipsHtml(rows, selfKeys, snapshot.leaveIds, locateId, searchQuery)}
                                 </div>
                             </div>`;
                         }).join('')}
-                    </div>`).join('')}
+                        ${(storeSnap.crossStore || []).length ? `
+                        <div class="zdos-hr-board-cross" data-shift="CROSS">
+                            <div class="zdos-hr-board-cross-head">
+                                <p class="zdos-hr-board-cross-title">今日跨店支援（${storeSnap.crossStore.length}）</p>
+                                <span class="zdos-hr-board-cross-note">獨立區塊</span>
+                            </div>
+                            <div class="zdos-hr-board-cross-body">
+                                ${renderHrTodayBoardChipsHtml(storeSnap.crossStore, selfKeys, snapshot.leaveIds, locateId, searchQuery, { hideCross: true })}
+                            </div>
+                        </div>` : ''}
+                    </div>`;
+                }).join('')}
             </section>`;
         };
 
