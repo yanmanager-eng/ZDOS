@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#00153a">
+  <meta name="theme-color" content="#001b44">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>ZDOS v1.5.0 正式版上線</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,61 +14,52 @@
 </head>
 <body>
   <main class="g01" role="main" aria-label="ZDOS v1.5.0 系統升級維護頁">
-    <div class="g01__circuit" aria-hidden="true"></div>
-    <div class="g01__inner">
+    <div class="g01__stage">
       <header class="g01__brand">
-        <img
-          class="g01__logo"
-          src="ui/assets/brand/zdos-product-logo.png"
-          width="58"
-          height="58"
-          alt="ZDOS"
-          decoding="async"
-        >
-        <div class="g01__brand-text">
+        <img class="g01__logo" src="ui/assets/brand/zdos-product-logo.png" width="52" height="52" alt="ZDOS" decoding="async">
+        <div class="g01__brand-copy">
           <strong>ZDOS</strong>
           <span>中東營運系統</span>
-          <em>ZhongDong Operating System</em>
         </div>
       </header>
 
-      <div class="g01__badge" aria-label="系統狀態">
+      <div class="g01__badge">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17l-4.66 4.66a2.12 2.12 0 01-3-3l4.66-4.66M14.5 7.5l2 2M16 4l4 4M9 15l6-6"/>
-          <circle cx="15.5" cy="8.5" r="1.2" fill="currentColor"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14.7 6.3l3 3M4.5 19.5l5.2-1.2a2 2 0 001.1-.7L19 9.4a2.1 2.1 0 00-3-3L7.9 14.6a2 2 0 00-.7 1.1L6 20.9"/>
         </svg>
         系統升級維護中
       </div>
 
       <h1 class="g01__title">ZDOS v1.5.0 正式版上線</h1>
-      <p class="g01__desc">
+      <p class="g01__lead">
         為提供更穩定、強大且智慧的服務，ZDOS 正在進行系統升級與全面優化。造成不便敬請見諒，感謝您的耐心等待！
       </p>
 
-      <div class="g01__duo" aria-label="官方角色">
+      <section class="g01__duo" aria-label="官方 AI 角色">
+        <div class="g01__portal" aria-hidden="true"></div>
+
         <figure class="g01__char g01__char--left">
-          <div class="g01__bubble">有問題就找 AI 小天！</div>
-          <div class="g01__char-glow" aria-hidden="true"></div>
-          <img src="ui/assets/brand/ai-xiaotian-normal.png" width="148" height="266" alt="AI 小天" decoding="async">
-          <figcaption class="g01__char-label">AI 小天</figcaption>
+          <div class="g01__bubble g01__bubble--left">有問題，找 AI 小天！</div>
+          <img src="ui/assets/brand/ai-xiaotian-normal.png" width="150" height="270" alt="AI 小天" decoding="async">
+          <figcaption>AI 小天</figcaption>
         </figure>
+
         <figure class="g01__char g01__char--right">
-          <div class="g01__bubble">我來陪你學習，一起變得更厲害！</div>
-          <div class="g01__char-glow" aria-hidden="true"></div>
-          <img src="ui/assets/brand/ai-sisi-welcome.jpg" width="148" height="148" alt="AI 絲絲" decoding="async">
-          <figcaption class="g01__char-label">AI 絲絲</figcaption>
+          <div class="g01__bubble g01__bubble--right">我來陪著你學習，一起變得更厲害！</div>
+          <img class="g01__sisi" src="ui/assets/brand/ai-sisi-welcome.jpg" width="168" height="168" alt="AI 絲絲" decoding="async">
+          <figcaption>AI 絲絲</figcaption>
         </figure>
-      </div>
+      </section>
 
       <section class="g01__status" aria-label="升級狀態">
-        <div>
+        <div class="g01__status-col">
           <h2>預計完成時間</h2>
-          <div class="g01__time-row">
+          <div class="g01__time">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-              <rect x="3.5" y="5" width="17" height="15" rx="2.5"/>
-              <path stroke-linecap="round" d="M8 3.5v3M16 3.5v3M3.5 10h17"/>
-              <circle cx="12" cy="15" r="3.2"/>
-              <path stroke-linecap="round" d="M12 13.8v1.4l1 .6"/>
+              <rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect>
+              <path stroke-linecap="round" d="M8 3.5v3M16 3.5v3M3.5 10h17"></path>
+              <circle cx="12" cy="15.2" r="3"></circle>
+              <path stroke-linecap="round" d="M12 13.9v1.4l.9.6"></path>
             </svg>
             <div>
               <p class="g01__time-value">2026 / 07 / 31 (五)<br>下午 16:00</p>
@@ -76,12 +67,15 @@
             </div>
           </div>
         </div>
-        <div>
-          <div class="g01__progress-head">
+        <div class="g01__status-divider" aria-hidden="true"></div>
+        <div class="g01__status-col">
+          <div class="g01__progress-top">
             <h2>升級進度</h2>
-            <div class="g01__progress-pct">68%</div>
+            <strong>68%</strong>
           </div>
-          <div class="g01__bar" aria-hidden="true"><span></span></div>
+          <div class="g01__bar" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100">
+            <span></span>
+          </div>
           <p class="g01__progress-note">
             <span class="g01__spinner" aria-hidden="true"></span>
             系統升級中，請稍後再回來
@@ -89,41 +83,57 @@
         </div>
       </section>
 
-      <h2 class="g01__section-title">本次更新重點</h2>
+      <h2 class="g01__section-title">
+        <span aria-hidden="true">✦</span>
+        本次更新重點
+      </h2>
+
       <ul class="g01__features">
         <li>
-          <svg class="g01__feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="9" r="3.2"/><path stroke-linecap="round" d="M7 19c.8-2.4 2.6-3.6 5-3.6s4.2 1.2 5 3.6"/><path stroke-linecap="round" d="M4 11h2M18 11h2M12 3v2"/></svg>
+          <span class="g01__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="9" r="3"/><path stroke-linecap="round" d="M7 19c.8-2.3 2.6-3.5 5-3.5s4.2 1.2 5 3.5"/></svg>
+          </span>
           <strong>AI 功能升級</strong>
           <p>更聰明的小天<br>更強大的 AI 助手</p>
         </li>
         <li>
-          <svg class="g01__feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path stroke-linecap="round" d="M8 3.5v3M16 3.5v3M3.5 10h17"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 15l2 2 4-4"/></svg>
+          <span class="g01__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path stroke-linecap="round" d="M8 3.5v3M16 3.5v3M3.5 10h17"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 15l2 2 4-4"/></svg>
+          </span>
           <strong>排班系統優化</strong>
           <p>更彈性的排班<br>更順暢的運作</p>
         </li>
         <li>
-          <svg class="g01__feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" d="M4 19h16"/><path stroke-linecap="round" d="M7 16V10M12 16V7M17 16v-4"/></svg>
+          <span class="g01__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" d="M4 19h16M7 16V10M12 16V7M17 16v-4"/></svg>
+          </span>
           <strong>業績即時分析</strong>
           <p>即時資料更新<br>更精準的決策</p>
         </li>
         <li>
-          <svg class="g01__feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 3v5c0 4.5-3 7.8-7 9-4-1.2-7-4.5-7-9V6l7-3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.5 12l1.7 1.7L14.8 10"/></svg>
+          <span class="g01__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 3v5c0 4.5-3 7.8-7 9-4-1.2-7-4.5-7-9V6l7-3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.5 12l1.7 1.7L14.8 10"/></svg>
+          </span>
           <strong>系統安全強化</strong>
           <p>更安全的資料<br>使用更放心</p>
         </li>
         <li>
-          <svg class="g01__feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-11 2 6 5 1-7 11-2-6-5-1z"/></svg>
+          <span class="g01__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-11 2 6 5 1-7 11-2-6-5-1z"/></svg>
+          </span>
           <strong>效能全面提升</strong>
           <p>更快的速度<br>更流暢的體驗</p>
         </li>
         <li>
-          <svg class="g01__feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="7" y="3.5" width="10" height="17" rx="2"/><circle cx="12" cy="17.5" r="0.9" fill="currentColor"/><path stroke-linecap="round" d="M10 6h4"/></svg>
+          <span class="g01__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="7" y="3.5" width="10" height="17" rx="2"/><circle cx="12" cy="17.5" r="0.9" fill="currentColor"/><path stroke-linecap="round" d="M10 6h4"/></svg>
+          </span>
           <strong>行動體驗優化</strong>
           <p>更直覺的手機操作<br>使用更方便</p>
         </li>
       </ul>
 
-      <section class="g01__safety" aria-label="資料安全">
+      <section class="g01__safety">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 3v5c0 4.5-3 7.8-7 9-4-1.2-7-4.5-7-9V6l7-3z"/>
           <rect x="9.2" y="10.2" width="5.6" height="4.4" rx="1"/>
@@ -136,8 +146,8 @@
       </section>
 
       <footer class="g01__footer">
-        <p><span>♥</span> 感謝每一位夥伴的支持與陪伴，一起創造更好的未來！</p>
-        <strong>ZDOS Team</strong>
+        <p><span aria-hidden="true">♥</span> 感謝每一位夥伴的支持與陪伴，讓我們一起創造更好的未來！</p>
+        <strong>ZDOS 團隊 敬上</strong>
       </footer>
     </div>
   </main>
