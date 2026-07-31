@@ -2844,6 +2844,24 @@
         .zdos-acc-center select{border-radius:var(--oc-radius-md);transition:border-color 150ms ease, box-shadow 150ms ease}
         .zdos-acc-center select:focus{border-color:rgba(56,189,248,.42);box-shadow:0 0 0 3px rgba(56,189,248,.10);outline:none}
         /* ============================================================
+         * UI-030-05｜財務中心 Layout Polish（純版面，全部 scoped .zdos-acc-center 之下）
+         * 僅 spacing／alignment／safe-area／overflow／readability；
+         * 不改報表／計算／匯出／權限／資料流程／文字／事件。
+         * ============================================================ */
+        /* ⑩ Safe Area：最後一張卡片（結帳／財務分析）不被 Home Indicator 擋住 */
+        .zdos-acc-center{padding-bottom:max(.5rem,env(safe-area-inset-bottom,0px))}
+        /* ② UI-015 Banner：文字行距一致、長字換行（不過度佔第一屏） */
+        .zdos-acc-center > .zdos-workspace-card:first-child p{line-height:1.35;overflow-wrap:anywhere}
+        /* ③④ 報表中心 Tab：等高、換行文字置中對齊（375 可換行不錯位） */
+        .zdos-acc-center .bg-slate-950.flex-wrap > .zdos-nav-btn{min-height:2.4rem;display:inline-flex;align-items:center;justify-content:center;line-height:1.15}
+        /* ④ 收支管理 門市／期間 資訊卡：長日期不破版 */
+        .zdos-acc-center [aria-label="收支管理"] .font-mono{overflow-wrap:anywhere}
+        /* ⑦ 匯出按鈕：維持足夠點擊區（不改 handler／loading／disabled 樣式） */
+        .zdos-acc-center #accounting-weekly-export-btn{min-height:3rem}
+        /* ⑧ Placeholder（結帳／財務分析）：說明行距一致、留白自然 */
+        .zdos-acc-center section[aria-label="結帳中心"],
+        .zdos-acc-center section[aria-label="財務分析"]{line-height:1.4}
+        /* ============================================================
          * UI-020B-05｜公告中心視覺同步（延續 Hero 企業深藍家族）
          * 純視覺：列表／卡片／Tag／詳情／管理／Search → UI-020A tokens。
          * 保留公告語意色（必讀 rose／本週 amber／未讀 sky／已讀 slate／草稿 amber／發布 emerald）。
