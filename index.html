@@ -2891,6 +2891,19 @@
         .zdos-acc-center section[aria-label="結帳中心"],
         .zdos-acc-center section[aria-label="財務分析"]{line-height:1.4}
         /* ============================================================
+         * UI-035-05｜財務中心 Founder Pixel Polish（純版面，全部 scoped .zdos-acc-center 之下）
+         * 僅 min-height／grid／alignment；不改 renderAccountingCenter／報表計算／匯出／區間／
+         *   A欄日期／B~H寫入／dateToRow／權限／事件／文字。
+         * ============================================================ */
+        /* ④ Tab 完全等高：報表中心（flex-wrap）＋收支管理模式列（flex）所有 Tab 一致高度、內容置中、單行不換行（整顆按鈕由 flex-wrap 換行，不產生水平捲動） */
+        .zdos-acc-center .bg-slate-950.flex > .zdos-nav-btn{min-height:2.4rem;display:inline-flex;align-items:center;justify-content:center;line-height:1.15;white-space:nowrap}
+        /* ⑤ Select／日期欄：全中心一致高度（週報／年份／月份） */
+        .zdos-acc-center select{min-height:2.75rem}
+        /* ⑥ 收支管理 門市／期間 資訊卡與選單列：同格等高（列高一致，stacked 亦一致） */
+        .zdos-acc-center [aria-label="收支管理"] .grid{grid-auto-rows:1fr}
+        /* ③ 報表中心 面板動作按鈕（查看／匯出一般／匯出會計）：同列等高、基線一致 */
+        .zdos-acc-center [aria-label="報表中心"] .zdos-workspace-card .grid{grid-auto-rows:1fr}
+        /* ============================================================
          * UI-020B-05｜公告中心視覺同步（延續 Hero 企業深藍家族）
          * 純視覺：列表／卡片／Tag／詳情／管理／Search → UI-020A tokens。
          * 保留公告語意色（必讀 rose／本週 amber／未讀 sky／已讀 slate／草稿 amber／發布 emerald）。
