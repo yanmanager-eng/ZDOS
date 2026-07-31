@@ -3147,6 +3147,24 @@
         /* 班表異動子按鈕（hrHome）：卡片感一致 */
         .zdos-hr-home section .zdos-nav-btn{border-radius:var(--oc-radius-md)}
         /* ============================================================
+         * UI-035-02｜人力中心 Founder Pixel Polish（純版面，scoped .zdos-hr-home）
+         * 僅 spacing／alignment／min-height／grid／safe-area；
+         * 不改資料／邏輯／M A N 判定／識別色／事件／權限／日期。
+         * ============================================================ */
+        /* ⑥ Safe Area：最後內容（班表異動／footer）不被 Home Indicator 擋住 */
+        .zdos-hr-home{padding-bottom:max(.5rem,env(safe-area-inset-bottom,0px))}
+        /* ② 今日總覽：空班別與人名 chip 等高（垂直置中、不塌陷） */
+        .zdos-hr-home .zdos-hr-board-empty{min-height:2rem;display:flex;align-items:center}
+        /* ③ 月曆：星期列七格等高置中 */
+        .zdos-hr-home .zdos-scheduling-weekday{display:flex;align-items:center;justify-content:center}
+        /* ③ 月曆：所有日期格完全等高（列高一致、格子撐滿） */
+        .zdos-hr-home .zdos-hr-calendar-grid{grid-auto-rows:1fr}
+        .zdos-hr-home .zdos-hr-day{height:100%}
+        /* ④ 快捷入口：四卡完全等高（列高一致、卡片撐滿）、內容置中對齊 */
+        .zdos-hr-home .zdos-hr-primary-actions{grid-auto-rows:1fr}
+        .zdos-hr-home .zdos-hr-action{min-height:4.8rem;height:100%}
+        /* ⑤ Bottom Sheet 安全區由既有 .zdos-sched-info-sheet-panel（fixed，位於 .zdos-hr-home 之外）處理，本輪不重覆掛載 */
+        /* ============================================================
          * UI-030-03｜排假中心（排班中心）Layout Polish（純版面，scoped .zdos-lc17-*）
          * 僅 margin／padding／gap／height／min-height／line-height／alignment；
          * 不改資料／統計／日期計算／M A N 判定／識別色／submit／事件。
