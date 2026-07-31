@@ -2798,6 +2798,23 @@
         @media (prefers-reduced-motion: reduce) {
             .zdos-sales-form input, .zdos-sales-form select { transition:none; }
         }
+        /* ============================================================
+         * UI-020B-03｜業績中心視覺同步（延續 Hero 企業深藍家族）
+         * 純視覺：Hero／KPI／Metric／Card／Chart 外框／Status／History → UI-020A tokens。
+         * 保留營收數值、圖表資料色（#38bdf8／#34d399）、狀態語意與所有事件（無 markup/handler 變更）。
+         * ============================================================ */
+        .zdos-sales-shell{gap:.85rem}
+        .zdos-sales-hero{border-radius:var(--oc-radius-xl);box-shadow:var(--oc-shadow-lg)}
+        .zdos-sales-metric{border-radius:var(--oc-radius-lg);background:rgba(8,17,39,.5);border-color:rgba(56,189,248,.14)}
+        .zdos-sales-metric--primary{border-color:rgba(56,189,248,.22)}
+        .zdos-sales-status{border-radius:var(--oc-radius-full)}
+        /* Card／Chart 外框統一（覆蓋既有 !important） */
+        .zdos-sales-card{border-radius:var(--oc-radius-lg) !important;box-shadow:var(--oc-shadow-md) !important;background:linear-gradient(160deg,rgba(13,31,61,.6),rgba(8,17,39,.6)) !important;border-color:rgba(56,189,248,.12) !important}
+        .zdos-sales-card-kicker{color:var(--zds-brand-sky)}
+        .zdos-sales-history-card{border-radius:var(--oc-radius-md);background:rgba(8,17,39,.42)}
+        .zdos-sales-history-metric{border-radius:var(--oc-radius-sm)}
+        /* 送出鍵：保留成功語意色，收斂過亮光暈為低陰影 */
+        .zdos-sales-submit{border-radius:var(--oc-radius-md) !important;box-shadow:var(--oc-shadow-md) !important}
 
                 /* UI-011：人力中心首頁重整（相容層；不取代 UI-010 排假中心） */
         .zdos-hr-home{display:flex;flex-direction:column;gap:.85rem;min-width:0;max-width:100%;overflow-x:hidden}
