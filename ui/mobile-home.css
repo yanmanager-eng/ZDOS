@@ -75,10 +75,11 @@
   justify-content: space-between;
   gap: var(--zdos-space-2);
   min-height: var(--zdos-mh-header-h);
+  /* UI-035-01：左右留白對齊主內容（1rem），與 Hero／各區塊邊界一致 */
   padding: calc(var(--zdos-mh-safe-top) + var(--zdos-space-2))
-    max(var(--zdos-space-3), env(safe-area-inset-right, 0px))
+    max(var(--zdos-space-4), env(safe-area-inset-right, 0px))
     var(--zdos-space-2)
-    max(var(--zdos-space-3), env(safe-area-inset-left, 0px));
+    max(var(--zdos-space-4), env(safe-area-inset-left, 0px));
   background: linear-gradient(
     180deg,
     #FFFFFF 0%,
@@ -386,6 +387,8 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(0, 1fr));
+  /* UI-035-01：兩列等高，四卡完全一致 */
+  grid-auto-rows: 1fr;
   gap: var(--zdos-space-2);
   align-items: stretch;
 }
@@ -404,7 +407,9 @@
   border-radius: var(--zdos-radius-md);
   box-shadow: var(--zdos-shadow-kpi);
   cursor: pointer;
-  min-height: 76px;
+  /* UI-035-01：統一最小高度，涵蓋標題＋數值＋備註最壞情況，確保四卡完全等高 */
+  min-height: 84px;
+  justify-content: center;
 }
 
 .zdos-mh__kpi-card:active {
