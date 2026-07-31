@@ -2881,6 +2881,25 @@
         /* 公告詳情：長文閱讀層級（維持深藍，收斂邊框、放大行距） */
         .zdos-ann-detail article.zdos-workspace-card{border-color:rgba(56,189,248,.12)}
         .zdos-ann-detail .whitespace-pre-wrap{line-height:1.75}
+        /* ============================================================
+         * UI-030-06｜公告中心 Layout Polish（純版面，scoped .zdos-ann-center／.zdos-ann-detail）
+         * 僅 spacing／alignment／safe-area／overflow／readability；
+         * 不改公告資料／已讀邏輯／權限／發布／編輯／刪除／推播／文字。
+         * ============================================================ */
+        /* ⑨ Safe Area：列表最後一張卡／詳情按鈕不被 Home Indicator 擋住 */
+        .zdos-ann-center{padding-bottom:max(.5rem,env(safe-area-inset-bottom,0px))}
+        /* ② 摘要（line-clamp）：行距一致、長字換行不爆版 */
+        .zdos-ann-center .line-clamp-2{line-height:1.5;overflow-wrap:anywhere}
+        /* ③⑥ 狀態／分類 Tag、checkbox、按鈕列：換行時上下呼吸一致 */
+        .zdos-ann-center .flex-wrap{row-gap:.4rem}
+        /* ④ 詳情內文：長連結／長字換行、可讀 */
+        .zdos-ann-detail .whitespace-pre-wrap{overflow-wrap:anywhere;word-break:break-word}
+        /* ⑤ 管理搜尋列：高度舒適一致 */
+        .zdos-ann-center #ann-mgr-search{min-height:2.5rem}
+        /* ⑦ 編輯表單內容 textarea：最小高度舒適、行距可讀（長內容可捲動沿用原生） */
+        .zdos-ann-center #ann-mgr-content{min-height:9rem;line-height:1.6}
+        /* ⑦ 即時預覽卡：不超寬、長字換行 */
+        .zdos-ann-center #ann-mgr-preview{min-width:0;overflow-wrap:anywhere}
 
                 /* UI-011：人力中心首頁重整（相容層；不取代 UI-010 排假中心） */
         .zdos-hr-home{display:flex;flex-direction:column;gap:.85rem;min-width:0;max-width:100%;overflow-x:hidden}
