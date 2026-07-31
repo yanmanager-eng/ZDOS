@@ -3079,6 +3079,29 @@
         .zdos-lc17-day--today{border-color:rgba(56,189,248,.6)}
         /* 班表異動子按鈕（hrHome）：卡片感一致 */
         .zdos-hr-home section .zdos-nav-btn{border-radius:var(--oc-radius-md)}
+        /* ============================================================
+         * UI-030-03｜排假中心（排班中心）Layout Polish（純版面，scoped .zdos-lc17-*）
+         * 僅 margin／padding／gap／height／min-height／line-height／alignment；
+         * 不改資料／統計／日期計算／M A N 判定／識別色／submit／事件。
+         * ============================================================ */
+        /* ③ 今日資訊三卡（今日休假／今日請假／待審核）：高度一致、字級對齊、置中 */
+        .zdos-lc17-kpi{display:flex;flex-direction:column;justify-content:center;min-height:3.4rem}
+        .zdos-lc17-kpi-label{line-height:1.2}
+        .zdos-lc17-kpi-value{line-height:1.1}
+        /* ④ 本月統計：每格高度一致、emoji 對齊、數字靠右一致 */
+        .zdos-lc17-stat{min-height:2.05rem;line-height:1.2}
+        .zdos-lc17-stat-emoji{width:1.15rem;text-align:center;line-height:1}
+        /* ⑤ 搜尋列：高度舒適、左右 padding 一致 */
+        .zdos-lc17-search{height:2.1rem;padding:0 .8rem}
+        /* ⑥ 工具／快捷按鈕（今天／批次）：高度一致、點擊區一致 */
+        .zdos-lc17-btn{height:1.95rem;display:inline-flex;align-items:center;justify-content:center}
+        .zdos-lc17-actions{gap:.35rem}
+        /* ② 月曆：月份標題與左右切月按鈕垂直對齊、卡片上下留白、假別 tag 對齊 */
+        .zdos-lc17 .zdos-scheduling-month-nav{align-items:center;gap:.4rem}
+        .zdos-lc17-cal{padding:.6rem}
+        .zdos-lc17-tag{align-items:center;line-height:1.1}
+        /* ⑦ Bottom Sheet：底部按鈕不被 safe-area 遮擋（補強既有 env padding） */
+        .zdos-lc17-info-actions{padding-bottom:max(0px,env(safe-area-inset-bottom,0px))}
     </style>
     <link rel="stylesheet" href="ui/operation-center/tokens.css">
     <link rel="stylesheet" href="ui/operation-center/components.css">
