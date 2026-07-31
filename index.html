@@ -2937,6 +2937,50 @@
             .zdos-hr-day{min-height:3.35rem;padding:.16rem}
             .zdos-hr-shift{font-size:.5rem}
         }
+        /* ============================================================
+         * UI-020B-01｜人力中心視覺同步（維持 Hero 企業深藍家族）
+         * 純視覺：統一卡面/圓角/低陰影/間距至 UI-020A tokens；
+         * 保留固定員工識別色、M／A／N 語意色與所有事件綁定（不改 markup/handler）。
+         * ============================================================ */
+        .zdos-hr-home{gap:.75rem}
+        /* 主要卡面統一：Hero 深藍家族 + 低陰影 + 一致圓角 */
+        .zdos-hr-home .zdos-hr-hero,
+        .zdos-hr-home .zdos-hr-today,
+        .zdos-hr-home .zdos-hr-calendar-card{
+            border-radius:var(--oc-radius-lg);
+            border:1px solid rgba(56,189,248,.16);
+            background:linear-gradient(160deg,rgba(13,31,61,.92),rgba(8,17,39,.94));
+            box-shadow:var(--oc-shadow-md);
+        }
+        .zdos-hr-home .zdos-hr-today--board{
+            border-radius:var(--oc-radius-lg);
+            border-color:rgba(56,189,248,.2);
+            background:linear-gradient(165deg,rgba(11,79,140,.28),rgba(8,17,39,.92));
+        }
+        /* 今日班別看板：一致圓角、清楚層級（M／A／N 語意色不動） */
+        .zdos-hr-home .zdos-hr-board-shift{border-radius:var(--oc-radius-md);background:rgba(8,17,39,.5)}
+        .zdos-hr-home .zdos-hr-board-chip{border-radius:10px;background:rgba(13,31,61,.82);border-color:rgba(148,163,184,.16)}
+        .zdos-hr-home .zdos-hr-board-chip.is-self{border-color:rgba(56,189,248,.5);background:rgba(11,79,140,.34)}
+        .zdos-hr-home .zdos-hr-board-chip.is-match{border-color:rgba(56,189,248,.75);background:rgba(11,79,140,.4)}
+        /* 今日總覽 Empty State：一致語氣 */
+        .zdos-hr-home .zdos-hr-today-empty,
+        .zdos-hr-home .zdos-hr-board-empty{color:rgb(148 163 184);font-weight:600}
+        /* 月曆日格：一致圓角；今日以企業藍標記（沿用既有 today 規則） */
+        .zdos-hr-home .zdos-hr-day{border-radius:12px;background:rgba(8,17,39,.55)}
+        .zdos-hr-home .zdos-hr-shift{border-radius:8px;background:rgba(13,31,61,.9);border-color:rgba(56,189,248,.16);color:rgb(186 230 253)}
+        /* 快捷入口（請假／排假／批次排假）：統一企業深藍卡，移除廉價漸層，語意色僅作點綴邊框 */
+        .zdos-hr-home .zdos-hr-primary-actions{gap:.55rem}
+        .zdos-hr-home .zdos-hr-action{
+            min-height:4.6rem;padding:.85rem;border-radius:var(--oc-radius-lg);
+            background:linear-gradient(160deg,rgba(13,31,61,.92),rgba(8,17,39,.94));
+            border:1px solid rgba(56,189,248,.2);
+            box-shadow:var(--oc-shadow-sm);
+        }
+        .zdos-hr-home .zdos-hr-action--leave{border-color:rgba(251,113,133,.42)}
+        .zdos-hr-home .zdos-hr-action--advance{border-color:rgba(56,189,248,.34)}
+        .zdos-hr-home .zdos-hr-action:active{box-shadow:none;transform:scale(.99)}
+        /* 班表異動子按鈕（.zdos-nav-btn）：一致卡片感、清楚可點 */
+        .zdos-hr-home .zdos-nav-btn{transition:border-color .15s var(--oc-motion-ease),background .15s var(--oc-motion-ease)}
     </style>
     <link rel="stylesheet" href="ui/operation-center/tokens.css">
     <link rel="stylesheet" href="ui/operation-center/components.css">
