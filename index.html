@@ -2828,6 +2828,26 @@
         .zdos-acc-center .rounded-xl{border-radius:var(--oc-radius-md)}
         .zdos-acc-center select{border-radius:var(--oc-radius-md);transition:border-color 150ms ease, box-shadow 150ms ease}
         .zdos-acc-center select:focus{border-color:rgba(56,189,248,.42);box-shadow:0 0 0 3px rgba(56,189,248,.10);outline:none}
+        /* ============================================================
+         * UI-020B-05｜公告中心視覺同步（延續 Hero 企業深藍家族）
+         * 純視覺：列表／卡片／Tag／詳情／管理／Search → UI-020A tokens。
+         * 保留公告語意色（必讀 rose／本週 amber／未讀 sky／已讀 slate／草稿 amber／發布 emerald）。
+         * scope：.zdos-ann-center／.zdos-ann-detail（不影響其他共用 .zdos-workspace-card 的頁面；不覆寫全域 .card/.button/.badge）
+         * ============================================================ */
+        .zdos-ann-center{display:flex;flex-direction:column;gap:.9rem;min-width:0}
+        .zdos-ann-center .zdos-workspace-card{border-radius:var(--oc-radius-lg);box-shadow:var(--oc-shadow-md)}
+        .zdos-ann-center .shadow-lg,.zdos-ann-center .shadow-xl{box-shadow:var(--oc-shadow-md) !important}
+        .zdos-ann-center .rounded-2xl{border-radius:var(--oc-radius-lg)}
+        .zdos-ann-center .rounded-xl{border-radius:var(--oc-radius-md)}
+        .zdos-ann-center .zdos-ann-scroll-item{border-radius:var(--oc-radius-lg)}
+        /* 長標題不溢出 */
+        .zdos-ann-center h3,.zdos-ann-center h2{overflow-wrap:anywhere}
+        .zdos-ann-center input:focus,.zdos-ann-center textarea:focus,.zdos-ann-center select:focus{border-color:rgba(56,189,248,.42);box-shadow:0 0 0 3px rgba(56,189,248,.10);outline:none}
+        /* 未讀點：保留辨識度（明顯但不刺眼） */
+        .zdos-ann-center .zdos-ann-unread-dot{width:9px;height:9px;box-shadow:0 0 6px rgba(56,189,248,.4)}
+        /* 公告詳情：長文閱讀層級（維持深藍，收斂邊框、放大行距） */
+        .zdos-ann-detail article.zdos-workspace-card{border-color:rgba(56,189,248,.12)}
+        .zdos-ann-detail .whitespace-pre-wrap{line-height:1.75}
 
                 /* UI-011：人力中心首頁重整（相容層；不取代 UI-010 排假中心） */
         .zdos-hr-home{display:flex;flex-direction:column;gap:.85rem;min-width:0;max-width:100%;overflow-x:hidden}
@@ -17119,6 +17139,7 @@
                 rightHtml: `<span class="zdos-workspace-btn ${unreadCount > 0 ? 'border-sky-500/25 bg-sky-950/40 text-sky-300' : 'border-white/[0.06] bg-slate-950/40 text-slate-500'}">🔔 ${unreadCount > 0 ? `${unreadCount} 未讀` : '已讀完'}</span>`
             });
             const body = `
+                    <div class="zdos-ann-center">
                         <section>
                             <h2 class="text-sm font-bold text-rose-300 mb-2">🔴 必讀公告</h2>
                             ${mustReadList.length === 0 ? `<div class="zdos-workspace-card p-4 text-xs text-slate-500">目前沒有必讀公告。</div>` : mustReadList.map(ann => `
@@ -17165,7 +17186,8 @@
                             </div>
                         </section>
 
-                        <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · 公告中心</footer>`;
+                        <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · 公告中心</footer>
+                    </div>`;
             root.innerHTML = wrapFunctionPage(header, body);
         }
 
@@ -17177,6 +17199,7 @@
                 rightHtml: !isRead ? '<span class="zdos-workspace-btn border-sky-500/25 bg-sky-950/40 text-sky-300">未讀</span>' : '<span class="zdos-workspace-btn border-white/[0.06] bg-slate-950/40 text-slate-500">已讀</span>'
             });
             const body = `
+                    <div class="zdos-ann-center zdos-ann-detail">
                         <article class="zdos-workspace-card p-5 space-y-4">
                             <p class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-300"><span class="text-lg">${escapeHtmlText(ann.categoryIcon)}</span>${escapeHtmlText(ann.category)}</p>
                             <h2 class="text-xl font-black text-white leading-snug">${escapeHtmlText(ann.title)}</h2>
@@ -17191,7 +17214,8 @@
                             ${isRead ? '↩ 標為未讀' : '☑ 我已閱讀'}
                         </button>
 
-                        <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · 公告詳情</footer>`;
+                        <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · 公告詳情</footer>
+                    </div>`;
             root.innerHTML = wrapFunctionPage(header, body);
         }
 
@@ -17342,6 +17366,7 @@
                     ...existing
                 } : emptyAnnouncementManagerForm();
                 const body = `
+                    <div class="zdos-ann-center">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <section class="zdos-workspace-card border-white/[0.06] p-4 space-y-3" aria-label="公告編輯">
                             <h2 class="text-sm font-bold text-slate-100">${editingId === 'new' ? '新增公告' : '編輯公告'}</h2>
@@ -17389,7 +17414,8 @@
                         </section>
                         <aside id="ann-mgr-preview" class="zdos-workspace-card border-cyan-500/20 bg-cyan-500/[0.04] p-4" aria-label="公告預覽"></aside>
                     </div>
-                    <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · ANN-001</footer>`;
+                    <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · ANN-001</footer>
+                    </div>`;
                 root.innerHTML = wrapFunctionPage(header, body, 'max-w-6xl');
                 syncAnnouncementManagerPreview();
                 return;
@@ -17420,12 +17446,14 @@
                     </article>`).join('')}</div>`;
 
             const body = `
+                    <div class="zdos-ann-center">
                 <div class="flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between">
                     <input id="ann-mgr-search" type="search" value="${escapeHtmlText(state.announcementManagerSearch || '')}" oninput="setAnnouncementManagerSearch(this.value)" placeholder="搜尋標題／分類／發布者／內容" class="w-full sm:max-w-md rounded-xl border border-white/[0.08] bg-slate-950/60 px-3 py-2 text-sm text-white">
                     <p class="text-[10px] text-slate-500">${rows.length} 筆 · Beta 寫回 ANNOUNCEMENT_SEED</p>
                 </div>
                 ${listHtml}
-                <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · 公告管理中心</footer>`;
+                <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · 公告管理中心</footer>
+                    </div>`;
             root.innerHTML = wrapFunctionPage(header, body, 'max-w-5xl');
         }
 
