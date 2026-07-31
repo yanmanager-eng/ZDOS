@@ -2981,6 +2981,36 @@
         .zdos-hr-home .zdos-hr-action:active{box-shadow:none;transform:scale(.99)}
         /* 班表異動子按鈕（.zdos-nav-btn）：一致卡片感、清楚可點 */
         .zdos-hr-home .zdos-nav-btn{transition:border-color .15s var(--oc-motion-ease),background .15s var(--oc-motion-ease)}
+        /* ============================================================
+         * UI-020B-02｜排班中心視覺同步（延續 Hero 企業深藍家族）
+         * 純視覺：統一排班/排假共用外框、月份切換、星期列、正式班表 grid、
+         *   班別 chip 結構、排假中心(lc17)卡面 → UI-020A tokens。
+         * 保留 M／A／N 語意色、員工識別色（getEmployeeColor）與所有事件綁定。
+         * ============================================================ */
+        /* 月份切換 pill 統一為企業藍 */
+        .zdos-scheduling-month-btn{border-radius:var(--oc-radius-sm);border-color:rgba(56,189,248,.28);background:rgba(11,79,140,.3);color:rgb(186 230 253)}
+        .zdos-scheduling-month-label{color:#eaf2fb}
+        /* 星期列可讀性 */
+        .zdos-scheduling-weekday{color:rgb(148 170 196);letter-spacing:.04em}
+        /* 門市切換（本店／全店）pill 統一 */
+        .zdos-scheduling-store-btn{border-radius:var(--oc-radius-sm);background:rgba(8,17,39,.5)}
+        .zdos-scheduling-store-btn--active{border-color:rgba(56,189,248,.5);background:rgba(11,79,140,.34);color:rgb(199 224 253)}
+        /* 正式班表 grid：面板／員工列／日格 統一深藍＋低陰影＋一致圓角 */
+        .zdos-scheduling-panel{border-radius:var(--oc-radius-lg);border-color:rgba(56,189,248,.14);background:linear-gradient(160deg,rgba(13,31,61,.72),rgba(8,17,39,.7));box-shadow:var(--oc-shadow-md)}
+        .zdos-scheduling-emp-item{border-radius:var(--oc-radius-md);background:rgba(13,31,61,.6);border-color:rgba(148,163,184,.14)}
+        .zdos-scheduling-emp-item--active{border-color:rgba(56,189,248,.5);background:rgba(11,79,140,.3)}
+        .zdos-scheduling-day{border-radius:var(--oc-radius-md);background:rgba(8,17,39,.42)}
+        .zdos-scheduling-day--today{border-color:rgba(56,189,248,.5);background:rgba(11,79,140,.24)}
+        /* 班別 chip：僅統一圓角結構；M／A／N 語意色不動 */
+        .zdos-scheduling-shift-chip{border-radius:var(--oc-radius-sm)}
+        /* 排假中心（lc17）卡面統一至深藍家族 */
+        .zdos-lc17-kpi{border-radius:var(--oc-radius-md);border-color:rgba(56,189,248,.14);background:rgba(13,31,61,.62)}
+        .zdos-lc17-stat{border-radius:var(--oc-radius-sm);background:rgba(8,17,39,.42)}
+        .zdos-lc17-cal{border-radius:var(--oc-radius-lg);border-color:rgba(56,189,248,.14);background:linear-gradient(160deg,rgba(13,31,61,.62),rgba(8,17,39,.6))}
+        .zdos-lc17-day{border-radius:var(--oc-radius-md);background:rgba(8,17,39,.42)}
+        .zdos-lc17-day--today{border-color:rgba(56,189,248,.6)}
+        /* 班表異動子按鈕（hrHome）：卡片感一致 */
+        .zdos-hr-home section .zdos-nav-btn{border-radius:var(--oc-radius-md)}
     </style>
     <link rel="stylesheet" href="ui/operation-center/tokens.css">
     <link rel="stylesheet" href="ui/operation-center/components.css">
