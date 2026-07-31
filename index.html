@@ -2815,6 +2815,19 @@
         .zdos-sales-history-metric{border-radius:var(--oc-radius-sm)}
         /* 送出鍵：保留成功語意色，收斂過亮光暈為低陰影 */
         .zdos-sales-submit{border-radius:var(--oc-radius-md) !important;box-shadow:var(--oc-shadow-md) !important}
+        /* ============================================================
+         * UI-020B-04｜財務中心視覺同步（延續 Hero 企業深藍家族）
+         * 純視覺：Header／Card／報表中心／收支管理／選單／Button → UI-020A tokens。
+         * 保留財務語意色（emerald／teal＝金流／會計）與所有 onclick／export／handler／markup。
+         * scope：.zdos-acc-center（僅財務中心，不影響其他共用 .zdos-workspace-card 的頁面）
+         * ============================================================ */
+        .zdos-acc-center{display:flex;flex-direction:column;gap:.85rem;min-width:0}
+        .zdos-acc-center .zdos-workspace-card{border-radius:var(--oc-radius-lg);box-shadow:var(--oc-shadow-md);border-color:rgba(56,189,248,.10)}
+        .zdos-acc-center .shadow-lg,.zdos-acc-center .shadow-xl{box-shadow:var(--oc-shadow-md) !important}
+        .zdos-acc-center .rounded-2xl{border-radius:var(--oc-radius-lg)}
+        .zdos-acc-center .rounded-xl{border-radius:var(--oc-radius-md)}
+        .zdos-acc-center select{border-radius:var(--oc-radius-md);transition:border-color 150ms ease, box-shadow 150ms ease}
+        .zdos-acc-center select:focus{border-color:rgba(56,189,248,.42);box-shadow:0 0 0 3px rgba(56,189,248,.10);outline:none}
 
                 /* UI-011：人力中心首頁重整（相容層；不取代 UI-010 排假中心） */
         .zdos-hr-home{display:flex;flex-direction:column;gap:.85rem;min-width:0;max-width:100%;overflow-x:hidden}
@@ -16959,6 +16972,7 @@
                     <p class="text-[10px] text-slate-500">功能預留 · 維持原架構，本次不改資料與計算</p>
                 </section>`;
             const body = `
+                    <div class="zdos-acc-center">
                         <div class="zdos-workspace-card border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.06] to-teal-950/20 p-1">
                             <div class="px-4 pt-4 pb-3">
                                 <p class="text-[10px] uppercase tracking-[0.22em] text-emerald-400/90">UI-015</p>
@@ -17019,7 +17033,8 @@
                         ${financePlaceholder('📅', '結帳中心', '維持原功能架構，後續承接結帳流程。')}
                         ${financePlaceholder('📈', '財務分析', '維持原功能架構，後續承接分析報表。')}
 
-                        <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · 財務中心</footer>`;
+                        <footer class="pt-1 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · 財務中心</footer>
+                    </div>`;
             root.innerHTML = wrapFunctionPage(header, body, 'max-w-5xl');
             if (state.reportModal) renderReportModalOverlay();
         }
