@@ -2816,6 +2816,21 @@
         /* 送出鍵：保留成功語意色，收斂過亮光暈為低陰影 */
         .zdos-sales-submit{border-radius:var(--oc-radius-md) !important;box-shadow:var(--oc-shadow-md) !important}
         /* ============================================================
+         * UI-030-04｜業績中心 Layout Polish（純版面，全部 scoped .zdos-sales-shell 之下）
+         * 僅 spacing／alignment／safe-area／overflow／readability；
+         * 不改資料／營收計算／金額邏輯／submit／匯出／事件／權限／日期／文字。
+         * ============================================================ */
+        /* 底部安全區：最後內容不被 notch／home indicator 裁切 */
+        .zdos-sales-shell{padding-bottom:max(.5rem,env(safe-area-inset-bottom,0px))}
+        /* Hero meta：行距與長字換行（門市名／日期不溢出） */
+        .zdos-sales-shell .zdos-sales-hero-meta{line-height:1.4;overflow-wrap:anywhere}
+        /* 分析 KPI（本週累計／日均／最高）：三卡高度一致、內容垂直置中、值不溢出 */
+        .zdos-sales-shell .zdos-sales-kpi{display:flex;flex-direction:column;justify-content:center;min-height:4.1rem}
+        /* 歷史卡數值：長金額防溢出（沿用既有 ellipsis 慣例） */
+        .zdos-sales-shell .zdos-sales-history-metric strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        /* 圖表卡標題與圖之間呼吸一致 */
+        .zdos-sales-shell .zdos-sales-chart-title{line-height:1.3}
+        /* ============================================================
          * UI-020B-04｜財務中心視覺同步（延續 Hero 企業深藍家族）
          * 純視覺：Header／Card／報表中心／收支管理／選單／Button → UI-020A tokens。
          * 保留財務語意色（emerald／teal＝金流／會計）與所有 onclick／export／handler／markup。
