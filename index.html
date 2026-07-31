@@ -2608,6 +2608,21 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
+        /* ============================================================
+         * UI-030-07｜Shared Function Page Header 一致性（純視覺）
+         * scope：.zdos-workspace-header（全中心共用功能頁 Header：人力／排班／業績／財務／公告／詳情／管理…）
+         * 僅 min-height／alignment／overflow；不改 renderFunctionPageHeader 導覽邏輯／route／onclick／文字／Logo。
+         * ============================================================ */
+        /* 三欄 Header（返回／標題／操作）最小高度一致、整體垂直置中 */
+        .zdos-workspace-header-inner { min-height: 2.5rem; }
+        /* 返回鍵：一致點擊高度、內容垂直置中 */
+        .zdos-workspace-back { display: inline-flex; align-items: center; justify-content: center; min-height: 2rem; }
+        /* 右側操作區：項目一致高度、垂直置中（不改按鈕文字／handler） */
+        .zdos-workspace-actions > * { min-height: 2rem; }
+        .zdos-workspace-actions > .zdos-workspace-btn { display: inline-flex; align-items: center; justify-content: center; }
+        /* 標題：長標題換行不溢出（grid 側欄已固定，不會推擠操作按鈕） */
+        .zdos-workspace-title { overflow-wrap: anywhere; }
+
         /* UI-010D：休假清單與快速篩選 */
         .zdos-leave-filter-card {
             border-radius: 16px;
