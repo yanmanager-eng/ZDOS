@@ -3032,6 +3032,24 @@
         /* 班表異動子按鈕（.zdos-nav-btn）：一致卡片感、清楚可點 */
         .zdos-hr-home .zdos-nav-btn{transition:border-color .15s var(--oc-motion-ease),background .15s var(--oc-motion-ease)}
         /* ============================================================
+         * UI-030-02｜人力中心 Layout Polish（純版面：間距／對齊／尺寸／可讀性）
+         * 僅 scoped .zdos-hr-*；不改資料／邏輯／識別色／M A N 判定／事件／權限／日期。
+         * ============================================================ */
+        /* 雙店（中華／東港）上下分隔更清楚、不黏在一起 */
+        .zdos-hr-home .zdos-hr-today-store{margin-top:.95rem;padding-top:.85rem}
+        .zdos-hr-home .zdos-hr-today-store:first-of-type{margin-top:.35rem;padding-top:0}
+        /* 今日總覽班別看板：卡間距一致、空班別收斂空洞 */
+        .zdos-hr-home .zdos-hr-board-shift{margin-top:.45rem}
+        .zdos-hr-home .zdos-hr-board-empty{padding:.25rem .15rem}
+        /* 今日總覽 toolbar 與搜尋列呼吸一致 */
+        .zdos-hr-home .zdos-hr-today-search{margin-top:.5rem}
+        /* 月曆：日名清楚截斷（避免超出格子、避免過長） */
+        .zdos-hr-home .zdos-hr-day-names{max-height:2.6em;line-height:1.25}
+        /* 月曆月份列與 本店／全店 切換 垂直對齊、不擁擠 */
+        .zdos-hr-home .zdos-hr-cal-toggle{align-items:center;gap:.4rem}
+        /* 快捷入口（請假／排假／批次排假）：點擊區與間距一致 */
+        .zdos-hr-home .zdos-hr-primary-actions{gap:.6rem}
+        /* ============================================================
          * UI-020B-02｜排班中心視覺同步（延續 Hero 企業深藍家族）
          * 純視覺：統一排班/排假共用外框、月份切換、星期列、正式班表 grid、
          *   班別 chip 結構、排假中心(lc17)卡面 → UI-020A tokens。
