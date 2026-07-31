@@ -13,14 +13,15 @@
   --zdos-surface: #FFFFFF;
   --zdos-surface-muted: #E8EEF4;
   --zdos-surface-focus: #E2EAF2;
-  --zdos-primary: #0B4F8C;
-  --zdos-primary-soft: rgba(11, 79, 140, 0.08);
+  /* UI-020A：品牌/狀態色改引用全站單一來源（tokens.css 的 --zds-*）；fallback 維持原值 */
+  --zdos-primary: var(--zds-brand-primary, #0B4F8C);
+  --zdos-primary-soft: var(--zds-brand-primary-soft, rgba(11, 79, 140, 0.08));
   --zdos-text-primary: #0B1F33;
   --zdos-text-secondary: #5A6B7C;
   --zdos-border: #C9D6E4;
-  --zdos-success: #147A45;
-  --zdos-warning: #A67C00;
-  --zdos-danger: #C62828;
+  --zdos-success: var(--zds-ok, #147A45);
+  --zdos-warning: var(--zds-warn, #A67C00);
+  --zdos-danger: var(--zds-alert, #C62828);
 
   --zdos-space-1: 0.25rem;
   --zdos-space-2: 0.5rem;
@@ -653,7 +654,7 @@
   grid-area: status;
   font-size: 0.6875rem;
   font-weight: 700;
-  color: #B8860B;
+  color: var(--zdos-warning);
 }
 
 .zdos-mh__coming-blurb {

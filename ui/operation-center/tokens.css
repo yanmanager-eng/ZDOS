@@ -4,6 +4,31 @@
  */
 
 :root {
+  /* ============================================================
+   * ZDOS v1.5 · Design System Foundation (UI-020A)
+   * 全站唯一品牌色/尺度來源 — 企業科技藍（與首頁 Hero 一致）。
+   * 其他系統（oc-* / zdos-mh__*）一律引用這層，不再各自硬寫。
+   * ============================================================ */
+  --zds-brand-primary: #0b4f8c;        /* 企業主藍（與 mobile home 一致） */
+  --zds-brand-primary-strong: #093f70;
+  --zds-brand-primary-soft: rgba(11, 79, 140, 0.08);
+  --zds-brand-sky: #38bdf8;            /* Hero 電路藍點綴 */
+  --zds-brand-sky-soft: #7dd3fc;
+  --zds-brand-navy-900: #081127;
+  --zds-brand-navy-800: #0d1f3d;
+  --zds-brand-navy-700: #15386b;
+  --zds-brand-gradient: radial-gradient(130% 150% at 100% 0, #15386b 0%, #0d1f3d 46%, #081127 100%);
+  --zds-brand-z: #38bdf8;              /* 官方藍色電路 Z */
+  --zds-focus-ring: 0 0 0 3px rgba(11, 79, 140, 0.35);
+
+  /* Status — single source */
+  --zds-ok: #147a45;
+  --zds-ok-bg: rgba(20, 122, 69, 0.10);
+  --zds-warn: #a67c00;
+  --zds-warn-bg: rgba(166, 124, 0, 0.12);
+  --zds-alert: #c62828;
+  --zds-alert-bg: rgba(198, 40, 40, 0.10);
+
   /* Color — semantic */
   --oc-color-bg: #f5f5f7;
   --oc-color-bg-elevated: #ffffff;
@@ -16,15 +41,17 @@
   --oc-color-text-secondary: #6e6e73;
   --oc-color-text-tertiary: #86868b;
 
-  --oc-color-accent: #0066cc;
-  --oc-color-accent-muted: rgba(0, 102, 204, 0.08);
+  /* UI-020A：品牌強調色改由單一來源提供（企業科技藍） */
+  --oc-color-accent: var(--zds-brand-primary);
+  --oc-color-accent-strong: var(--zds-brand-primary-strong);
+  --oc-color-accent-muted: var(--zds-brand-primary-soft);
 
-  --oc-color-status-ok: #248a3d;
-  --oc-color-status-ok-bg: rgba(36, 138, 61, 0.1);
-  --oc-color-status-warn: #b8860b;
-  --oc-color-status-warn-bg: rgba(184, 134, 11, 0.12);
-  --oc-color-status-alert: #c93434;
-  --oc-color-status-alert-bg: rgba(201, 52, 52, 0.1);
+  --oc-color-status-ok: var(--zds-ok);
+  --oc-color-status-ok-bg: var(--zds-ok-bg);
+  --oc-color-status-warn: var(--zds-warn);
+  --oc-color-status-warn-bg: var(--zds-warn-bg);
+  --oc-color-status-alert: var(--zds-alert);
+  --oc-color-status-alert-bg: var(--zds-alert-bg);
 
   --oc-color-nav-active: #1d1d1f;
   --oc-color-nav-inactive: #86868b;
@@ -72,6 +99,13 @@
   --oc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
   --oc-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
   --oc-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  /* Badge / Tag / Button (UI-020A) */
+  --oc-badge-radius: var(--oc-radius-full);
+  --oc-tag-radius: var(--oc-radius-sm);
+  --oc-btn-radius: var(--oc-radius-md);
+  --oc-btn-primary-grad: linear-gradient(180deg, #1567b3 0%, var(--zds-brand-primary) 100%);
+  --oc-btn-primary-text: #ffffff;
 
   /* Layout */
   --oc-header-height: 52px;

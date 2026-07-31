@@ -54,8 +54,9 @@
   width: 32px;
   height: 32px;
   border-radius: var(--oc-radius-sm);
-  background: var(--oc-color-text-primary);
-  color: var(--oc-color-bg-elevated);
+  /* UI-020A：官方藍色電路 Z 品牌塊（深藍底＋科技藍字） */
+  background: var(--zds-brand-navy-800);
+  color: var(--zds-brand-z);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -208,7 +209,7 @@
 }
 
 .oc-ai-card__action:hover {
-  background: rgba(0, 102, 204, 0.14);
+  background: var(--oc-color-accent-muted);
 }
 
 /* ——— KPI Grid 2×2 ——— */
@@ -495,4 +496,160 @@
 
 .oc-ai-card--empty .oc-ai-card__headline {
   color: var(--oc-color-text-secondary);
+}
+
+/* ==========================================================================
+ * UI-020A · ZDOS Design System Foundation — shared primitives
+ * Button / Badge / Tag / Card / Empty / Safe-area / 375-390-430 base
+ * 僅新增全站共用基礎，不改既有 oc-* 版面、不重畫各中心。
+ * ========================================================================== */
+
+/* ——— Generic surface card ——— */
+.oc-card {
+  background: var(--oc-color-surface);
+  border: 1px solid var(--oc-color-border);
+  border-radius: var(--oc-radius-lg);
+  box-shadow: var(--oc-shadow-sm);
+  padding: var(--oc-space-4);
+}
+.oc-card--flat { box-shadow: none; }
+.oc-card--muted { background: var(--oc-color-surface-muted); }
+.oc-card--pad-lg { padding: var(--oc-space-5); }
+
+/* ——— Button system ——— */
+.oc-btn {
+  --_h: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--oc-space-2);
+  min-height: var(--_h);
+  padding: 0 var(--oc-space-4);
+  border: 1px solid transparent;
+  border-radius: var(--oc-btn-radius);
+  font-family: var(--oc-font-family);
+  font-size: var(--oc-font-size-footnote);
+  font-weight: var(--oc-font-weight-semibold);
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--oc-motion-duration) var(--oc-motion-ease),
+    border-color var(--oc-motion-duration) var(--oc-motion-ease),
+    box-shadow var(--oc-motion-duration) var(--oc-motion-ease),
+    transform var(--oc-motion-duration) var(--oc-motion-ease);
+}
+.oc-btn:active { transform: scale(0.98); }
+.oc-btn:focus-visible { outline: none; box-shadow: var(--zds-focus-ring); }
+.oc-btn:disabled,
+.oc-btn[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+.oc-btn--primary {
+  background: var(--oc-btn-primary-grad);
+  color: var(--oc-btn-primary-text);
+  box-shadow: var(--oc-shadow-sm);
+}
+.oc-btn--primary:hover { filter: brightness(1.06); }
+.oc-btn--secondary {
+  background: var(--oc-color-surface);
+  color: var(--oc-color-text-primary);
+  border-color: var(--oc-color-border-strong);
+}
+.oc-btn--secondary:hover { background: var(--oc-color-surface-muted); }
+.oc-btn--ghost { background: transparent; color: var(--oc-color-accent); }
+.oc-btn--ghost:hover { background: var(--oc-color-accent-muted); }
+.oc-btn--danger { background: var(--oc-color-status-alert); color: #fff; }
+.oc-btn--sm { --_h: 32px; padding: 0 var(--oc-space-3); font-size: var(--oc-font-size-caption); }
+.oc-btn--lg { --_h: 48px; padding: 0 var(--oc-space-6); font-size: var(--oc-font-size-callout); }
+.oc-btn--block { width: 100%; }
+
+/* ——— Badge (count/dot) + Tag (label) ——— */
+.oc-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: var(--oc-badge-radius);
+  background: var(--oc-color-status-alert);
+  color: #fff;
+  font-size: 10px;
+  font-weight: var(--oc-font-weight-semibold);
+  line-height: 1;
+}
+.oc-badge--dot { min-width: 8px; width: 8px; height: 8px; padding: 0; }
+.oc-badge--ok { background: var(--oc-color-status-ok); }
+.oc-badge--warn { background: var(--oc-color-status-warn); }
+.oc-badge--neutral { background: var(--oc-color-text-tertiary); }
+
+.oc-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--oc-tag-radius);
+  background: var(--oc-color-surface-muted);
+  color: var(--oc-color-text-secondary);
+  border: 1px solid var(--oc-color-border);
+  font-size: var(--oc-font-size-caption);
+  font-weight: var(--oc-font-weight-medium);
+  line-height: 1.4;
+}
+.oc-tag--ok { color: var(--oc-color-status-ok); background: var(--oc-color-status-ok-bg); border-color: transparent; }
+.oc-tag--warn { color: var(--oc-color-status-warn); background: var(--oc-color-status-warn-bg); border-color: transparent; }
+.oc-tag--alert { color: var(--oc-color-status-alert); background: var(--oc-color-status-alert-bg); border-color: transparent; }
+.oc-tag--brand { color: var(--oc-color-accent); background: var(--oc-color-accent-muted); border-color: transparent; }
+
+/* ——— Structured empty state (icon / title / hint) ——— */
+.oc-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--oc-space-2);
+  padding: var(--oc-space-6) var(--oc-space-4);
+  color: var(--oc-color-text-tertiary);
+}
+.oc-empty__icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--oc-radius-full);
+  background: var(--oc-color-surface-muted);
+  color: var(--oc-color-text-secondary);
+}
+.oc-empty__title {
+  font-size: var(--oc-font-size-footnote);
+  font-weight: var(--oc-font-weight-semibold);
+  color: var(--oc-color-text-secondary);
+}
+.oc-empty__hint { font-size: var(--oc-font-size-caption); color: var(--oc-color-text-tertiary); }
+
+/* ——— Safe-area utilities ——— */
+.oc-safe-top { padding-top: env(safe-area-inset-top, 0px); }
+.oc-safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.oc-safe-x {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* ——— Brand header logo variant (blue circuit Z) ——— */
+.oc-header__logo--brand { background: var(--zds-brand-navy-800); color: var(--zds-brand-z); }
+
+/* ——— Responsive base: 375 / 390 / 430 ——— */
+@media (max-width: 374px) {
+  .oc-main { padding: var(--oc-space-3); }
+  .oc-kpi-grid { gap: var(--oc-space-2); }
+  .oc-kpi-card { min-height: 88px; padding: var(--oc-space-3); }
+}
+@media (min-width: 375px) and (max-width: 389px) {
+  .oc-main { padding: var(--oc-space-4); }
+}
+@media (min-width: 390px) and (max-width: 429px) {
+  .oc-main { padding: var(--oc-space-4); }
+}
+@media (min-width: 430px) and (max-width: 767px) {
+  .oc-main { padding: var(--oc-space-5); max-width: 460px; }
 }
