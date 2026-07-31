@@ -3187,6 +3187,27 @@
         .zdos-lc17-tag{align-items:center;line-height:1.1}
         /* ⑦ Bottom Sheet：底部按鈕不被 safe-area 遮擋（補強既有 env padding） */
         .zdos-lc17-info-actions{padding-bottom:max(0px,env(safe-area-inset-bottom,0px))}
+        /* ============================================================
+         * UI-035-03｜排假中心（UI-017 / lc17）Founder Pixel Polish
+         * 純版面，全部 scoped .zdos-lc17／.zdos-lc17-*（無裸全域選擇器）；
+         * 不改資料／統計／日期計算／+N／假別／識別色／submit／事件／權限／雲端。
+         * ============================================================ */
+        /* ⑨ Safe Area：最後卡片（月曆／footer）不被 Home Indicator 擋住 */
+        .zdos-lc17{padding-bottom:max(.5rem,env(safe-area-inset-bottom,0px))}
+        /* ② 今日資訊 KPI：三卡完全等高、數字基線一致、長數字不爆版 */
+        .zdos-lc17-kpis{grid-auto-rows:1fr}
+        .zdos-lc17-kpi{height:100%}
+        .zdos-lc17-kpi-value{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+        /* ③ 本月統計：每格完全等高（列高一致、格子撐滿），emoji／數字對齊沿用 UI-030-03 */
+        .zdos-lc17-month-stats{grid-auto-rows:1fr}
+        .zdos-lc17-stat{height:100%}
+        /* ⑤ 月曆：星期列七格垂直置中、所有日期格完全等高（列高一致、格子撐滿） */
+        .zdos-lc17 .zdos-scheduling-weekday{display:flex;align-items:center;justify-content:center}
+        .zdos-lc17 .zdos-leave-calendar-grid{grid-auto-rows:1fr}
+        .zdos-lc17-day{height:100%}
+        /* ⑥ 日期 Bottom Sheet：lc17 分組標題行距一致、人員列點擊區一致（面板 safe-area／捲動沿用既有 .zdos-leave-bottom-sheet-panel） */
+        .zdos-lc17-sheet-group-title{line-height:1.2}
+        .zdos-lc17-person{min-height:2.75rem}
     </style>
     <link rel="stylesheet" href="ui/operation-center/tokens.css">
     <link rel="stylesheet" href="ui/operation-center/components.css">
