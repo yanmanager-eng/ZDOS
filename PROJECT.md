@@ -231,6 +231,8 @@ isLoggedIn === true
 | `cover_design_v31_permanent` | 封面外觀 |
 | `zdos_schedule_registry_v1` | 排班紀錄（Schedule Registry） |
 | `zdos_schedule_baseline_202607_applied` | Baseline 202607 是否已套用 |
+| `zdos_personnel_orl_registry_v1` | ORL 戰力等級（Personnel ORL） |
+| `zdos_ability_registry_v1` | 能力管理系統分項能力紀錄（UI-018 能力學院） |
 
 ---
 

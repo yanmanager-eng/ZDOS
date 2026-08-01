@@ -1,5 +1,36 @@
 # ZDOS 更新紀錄
 
+## v1.5.0
+
+### UI-018：能力學院（能力管理系統）✅
+
+- 首頁快速入口「能力學院」由 `功能建置中` toast 改為正式模組（`openAbilityAcademy()`，新增 `academy` View）
+- **能力框架 `ABILITY_MATRIX`**：三大分類（核心職能／專業進階／管理發展）× 4 項 = 12 項能力，靜態定義為唯一來源
+- **四級能力等級**（未評核／學習中／已達標／精通）；個人能力紀錄持久化於 `localStorage` key `zdos_ability_registry_v1`（不串雲端）
+- **與既有 ORL 戰力等級整合**：ORL 為總體戰力（沿用 `setEmployeeOrlLevel`），本系統為分項能力；評核頁可一併調整 ORL
+- **我的能力（總覽）**：個人能力檔案——ORL 戰力、整體達成度 %、已達標／精通／已評核統計、各分類進度條與逐項等級（全角色）
+- **團隊評核**：依登入門市列出在職人員與達成度，點擊評核可逐項設定能力等級並儲存；權限沿用 `canCurrentUserEditStoreSchedule`（店長／集團首腦，與 ORL 管理一致）
+- Helper：`getAllAbilities()`、`getEmployeeAbilityLevel()`、`computeAbilityStats()`、`setEmployeeAbilityLevels()`、`canManageEmployeeAbility()`
+- 未觸及登入／Google Form／現金公式／既有 localStorage key；沿用 `renderFunctionPageHeader`／`wrapFunctionPage`
+
+**影響範圍：** 首頁快速入口 + `academy` View；全角色可見（個人檔案），評核限店長／集團首腦；新增 1 個 localStorage key `zdos_ability_registry_v1`；不觸及雲端
+
+#### M2：Skill Map（能力地圖）＋ Learning Path（能力路徑）✅
+
+- **能力地圖 Skill Map**：以三大分類呈現 12 能力節點，含等級熱度（未評核／學習中／已達標／精通）、整體掌握度 %、先修解鎖邏輯（先修達 L2 解鎖後續能力，未解鎖顯示 🔒 與先修條件）
+- **能力路徑 Learning Path**：三條角色導向路徑（新人啟航／服務進階／儲備幹部），階段式 stepper（完成 ✓／進行中／未解鎖 🔒），路徑進度 % 與「建議下一步」（rule-based 推導）
+- 新增 `ABILITY_PREREQUISITES`（先修關聯）與 `LEARNING_PATHS`（路徑定義）常數；Helper：`isAbilityUnlocked()`、`getLearningPathProgress()`、`getAbilityMeta()`
+- **沿用 `ABILITY_MATRIX` 能力 id 與 `zdos_ability_registry_v1` 等級推導；擴充不重建；未新增 localStorage key**；保留既有「我的能力／團隊評核」
+- 手機導覽殼（M1）「能力地圖／能力路徑」由建置中佔位改為正式內容（`ready:true`）
+
+#### Hotfix：BUG-UI018-M2-001（Learning Path 狀態互斥）✅
+
+- 鎖定步驟（🔒）僅顯示「未解鎖」，不得顯示「下一步／建議下一步／目前進度」
+- `getLearningPathProgress().nextStep` 僅指向「未完成且已解鎖」步驟；每條路徑同時最多一個「下一步」
+- 路徑底部文案：可開始 →「下一步：」；全完成 →「已全部達標」；其餘未解鎖 →「尚有步驟未解鎖」
+
+---
+
 ## v1.3.0
 
 ### Feature-009A：Schedule Registry（排班建立）✅
