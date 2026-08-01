@@ -1,0 +1,540 @@
+/* UI-999 — Maintenance page
+   Full rebuild to G01 block order:
+   Header → Badge → Title → Desc → AI → Progress → Grid → Security → Footer
+*/
+
+:root {
+  --bg-0: #001028;
+  --bg-1: #001a3d;
+  --bg-2: #002a5c;
+  --cyan: #38bdf8;
+  --cyan-2: #0ea5e9;
+  --blue: #3b82f6;
+  --ink: #ffffff;
+  --muted: rgba(226, 232, 240, 0.82);
+  --card: #eef4ff;
+  --card-ink: #0f172a;
+  --card-muted: #475569;
+  --line: rgba(56, 189, 248, 0.35);
+  --glow: 0 0 40px rgba(14, 165, 233, 0.25);
+  --radius: 22px;
+  --max: 430px;
+  --font: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--bg-0);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 18%, rgba(14, 165, 233, 0.18), transparent 60%),
+    radial-gradient(ellipse 70% 40% at 50% 55%, rgba(37, 99, 235, 0.12), transparent 65%),
+    linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 55%, #000814 100%);
+}
+
+.page {
+  width: 100%;
+  max-width: var(--max);
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 20px 18px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 20%, transparent 75%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page > * {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+/* ========== 1. Header ========== */
+#block-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 6px;
+  text-align: left;
+}
+
+#block-header .logo {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.55));
+}
+
+#block-header .logo svg {
+  width: 56px;
+  height: 56px;
+  display: block;
+}
+
+#block-header .brand-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+#block-header .brand {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: #fff;
+}
+
+#block-header .sub-zh {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: 0.12em;
+}
+
+#block-header .sub-en {
+  font-size: 9px;
+  font-weight: 600;
+  color: rgba(186, 230, 253, 0.75);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ========== 2. Status Badge ========== */
+#block-badge {
+  display: flex;
+  justify-content: center;
+}
+
+#block-badge .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 8px 10px;
+  border-radius: 999px;
+  background: rgba(0, 26, 61, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.55);
+  box-shadow: 0 0 18px rgba(14, 165, 233, 0.25);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#block-badge .wrench {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--cyan), var(--blue));
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}
+
+/* ========== 3. Huge Title ========== */
+#block-title {
+  text-align: center;
+}
+
+#block-title h1 {
+  margin: 0;
+  font-size: clamp(30px, 9vw, 38px);
+  line-height: 1.25;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #fff;
+  text-shadow: 0 0 24px rgba(56, 189, 248, 0.25);
+}
+
+/* ========== 4. Description ========== */
+#block-desc {
+  text-align: center;
+  max-width: 340px;
+  margin-inline: auto;
+}
+
+#block-desc p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+/* ========== 5. AI Hero（官方雙人圖） ========== */
+#block-ai {
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 16px;
+  padding: 0;
+  isolation: isolate;
+  overflow: visible;
+}
+
+#block-ai::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  width: min(280px, 88%);
+  height: min(280px, 88%);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.22), transparent 68%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.maintenance-ai-hero {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
+  min-height: 260px;
+  overflow: visible;
+}
+
+.maintenance-ai-hero__image {
+  display: block;
+  width: min(100%, 500px);
+  max-height: 380px;
+  height: auto;
+  object-fit: contain;
+  object-position: center bottom;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.4));
+}
+
+/* ========== 6. Progress Card ========== */
+#block-progress .card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px 14px;
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 12px;
+  align-items: stretch;
+  box-shadow: var(--glow);
+}
+
+#block-progress .divider {
+  background: rgba(59, 130, 246, 0.25);
+  width: 1px;
+  align-self: stretch;
+}
+
+#block-progress .col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+  color: var(--card-ink);
+}
+
+#block-progress .col-icon {
+  width: 34px;
+  height: 34px;
+  margin: 0 auto;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #38bdf8, #2563eb);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+}
+
+#block-progress .label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--card-muted);
+}
+
+#block-progress .value {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.35;
+  color: var(--card-ink);
+}
+
+#block-progress .foot {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+#block-progress .pct-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+}
+
+#block-progress .pct {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--blue);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+#block-progress .pct-unit {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--blue);
+}
+
+#block-progress .track {
+  height: 8px;
+  border-radius: 999px;
+  background: #dbeafe;
+  overflow: hidden;
+}
+
+#block-progress .fill {
+  height: 100%;
+  width: 68%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #38bdf8, #2563eb);
+}
+
+#block-progress .status {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--card-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+#block-progress .spin {
+  width: 10px;
+  height: 10px;
+  border: 2px solid #93c5fd;
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========== 7. Six Grid ========== */
+#block-grid-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#block-grid-wrap .section-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 4px 0 0;
+}
+
+#block-grid-wrap .section-title::before,
+#block-grid-wrap .section-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.55), transparent);
+}
+
+#block-grid-wrap .section-title h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#block-grid-wrap .star {
+  width: 10px;
+  height: 10px;
+  background: var(--cyan);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+}
+
+#block-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+#block-grid .cell {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 14px 12px;
+  min-height: 108px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--card-ink);
+}
+
+#block-grid .icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #38bdf8, #2563eb);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+
+#block-grid .cell-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+#block-grid .cell-desc {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--card-muted);
+}
+
+/* ========== 8. Security Card ========== */
+#block-security .card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 14px 14px 14px 12px;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 10px;
+  align-items: center;
+  color: var(--card-ink);
+  box-shadow: var(--glow);
+}
+
+#block-security .shield {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #38bdf8, #2563eb);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+}
+
+#block-security h2 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+#block-security p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--card-muted);
+}
+
+/* ========== 9. Footer ========== */
+#block-footer {
+  text-align: center;
+  padding-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#block-footer .thanks {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.65;
+  color: rgba(226, 232, 240, 0.9);
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+}
+
+#block-footer .heart-svg {
+  margin-top: 2px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.6));
+}
+
+#block-footer .sign {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+}
+
+@media (max-width: 430px) {
+  .maintenance-ai-hero {
+    min-height: 220px;
+  }
+
+  .maintenance-ai-hero__image {
+    width: min(100%, 340px);
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 360px) {
+  #block-header .brand {
+    font-size: 24px;
+  }
+
+  #block-progress .value {
+    font-size: 12px;
+  }
+}

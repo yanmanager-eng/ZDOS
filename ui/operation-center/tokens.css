@@ -1,0 +1,126 @@
+/**
+ * UI-001A | Operation Center Design Tokens
+ * 禁止在元件內硬寫色碼／間距；僅引用 var(--oc-*)
+ */
+
+:root {
+  /* ============================================================
+   * ZDOS v1.5 · Design System Foundation (UI-020A)
+   * 全站唯一品牌色/尺度來源 — 企業科技藍（與首頁 Hero 一致）。
+   * 其他系統（oc-* / zdos-mh__*）一律引用這層，不再各自硬寫。
+   * ============================================================ */
+  --zds-brand-primary: #0b4f8c;        /* 企業主藍（與 mobile home 一致） */
+  --zds-brand-primary-strong: #093f70;
+  --zds-brand-primary-soft: rgba(11, 79, 140, 0.08);
+  --zds-brand-sky: #38bdf8;            /* Hero 電路藍點綴 */
+  --zds-brand-sky-soft: #7dd3fc;
+  --zds-brand-navy-900: #081127;
+  --zds-brand-navy-800: #0d1f3d;
+  --zds-brand-navy-700: #15386b;
+  --zds-brand-gradient: radial-gradient(130% 150% at 100% 0, #15386b 0%, #0d1f3d 46%, #081127 100%);
+  --zds-brand-z: #38bdf8;              /* 官方藍色電路 Z */
+  --zds-focus-ring: 0 0 0 3px rgba(11, 79, 140, 0.35);
+
+  /* Status — single source */
+  --zds-ok: #147a45;
+  --zds-ok-bg: rgba(20, 122, 69, 0.10);
+  --zds-warn: #a67c00;
+  --zds-warn-bg: rgba(166, 124, 0, 0.12);
+  --zds-alert: #c62828;
+  --zds-alert-bg: rgba(198, 40, 40, 0.10);
+
+  /* Color — semantic */
+  --oc-color-bg: #f5f5f7;
+  --oc-color-bg-elevated: #ffffff;
+  --oc-color-surface: #ffffff;
+  --oc-color-surface-muted: #f9f9fb;
+  --oc-color-border: rgba(0, 0, 0, 0.08);
+  --oc-color-border-strong: rgba(0, 0, 0, 0.12);
+
+  --oc-color-text-primary: #1d1d1f;
+  --oc-color-text-secondary: #6e6e73;
+  --oc-color-text-tertiary: #86868b;
+
+  /* UI-020A：品牌強調色改由單一來源提供（企業科技藍） */
+  --oc-color-accent: var(--zds-brand-primary);
+  --oc-color-accent-strong: var(--zds-brand-primary-strong);
+  --oc-color-accent-muted: var(--zds-brand-primary-soft);
+
+  --oc-color-status-ok: var(--zds-ok);
+  --oc-color-status-ok-bg: var(--zds-ok-bg);
+  --oc-color-status-warn: var(--zds-warn);
+  --oc-color-status-warn-bg: var(--zds-warn-bg);
+  --oc-color-status-alert: var(--zds-alert);
+  --oc-color-status-alert-bg: var(--zds-alert-bg);
+
+  --oc-color-nav-active: #1d1d1f;
+  --oc-color-nav-inactive: #86868b;
+
+  /* Typography */
+  --oc-font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+    "Helvetica Neue", "Noto Sans TC", sans-serif;
+  --oc-font-family-display: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "Segoe UI", "Noto Sans TC", sans-serif;
+
+  --oc-font-size-caption: 0.6875rem; /* 11px */
+  --oc-font-size-footnote: 0.8125rem; /* 13px */
+  --oc-font-size-body: 0.9375rem; /* 15px */
+  --oc-font-size-callout: 1rem; /* 16px */
+  --oc-font-size-title-3: 1.25rem; /* 20px */
+  --oc-font-size-title-2: 1.375rem; /* 22px */
+  --oc-font-size-large-title: 1.75rem; /* 28px */
+
+  --oc-font-weight-regular: 400;
+  --oc-font-weight-medium: 500;
+  --oc-font-weight-semibold: 600;
+
+  --oc-line-height-tight: 1.2;
+  --oc-line-height-normal: 1.45;
+  --oc-letter-spacing-tight: -0.02em;
+
+  /* Spacing (4px base) */
+  --oc-space-1: 0.25rem;
+  --oc-space-2: 0.5rem;
+  --oc-space-3: 0.75rem;
+  --oc-space-4: 1rem;
+  --oc-space-5: 1.25rem;
+  --oc-space-6: 1.5rem;
+  --oc-space-8: 2rem;
+  --oc-space-10: 2.5rem;
+
+  /* Radius */
+  --oc-radius-sm: 8px;
+  --oc-radius-md: 12px;
+  --oc-radius-lg: 16px;
+  --oc-radius-xl: 20px;
+  --oc-radius-full: 9999px;
+
+  /* Shadow — calm, Stripe-like */
+  --oc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --oc-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --oc-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  /* Badge / Tag / Button (UI-020A) */
+  --oc-badge-radius: var(--oc-radius-full);
+  --oc-tag-radius: var(--oc-radius-sm);
+  --oc-btn-radius: var(--oc-radius-md);
+  --oc-btn-primary-grad: linear-gradient(180deg, #1567b3 0%, var(--zds-brand-primary) 100%);
+  --oc-btn-primary-text: #ffffff;
+
+  /* Layout */
+  --oc-header-height: 52px;
+  --oc-bottom-nav-height: 56px;
+  --oc-content-max-width: 680px;
+  --oc-content-max-width-desktop: 960px;
+  --oc-safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Motion — minimal; no decorative animation */
+  --oc-motion-duration: 150ms;
+  --oc-motion-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --oc-motion-duration: 0ms;
+  }
+}

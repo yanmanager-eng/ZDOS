@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZDOS 中東營運系統</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 隱藏滾動條但保持功能 */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+        
+        /* 強效防溢出機制 */
+        input, select, textarea {
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+        }
+
+        /* 網格背景紋理 */
+        .premium-grid {
+            background-color: #030712;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.008) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.008) 1px, transparent 1px);
+            background-size: 24px 30px;
+            background-position: center;
+        }
+
+        /* 絲滑脈衝動畫 */
+        @keyframes subtle-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.01); opacity: 1; }
+        }
+        .animate-subtle { animation: subtle-pulse 5s ease-in-out infinite; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* 跑馬燈滾動動畫 */
+        @keyframes marquee {
+            0% { transform: translate3d(100%, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+        .marquee-content {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 10px;
+            animation: marquee 16s linear infinite;
+        }
+        .marquee-content:hover {
+            animation-play-state: paused;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 premium-grid min-h-screen relative overflow-x-hidden font-sans">
+
+    <div id="glow-1" class="absolute top-[10%] left-[20%] w-[50vw] h-[50vw] rounded-full blur-[140px] pointer-events-none transition-all duration-1000 bg-blue-600/10"></div>
+    <div id="glow-2" class="absolute bottom-[20%] right-[-10%] w-[45vw] h-[45vw] rounded-full blur-[140px] pointer-events-none transition-all duration-1000 bg-indigo-700/8"></div>
+
+    <div id="toast-container" class="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none transition-all duration-300 flex flex-col gap-2"></div>
+
+    <div id="update-modal" class="fixed inset-0 z-[10000] hidden flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-2xl animate-fade-in">
+        <div class="w-full max-w-lg bg-slate-900 border border-white/[0.08] rounded-[28px] p-7 shadow-2xl relative max-h-[85vh] overflow-y-auto font-sans">
+            <div class="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-emerald-500 via-sky-500 to-indigo-500 rounded-l-full"></div>
+            <div class="flex items-center space-x-2.5 mb-4 select-none">
+                <span class="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">🚀</span>
+                <div>
+                    <h3 class="text-base font-bold text-slate-100 tracking-wide">系統核心重大版本更新公告</h3>
+                    <p class="text-[10px] text-slate-400 font-mono mt-0.5">Release v1.0.1 Dashboard (業績申報 + 原物料庫存盤點雙軌安全旗艦版)</p>
+                </div>
+            </div>
+            <hr class="border-white/[0.04] mb-4">
+            <div class="space-y-4 text-xs text-slate-300 leading-relaxed font-light">
+                <p class="font-normal text-slate-200 text-sm">親愛的店長與門市夥伴，系統已升級至業績與庫存盤點並存之雙軌體系，且維持全部既有安全防護：</p>
+                <div class="bg-slate-950/50 rounded-xl p-3.5 border border-white/[0.04] space-y-2">
+                    <p class="font-bold text-sky-400 flex items-center">📊 1. 營業業績 ＆ 庫存盤點叫貨雙軌切換</p>
+                    <p class="text-[11px] pl-4 text-slate-400">登入後台後，上方新增了活頁標籤，可以隨時一鍵切換「業績申報」與「原物料盤點叫貨」表單，明細獨立存放。</p>
+                </div>
+                <div class="bg-slate-950/50 rounded-xl p-3.5 border border-white/[0.04] space-y-2">
+                    <p class="font-bold text-amber-400 flex items-center">📷 2. 手機鏡頭相機條碼掃描模組解鎖</p>
+                    <p class="text-[11px] pl-4 text-slate-400">在庫存分頁點擊按鈕可直接喚醒門市手機後鏡頭，進行條碼與 QR Code 盤點掃描，亦保留核心物料測試盤點面板。</p>
+                </div>
+                <div class="bg-slate-950/50 rounded-xl p-3.5 border border-white/[0.04] space-y-2">
+                    <p class="font-bold text-emerald-400 flex items-center">🛡️ 3. 完美原廠架構護盾（防滑掉、叫回修改、自由改員編）</p>
+                    <p class="text-[11px] pl-4 text-slate-400">手機滑掉 100% 保持登入不踢回。業績欄位打錯保留「✏️ 修改」一秒叫回重新填寫重傳網關。員工管理控制台依然允許塗改、直接修正員工編號。</p>
+                </div>
+            </div>
+            <button onclick="window.closeUpdateModal()" class="w-full mt-6 py-3 bg-gradient-to-r from-emerald-600 to-sky-600 hover:from-emerald-500 hover:to-sky-500 text-white rounded-xl font-bold text-xs cursor-pointer tracking-widest shadow-lg transition-all text-center">我知道了，開始登入管理</button>
+        </div>
+    </div>
+
+    <div id="backup-payload-modal" class="fixed inset-0 z-[20000] hidden flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl animate-fade-in">
+        <div class="w-full max-w-md bg-slate-900 border border-white/[0.08] rounded-[24px] p-5 shadow-2xl relative font-sans text-xs">
+            <div class="flex justify-between items-center mb-3">
+                <p id="backup-payload-title" class="font-bold text-slate-100">📋 最新備份代碼</p>
+                <button onclick="document.getElementById('backup-payload-modal').classList.add('hidden')" class="text-slate-400 hover:text-white">✕</button>
+            </div>
+            <p class="text-[10px] text-slate-400 mb-2">💡 框內內容已自動全選，下一次更新前貼給 AI 即可！</p>
+            <textarea id="backup-payload-textarea" rows="8" readonly class="w-full bg-slate-950 border border-white/[0.06] rounded-xl p-3 text-[11px] text-emerald-400 font-mono focus:outline-none focus:border-emerald-500/40" onclick="this.select();"></textarea>
+            <button onclick="window.tryFallbackTextareaCopy()" class="w-full mt-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all">再次嘗試自動複製</button>
+        </div>
+    </div>
+
+    <div id="root" class="relative z-10 w-full min-h-screen flex flex-col justify-between p-2 sm:p-4"></div>
+
+    <script>
+        // ========================================================================
+        // 1. 全局常數與圖標庫
+        // ========================================================================
+        const THEMES = {
+            'classic-blue': { glow1: 'bg-blue-600', glow2: 'bg-indigo-700', text: 'text-sky-400', border: 'border-sky-500/20', bg: 'bg-sky-500/5' }
+        };
+
+        const ROLE_OPTIONS = ['資深員工', '實習幹部', '副領班', '領班', '店經理', '區經理', '人資', '總務', '秘書', '店長', '集團首腦'];
+
+        const SVGIcons = {
+            User: `<svg class="w-4 h-4 mr-1.5 inline-block align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>`,
+            Lock: `<svg class="w-4 h-4 inline-block align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>`,
+            Settings: `<svg class="w-3.5 h-3.5 mr-1.5 inline-block align-middle transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.43l-1.003.828c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.43l1.004-.827c.292.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.991l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.28z" /><circle cx="12" cy="12" r="3"/></svg>`,
+            Plus: `<svg class="w-4 h-4 inline-block mr-1 align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>`,
+            CloudUpload: `<svg class="w-5 h-5 mr-1.5 inline-block align-middle text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" /></svg>`,
+            Trash: `<svg class="w-3.5 h-3.5 inline-block align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.24 9m12 15.468V6.108c0-1.135-.845-2.091-1.97-2.199A47.003 47.003 0 0012 4.5c-2.235 0-4.302.22-6.27.621C4.593 5.234 3.75 6.19 3.75 7.324v11.015c0 1.135.845 2.091 1.97 2.199a47.003 47.003 0 0012 0c1.125-.108 1.97-1.064 1.97-2.199zM19.5 6h-15" /></svg>`,
+            ChartBar: `<svg class="w-4 h-4 text-indigo-400 inline-block mr-1.5 align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" /></svg>`,
+            Box: `<svg class="w-4 h-4 inline-block align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-4.5-9 4.5M21 7.5v9l-9 4.5M21 7.5l-9 4.5M3 7.5v9l-9 4.5M3 7.5l9 4.5M12 12v9" /></svg>`,
+            Camera: `<svg class="w-4 h-4 inline-block align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.003 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316A2.192 2.192 0 0014.502 4h-5.004c-.63 0-1.213.336-1.566.864l-.822 1.316z"/><circle cx="12" cy="13" r="3" stroke="currentColor" stroke-width="2"/></svg>`
+        };
+
+        const safeFloat = (val) => { const p = parseFloat(val); return isNaN(p) || !isFinite(p) ? 0 : p; };
+        const safeGetItem = (key, def) => { try { const v = localStorage.getItem(key); return v !== null ? v : def; } catch (e) { return def; } };
+        const safeSetItem = (key, val) => { try { localStorage.setItem(key, val); } catch (e) {} };
+
+        const safeJsonParse = (key, defaultValue) => {
+            try {
+                const saved = localStorage.getItem(key); if (!saved) return defaultValue; return JSON.parse(saved);
+            } catch (e) { return defaultValue; }
+        };
+
+        // ========================================================================
+        // 3. 初始狀態與核心數據模型 (🔒 終極鎖定原廠雙軌安全版)
+        // ========================================================================
+        let state = {
+            isLoggedIn: safeGetItem('shield_is_logged_in', 'false') === 'true',
+            storeType: safeGetItem('shield_store_type', null),
+            employeeId: safeGetItem('shield_employee_id', ''),
+            password: '', 
+            
+            currentView: safeGetItem('zdos_current_view', 'dashboard'),
+            activeAppTab: 'sales', 
+            isSubmitting: false, activeConfigTab: 'zhonghua', settingsTab: 'google', editingEmpId: null,
+            editEmpIdVal: '', editPassword: '', editName: '', editStore: '中華店', editStore2: '無', editRole: '資深員工',
+
+            accounts: safeJsonParse('store_accounts_v48_system', [
+                { "empId": "1", "password": "1", "name": "測試員", "store": "中華店", "store2": "東港店", "role": "集團首腦" },
+                { "empId": "DDP001", "password": "1", "name": "顏志添", "store": "中華店", "store2": "東港店", "role": "店長" },
+                { "empId": "DDP0003", "password": "1", "name": "楊政霖", "store": "中華店", "store2": "無", "role": "領班" },
+                { "empId": "CDP0005", "password": "1", "name": "陳禹榛", "store": "中華店", "store2": "無", "role": "領班" },
+                { "empId": "DDP0010", "password": "1", "name": "高子懿", "store": "中華店", "store2": "無", "role": "資深員工" },
+                { "empId": "DDP0011", "password": "1", "name": "張弘洋", "store": "中華店", "store2": "無", "role": "領班" },
+                { "empId": "DDP0002", "password": "1", "name": "林泰宇", "store": "東港店", "store2": "無", "role": "實習幹部" },
+                { "empId": "DDP0006", "password": "1", "name": "林文明", "store": "東港店", "store2": "無", "role": "實習幹部" },
+                { "empId": "DDP0007", "password": "1", "name": "蔡語晴", "store": "東港店", "store2": "無", "role": "資深員工" }
+            ]),
+            
+            googleFormSettings: safeJsonParse('google_form_settings_v31_permanent', {
+                zhonghua: {
+                    enabled: true,
+                    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeCpWJs83vdnu0SgOSyhIOoM5qF_iaT2aKNWgsuAenzcDmkNQ/formResponse', 
+                    entryDate: 'entry.1636131206', entryShift: 'entry.223532372', entryOver: 'entry.1993098951', entryRevenue: 'entry.1968731458', entryExpItems: 'entry.1850283605', entryExpTotal: 'entry.32737337', entryLinepay: 'entry.1733317683', entryTwqr: 'entry.896759792', entryApple: 'entry.1349795492', entryCash: 'entry.417698033',
+                    invFormUrl: '', invDateId: '', invStoreId: '', invEmpId: '', invBarcodeId: '', invStockId: '', invOrderId: ''
+                },
+                donggang: {
+                    enabled: true,
+                    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSfrqsQSNQSCZC-RnMwey_OKQ8DZbIho2GDYINbkI-RKimb6Ew/formResponse', 
+                    entryDate: 'entry.1636131206', entryShift: 'entry.223532372', entryOver: 'entry.417698033', entryRevenue: 'entry.1993098951', entryExpItems: 'entry.1968731458', entryExpTotal: 'entry.1850283605', entryCash: 'entry.1744151882',
+                    invFormUrl: '', invDateId: '', invStoreId: '', invEmpId: '', invBarcodeId: '', invStockId: '', invOrderId: ''
+                }
+            }),
+            
+            salesRecords: safeJsonParse('local_sales_records_v22', []),
+            inventoryRecords: safeJsonParse('local_inventory_records_v22', []), 
+            coverNotice: safeGetItem('cover_notice_v31_permanent', "傳承職人精神 ‧ 堅持美味品質"),
+            coverDesign: safeJsonParse('cover_design_v31_permanent', { title: "大埔中東集團營運回報系統", glowIntensity: "high", theme: "classic-blue", noticeMode: "marquee" }),
+
+            newDate: new Date().toISOString().split('T')[0], newShift: '早班', newOverAmount: '', newSalesAmount: '', newExpenseNotes: '', newExpenseAmount: '', newLinaPay: '', newTwqr: '', newApplePay: '', invBarcode: '', invStockQty: '', invOrderQty: ''
+        };
+
+        window.showToast = function(msg, type = 'info') {
+            const container = document.getElementById('toast-container'); if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `px-5 py-2.5 rounded-lg shadow-2xl text-xs font-bold text-white transition-all duration-300 transform translate-y-[-20px] opacity-0 flex items-center space-x-2 backdrop-blur-md ${type === 'error' ? 'bg-rose-500/90 border border-rose-500/30' : type === 'success' ? 'bg-emerald-500/90 border border-emerald-500/30' : 'bg-sky-500/90 border border-sky-500/30'}`;
+            toast.innerHTML = `<span>●</span> <span>${msg}</span>`; container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-[-20px]', 'opacity-0'), 10);
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-[-20px]'); setTimeout(() => toast.remove(), 300); }, 3500);
+        };
+
+        window.saveState = function() {
+            state.accounts = state.accounts || [];
+            safeSetItem('store_accounts_v48_system', JSON.stringify(state.accounts));
+            safeSetItem('google_form_settings_v31_permanent', JSON.stringify(state.googleFormSettings));
+            safeSetItem('local_sales_records_v22', JSON.stringify(state.salesRecords));
+            safeSetItem('local_inventory_records_v22', JSON.stringify(state.inventoryRecords));
+            safeSetItem('cover_notice_v31_permanent', state.coverNotice);
+            safeSetItem('cover_design_v31_permanent', JSON.stringify(state.coverDesign));
+        };
+
+        window.addEventListener('beforeunload', function (e) {
+            const dynamicSales = document.getElementById('form-sales-amount')?.value || '';
+            if (state.isLoggedIn && safeFloat(dynamicSales) > 0) { e.preventDefault(); e.returnValue = '您填寫的帳目尚未儲存上傳，確定要刷新嗎？'; }
+        });
+
+        window.updateDateOrShift = function(field, value) { state[field] = value; renderApp(); };
+        window.switchAppTab = function(tab) { state.activeAppTab = tab; state.currentView = 'module'; safeSetItem('zdos_current_view', 'module'); renderApp(); };
+        window.openZDOSModule = function(tab) {
+            state.activeAppTab = tab;
+            state.currentView = 'module';
+            safeSetItem('zdos_current_view', 'module');
+            renderApp();
+        };
+        window.backToZDOSHome = function() {
+            state.currentView = 'dashboard';
+            safeSetItem('zdos_current_view', 'dashboard');
+            renderApp();
+        };
+
+        window.updateGlobalGlows = function() {
+            const theme = THEMES[state.coverDesign.theme] || THEMES['classic-blue']; const g1 = document.getElementById('glow-1'); const g2 = document.getElementById('glow-2');
+            if(g1) g1.className = `absolute top-[-25%] left-[-15%] w-[65vw] h-[65vw] rounded-full blur-[140px] pointer-events-none transition-all duration-1000 ${theme.glow1}/10`;
+            if(g2) g2.className = `absolute bottom-[-15%] right-[-15%] w-[55vw] h-[55vw] rounded-full blur-[140px] pointer-events-none transition-all duration-1000 ${theme.glow2}/8`;
+        };
+
+        window.handleLoginSubmit = function(storeType) {
+            const idInput = document.getElementById('emp-id-input');
+            const passInput = document.getElementById('pass-input');
+            const inputId = String(idInput ? idInput.value : state.employeeId || '').trim();
+            const inputPassword = String(passInput ? passInput.value : state.password || '').trim();
+
+            state.employeeId = inputId;
+            state.password = inputPassword;
+
+            if (!inputId || !inputPassword) return showToast('請輸入員工編號與密碼', 'error');
+
+            const normalizeId = value => String(value || '').trim().toLowerCase();
+            const user = (state.accounts || []).find(a =>
+                normalizeId(a.empId) === normalizeId(inputId) &&
+                String(a.password ?? '').trim() === inputPassword
+            );
+
+            if (!user) return showToast('工號或密碼錯誤！', 'error');
+            if (user.store !== storeType && user.store2 !== storeType && user.role !== '集團首腦') {
+                return showToast(`帳密正確，但無登入【${storeType}】權限`, 'error');
+            }
+
+            state.employeeId = String(user.empId);
+            state.storeType = storeType;
+            state.isLoggedIn = true;
+            state.newShift = '早班';
+            safeSetItem('shield_is_logged_in', 'true');
+            safeSetItem('shield_store_type', storeType);
+            safeSetItem('shield_employee_id', state.employeeId);
+            showToast(`歡迎回來，${user.name} 👑`, 'success');
+            renderApp();
+        };
+
+        window.handleLogoutSubmit = function() {
+            state.isLoggedIn = false; state.employeeId = ''; state.password = ''; state.storeType = null; state.currentView = 'dashboard';
+            safeSetItem('shield_is_logged_in', 'false'); safeSetItem('shield_store_type', ''); safeSetItem('shield_employee_id', '');
+            renderApp();
+        };
+
+        window.handleTryOpen = function() {
+            const currentMatched = state.accounts.find(acc => acc.empId.toLowerCase() === state.employeeId.toLowerCase());
+            if (!currentMatched || (currentMatched.role !== '店長' && currentMatched.role !== '集團首腦')) { return showToast('❌ 權限不足控制台。', 'error'); }
+            window.showSettingsModalDirect();
+        };
+
+        window.handleRecallRecordToForm = function(id) {
+            const record = state.salesRecords.find(r => r.id === id); if (!record) return showToast('找不到該筆數據項目！', 'error');
+            state.newDate = record.date; state.newShift = record.shift; state.newOverAmount = record.overAmount === 0 ? '' : record.overAmount; state.newSalesAmount = record.salesAmount === 0 ? '' : record.salesAmount; state.newExpenseNotes = record.expenseNotes === '無支出備註' ? '' : record.expenseNotes; state.newExpenseAmount = record.expenseAmount === 0 ? '' : record.expenseAmount; state.newLinaPay = record.linaPay === 0 ? '' : record.linaPay; state.newTwqr = record.twqr === 0 ? '' : record.twqr; state.newApplePay = record.applePay === 0 ? '' : record.applePay;
+            renderApp(); calculateLiveNetProfit(); showToast('✏️ 已將業績數據叫回左側表單！', 'success');
+        };
+
+        window.calculateLiveNetProfit = function() {
+            state.newSalesAmount = document.getElementById('form-sales-amount')?.value || ''; state.newExpenseAmount = document.getElementById('form-expense-amount')?.value || ''; state.newOverAmount = document.getElementById('form-over-amount')?.value || ''; state.newExpenseNotes = document.getElementById('form-expense-notes')?.value || '';
+            if (state.storeType === '中華店') { state.newLinaPay = document.getElementById('form-lina-pay')?.value || ''; state.newTwqr = document.getElementById('form-twqr-pay')?.value || ''; state.newApplePay = document.getElementById('form-apple-pay')?.value || ''; }
+            const salesVal = safeFloat(state.newSalesAmount); const expVal = safeFloat(state.newExpenseAmount); const overVal = safeFloat(state.newOverAmount);
+            let liveNetProfit = (state.storeType === '中華店') ? (salesVal - expVal - safeFloat(state.newLinaPay) - safeFloat(state.newTwqr) - safeFloat(state.newApplePay) + overVal) : (salesVal - expVal + overVal);
+            const estimateTarget = document.getElementById('live-estimate-value'); if (estimateTarget) { estimateTarget.innerText = '$' + liveNetProfit.toLocaleString(); estimateTarget.className = `text-xl font-bold font-mono ${liveNetProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`; }
+        };
+
+        window.calculateLiveInventory = function() {
+            state.invBarcode = document.getElementById('form-inv-barcode')?.value || '';
+            state.invStockQty = document.getElementById('form-inv-stock')?.value || '';
+            state.invOrderQty = document.getElementById('form-inv-order')?.value || '';
+        };
+
+        window.handleDirectUploadRecord = function(e) {
+            e.preventDefault(); const currentConfig = (state.storeType === '中華店') ? state.googleFormSettings.zhonghua : state.googleFormSettings.donggang;
+            if (!currentConfig || !currentConfig.formUrl) { return showToast('雲端目的地尚未配置！', 'error'); }
+            const sales = safeFloat(state.newSalesAmount); const exp = safeFloat(state.newExpenseAmount); const over = safeFloat(state.newOverAmount); const lina = safeFloat(state.newLinaPay); const twqr = safeFloat(state.newTwqr); const apple = safeFloat(state.newApplePay);
+            let netCash = (state.storeType === '中華店') ? (sales - exp - lina - twqr - apple + over) : (sales - exp + over);
+            state.isSubmitting = true; showToast('正在向雲端網關申報傳送...', 'info'); const formData = new URLSearchParams();
+            
+            if (state.storeType === '中華店') {
+                formData.append(currentConfig.entryDate, state.newDate.toString()); formData.append(currentConfig.entryShift, state.newShift.toString()); formData.append(currentConfig.entryOver, over.toString()); formData.append(currentConfig.entryRevenue, sales.toString()); formData.append(currentConfig.entryExpItems, (state.newExpenseNotes || '無支出項目').toString()); formData.append(currentConfig.entryExpTotal, exp.toString()); formData.append(currentConfig.entryLinepay, lina.toString()); formData.append(currentConfig.entryTwqr, twqr.toString()); formData.append(currentConfig.entryApple, apple.toString()); formData.append(currentConfig.entryCash, netCash.toString());
+            } else {
+                formData.append(currentConfig.entryDate, state.newDate.toString()); formData.append(currentConfig.entryShift, state.newShift.toString()); formData.append(currentConfig.entryOver, over.toString()); formData.append(currentConfig.entryRevenue, sales.toString()); formData.append(currentConfig.entryExpItems, (state.newExpenseNotes || '無支出項目').toString()); formData.append(currentConfig.entryExpTotal, exp.toString()); formData.append(currentConfig.entryCash, netCash.toString());
+            }
+            const recordId = Date.now(); const currentMatched = state.accounts.find(acc => acc.empId.toLowerCase() === state.employeeId.toLowerCase()) || { empId: state.employeeId };
+            fetch(currentConfig.formUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formData.toString() }).then(() => {
+                state.salesRecords = state.salesRecords.filter(r => !(r.date === state.newDate && r.shift === state.newShift && r.store === state.storeType));
+                state.salesRecords.push({ id: recordId, date: state.newDate, store: state.storeType, shift: state.newShift, employeeId: currentMatched.empId, overAmount: over, salesAmount: sales, expenseNotes: state.newExpenseNotes, expenseAmount: exp, linaPay: lina, twqr: twqr, applePay: apple, netProfit: netCash, mode: 'Google Cloud' });
+                state.isSubmitting = false; saveState(); showToast(`【${state.newShift}】數據已成功傳送至雲端！`, 'success'); 
+                ['newSalesAmount', 'newExpenseAmount', 'newOverAmount', 'newExpenseNotes', 'newLinaPay', 'newTwqr', 'newApplePay'].forEach(k => state[k] = '');
+                renderApp();
+            }).catch(err => { state.isSubmitting = false; showToast('網路連線異常，請稍候再試。', 'error'); renderApp(); });
+        };
+
+        window.handleAddInventoryLocal = function(e) {
+            e.preventDefault(); if (!state.invBarcode.trim()) { return showToast('請先輸入或掃描物料條碼名稱！', 'error'); }
+            state.inventoryRecords.unshift({ id: Date.now(), date: state.newDate, store: state.storeType, employeeId: state.employeeId, barcode: state.invBarcode.trim(), stockQty: safeFloat(state.invStockQty), orderQty: safeFloat(state.invOrderQty), mode: 'Local' });
+            state.invBarcode = ''; state.invStockQty = ''; state.invOrderQty = ''; saveState(); showToast('📦 物料叫貨及庫存已暫存入本地快照！', 'success'); renderApp();
+        };
+
+        window.handleUploadInventoryToCloud = async function() {
+            const targets = state.inventoryRecords.filter(r => r && r.date === state.newDate && r.store === state.storeType && r.mode === 'Local');
+            if (targets.length === 0) { return showToast(`今日庫存盤點皆已同步完畢或無新快照資料！`, 'error'); }
+            state.isSubmitting = true; showToast("正在與庫存雲端網關建立對接連線...", "info"); renderApp();
+            const currentConfig = (state.storeType === '中華店') ? state.googleFormSettings.zhonghua : state.googleFormSettings.donggang;
+            let count = 0;
+            for (const r of targets) {
+                if (!currentConfig.invFormUrl) continue;
+                const formData = new URLSearchParams();
+                formData.append(currentConfig.invDateId, r.date); formData.append(currentConfig.invStoreId, r.store); formData.append(currentConfig.invEmpId, r.employeeId); formData.append(currentConfig.invBarcodeId, r.barcode); formData.append(currentConfig.invStockId, r.stockQty.toString()); formData.append(currentConfig.invOrderId, r.orderQty.toString());
+                try {
+                    await fetch(currentConfig.invFormUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formData.toString() });
+                    r.mode = 'Google Cloud'; count++;
+                } catch(e) { console.error(e); }
+            }
+            state.isSubmitting = false; saveState(); showToast(`🎉 成功同步 ${count} 筆盤點數據至 Google 試算表分頁！`, 'success'); renderApp();
+        };
+
+        window.toggleCameraScanner = async function() {
+            const vc = document.getElementById('scanner-video-container'); if (!vc) return;
+            if (!vc.classList.contains('hidden')) { vc.classList.add('hidden'); const v = document.getElementById('scanner-video'); if (v && v.srcObject) { v.srcObject.getTracks().forEach(t => t.stop()); } return; }
+            vc.className = 'block'; showToast("正在初始接通手機相機驅動模組...", "info");
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); const v = document.getElementById('scanner-video');
+                if (v) {
+                    v.srcObject = stream; v.setAttribute("playsinline", true); v.play();
+                    if ('BarcodeDetector' in window) {
+                        const detector = new BarcodeDetector({ formats: ['qr_code', 'code_128', 'ean_13'] });
+                        const loop = async () => {
+                            if (vc.classList.contains('hidden')) return;
+                            try { const codes = await detector.detect(v); if (codes.length > 0) { document.getElementById('form-inv-barcode').value = codes[0].rawValue; state.invBarcode = codes[0].rawValue; showToast(`✓ 掃描識別成功: ${codes[0].rawValue}`, "success"); vc.classList.add('hidden'); stream.getTracks().forEach(t => t.stop()); return; } } catch(e) {}
+                            requestAnimationFrame(loop);
+                        }; requestAnimationFrame(loop);
+                    } else { setTimeout(() => { if (!vc.classList.contains('hidden')) showToast("提示：此裝置系統不支援原廠自動解碼，請點下方模擬面板或手打品項。", "info"); }, 2000); }
+                }
+            } catch (err) { showToast("相機遭系統受限，已解鎖右側「條碼模擬盤點面板供測試", "error"); document.getElementById('sandbox-barcode-simulator').classList.remove('hidden'); }
+        };
+
+        window.simulateScanBarcode = function(code) { const input = document.getElementById('form-inv-barcode'); if (input) { input.value = code; state.invBarcode = code; showToast(`✓ 已模擬載入物料: ${code}`, "success"); calculateLiveInventory(); } };
+
+        window.handleDeleteLocalRecord = function(id) { if(confirm('確定要刪除這筆歷史申報紀錄嗎？')) { state.salesRecords = state.salesRecords.filter(r => r.id !== id); saveState(); renderApp(); } };
+        window.handleDeleteInventoryRecord = function(id) { if(confirm('確定要刪除這筆庫存暫存紀錄嗎？')) { state.inventoryRecords = state.inventoryRecords.filter(r => r.id !== id); saveState(); renderApp(); } };
+
+        window.startEditAccount = function(empId, name, password, store, store2, role) { state.editingEmpId = empId; state.editEmpIdVal = empId; state.editName = name; state.editPassword = password; state.editStore = store; state.editStore2 = store2; state.editRole = role; const m = document.getElementById('settings-modal'); if (m) updateModalContent(m); };
+        window.cancelEdit = function() { state.editingEmpId = null; const m = document.getElementById('settings-modal'); if (m) updateModalContent(m); };
+        window.saveEditAccount = function(oldEmpId) {
+            const newEmpId = document.getElementById(`edit-id-${oldEmpId}`).value.trim(); const n = document.getElementById(`edit-name-${oldEmpId}`).value.trim(); const p = document.getElementById(`edit-pass-${oldEmpId}`).value.trim(); const s = document.getElementById(`edit-store-${oldEmpId}`).value; const s2 = document.getElementById(`edit-store2-${oldEmpId}`).value; const r = document.getElementById(`edit-role-${oldEmpId}`).value;
+            if (!newEmpId || !n || !p) return showToast('資料欄位不得為空！', 'error'); if (newEmpId.toLowerCase() !== oldEmpId.toLowerCase() && state.accounts.some(acc => acc.empId.toLowerCase() === newEmpId.toLowerCase())) { return showToast('❌ 工號重複佔用！', 'error'); }
+            state.accounts = state.accounts.map(acc => acc.empId === oldEmpId ? { empId: newEmpId, password: p, name: n, store: s, store2: s2, role: r } : acc);
+            if (state.employeeId.toLowerCase() === oldEmpId.toLowerCase()) { state.employeeId = newEmpId; safeSetItem('shield_employee_id', newEmpId); }
+            state.editingEmpId = null; saveState(); showToast('同仁員工編號及權限名冊儲存修改成功！', 'success'); const m = document.getElementById('settings-modal'); if (m) updateModalContent(m); renderApp();
+        };
+
+        window.saveSheetSettingsDirect = function(e) {
+            e.preventDefault(); const g = state.googleFormSettings; const tab = state.activeConfigTab;
+            if (tab === 'zhonghua') {
+                g.zhonghua.formUrl = document.getElementById('sheet-url-zh').value; g.zhonghua.entryDate = document.getElementById('sheet-date-zh').value; g.zhonghua.entryShift = document.getElementById('sheet-store-zh').value; g.zhonghua.entryOver = document.getElementById('sheet-emp-zh').value; g.zhonghua.entryRevenue = document.getElementById('sheet-cat-zh').value; g.zhonghua.entryExpItems = document.getElementById('sheet-amt-zh').value; g.zhonghua.entryExpTotal = document.getElementById('sheet-exptotal-zh').value; g.zhonghua.entryLinepay = document.getElementById('sheet-line-zh').value; g.zhonghua.entryTwqr = document.getElementById('sheet-twqr-zh').value; g.zhonghua.entryApple = document.getElementById('sheet-apple-zh').value; g.zhonghua.entryCash = document.getElementById('sheet-cash-zh').value;
+                g.zhonghua.invFormUrl = document.getElementById('inv-url-zh').value; g.zhonghua.invDateId = document.getElementById('inv-date-zh').value; g.zhonghua.invStoreId = document.getElementById('inv-store-zh').value; g.zhonghua.invEmpId = document.getElementById('inv-emp-zh').value; g.zhonghua.invBarcodeId = document.getElementById('inv-code-zh').value; g.zhonghua.invStockId = document.getElementById('inv-stock-zh').value; g.zhonghua.invOrderId = document.getElementById('inv-order-zh').value;
+            } else {
+                g.donggang.formUrl = document.getElementById('sheet-url-dg').value; g.donggang.entryDate = document.getElementById('sheet-date-dg').value; g.donggang.entryShift = document.getElementById('sheet-store-dg').value; g.donggang.entryOver = document.getElementById('sheet-emp-dg').value; g.donggang.entryRevenue = document.getElementById('sheet-cat-dg').value; g.donggang.entryExpItems = document.getElementById('sheet-amt-dg').value; g.donggang.entryExpTotal = document.getElementById('sheet-exptotal-dg').value; g.donggang.entryCash = document.getElementById('sheet-cash-dg').value;
+                g.donggang.invFormUrl = document.getElementById('inv-url-dg').value; g.donggang.invDateId = document.getElementById('inv-date-dg').value; g.donggang.invStoreId = document.getElementById('inv-store-dg').value; g.donggang.invEmpId = document.getElementById('inv-emp-dg').value; g.donggang.invBarcodeId = document.getElementById('inv-code-dg').value; g.donggang.invStockId = document.getElementById('inv-stock-dg').value; g.donggang.invOrderId = document.getElementById('inv-order-dg').value;
+            }
+            saveState(); showToast('全球試算表雙分流路由金鑰配置成功！', 'success'); closeSettingsModalDirect(); renderApp();
+        };
+
+        window.saveDesignSettingsDirect = function(e) { e.preventDefault(); state.coverDesign.title = document.getElementById('design-title-input').value; state.coverDesign.noticeMode = document.getElementById('design-notice-mode').value; state.coverNotice = document.getElementById('design-notice-input').value; saveState(); showToast('視覺外觀設定已保存！', 'success'); closeSettingsModalDirect(); renderApp(); };
+        window.handleNewAccountSubmit = function(e) { e.preventDefault(); const id = document.getElementById('new-acc-id').value.trim(); const pass = document.getElementById('new-acc-pass').value.trim(); const name = document.getElementById('new-acc-name').value.trim(); state.accounts.push({ empId: id, password: pass, name, store: document.getElementById('new-acc-store').value, store2: document.getElementById('new-acc-store2').value, role: document.getElementById('new-acc-role').value }); saveState(); showToast(`成員「${name}」新增成功！`, 'success'); updateModalContent(document.getElementById('settings-modal')); renderApp(); };
+        window.deleteAccount = function(id) { if(confirm('確定移除此同仁權限？')) { state.accounts = state.accounts.filter(a => a.empId !== id); saveState(); updateModalContent(document.getElementById('settings-modal')); renderApp(); } };
+        window.showSettingsModalDirect = function() { const existing = document.getElementById('settings-modal'); if (existing) existing.remove(); const modal = document.createElement('div'); modal.id = 'settings-modal'; modal.className = 'fixed inset-0 z-[999] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl animate-fade-in'; updateModalContent(modal); document.body.appendChild(modal); };
+        window.closeSettingsModalDirect = function() { const modal = document.getElementById('settings-modal'); if (modal) modal.remove(); };
+        window.changeSettingsTabDirect = function(tabName) { state.settingsTab = tabName; updateModalContent(document.getElementById('settings-modal')); };
+        window.changeConfigTabDirect = function(tab) { state.activeConfigTab = tab; updateModalContent(document.getElementById('settings-modal')); };
+
+        // ========================================================================
+        // 5.5 Recovery 完整備份與還原
+        // ========================================================================
+        window.exportFullBackup = function() {
+            try {
+                saveState();
+                const payload = { app: 'DAPU OS', version: '1.0.0 Recovery', exportedAt: new Date().toISOString(), localStorage: {} };
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    payload.localStorage[key] = localStorage.getItem(key);
+                }
+                const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                const now = new Date();
+                const pad = n => String(n).padStart(2, '0');
+                a.href = url;
+                a.download = `DAPU_Backup_${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}_${pad(now.getHours())}-${pad(now.getMinutes())}.json`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+                showToast('完整備份已下載，請妥善保存。', 'success');
+            } catch (err) {
+                console.error(err);
+                showToast('備份失敗，請重新嘗試。', 'error');
+            }
+        };
+
+        window.openRestorePicker = function() {
+            const input = document.getElementById('restore-backup-input');
+            if (input) input.click();
+        };
+
+        window.restoreFullBackup = function(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            if (!confirm('還原會覆蓋目前這台裝置上的帳號、業績、庫存與設定。確定繼續嗎？')) {
+                event.target.value = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function() {
+                try {
+                    const payload = JSON.parse(reader.result);
+                    if (!payload || !payload.localStorage || typeof payload.localStorage !== 'object') throw new Error('Invalid backup');
+                    localStorage.clear();
+                    Object.entries(payload.localStorage).forEach(([key, value]) => {
+                        if (value !== null && value !== undefined) localStorage.setItem(key, String(value));
+                    });
+                    alert('還原完成，系統將重新載入。');
+                    location.reload();
+                } catch (err) {
+                    console.error(err);
+                    showToast('備份檔格式錯誤，無法還原。', 'error');
+                } finally {
+                    event.target.value = '';
+                }
+            };
+            reader.readAsText(file, 'utf-8');
+        };
+
+        // ========================================================================
+        // 6. 高級 HTML/DOM 雙軌大渲染器 (SPA)
+        // ========================================================================
+        function renderApp() {
+            const root = document.getElementById('root'); if (!root) return;
+            const currentStoreRecords = state.salesRecords.filter(r => r && r.store === state.storeType);
+            const currentStoreInvRecords = state.inventoryRecords.filter(r => r && r.store === state.storeType);
+            
+            const salesVal = safeFloat(state.newSalesAmount); const expVal = safeFloat(state.newExpenseAmount); const overVal = safeFloat(state.newOverAmount);
+            let liveNetProfit = (state.storeType === '中華店') ? (salesVal - expVal - safeFloat(state.newLinaPay) - safeFloat(state.newTwqr) - safeFloat(state.newApplePay) + overVal) : (salesVal - expVal + overVal);
+            const currentMatched = state.accounts.find(acc => acc.empId.toLowerCase() === state.employeeId.toLowerCase().trim()) || { name: state.employeeId || '同仁', role: '資深員工' };
+            const total = state.salesRecords.reduce((acc, cur) => acc + safeFloat(cur?.salesAmount ?? cur?.amount ?? 0), 0);
+
+            // 庫存權限鎖定：不是店長或首腦，直接留在業績申報頁面
+            const hasInventoryPrivilege = (currentMatched.role === '店長' || currentMatched.role === '集團首腦');
+            if (!hasInventoryPrivilege && state.activeAppTab === 'inventory') { state.activeAppTab = 'sales'; }
+
+            // -- VIEW A: 未登入畫面 --
+            if (!state.isLoggedIn) {
+                let noticeHtml = ''; if (state.coverNotice) { if (state.coverDesign.noticeMode === 'marquee') { noticeHtml = `<div class="w-full overflow-hidden whitespace-nowrap flex items-center"><span class="marquee-content text-xs sm:text-sm text-slate-300 font-medium tracking-wide">${state.coverNotice}</span></div>`; } else { noticeHtml = `<p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">${state.coverNotice}</p>`; } }
+                root.innerHTML = `
+                    <div class="absolute top-3 right-4 z-50 select-none"><span class="px-2.5 py-0.5 text-[9px] font-mono font-bold tracking-wider rounded-md bg-slate-900/60 border border-white/[0.06] text-slate-500 backdrop-blur-md">v1.0.1 Dashboard</span></div>
+                    <div class="flex-grow flex items-center justify-center w-full animate-fade-in py-2">
+                        <div class="w-full max-w-[420px] flex flex-col items-center gap-3 relative z-20">
+                            <div class="flex flex-col items-center select-none text-center w-full">
+                                <div class="w-[100px] h-[104px] flex items-center justify-center overflow-hidden mb-1 animate-subtle">
+                                    <div id="fallback-logo-text" class="font-mono font-black text-2xl text-emerald-400 tracking-widest">ZDOS</div>
+                                </div>
+                                <h1 class="text-xl font-black tracking-[0.22em] bg-gradient-to-r from-slate-200 via-emerald-200 to-slate-200 bg-clip-text text-transparent leading-none">中東營運系統</h1>
+                                <p class="text-[8px] tracking-[0.28em] text-slate-500 uppercase font-mono font-bold mt-1.5 leading-none">ZhongDong Operating System</p>
+                                <p class="text-[9px] tracking-[0.1em] text-amber-500/50 font-light mt-1.5 leading-none">傳承職人精神 ‧ 堅持美味品質</p>
+                            </div>
+                            <div class="w-full relative bg-gradient-to-b from-slate-900/90 to-slate-900/60 border border-white/[0.06] rounded-[24px] p-5 shadow-[0_25px_70px_rgba(0,0,0,0.8)] backdrop-blur-2xl">
+                                <h2 class="text-xs font-bold text-center tracking-[0.25em] text-slate-400 mb-4 flex items-center justify-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-500/40">◦</span> 店別 營運登入 <span class="w-1.5 h-1.5 rounded-full bg-amber-500/40">◦</span></h2>
+                                <div class="space-y-4 mb-6 mt-4 max-w-[240px] mx-auto">
+                                    <div class="w-full relative flex items-center rounded-xl bg-white/[0.06] border-[3px] border-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.37),inset_0_1px_1px_rgba(255,255,255,0.2)] group transition-all duration-300 focus-within:border-amber-400 focus-within:shadow-[0_0_20px_rgba(245,158,11,0.25)] px-4 py-3.5">
+                                        <span class="flex-shrink-0 flex items-center justify-center text-slate-400">${SVGIcons.User}</span>
+                                        <input type="text" id="emp-id-input" value="${state.employeeId}" placeholder="員工編號" class="w-full bg-transparent border-none text-base tracking-widest text-white font-black placeholder-white/30 focus:outline-none font-mono pl-1" />
+                                    </div>
+                                    <div class="w-full relative flex items-center rounded-xl bg-white/[0.06] border-[3px] border-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.37),inset_0_1px_1px_rgba(255,255,255,0.2)] group transition-all duration-300 focus-within:border-amber-400 focus-within:shadow-[0_0_20px_rgba(245,158,11,0.25)] px-4 py-3.5">
+                                        <span class="flex-shrink-0 flex items-center justify-center text-slate-400">${SVGIcons.Lock}</span>
+                                        <input type="password" id="pass-input" value="${state.password}" placeholder="密碼" class="w-full bg-transparent border-none text-base tracking-widest text-white font-black placeholder-white/30 focus:outline-none pl-1" />
+                                    </div>
+                                </div>
+                                <div class="space-y-3 max-w-[240px] mx-auto w-full">
+                                    <button onclick="handleLoginSubmit('中華店')" class="w-full py-4 rounded-xl border border-sky-500/40 bg-gradient-to-b from-sky-500/20 to-sky-600/10 hover:from-sky-500/30 hover:to-sky-600/20 text-sky-200 font-bold text-xs tracking-widest transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.98]"><span>中華店 登入</span></button>
+                                    <button onclick="handleLoginSubmit('東港店')" class="w-full py-4 rounded-xl border border-amber-500/40 bg-gradient-to-b from-amber-500/20 to-amber-600/10 hover:from-amber-500/30 hover:to-amber-600/20 text-amber-200 font-bold text-xs tracking-widest transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.98]"><span>東港店 登入</span></button>
+                                </div>
+                            </div>
+                            ${state.coverNotice ? `<div class="w-full bg-slate-900/40 border border-white/[0.05] rounded-xl p-3 shadow-xl backdrop-blur-2xl overflow-hidden relative flex items-center justify-center"><div class="absolute left-0 top-0 bottom-0 w-1 bg-amber-500 rounded-l-full"></div><span class="text-sky-400 mr-2 text-xs sm:text-sm select-none">📢</span>${noticeHtml}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+                document.getElementById('emp-id-input').addEventListener('input', (e) => { state.employeeId = e.target.value; });
+                document.getElementById('pass-input').addEventListener('input', (e) => { state.password = e.target.value; });
+                return;
+            }
+
+
+            // -- VIEW B: ZDOS 今日營運首頁 --
+            if (state.currentView === 'dashboard') {
+                const todayLabel = new Intl.DateTimeFormat('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' }).format(new Date());
+                const canManage = currentMatched.role === '店長' || currentMatched.role === '集團首腦';
+                const todaySalesDone = currentStoreRecords.some(r => r && r.date === state.newDate);
+                const todayInventoryDone = currentStoreInvRecords.some(r => r && r.date === state.newDate);
+                root.innerHTML = `
+                    <div class="w-full max-w-5xl mx-auto px-2 py-5 space-y-5 animate-fade-in font-sans">
+                        <header class="relative overflow-hidden rounded-[26px] border border-white/[0.06] bg-slate-900/70 p-6 shadow-2xl backdrop-blur-xl">
+                            <div class="absolute -top-24 -right-20 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none"></div>
+                            <div class="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+                                <div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-black font-mono tracking-wider">ZD</div>
+                                        <div>
+                                            <p class="text-[10px] uppercase tracking-[0.28em] text-emerald-400 font-mono">ZDOS v1.0.1</p>
+                                            <h1 class="text-2xl font-black tracking-[0.12em] text-white">中東營運系統</h1>
+                                        </div>
+                                    </div>
+                                    <p class="mt-5 text-sm text-slate-400">${todayLabel}</p>
+                                    <p class="mt-1 text-lg text-slate-100">歡迎回來，<strong>${currentMatched.name}</strong></p>
+                                    <p class="mt-1 text-xs text-slate-400">${state.storeType} · ${currentMatched.role}</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    ${canManage ? `<button onclick="handleTryOpen()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200">⚙️ 系統設定</button>` : ''}
+                                    <button onclick="handleLogoutSubmit()" class="px-4 py-2 rounded-xl border border-rose-500/20 bg-rose-950/20 text-xs font-bold text-rose-400">登出</button>
+                                </div>
+                            </div>
+                        </header>
+
+                        <section class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                            <div class="rounded-2xl border border-white/[0.05] bg-slate-900/45 p-4">
+                                <p class="text-[10px] text-slate-500">今日業績回報</p>
+                                <p class="mt-2 text-sm font-bold ${todaySalesDone ? 'text-emerald-400' : 'text-amber-400'}">${todaySalesDone ? '已完成' : '尚未回報'}</p>
+                            </div>
+                            <div class="rounded-2xl border border-white/[0.05] bg-slate-900/45 p-4">
+                                <p class="text-[10px] text-slate-500">今日庫存盤點</p>
+                                <p class="mt-2 text-sm font-bold ${todayInventoryDone ? 'text-emerald-400' : 'text-slate-500'}">${todayInventoryDone ? '已有紀錄' : '尚無紀錄'}</p>
+                            </div>
+                            <div class="col-span-2 sm:col-span-1 rounded-2xl border border-white/[0.05] bg-slate-900/45 p-4">
+                                <p class="text-[10px] text-slate-500">目前門市</p>
+                                <p class="mt-2 text-sm font-bold ${state.storeType === '中華店' ? 'text-sky-400' : 'text-amber-400'}">${state.storeType}</p>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="mb-3 flex items-end justify-between">
+                                <div><p class="text-[10px] uppercase tracking-[0.22em] text-slate-500">Operation Center</p><h2 class="text-base font-bold text-slate-100">功能中心</h2></div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <button onclick="openZDOSModule('sales')" class="group text-left rounded-[22px] border border-sky-500/20 bg-gradient-to-br from-sky-500/10 to-indigo-500/5 p-5 hover:border-sky-400/40 transition-all active:scale-[0.99]">
+                                    <div class="flex items-center justify-between"><span class="text-2xl">📊</span><span class="text-sky-400 text-lg">→</span></div>
+                                    <h3 class="mt-4 text-lg font-bold text-white">營運中心</h3><p class="mt-1 text-xs text-slate-400">業績回報、歷史申報與營收資料</p>
+                                </button>
+                                ${hasInventoryPrivilege ? `
+                                <button onclick="openZDOSModule('inventory')" class="group text-left rounded-[22px] border border-amber-500/20 bg-gradient-to-br from-amber-500/10 to-orange-500/5 p-5 hover:border-amber-400/40 transition-all active:scale-[0.99]">
+                                    <div class="flex items-center justify-between"><span class="text-2xl">📦</span><span class="text-amber-400 text-lg">→</span></div>
+                                    <h3 class="mt-4 text-lg font-bold text-white">庫存中心</h3><p class="mt-1 text-xs text-slate-400">盤點、叫貨與庫存雲端同步</p>
+                                </button>` : `
+                                <div class="rounded-[22px] border border-white/[0.05] bg-slate-900/35 p-5 opacity-55">
+                                    <div class="flex items-center justify-between"><span class="text-2xl">📦</span><span class="text-slate-600">🔒</span></div>
+                                    <h3 class="mt-4 text-lg font-bold text-slate-400">庫存中心</h3><p class="mt-1 text-xs text-slate-600">目前帳號無庫存權限</p>
+                                </div>`}
+                                ${canManage ? `
+                                <button onclick="handleTryOpen()" class="group text-left rounded-[22px] border border-violet-500/20 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/5 p-5 hover:border-violet-400/40 transition-all active:scale-[0.99]">
+                                    <div class="flex items-center justify-between"><span class="text-2xl">👥</span><span class="text-violet-400 text-lg">→</span></div>
+                                    <h3 class="mt-4 text-lg font-bold text-white">人員與系統中心</h3><p class="mt-1 text-xs text-slate-400">員工帳密、Google 設定、備份與還原</p>
+                                </button>` : ''}
+                                <div class="rounded-[22px] border border-white/[0.05] bg-slate-900/35 p-5">
+                                    <div class="flex items-center justify-between"><span class="text-2xl">📢</span><span class="px-2 py-1 rounded-full bg-slate-800 text-[9px] text-slate-500">建置中</span></div>
+                                    <h3 class="mt-4 text-lg font-bold text-slate-300">公告中心</h3><p class="mt-1 text-xs text-slate-500">未來放置最新公告與重要通知</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <footer class="pt-2 text-center text-[10px] text-slate-600 font-mono">ZDOS v1.0.1 Dashboard · ZhongDong Operating System</footer>
+                    </div>`;
+                return;
+            }
+
+            // -- VIEW C: 已登入功能後台 --
+
+            root.innerHTML = `
+                <div class="w-full max-w-6xl mx-auto px-2 py-4 space-y-5 animate-fade-in font-sans">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-5 bg-slate-900/60 border border-white/[0.04] rounded-2xl shadow-xl gap-4">
+                        <div>
+                            <span class="text-xs font-bold ${state.storeType === '中華店' ? 'text-sky-400' : 'text-amber-400'}">${state.storeType} 申報大數據中心</span>
+                            <h1 class="text-base font-light mt-0.5">歡迎，<span class="text-slate-100 font-bold">${currentMatched.name}</span> <span class="text-[10px] text-indigo-400 font-bold ml-1.5 px-2 py-0.5 rounded bg-indigo-950/60 border border-indigo-900/30">👑 ${currentMatched.role}</span></h1>
+                        </div>
+                        
+                        <div class="flex bg-slate-950 p-1 rounded-xl border border-white/[0.05] shadow-inner">
+                            <button onclick="switchAppTab('sales')" class="px-4 py-1.5 text-xs font-bold rounded-lg transition-all ${state.activeAppTab === 'sales' ? 'bg-gradient-to-r from-sky-600 to-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'}">📊 營業業績申報</button>
+                            ${hasInventoryPrivilege ? `
+                                <button onclick="switchAppTab('inventory')" class="px-4 py-1.5 text-xs font-bold rounded-lg transition-all ${state.activeAppTab === 'inventory' ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'}">📦 原物料盤點叫貨</button>
+                            ` : ''}
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button onclick="backToZDOSHome()" class="px-3 py-1.5 rounded-xl bg-emerald-950/30 text-emerald-400 border border-emerald-500/20 text-xs cursor-pointer">⌂ ZDOS 首頁</button>
+                            <button onclick="handleTryOpen()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-white cursor-pointer">${SVGIcons.Settings} 系統設定</button>
+                            <button onclick="handleLogoutSubmit()" class="px-3 py-1.5 rounded-xl bg-rose-950/20 text-rose-400 border border-rose-500/20 text-xs cursor-pointer">🚪 登出</button>
+                        </div>
+                    </div>
+
+                    ${state.activeAppTab === 'sales' ? `
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                            <div class="lg:col-span-4 flex flex-col gap-5 w-full">
+                                <div class="bg-slate-900/40 border border-white/[0.04] rounded-2xl p-5 shadow-xl">
+                                    <h3 class="text-sm font-bold text-slate-100 mb-2 flex items-center gap-1.5">${SVGIcons.Plus} 門市營運直接上報</h3>
+                                    <p class="text-[10px] text-slate-400 mb-4">⚡ 已鎖定【${state.storeType}】規格。打錯請點右側歷史紀錄『✏️ 修改』。</p>
+                                    <form onsubmit="handleDirectUploadRecord(event)" class="space-y-3.5">
+                                        <div><label class="block text-[10px] text-slate-400 mb-1 font-bold">選擇日期 *</label><input type="date" id="form-date-val" value="${state.newDate}" onchange="updateDateOrShift('newDate', this.value)" class="w-full bg-slate-950 border border-white/[0.06] rounded-xl p-2.5 text-xs text-slate-200 font-mono" required /></div>
+                                        
+                                        <div>
+                                            <label class="block text-[10px] text-slate-400 mb-1 font-bold">選擇您的班別 *</label>
+                                            <select id="form-shift-val" onchange="updateDateOrShift('newShift', this.value)" class="w-full bg-slate-950 border border-white/[0.06] rounded-xl p-2.5 text-xs text-slate-200">
+                                                ${state.storeType === '中華店' ? `
+                                                    <option value="早班" ${state.newShift === '早班' ? 'selected' : ''}>早班 ☀️</option>
+                                                    <option value="中班" ${state.newShift === '中班' ? 'selected' : ''}>中班 ⛅</option>
+                                                    <option value="晚班" ${state.newShift === '晚班' ? 'selected' : ''}>晚班 🌙</option>
+                                                ` : `
+                                                    <option value="早班" ${state.newShift === '早班' ? 'selected' : ''}>早班 ☀️</option>
+                                                `}
+                                            </select>
+                                        </div>
+                                        <div><label class="block text-[10px] text-slate-400 mb-1 font-bold">當班帳多 (溢收現金)</label><input type="number" id="form-over-amount" value="${state.newOverAmount}" placeholder="無溢收則填 0" oninput="calculateLiveNetProfit()" class="w-full bg-slate-950 border border-white/[0.06] rounded-xl p-2.5 text-xs text-slate-200 font-mono focus:outline-none" /></div>
+                                        <div><label class="block text-[10px] text-slate-400 mb-1 font-bold">當班營收 (總營業額) *</label><input type="number" id="form-sales-amount" value="${state.newSalesAmount}" placeholder="請輸入當班業績" oninput="calculateLiveNetProfit()" class="w-full bg-slate-950 border border-white/[0.06] rounded-xl p-2.5 text-xs text-slate-200 font-mono focus:outline-none" required /></div>
+                                        <div><label class="block text-[10px] text-slate-400 mb-1 font-bold">支出品項及金額</label><input type="text" id="form-expense-notes" value="${state.newExpenseNotes}" placeholder="例: 買便當120" oninput="calculateLiveNetProfit()" class="w-full bg-slate-950 border border-white/[0.06] rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none" /></div>
+                                        <div><label class="block text-[10px] text-slate-400 mb-1 font-bold">支出總額</label><input type="number" id="form-expense-amount" value="${state.newExpenseAmount}" placeholder="無開支則填 0" oninput="calculateLiveNetProfit()" class="w-full bg-slate-950 border border-white/[0.06] rounded-xl p-2.5 text-xs text-slate-200 font-mono focus:outline-none" /></div>
+                                        ${state.storeType === '中華店' ? `
+                                            <div class="bg-slate-950/60 p-3 rounded-xl border border-white/[0.04] space-y-2.5">
+                                                <p class="text-[11px] font-bold text-indigo-400 flex items-center"><span>中華店行動支付扣除額網關</span></p>
+                                                <div class="grid grid-cols-3 gap-2">
+                                                    <div><label class="block text-[9px] text-slate-500 mb-0.5 text-center">Linepay</label><input type="number" id="form-lina-pay" value="${state.newLinaPay}" oninput="calculateLiveNetProfit()" class="w-full bg-slate-900 border border-white/[0.06] rounded-lg p-1.5 text-xs text-slate-200 font-mono text-center focus:outline-none" /></div>
+                                                    <div><label class="block text-[9px] text-slate-500 mb-0.5 text-center">TWQR</label><input type="number" id="form-twqr-pay" value="${state.newTwqr}" oninput="calculateLiveNetProfit()" class="w-full bg-slate-900 border border-white/[0.06] rounded-lg p-1.5 text-xs text-slate-200 font-mono text-center focus:outline-none" /></div>
+                                                    <div><label class="block text-[9px] text-slate-500 mb-0.5 text-center">Apple</label><input type="number" id="form-apple-pay" value="${state.newApplePay}" oninput="calculateLiveNetProfit()" class="w-full bg-slate-900 border border-white/[0.06] rounded-lg p-1.5 text-xs text-slate-200 font-mono text-center focus:outline-none" /></div>
+                                                </div>
+                                            </div>
+                                        ` : ''}
+                                        <div class="p-3 bg-slate-950 rounded-xl border border-white/[0.04] flex justify-between items-center mt-3 select-none">
+                                            <span class="text-[11px] text-slate-400">當班即時估算實收現金</span>
+                                            <span id="live-estimate-value" class="text-xl font-bold font-mono ${liveNetProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}">$${liveNetProfit.toLocaleString()}</span>
+                                        </div>
+                                        <button type="submit" ${state.isSubmitting ? 'disabled' : ''} class="w-full py-3 mt-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold text-xs tracking-wider cursor-pointer transition-all flex items-center justify-center gap-1.5 shadow-lg disabled:opacity-50"><span>💾 儲存並直接上傳雲端</span></button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <div class="lg:col-span-8 bg-slate-900/40 border border-white/[0.04] rounded-2xl p-5 flex flex-col justify-between shadow-xl">
+                                <div>
+                                    <div class="flex justify-between items-center mb-5">
+                                        <h3 class="text-base font-bold flex items-center gap-1.5">${SVGIcons.ChartBar} 本地安全上報歷史明細</h3>
+                                    </div>
+                                    <div class="overflow-x-auto rounded-xl border border-white/[0.06]">
+                                        <table class="w-full text-left text-xs border-collapse">
+                                            <thead class="bg-slate-950 text-slate-500">
+                                                <tr>
+                                                    <th class="p-2.5">日期/班別</th>
+                                                    <th class="p-3 text-right">當班營收</th>
+                                                    <th class="p-3 text-right">當班實收現金</th>
+                                                    <th class="p-3 text-center">狀態</th>
+                                                    <th class="p-3 text-center">操作區域</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-white/[0.04] font-sans">
+                                                ${currentStoreRecords.map(r => `
+                                                    <tr class="hover:bg-white/[0.01] transition-colors">
+                                                        <td class="p-2.5 text-slate-300 font-mono">${r.date} <span class="text-[9px] font-sans bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-white/[0.05] ml-1">${r.shift}</span></td>
+                                                        <td class="p-3 text-right font-mono text-slate-200 font-medium">$${safeFloat(r.salesAmount).toLocaleString()}</td>
+                                                        <td class="p-3 text-right font-mono text-emerald-400 font-bold">$${safeFloat(r.netProfit).toLocaleString()}</td>
+                                                        <td class="p-3 text-center"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-semibold bg-emerald-950 text-emerald-400 border border-emerald-900/40">☁ 已直傳雲端</span></td>
+                                                        <td class="p-3 text-center space-x-2">
+                                                            <button onclick="handleRecallRecordToForm(${r.id})" class="text-amber-400 hover:text-amber-300 px-2 py-0.5 border border-amber-500/20 bg-amber-500/5 rounded text-[10px] font-medium cursor-pointer">✏️ 修改</button>
+                                                            <button onclick="handleDeleteLocalRecord(${r.id})" class="text-rose-400 hover:text-rose-300 cursor-pointer p-1 align-middle">${SVGIcons.Trash}</button>
+                                                        </td>
+                                                    </tr>
+                                                `).reverse().join('') || `<tr><td colspan="5" class="p-6 text-center text-slate-500">本機目前尚無本班次申報紀錄</td></tr>`}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ` : `
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start animate-fade-in">
+                            <div class="lg:col-span-4 bg-slate-900/40 border border-white/[0.04] rounded-2xl p-5 shadow-xl space-y-4">
+                                <div class="flex items-center space-x-2">
+                                    <div class="p-2 rounded-lg bg-amber-500/10 text-amber-400">${SVGIcons.Box}</div>
+                                    <div>
+                                        <h3 class="text-sm font-bold text-slate-100">原物料庫存盤點與叫貨</h3>
+                                        <p class="text-[10px] text-slate-500 font-light">支援鏡頭條碼掃描與獨立分頁雲端發送</p>
+                                    </div>
+                                </div>
+
+                                <div id="scanner-video-container" class="hidden relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-amber-500/30">
+                                    <video id="scanner-video" class="w-full h-full object-cover"></video>
+                                    <div class="absolute inset-0 border-[2px] border-amber-500/50 scale-75 rounded-md animate-pulse"></div>
+                                    <p class="absolute bottom-2 left-0 right-0 text-center text-[10px] bg-black/60 py-1 text-amber-300 font-mono">請將條碼對準中央線</p>
+                                </div>
+
+                                <div id="sandbox-barcode-simulator" class="hidden p-3 bg-slate-950 rounded-xl border border-white/[0.05] space-y-2">
+                                    <p class="text-[10px] font-bold text-amber-400">💡 門市核心物料快速測試面板</p>
+                                    <div class="flex flex-wrap gap-1.5">
+                                        <button type="button" onclick="simulateScanBarcode('🥩 沙朗牛排 (箱)')" class="bg-slate-900 text-[10px] px-2 py-1 rounded">🥩 牛排</button>
+                                        <button type="button" onclick="simulateScanBarcode('🥬 特選高麗菜 (籃)')" class="bg-slate-900 text-[10px] px-2 py-1 rounded">🥬 高麗菜</button>
+                                        <button type="button" onclick="simulateScanBarcode('🌱 契作豆芽菜 (袋)')" class="bg-slate-900 text-[10px] px-2 py-1 rounded">🌱 豆芽菜</button>
+                                    </div>
+                                </div>
+
+                                <form onsubmit="handleAddInventoryLocal(event)" class="space-y-3.5 block w-full">
+                                    <button type="button" onclick="toggleCameraScanner()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-600/20 to-orange-600/20 text-amber-300 border border-amber-500/30 text-xs font-bold flex items-center justify-center gap-1 cursor-pointer transition-all">${SVGIcons.Camera} <span>開啟相機鏡頭掃描條碼</span></button>
+                                    <div>
+                                        <label class="block text-[11px] text-slate-400 mb-1.5 font-bold">品項名稱 / 掃描條碼結果 *</label>
+                                        <input type="text" id="form-inv-barcode" value="${state.invBarcode}" placeholder="手動輸入或點上方相機掃碼" oninput="calculateLiveInventory()" class="w-full bg-slate-950 border border-white/[0.06] rounded-xl p-2.5 text-xs text-slate-200" required />
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <label class="block text-[10px] text-slate-400 mb-1 font-bold">現場盤點現有數 *</label>
+                                            <input type="number" id="form-inv-stock" value="${state.invStockQty}" placeholder="現場庫存" oninput="calculateLiveInventory()" class="w-full bg-slate-950 border border-white/[0.06] rounded-xl p-2.5 text-xs font-mono" required />
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] text-slate-400 mb-1 font-bold">追加補貨叫貨數 *</label>
+                                            <input type="number" id="form-inv-order" value="${state.invOrderQty}" placeholder="叫貨" oninput="calculateLiveInventory()" class="w-full bg-slate-950 border border-white/[0.06] rounded-xl p-2.5 text-xs font-mono" required />
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-amber-600 to-orange-500 text-white font-bold text-xs rounded-xl">💾 登記至本地盤點清單</button>
+                                </form>
+
+                                <div class="p-3 bg-slate-950 rounded-xl border border-amber-500/20 space-y-2">
+                                    <div><h4 class="text-[11px] font-bold text-amber-400">☁ 庫存分頁雲端發送火箭</h4></div>
+                                    <button onclick="handleUploadInventoryToCloud()" ${state.isSubmitting || currentStoreInvRecords.filter(r=>r.mode==='Local').length === 0 ? 'disabled' : ''} class="w-full py-2 bg-emerald-600 text-white font-bold text-xs rounded-lg disabled:opacity-40 flex items-center justify-center gap-1"><span>上傳盤點數據至 Google Sheets</span></button>
+                                </div>
+                            </div>
+
+                            <div class="lg:col-span-8 bg-slate-900/40 border border-white/[0.04] rounded-2xl p-5 flex flex-col justify-between shadow-xl">
+                                <div>
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h3 class="text-base font-bold flex items-center gap-1.5">${SVGIcons.Box} 本日本地盤點與叫貨明細</h3>
+                                    </div>
+                                    <div class="overflow-x-auto rounded-xl border border-white/[0.06]">
+                                        <table class="w-full text-left text-xs border-collapse">
+                                            <thead class="bg-slate-950 text-slate-400"><tr><th class="p-3">品項名稱/條碼</th><th class="p-3 text-right">現場庫存</th><th class="p-3 text-right">追加叫貨</th><th class="p-3 text-center">同步狀態</th></tr></thead>
+                                            <tbody class="divide-y divide-white/[0.04]">
+                                                ${currentStoreInvRecords.map(r => `
+                                                    <tr class="hover:bg-white/[0.01] transition-colors font-sans">
+                                                        <td class="p-3 text-slate-200 font-medium font-mono">${r.barcode}</td>
+                                                        <td class="p-3 text-right font-mono text-amber-400 font-bold">${r.stockQty}</td>
+                                                        <td class="p-3 text-right font-mono text-orange-400 font-bold">${r.orderQty}</td>
+                                                        <td class="p-3 text-center">${r.mode === 'Google Cloud' ? `<span class="px-1.5 py-0.5 rounded text-[8px] font-semibold bg-emerald-950 text-emerald-400 border border-emerald-900/40">☁ 已同步</span>` : `<span class="px-1.5 py-0.5 rounded text-[8px] font-semibold bg-slate-800 text-slate-400 border border-slate-700/40">本地暫存</span>`}</td>
+                                                    </tr>
+                                                `).join('') || `<tr><td colspan="4" class="p-8 text-center text-slate-500">目前本日尚無庫存盤點暫存項目</td></tr>`}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `}
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 font-sans animate-fade-in">
+                        <div class="p-6 bg-slate-900/40 border border-white/[0.04] rounded-2xl flex flex-col justify-between shadow-md">
+                            <div><p class="text-xs text-slate-400 tracking-wider">歷史大數據雙店累計營業額</p><h3 class="text-2xl font-extrabold text-white mt-1 font-mono">$${total.toLocaleString()}</h3></div>
+                            <div class="mt-4 pt-4 border-t border-white/[0.04] flex items-center justify-between text-[11px] text-slate-400"><span>本地暫存數據總計</span><span class="font-bold text-slate-200 font-mono">${state.salesRecords.length + state.inventoryRecords.length} 筆</span></div>
+                        </div>
+                        <div class="p-6 bg-slate-900/40 border border-white/[0.04] rounded-2xl flex flex-col justify-between shadow-md">
+                            <div><div class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span><p class="text-xs text-slate-400 tracking-wider font-sans">中華店當月累計業績</p></div><h3 class="text-2xl font-extrabold text-sky-400 mt-1 font-mono">$${state.salesRecords.filter(r=>r.store==='中華店').reduce((acc,cur)=>acc+safeFloat(cur.salesAmount),0).toLocaleString()}</h3></div>
+                            <div class="mt-4 pt-4 border-t border-white/[0.04] flex items-center justify-between text-[11px] text-slate-400 font-sans"><span>已錄入項目總筆數</span><span class="font-mono">${state.salesRecords.filter(r=>r.store==='中華店').length} 班次</span></div>
+                        </div>
+                        <div class="p-6 bg-slate-900/40 border border-white/[0.04] rounded-2xl flex flex-col justify-between shadow-md">
+                            <div><div class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span><p class="text-xs text-slate-400 tracking-wider">東港店當月累計業績</p></div><h3 class="text-2xl font-extrabold text-amber-400 mt-1 font-mono">$${state.salesRecords.filter(r=>r.store==='東港店').reduce((acc,cur)=>acc+safeFloat(cur.salesAmount),0).toLocaleString()}</h3></div>
+                            <div class="mt-4 pt-4 border-t border-white/[0.04] flex items-center justify-between text-[11px] text-slate-400 font-sans"><span>已錄入項目總筆數</span><span class="font-mono">${state.salesRecords.filter(r=>r.store==='東港店').length} 班次</span></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ========================================================================
+        // 11. 雙分店雲端對接配置面板
+        // ========================================================================
+        function updateModalContent(modalElement) {
+            const gSettings = state.googleFormSettings;
+            modalElement.innerHTML = `
+                <div class="w-full max-w-xl bg-slate-900 border border-white/[0.08] rounded-[28px] p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto font-sans text-xs">
+                    <div class="flex justify-between items-center mb-5 font-sans">
+                        <h3 class="text-sm font-bold flex items-center text-slate-100 gap-1.5">👥 <span>中東集團大數據中心雲端配置</span></h3>
+                        <button onclick="closeSettingsModalDirect()" class="text-slate-400 hover:text-white text-sm cursor-pointer">✕</button>
+                    </div>
+
+                    <div class="flex flex-wrap border-b border-white/[0.04] mb-4 gap-2 font-sans">
+                        <button type="button" onclick="changeSettingsTabDirect('google')" class="pb-2 px-2.5 font-semibold border-b-2 transition-all ${state.settingsTab === 'google' ? 'border-emerald-500 text-emerald-400' : 'border-transparent text-slate-400'}">📊 雲端試算表對應</button>
+                        <button type="button" onclick="changeSettingsTabDirect('accounts')" class="pb-2 px-2.5 font-semibold border-b-2 transition-all ${state.settingsTab === 'accounts' ? 'border-emerald-500 text-emerald-400' : 'border-transparent text-slate-400'}">👥 員工帳密管理</button>
+                        <button type="button" onclick="changeSettingsTabDirect('backup')" class="pb-2 px-2.5 font-semibold border-b-2 transition-all ${state.settingsTab === 'backup' ? 'border-emerald-500 text-emerald-400' : 'border-transparent text-slate-400'}">💾 備份與還原</button>
+                    </div>
+
+                    ${state.settingsTab === 'google' ? `
+                        <form onsubmit="saveSheetSettingsDirect(event)" class="space-y-4">
+                            <div class="flex space-x-2 bg-slate-950 p-1 rounded-xl border border-white/[0.04]">
+                                <button type="button" onclick="changeConfigTabDirect('zhonghua')" class="flex-1 py-1.5 text-[10px] font-bold rounded-lg ${state.activeConfigTab === 'zhonghua' ? 'bg-sky-950 text-sky-400' : 'text-slate-400'}">🏬 中華店</button>
+                                <button type="button" onclick="changeConfigTabDirect('donggang')" class="flex-1 py-1.5 text-[10px] font-bold rounded-lg ${state.activeConfigTab === 'donggang' ? 'bg-amber-950 text-amber-400' : 'text-slate-400'}">🏬 東港店</button>
+                            </div>
+                            ${state.activeConfigTab === 'zhonghua' ? `
+                                <div class="space-y-3 animate-fade-in">
+                                    <p class="text-[10px] text-sky-400 font-bold uppercase tracking-wider">📊 區塊一：營業業績上傳 ID 金鑰</p>
+                                    <div><input type="url" id="sheet-url-zh" value="${gSettings.zhonghua.formUrl || ''}" class="w-full bg-slate-950 border border-white/[0.06] rounded-xl p-2 font-mono text-slate-100" /></div>
+                                    <div class="grid grid-cols-4 gap-2 text-[10px]">
+                                        <div>日期 ID<input type="text" id="sheet-date-zh" value="${gSettings.zhonghua.entryDate || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>班別 ID<input type="text" id="sheet-store-zh" value="${gSettings.zhonghua.entryShift || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>帳多 ID<input type="text" id="sheet-emp-zh" value="${gSettings.zhonghua.entryOver || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>營收 ID<input type="text" id="sheet-cat-zh" value="${gSettings.zhonghua.entryRevenue || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>品項 ID<input type="text" id="sheet-amt-zh" value="${gSettings.zhonghua.entryExpItems || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>總額 ID<input type="text" id="sheet-exptotal-zh" value="${gSettings.zhonghua.entryExpTotal || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>Line ID<input type="text" id="sheet-line-zh" value="${gSettings.zhonghua.entryLinepay || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>現金 ID<input type="text" id="sheet-cash-zh" value="${gSettings.zhonghua.entryCash || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                    </div>
+                                    <p class="text-[10px] text-amber-500 font-bold uppercase tracking-wider mt-2">📦 區塊二：庫存盤點叫貨專用表單 ID 金鑰</p>
+                                    <div><input type="url" id="inv-url-zh" value="${gSettings.zhonghua.invFormUrl || ''}" placeholder="請貼上中華店庫存盤點表單 formResponse 網址" class="w-full bg-slate-950 border border-white/[0.06] rounded-xl p-2 font-mono text-slate-100" /></div>
+                                    <div class="grid grid-cols-3 gap-2 text-[10px]">
+                                        <div>日期 ID<input type="text" id="inv-date-zh" value="${gSettings.zhonghua.invDateId || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>分店 ID<input type="text" id="inv-store-zh" value="${gSettings.zhonghua.invStoreId || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>工號 ID<input type="text" id="inv-emp-zh" value="${gSettings.zhonghua.invEmpId || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>物料 ID<input type="text" id="inv-code-zh" value="${gSettings.zhonghua.invBarcodeId || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>盤點 ID<input type="text" id="inv-stock-zh" value="${gSettings.zhonghua.invStockId || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>叫貨 ID<input type="text" id="inv-order-zh" value="${gSettings.zhonghua.invOrderId || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                    </div>
+                                </div>
+                            ` : `
+                                <div class="space-y-3 animate-fade-in">
+                                    <p class="text-[10px] text-sky-400 font-bold uppercase tracking-wider">📊 營業業績上傳 ID 金鑰</p>
+                                    <div><input type="url" id="sheet-url-dg" value="${gSettings.donggang.formUrl || ''}" class="w-full bg-slate-950 border border-white/[0.06] rounded-xl p-2 font-mono text-slate-100" /></div>
+                                    <div class="grid grid-cols-4 gap-2 text-[10px]">
+                                        <div>日期 ID<input type="text" id="sheet-date-dg" value="${gSettings.donggang.entryDate || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>班別 ID<input type="text" id="sheet-store-dg" value="${gSettings.donggang.entryShift || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>帳多 ID<input type="text" id="sheet-emp-dg" value="${gSettings.donggang.entryOver || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>營收 ID<input type="text" id="sheet-cat-dg" value="${gSettings.donggang.entryRevenue || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>品項 ID<input type="text" id="sheet-amt-dg" value="${gSettings.donggang.entryExpItems || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>總額 ID<input type="text" id="sheet-exptotal-dg" value="${gSettings.donggang.entryExpTotal || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div class="col-span-2">現金 ID<input type="text" id="sheet-cash-dg" value="${gSettings.donggang.entryCash || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                    </div>
+                                    <p class="text-[10px] text-amber-500 font-bold uppercase tracking-wider mt-2">📦 區塊二：庫存盤點叫貨專用表單 ID 金鑰</p>
+                                    <div><input type="url" id="inv-url-dg" value="${gSettings.donggang.invFormUrl || ''}" placeholder="請貼上東港店庫存盤點表單" class="w-full bg-slate-950 border border-white/[0.06] rounded-xl p-2 font-mono text-slate-100" /></div>
+                                    <div class="grid grid-cols-3 gap-2 text-[10px]">
+                                        <div>日期 ID<input type="text" id="inv-date-dg" value="${gSettings.donggang.invDateId || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>分店 ID<input type="text" id="inv-store-dg" value="${gSettings.donggang.invStoreId || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>工號 ID<input type="text" id="inv-emp-dg" value="${gSettings.donggang.invEmpId || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>物料 ID<input type="text" id="inv-code-dg" value="${gSettings.donggang.invBarcodeId || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>盤點 ID<input type="text" id="inv-stock-dg" value="${gSettings.donggang.invStockId || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                        <div>叫貨 ID<input type="text" id="inv-order-dg" value="${gSettings.donggang.invOrderId || ''}" class="w-full bg-slate-950 border p-1" /></div>
+                                    </div>
+                                </div>
+                            `}
+                            <button type="submit" class="w-full mt-4 py-2.5 bg-emerald-600 rounded-xl text-white font-bold text-xs">儲存目前變更並套用雲端配置</button>
+                        </form>
+                    ` : ''}
+
+                    ${state.settingsTab === 'accounts' ? `
+                        <div class="space-y-4">
+                            <form onsubmit="handleNewAccountSubmit(event)" class="bg-slate-950 p-3 rounded-xl border border-white/[0.04] space-y-3 block font-sans">
+                                <p class="text-[10px] font-bold text-amber-400">➕ 新增同仁權限帳號</p>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <input type="text" id="new-acc-id" placeholder="員工編號 (工號)" class="bg-slate-900 p-2 rounded text-slate-100 font-mono" />
+                                    <input type="text" id="new-acc-pass" placeholder="安全密碼" class="bg-slate-900 p-2 rounded text-slate-100" />
+                                    <input type="text" id="new-acc-name" placeholder="員工姓名" class="bg-slate-900 p-2 rounded text-slate-100" />
+                                    <select id="new-acc-store" class="bg-slate-900 p-1.5 rounded"><option value="中華店">中華店</option><option value="東港店">東港店</option></select>
+                                    <select id="new-acc-store2" class="bg-slate-900 p-1.5 rounded"><option value="無">無</option><option value="中華店">中華店</option><option value="東港店">東港店</option></select>
+                                    <select id="new-acc-role" class="bg-slate-900 p-1.5 rounded font-sans">${ROLE_OPTIONS.map(r=>`<option value="${r}">${r}</option>`).join('')}</select>
+                                </div>
+                                <button type="submit" class="w-full py-2 bg-indigo-600 rounded-lg text-white font-bold text-[11px] font-sans">確定新增成員</button>
+                            </form>
+                            <div class="space-y-2">
+                                <p class="text-[11px] font-bold text-slate-400">👥 現有成員權限清冊 (點擊編輯完全解鎖員編塗改)</p>
+                                <div class="max-h-40 overflow-y-auto bg-slate-950 p-2 rounded-xl border border-white/[0.03] space-y-2 font-sans">
+                                    ${state.accounts.map(a => {
+                                        const isEditing = state.editingEmpId === a.empId;
+                                        return `
+                                            <div class="p-2 bg-slate-900/60 rounded flex flex-col gap-2 font-sans">
+                                                ${isEditing ? `
+                                                    <div class="grid grid-cols-3 gap-1.5">
+                                                        <input type="text" id="edit-id-${a.empId}" value="${state.editEmpIdVal}" class="bg-slate-950 border border-white/[0.05] p-1 rounded text-emerald-400 font-mono font-bold" placeholder="修正工號" />
+                                                        <input type="text" id="edit-name-${a.empId}" value="${state.editName}" class="bg-slate-950 border border-white/[0.05] p-1 rounded" placeholder="修正姓名" />
+                                                        <input type="text" id="edit-pass-${a.empId}" value="${state.editPassword}" class="bg-slate-950 border border-white/[0.05] p-1 rounded" placeholder="修正密碼" />
+                                                        <select id="edit-store-${a.empId}" class="bg-slate-950 p-1 rounded"><option value="中華店" ${state.editStore==='中華店'?'selected':''}>中華店</option><option value="東港店" ${state.editStore==='東港店'?'selected':''}>東港店</option></select>
+                                                        <select id="edit-store2-${a.empId}" class="bg-slate-950 p-1 rounded"><option value="無" ${state.editStore2==='無'?'selected':''}>無</option><option value="中華店" ${state.editStore2==='中華店'?'selected':''}>中華店</option><option value="東港店" ${state.editStore2==='東港店'?'selected':''}>東港店</option></select>
+                                                        <select id="edit-role-${a.empId}" class="bg-slate-950 p-1 rounded font-sans">${ROLE_OPTIONS.map(r=>`<option value="${r}" ${state.editRole===r?'selected':''}>${r}</option>`).join('')}</select>
+                                                    </div>
+                                                    <div class="flex justify-end gap-1.5 mt-1 font-sans">
+                                                        <button type="button" onclick="saveEditAccount('${a.empId}')" class="bg-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold text-white font-sans">💾 保存修改</button>
+                                                        <button type="button" onclick="cancelEdit()" class="bg-slate-800 px-2 py-0.5 rounded text-[10px] sans font-sans">取消</button>
+                                                    </div>
+                                                ` : `
+                                                    <div class="flex justify-between items-center">
+                                                        <span>工號: <strong class="text-amber-400 font-mono">${a.empId}</strong> | <strong>${a.name}</strong> (${a.role}) [${a.store}${a.store2!=='無'?'/'+a.store2:''}]</span>
+                                                        <div class="flex gap-2">
+                                                            <button onclick="startEditAccount('${a.empId}','${a.name}','${a.password}','${a.store}','${a.store2}','${a.role}')" class="text-sky-400 hover:text-white font-bold font-sans">✏️ 編輯</button>
+                                                            <button onclick="deleteAccount('${a.empId}')" class="text-rose-500 font-sans">✕</button>
+                                                        </div>
+                                                    </div>
+                                                `}
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${state.settingsTab === 'backup' ? `
+                        <div class="space-y-4 animate-fade-in">
+                            <div class="p-4 bg-slate-950 rounded-xl border border-emerald-500/20">
+                                <h4 class="text-sm font-bold text-emerald-400 mb-2">💾 完整系統備份</h4>
+                                <p class="text-[11px] text-slate-400 leading-relaxed mb-3">備份員工帳密、門市權限、Google 表單設定、業績、庫存、公告及外觀資料。</p>
+                                <button type="button" onclick="exportFullBackup()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs">下載完整備份 JSON</button>
+                            </div>
+                            <div class="p-4 bg-slate-950 rounded-xl border border-amber-500/20">
+                                <h4 class="text-sm font-bold text-amber-400 mb-2">📂 還原系統</h4>
+                                <p class="text-[11px] text-slate-400 leading-relaxed mb-3">選擇先前下載的 DAPU_Backup JSON。還原會覆蓋目前裝置上的資料。</p>
+                                <input id="restore-backup-input" type="file" accept=".json,application/json" class="hidden" onchange="restoreFullBackup(event)" />
+                                <button type="button" onclick="openRestorePicker()" class="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs">選擇備份檔並還原</button>
+                            </div>
+                            <div class="p-3 rounded-xl bg-rose-950/20 border border-rose-500/20 text-[10px] text-rose-300">備份檔包含員工帳號與密碼，請勿公開分享。</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            const itx = document.getElementById(`edit-id-${state.editingEmpId}`); if(itx) { itx.addEventListener('input', (e) => { state.editEmpIdVal = e.target.value; }); }
+        }
+
+        // ========================================================================
+        // 13. 應用程式自動載入引導
+        // ========================================================================
+        window.addEventListener('DOMContentLoaded', () => { updateGlobalGlows(); renderApp(); });
+    </script>
+</body>
+</html>
