@@ -2942,6 +2942,22 @@
         .zdos-ann-center #ann-mgr-content{min-height:9rem;line-height:1.6}
         /* ⑦ 即時預覽卡：不超寬、長字換行 */
         .zdos-ann-center #ann-mgr-preview{min-width:0;overflow-wrap:anywhere}
+        /* ============================================================
+         * UI-035-06｜Founder Pixel Polish（公告中心，scoped .zdos-ann-center／.zdos-ann-detail）
+         * 僅 layout（等高／對齊／基線／spacing）；不改資料／已讀邏輯／權限／發布邏輯／文字。
+         * ============================================================ */
+        /* ③ 本週重點：橫向卡完全等高 */
+        .zdos-ann-center .zdos-ann-scroll{align-items:stretch}
+        /* ② 未讀點與標題首行基線一致 */
+        .zdos-ann-center .zdos-ann-unread-dot{margin-top:.28rem}
+        /* ④ 分類／狀態 Tag：垂直置中、高度一致 */
+        .zdos-ann-center .flex-wrap>span{display:inline-flex;align-items:center}
+        /* ⑨ 新增／編輯表單欄位：高度一致（排除 checkbox／radio） */
+        .zdos-ann-center input:not([type="checkbox"]):not([type="radio"]),.zdos-ann-center select{min-height:2.5rem}
+        /* ⑩ 即時預覽卡：與 textarea 高度視覺平衡（手機堆疊時不塌陷） */
+        .zdos-ann-center #ann-mgr-preview{min-height:9rem}
+        /* ⑪ 儲存／取消／發布按鈕列：完全等高、圖文置中 */
+        .zdos-ann-center .flex-wrap.pt-2>.zdos-nav-btn{min-height:2.4rem;display:inline-flex;align-items:center;justify-content:center}
 
                 /* UI-011：人力中心首頁重整（相容層；不取代 UI-010 排假中心） */
         .zdos-hr-home{display:flex;flex-direction:column;gap:.85rem;min-width:0;max-width:100%;overflow-x:hidden}
@@ -4023,6 +4039,131 @@
             emp.orlLevel = next;
             savePersonnelOrlRegistry(state.personnelOrlRegistry);
             return { ok: true, orlLevel: next };
+        };
+
+        // ========================================================================
+        // UI-018 能力管理系統（能力學院）— 能力框架 + 個人能力紀錄
+        // 能力框架為靜態定義；個人能力等級持久化於 localStorage（不串雲端）。
+        // 與既有 ORL 戰力等級整合：ORL 為總體戰力，本系統為分項能力。
+        // ========================================================================
+        const ABILITY_STORAGE_KEY = 'zdos_ability_registry_v1';
+        const ABILITY_LEVEL_MIN = 0;
+        const ABILITY_LEVEL_MAX = 3;
+        const ABILITY_LEVEL_DEFINITIONS = [
+            { level: 0, name: '未評核', short: '未評', tone: 'slate' },
+            { level: 1, name: '學習中', short: 'L1', tone: 'amber' },
+            { level: 2, name: '已達標', short: 'L2', tone: 'sky' },
+            { level: 3, name: '精通', short: 'L3', tone: 'emerald' }
+        ];
+        const ABILITY_MATRIX = [
+            {
+                id: 'core', title: '核心職能', icon: '🧭',
+                blurb: '每位夥伴的門市基本功',
+                items: [
+                    { id: 'newbie', name: '新人訓練', desc: '到職流程、儀容規範、系統登入與基本作業' },
+                    { id: 'sop', name: '門市 SOP', desc: '開閉店、交接班、現金與設備標準流程' },
+                    { id: 'hygiene', name: '食安衛生', desc: '食品安全、清潔消毒與衛生自主管理' },
+                    { id: 'cashier', name: '收銀作業', desc: '結帳、發票、行動支付與現金核對' }
+                ]
+            },
+            {
+                id: 'pro', title: '專業進階', icon: '📚',
+                blurb: '提升服務品質與客單價',
+                items: [
+                    { id: 'product', name: '產品知識', desc: '商品組成、特色與常見問答' },
+                    { id: 'sales', name: '銷售技巧', desc: '推薦、加購與客單提升' },
+                    { id: 'service', name: '客訴處理', desc: '客訴應對、情緒安撫與問題升級' },
+                    { id: 'marketing', name: '行銷活動', desc: '檔期活動、集點與會員推廣' }
+                ]
+            },
+            {
+                id: 'mgmt', title: '管理發展', icon: '📈',
+                blurb: '幹部與儲備幹部的養成',
+                items: [
+                    { id: 'lead', name: '幹部培訓', desc: '領導帶人、教育訓練與帶班' },
+                    { id: 'schedule', name: '排班管理', desc: '班表安排、人力調度與工時掌握' },
+                    { id: 'data', name: '數據判讀', desc: '業績、庫存與報表數據分析' },
+                    { id: 'team', name: '團隊領導', desc: '目標設定、激勵與跨店協作' }
+                ]
+            }
+        ];
+
+        const normalizeAbilityLevel = value => {
+            const n = Number(value);
+            if (!Number.isFinite(n)) return ABILITY_LEVEL_MIN;
+            const rounded = Math.round(n);
+            if (rounded < ABILITY_LEVEL_MIN) return ABILITY_LEVEL_MIN;
+            if (rounded > ABILITY_LEVEL_MAX) return ABILITY_LEVEL_MAX;
+            return rounded;
+        };
+        const getAbilityLevelDefinition = level =>
+            ABILITY_LEVEL_DEFINITIONS.find(d => d.level === normalizeAbilityLevel(level)) || ABILITY_LEVEL_DEFINITIONS[0];
+        const getAllAbilities = () =>
+            ABILITY_MATRIX.flatMap(cat => cat.items.map(item => ({ ...item, categoryId: cat.id, categoryTitle: cat.title })));
+        const getAbilityCategory = catId => ABILITY_MATRIX.find(c => c.id === String(catId || '')) || null;
+
+        const loadAbilityRegistry = () => {
+            const raw = safeJsonParse(ABILITY_STORAGE_KEY, null);
+            if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
+            return raw;
+        };
+        const saveAbilityRegistry = map => {
+            safeSetItem(ABILITY_STORAGE_KEY, JSON.stringify(map || {}));
+        };
+        const getEmployeeAbilityMap = employeeId => {
+            const emp = getEmployee(employeeId);
+            if (!emp) return {};
+            const reg = (state.abilityRegistry && typeof state.abilityRegistry === 'object') ? state.abilityRegistry : {};
+            const row = reg[emp.id];
+            return (row && typeof row === 'object') ? row : {};
+        };
+        const getEmployeeAbilityLevel = (employeeId, abilityId) =>
+            normalizeAbilityLevel(getEmployeeAbilityMap(employeeId)[String(abilityId || '')]);
+
+        const canManageAbilityForStore = storeId => canCurrentUserEditStoreSchedule(storeId);
+        const canManageEmployeeAbility = employeeId => {
+            const emp = getEmployee(employeeId);
+            if (!emp) return false;
+            return canManageAbilityForStore(normalizeStoreIdCode(emp.storeId));
+        };
+
+        const setEmployeeAbilityLevels = (employeeId, levelsById) => {
+            const emp = getEmployee(employeeId);
+            if (!emp) return { ok: false, message: '找不到員工資料。' };
+            if (!canManageEmployeeAbility(emp.id)) return { ok: false, message: '無權評核此員工能力。' };
+            if (!state.abilityRegistry || typeof state.abilityRegistry !== 'object') state.abilityRegistry = {};
+            const known = new Set(getAllAbilities().map(a => a.id));
+            const next = { ...(state.abilityRegistry[emp.id] || {}) };
+            Object.keys(levelsById || {}).forEach(abilityId => {
+                if (!known.has(abilityId)) return;
+                next[abilityId] = normalizeAbilityLevel(levelsById[abilityId]);
+            });
+            state.abilityRegistry[emp.id] = next;
+            saveAbilityRegistry(state.abilityRegistry);
+            return { ok: true, levels: next };
+        };
+
+        const computeAbilityStats = employeeId => {
+            const map = getEmployeeAbilityMap(employeeId);
+            const byCat = {};
+            ABILITY_MATRIX.forEach(cat => {
+                byCat[cat.id] = { title: cat.title, achieved: 0, total: cat.items.length, score: 0, max: cat.items.length * ABILITY_LEVEL_MAX };
+            });
+            let assessed = 0, achieved = 0, mastered = 0, score = 0, total = 0;
+            ABILITY_MATRIX.forEach(cat => {
+                cat.items.forEach(item => {
+                    total += 1;
+                    const lv = normalizeAbilityLevel(map[item.id]);
+                    score += lv;
+                    if (lv > 0) assessed += 1;
+                    if (lv >= 2) { achieved += 1; byCat[cat.id].achieved += 1; }
+                    if (lv >= ABILITY_LEVEL_MAX) mastered += 1;
+                    byCat[cat.id].score += lv;
+                });
+            });
+            const max = total * ABILITY_LEVEL_MAX;
+            Object.values(byCat).forEach(c => { c.percent = c.max ? Math.round((c.score / c.max) * 100) : 0; });
+            return { total, assessed, achieved, mastered, score, max, percent: max ? Math.round((score / max) * 100) : 0, byCat };
         };
 
         const buildPersonnelProfileFields = (legacy, base) => ({
@@ -7511,6 +7652,7 @@
                 const f = getComingSoonFeature(state.activeComingSoonFeatureId);
                 return f?.title || '即將推出';
             }
+            if (state.currentView === 'academy') return '能力學院';
             if (state.currentView === 'module') return state.activeAppTab === 'inventory' ? '庫存盤點' : '業績申報';
             return '首頁';
         };
@@ -7635,6 +7777,10 @@
             leaveRegistry: loadLeaveRegistry(),
             leaveSelectionWindowRegistry: safeJsonParse(LEAVE_SELECTION_WINDOW_KEY, []),
             personnelOrlRegistry: loadPersonnelOrlRegistry(),
+            abilityRegistry: loadAbilityRegistry(),
+            academyTab: 'overview',
+            academySection: null,
+            academyAssessEmployeeId: null,
             reportRegistry: loadReportRegistry(),
             // REPORT-009｜報表中心 UI 狀態（唯讀；不寫入業績 SoT）
             // FIX-009-002：僅已完成週／月；週報以 startIso～endIso（週一～週日，可跨月）
@@ -16520,6 +16666,348 @@
             root.innerHTML = wrapFunctionPage(header, body);
         }
 
+        // ========================================================================
+        // UI-018 能力學院（能力管理系統）— 唯一 renderer + 事件處理
+        // ========================================================================
+        const ABILITY_TONE_CLASSES = {
+            slate: 'border-slate-500/25 bg-slate-500/10 text-slate-300',
+            amber: 'border-amber-500/30 bg-amber-500/10 text-amber-200',
+            sky: 'border-sky-500/30 bg-sky-500/10 text-sky-200',
+            emerald: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-200'
+        };
+        const abilityPercentTone = pct => (pct >= 80 ? 'emerald' : pct >= 50 ? 'sky' : pct >= 25 ? 'amber' : 'slate');
+        const ABILITY_BAR_FILL = { slate: 'bg-slate-500', amber: 'bg-amber-400', sky: 'bg-sky-400', emerald: 'bg-emerald-400' };
+        const abilityProgressBar = (percent, tone) => {
+            const pct = Math.max(0, Math.min(100, Number(percent) || 0));
+            const t = tone || abilityPercentTone(pct);
+            return `<div class="h-2 w-full rounded-full bg-slate-800/80 overflow-hidden"><div class="h-full rounded-full ${ABILITY_BAR_FILL[t] || ABILITY_BAR_FILL.slate}" style="width:${pct}%"></div></div>`;
+        };
+        const abilityLevelChip = level => {
+            const def = getAbilityLevelDefinition(level);
+            return `<span class="inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${ABILITY_TONE_CLASSES[def.tone] || ABILITY_TONE_CLASSES.slate}">${escapeHtmlText(def.name)}</span>`;
+        };
+
+        const renderAbilityCategorySections = (emp, { editable = false } = {}) => {
+            const map = getEmployeeAbilityMap(emp.id);
+            return ABILITY_MATRIX.map(cat => {
+                const catScore = cat.items.reduce((s, it) => s + normalizeAbilityLevel(map[it.id]), 0);
+                const catMax = cat.items.length * ABILITY_LEVEL_MAX;
+                const catPct = catMax ? Math.round((catScore / catMax) * 100) : 0;
+                const rows = cat.items.map(item => {
+                    const lv = normalizeAbilityLevel(map[item.id]);
+                    const control = editable
+                        ? `<select id="ability-lvl-${escapeHtmlText(item.id)}" class="shrink-0 rounded-lg bg-slate-950/70 border border-white/[0.08] px-2 py-1.5 text-xs text-slate-100">
+                                ${ABILITY_LEVEL_DEFINITIONS.map(d => `<option value="${d.level}"${d.level === lv ? ' selected' : ''}>${escapeHtmlText(d.name)}</option>`).join('')}
+                           </select>`
+                        : abilityLevelChip(lv);
+                    return `<div class="flex items-start justify-between gap-3 rounded-xl border border-white/[0.06] bg-slate-950/40 px-3.5 py-2.5">
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold text-slate-100">${escapeHtmlText(item.name)}</p>
+                            <p class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">${escapeHtmlText(item.desc)}</p>
+                        </div>
+                        <div class="shrink-0 pt-0.5">${control}</div>
+                    </div>`;
+                }).join('');
+                return `<section class="zdos-workspace-card border-white/[0.06] p-4 sm:p-5 space-y-3" aria-label="${escapeHtmlText(cat.title)}">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="min-w-0">
+                            <h3 class="text-sm font-bold text-slate-100"><span aria-hidden="true">${cat.icon}</span> ${escapeHtmlText(cat.title)}</h3>
+                            <p class="text-[11px] text-slate-500 mt-0.5">${escapeHtmlText(cat.blurb)}</p>
+                        </div>
+                        <span class="shrink-0 text-xs font-mono font-bold text-slate-300">${catPct}%</span>
+                    </div>
+                    ${abilityProgressBar(catPct)}
+                    <div class="space-y-2">${rows}</div>
+                </section>`;
+            }).join('');
+        };
+
+        const renderAbilityProfileSection = emp => {
+            if (!emp) {
+                return `<div class="zdos-workspace-card border-amber-500/20 bg-amber-950/20 p-5 text-sm text-amber-200">
+                    找不到你的人員主檔資料，暫時無法顯示個人能力檔案。請聯繫管理員確認帳號工號是否已納入人員主檔。
+                </div>`;
+            }
+            const stats = computeAbilityStats(emp.id);
+            const orlLevel = getEmployeeOrlLevel(emp);
+            const tone = abilityPercentTone(stats.percent);
+            const position = escapeHtmlText(emp.position || getEmployeeRoleLabel(emp) || '同仁');
+            const storeName = escapeHtmlText(getStoreByCode(emp.storeId)?.name || emp.storeId || '');
+            return `
+                <section class="zdos-workspace-card border-sky-500/20 bg-gradient-to-br from-sky-500/[0.07] to-slate-950/40 p-5 space-y-4">
+                    <div class="flex items-start justify-between gap-4">
+                        <div class="min-w-0">
+                            <p class="text-[10px] uppercase tracking-[0.22em] text-sky-300/80">我的能力檔案</p>
+                            <h2 class="text-xl font-black text-white mt-1 truncate">${escapeHtmlText(emp.name || '')}</h2>
+                            <p class="text-xs text-slate-400 mt-0.5">${position} · ${storeName}</p>
+                        </div>
+                        <div class="shrink-0 text-right">
+                            <p class="text-[10px] text-slate-500">戰力等級</p>
+                            <p class="text-sm font-bold text-indigo-200 mt-0.5">${escapeHtmlText(getOrlLevelCode(orlLevel))}｜${escapeHtmlText(getOrlLevelName(orlLevel))}</p>
+                            <p class="text-xs mt-0.5" aria-hidden="true">${renderOrlStars(orlLevel)}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-end justify-between mb-1.5">
+                            <span class="text-xs font-bold text-slate-300">整體能力達成度</span>
+                            <span class="text-lg font-black ${ABILITY_TONE_CLASSES[tone].split(' ').find(c => c.startsWith('text-'))}">${stats.percent}%</span>
+                        </div>
+                        ${abilityProgressBar(stats.percent, tone)}
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="rounded-xl border border-white/[0.06] bg-slate-950/50 px-3 py-2.5 text-center">
+                            <p class="text-lg font-black text-emerald-300">${stats.achieved}<span class="text-xs text-slate-500 font-bold">/${stats.total}</span></p>
+                            <p class="text-[10px] text-slate-500 mt-0.5">已達標項目</p>
+                        </div>
+                        <div class="rounded-xl border border-white/[0.06] bg-slate-950/50 px-3 py-2.5 text-center">
+                            <p class="text-lg font-black text-sky-300">${stats.mastered}</p>
+                            <p class="text-[10px] text-slate-500 mt-0.5">精通項目</p>
+                        </div>
+                        <div class="rounded-xl border border-white/[0.06] bg-slate-950/50 px-3 py-2.5 text-center">
+                            <p class="text-lg font-black text-slate-200">${stats.assessed}<span class="text-xs text-slate-500 font-bold">/${stats.total}</span></p>
+                            <p class="text-[10px] text-slate-500 mt-0.5">已評核項目</p>
+                        </div>
+                    </div>
+                </section>
+                ${renderAbilityCategorySections(emp, { editable: false })}`;
+        };
+
+        const renderAbilityTeamList = storeId => {
+            const code = normalizeStoreIdCode(storeId);
+            const storeName = escapeHtmlText(getStoreByCode(code)?.name || code || '');
+            const employees = getEmployeesByStore(code).filter(e => e.status === 'active');
+            if (!employees.length) {
+                return `<div class="zdos-workspace-card border-white/[0.06] p-5 text-sm text-slate-400">此門市目前沒有可評核的在職人員。</div>`;
+            }
+            const rows = employees.map(emp => {
+                const stats = computeAbilityStats(emp.id);
+                const tone = abilityPercentTone(stats.percent);
+                const orlLevel = getEmployeeOrlLevel(emp);
+                return `<div class="rounded-xl border border-white/[0.06] bg-slate-950/40 px-3.5 py-3 space-y-2">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold text-slate-100 truncate">${escapeHtmlText(emp.name || '')}</p>
+                            <p class="text-[11px] text-slate-500">${escapeHtmlText(emp.position || getEmployeeRoleLabel(emp) || '')} · ${escapeHtmlText(getOrlLevelCode(orlLevel))} ${renderOrlStars(orlLevel)}</p>
+                        </div>
+                        <button type="button" onclick="openAbilityAssessment('${escapeHtmlText(emp.id)}')" class="zdos-nav-btn shrink-0 rounded-lg border border-violet-500/35 bg-violet-600/15 text-violet-200 text-xs font-bold px-3 py-1.5">評核 →</button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="flex-1">${abilityProgressBar(stats.percent, tone)}</div>
+                        <span class="shrink-0 text-xs font-mono font-bold text-slate-300 w-10 text-right">${stats.percent}%</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500">已達標 ${stats.achieved}/${stats.total} · 精通 ${stats.mastered}</p>
+                </div>`;
+            }).join('');
+            return `
+                <section class="zdos-workspace-card border-white/[0.06] p-4 sm:p-5 space-y-3">
+                    <div class="flex items-center justify-between gap-3">
+                        <h3 class="text-sm font-bold text-slate-100">團隊能力總覽</h3>
+                        <span class="text-[11px] text-slate-500">${storeName} · ${employees.length} 人</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">${rows}</div>
+                </section>`;
+        };
+
+        const renderAbilityAssessment = emp => {
+            const stats = computeAbilityStats(emp.id);
+            const orlLevel = getEmployeeOrlLevel(emp);
+            const storeName = escapeHtmlText(getStoreByCode(emp.storeId)?.name || emp.storeId || '');
+            const orlOptions = ORL_LEVEL_DEFINITIONS.map(def =>
+                `<option value="${def.level}"${def.level === orlLevel ? ' selected' : ''}>${escapeHtmlText(def.code)}｜${escapeHtmlText(def.name)}</option>`).join('');
+            return `
+                <div class="flex items-center justify-between gap-3">
+                    <button type="button" onclick="closeAbilityAssessment()" class="zdos-nav-btn rounded-lg border border-white/[0.1] bg-slate-900/60 text-slate-200 text-xs font-bold px-3 py-1.5">← 團隊列表</button>
+                    <span class="text-[11px] text-slate-500">目前達成度 ${stats.percent}%</span>
+                </div>
+                <section class="zdos-workspace-card border-violet-500/20 bg-gradient-to-br from-violet-500/[0.07] to-slate-950/40 p-5 space-y-3">
+                    <div class="flex items-start justify-between gap-4">
+                        <div class="min-w-0">
+                            <p class="text-[10px] uppercase tracking-[0.22em] text-violet-300/80">能力評核</p>
+                            <h2 class="text-xl font-black text-white mt-1 truncate">${escapeHtmlText(emp.name || '')}</h2>
+                            <p class="text-xs text-slate-400 mt-0.5">${escapeHtmlText(emp.position || getEmployeeRoleLabel(emp) || '')} · ${storeName}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-400 mb-1" for="ability-orl-level">ORL 戰力等級（總體）</label>
+                        <select id="ability-orl-level" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2 text-sm text-slate-100">${orlOptions}</select>
+                    </div>
+                </section>
+                ${renderAbilityCategorySections(emp, { editable: true })}
+                <div class="flex gap-2 pt-1">
+                    <button type="button" onclick="closeAbilityAssessment()" class="zdos-nav-btn flex-1 rounded-xl border border-white/[0.1] bg-slate-900/60 text-slate-300 text-sm font-bold py-2.5">取消</button>
+                    <button type="button" onclick="saveAbilityAssessment('${escapeHtmlText(emp.id)}')" class="zdos-nav-btn flex-1 rounded-xl border border-emerald-500/35 bg-emerald-600/20 text-emerald-200 text-sm font-bold py-2.5">儲存評核</button>
+                </div>`;
+        };
+
+        // UI-018B-MOBILE｜能力學院手機版導覽殼（M1 Layout only）— 8 學習模組入口
+        // 內容分階段補齊；'progress' 復用個人能力檔案、'team' 復用團隊評核，其餘為建置中佔位。
+        const ACADEMY_SECTIONS = [
+            { id: 'progress',  label: '我的學習進度', sub: 'My Progress',   icon: '📈', ready: true,  blurb: '個人能力檔案、達成度與各分類進度。' },
+            { id: 'path',      label: '能力路徑',     sub: 'Learning Path', icon: '🧭', ready: false, blurb: '依戰力等級規劃的階段性學習路徑。' },
+            { id: 'map',       label: '能力地圖',     sub: 'Skill Map',     icon: '🗺️', ready: false, blurb: '全能力框架的視覺化地圖與掌握度。' },
+            { id: 'academic',  label: '學科',         sub: '理論知識',      icon: '📖', ready: false, blurb: '營運、制度、產品等理論知識課程。' },
+            { id: 'practical', label: '術科',         sub: '實作技能',      icon: '🛠️', ready: false, blurb: '現場操作、流程與實作技能訓練。' },
+            { id: 'material',  label: '教材',         sub: '學習資源',      icon: '📚', ready: false, blurb: '各能力對應的教材與學習資源。' },
+            { id: 'exam',      label: '考試',         sub: '能力測驗',      icon: '📝', ready: false, blurb: '能力測驗與評量，串接評核結果。' },
+            { id: 'cert',      label: '資格',         sub: '資格認證',      icon: '🎖️', ready: false, blurb: '通過測驗後取得的資格與認證紀錄。' }
+        ];
+        const getAcademySection = id => ACADEMY_SECTIONS.find(s => s.id === String(id || '')) || null;
+
+        const renderAcademyHub = (me, canManage) => {
+            const meStats = me ? computeAbilityStats(me.id) : null;
+            const meOrl = me ? getEmployeeOrlLevel(me) : null;
+            const banner = me ? `
+                <section class="zdos-workspace-card border-sky-500/20 bg-gradient-to-br from-sky-500/[0.07] to-slate-950/40 p-4 flex items-center justify-between gap-4">
+                    <div class="min-w-0">
+                        <p class="text-[10px] uppercase tracking-[0.22em] text-sky-300/80">能力學院</p>
+                        <h2 class="text-lg font-black text-white mt-0.5 truncate">${escapeHtmlText(me.name || '')}</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">${escapeHtmlText(getOrlLevelCode(meOrl))}｜${escapeHtmlText(getOrlLevelName(meOrl))}</p>
+                    </div>
+                    <div class="shrink-0 text-right">
+                        <p class="text-[10px] text-slate-500">整體達成度</p>
+                        <p class="text-2xl font-black text-sky-200 leading-tight">${meStats ? meStats.percent : 0}%</p>
+                    </div>
+                </section>` : '';
+            const cards = ACADEMY_SECTIONS.map(sec => {
+                const badge = sec.ready
+                    ? ''
+                    : `<span class="shrink-0 rounded-md border border-amber-500/30 bg-amber-500/10 text-amber-200 text-[10px] font-bold px-1.5 py-0.5">建置中</span>`;
+                return `<button type="button" onclick="openAcademySection('${sec.id}')" class="zdos-nav-btn text-left rounded-2xl border border-white/[0.08] bg-slate-900/50 p-4 flex flex-col gap-2 min-h-[104px]">
+                    <div class="flex items-start justify-between gap-2">
+                        <span class="text-2xl leading-none" aria-hidden="true">${sec.icon}</span>
+                        ${badge}
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-bold text-slate-100 truncate">${escapeHtmlText(sec.label)}</p>
+                        <p class="text-[11px] text-slate-500 truncate">${escapeHtmlText(sec.sub)}</p>
+                    </div>
+                </button>`;
+            }).join('');
+            const teamCard = canManage ? `<button type="button" onclick="openAcademySection('team')" class="zdos-nav-btn text-left rounded-2xl border border-violet-500/25 bg-violet-950/30 p-4 flex flex-col gap-2 min-h-[104px] col-span-2">
+                    <div class="flex items-start justify-between gap-2">
+                        <span class="text-2xl leading-none" aria-hidden="true">👥</span>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-bold text-violet-100 truncate">團隊評核</p>
+                        <p class="text-[11px] text-violet-300/70 truncate">Team Assessment · 店長／集團首腦</p>
+                    </div>
+                </button>` : '';
+            return `${banner}
+                <section class="grid grid-cols-2 gap-3">${cards}${teamCard}</section>`;
+        };
+
+        const renderAcademySectionPlaceholder = sec => `
+            <section class="zdos-workspace-card border-white/[0.06] p-6 text-center space-y-3">
+                <div class="text-4xl leading-none" aria-hidden="true">${sec.icon}</div>
+                <h2 class="text-lg font-black text-white">${escapeHtmlText(sec.label)} <span class="text-xs font-mono text-slate-500">${escapeHtmlText(sec.sub)}</span></h2>
+                <p class="inline-flex items-center gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-200 text-xs font-bold px-3 py-1.5">🚧 建置中 · UI-018B 後續階段</p>
+                <p class="text-sm text-slate-400 leading-relaxed max-w-sm mx-auto">${escapeHtmlText(sec.blurb || '此模組版面已預留，內容將於後續階段補齊。')}</p>
+            </section>`;
+
+        function renderAbilityAcademy(root) {
+            const me = getCurrentUserPersonnel();
+            const loginStore = getSchedulingStoreId();
+            const canManage = !!loginStore && canManageAbilityForStore(loginStore);
+            let section = state.academySection || null;
+            if (section === 'team' && !canManage) section = null;
+
+            const meOrl = me ? getEmployeeOrlLevel(me) : null;
+            const header = renderFunctionPageHeader({
+                backOnclick: section ? 'academyGoHub()' : 'backToZDOSHome()',
+                title: '能力學院',
+                rightHtml: me
+                    ? `<span class="zdos-workspace-btn border-indigo-500/25 bg-indigo-950/40 text-indigo-200">${escapeHtmlText(getOrlLevelCode(meOrl))}</span>`
+                    : '<span aria-hidden="true">&nbsp;</span>'
+            });
+
+            let body;
+            if (!section) {
+                body = renderAcademyHub(me, canManage);
+            } else if (section === 'progress') {
+                body = renderAbilityProfileSection(me);
+            } else if (section === 'team') {
+                const assessEmp = state.academyAssessEmployeeId ? getEmployee(state.academyAssessEmployeeId) : null;
+                if (assessEmp && canManageEmployeeAbility(assessEmp.id)) {
+                    body = renderAbilityAssessment(assessEmp);
+                } else {
+                    if (state.academyAssessEmployeeId) state.academyAssessEmployeeId = null;
+                    body = renderAbilityTeamList(loginStore);
+                }
+            } else {
+                const sec = getAcademySection(section);
+                body = sec ? renderAcademySectionPlaceholder(sec) : renderAcademyHub(me, canManage);
+            }
+
+            const footer = `<footer class="pt-2 text-center text-[10px] text-slate-600 font-mono">ZDOS ${VERSION_INFO.version} · UI-018 能力學院</footer>`;
+            root.innerHTML = wrapFunctionPage(header, `<div class="space-y-3">${body}${footer}</div>`);
+        }
+
+        window.openAbilityAcademy = function(section) {
+            state.currentView = 'academy';
+            const target = section === 'team' ? 'team' : (getAcademySection(section) ? section : null);
+            state.academySection = target;
+            state.academyTab = target === 'team' ? 'team' : 'overview';
+            state.academyAssessEmployeeId = null;
+            safeSetItem('zdos_current_view', 'academy');
+            renderApp();
+            zdosAfterViewNav();
+        };
+        window.openAcademySection = function(id) {
+            const sec = id === 'team' ? { id: 'team' } : getAcademySection(id);
+            state.academySection = sec ? sec.id : null;
+            state.academyTab = state.academySection === 'team' ? 'team' : 'overview';
+            state.academyAssessEmployeeId = null;
+            const root = document.getElementById('root');
+            if (root && state.currentView === 'academy') { renderAbilityAcademy(root); zdosAfterViewNav(); }
+        };
+        window.academyGoHub = function() {
+            state.academySection = null;
+            state.academyAssessEmployeeId = null;
+            const root = document.getElementById('root');
+            if (root && state.currentView === 'academy') { renderAbilityAcademy(root); zdosAfterViewNav(); }
+        };
+        window.setAcademyTab = function(tab) {
+            state.academySection = tab === 'team' ? 'team' : 'progress';
+            state.academyTab = tab === 'team' ? 'team' : 'overview';
+            state.academyAssessEmployeeId = null;
+            const root = document.getElementById('root');
+            if (root && state.currentView === 'academy') renderAbilityAcademy(root);
+        };
+        window.openAbilityAssessment = function(employeeId) {
+            if (!canManageEmployeeAbility(employeeId)) return showToast('無權評核此員工能力。', 'error');
+            state.academySection = 'team';
+            state.academyTab = 'team';
+            state.academyAssessEmployeeId = String(employeeId || '');
+            const root = document.getElementById('root');
+            if (root && state.currentView === 'academy') renderAbilityAcademy(root);
+        };
+        window.closeAbilityAssessment = function() {
+            state.academyAssessEmployeeId = null;
+            const root = document.getElementById('root');
+            if (root && state.currentView === 'academy') renderAbilityAcademy(root);
+        };
+        window.saveAbilityAssessment = function(employeeId) {
+            const emp = getEmployee(employeeId);
+            if (!emp) return showToast('找不到員工資料。', 'error');
+            if (!canManageEmployeeAbility(emp.id)) return showToast('無權評核此員工能力。', 'error');
+            const root = document.getElementById('root');
+            const levels = {};
+            getAllAbilities().forEach(a => {
+                const sel = root && root.querySelector(`#ability-lvl-${a.id}`);
+                if (sel) levels[a.id] = sel.value;
+            });
+            const abilityResult = setEmployeeAbilityLevels(emp.id, levels);
+            if (!abilityResult.ok) return showToast(abilityResult.message || '儲存失敗。', 'error');
+            const orlSel = root && root.querySelector('#ability-orl-level');
+            if (orlSel) {
+                const orlResult = setEmployeeOrlLevel(emp.id, orlSel.value);
+                if (!orlResult.ok) showToast(orlResult.message || 'ORL 更新失敗。', 'error');
+            }
+            showToast(`已儲存 ${emp.name} 的能力評核。`, 'success');
+            state.academyAssessEmployeeId = null;
+            if (root && state.currentView === 'academy') renderAbilityAcademy(root);
+        };
+
         const isMobileHomeViewport = () => {
             try {
                 return window.matchMedia('(max-width: 767px)').matches;
@@ -16739,7 +17227,7 @@
                 if (!hasAnnouncementManagerPrivilegeForSession()) return showToast(ANNOUNCEMENT_MANAGER_AUTHZ_TOAST, 'error');
                 return openAnnouncementManager();
             }
-            if (key === 'academy') return showToast('功能建置中', 'info');
+            if (key === 'academy') return openAbilityAcademy();
             if (key === 'ai') return showToast('AI 絲絲目前為 Rule-based／Demo State，尚未串接正式 AI。', 'info');
             if (key === 'work') {
                 if (!hasSalesCenterPrivilegeForSession()) return showToast('業績中心僅限幹部使用。', 'error');
@@ -22127,6 +22615,12 @@
                     return;
                 }
                 renderComingSoonFeature(root, comingSoonFeature);
+                return;
+            }
+
+            // -- VIEW: UI-018 能力學院（能力管理系統） --
+            if (state.currentView === 'academy') {
+                renderAbilityAcademy(root);
                 return;
             }
 
