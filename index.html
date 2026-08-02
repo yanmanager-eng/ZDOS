@@ -3257,6 +3257,7 @@
     <link rel="stylesheet" href="ui/mobile-home.css">
     <link rel="stylesheet" href="ui/boot-splash.css?v=20260729boot1">
     <link rel="stylesheet" href="ui/login-gate.css?v=20260729login004">
+    <link rel="stylesheet" href="ui/founder-console.css?v=next-003a-20260802">
 </head>
 <body class="bg-slate-950 text-slate-100 premium-grid min-h-screen relative font-sans" style="margin:0;padding:0;">
 
@@ -3371,12 +3372,14 @@
 
     <div id="root" class="relative z-10 w-full min-w-0 max-w-full min-h-screen flex flex-col justify-between p-2 sm:p-4"></div>
 
-    <!-- NEXT-001/002: Capability Engine + Founder Context/Resolver (default disabled; not wired to UI / Auth / centers) -->
+    <!-- NEXT-001/002/003: Capability Engine + Founder Context/Resolver + Founder Console (default disabled) -->
     <script src="core/capability/capability-types.js"></script>
     <script src="core/capability/capability-registry.js"></script>
     <script src="core/capability/capability-engine.js"></script>
     <script src="core/capability/founder-context.js"></script>
     <script src="core/capability/capability-resolver.js"></script>
+    <script src="core/capability/founder-identity-adapter.js"></script>
+    <script src="core/capability/founder-console.js?v=next-003a-20260802"></script>
 
     <script src="ui/operation-center/operation-center-mock.js"></script>
     <script src="ui/operation-center/operation-center-workforce-provider.js"></script>
@@ -7660,6 +7663,7 @@
                 return f?.title || '即將推出';
             }
             if (state.currentView === 'academy') return '能力學院';
+            if (state.currentView === 'founder-console') return '創辦人工作台';
             if (state.currentView === 'module') return state.activeAppTab === 'inventory' ? '庫存盤點' : '業績申報';
             return '首頁';
         };
@@ -12280,6 +12284,76 @@
             safeSetItem('zdos_current_view', 'operation-center');
             renderApp();
             zdosAfterViewNav();
+        };
+
+        // NEXT-003｜Founder Console v0.1 — host bridge（不改 Auth／Membership／既有權限結果）
+        const getFounderRoleSource = () => {
+            const actor = getSessionActor() || {};
+            const cloudRole = resolveCloudAuthRole() || String(actor.cloudRole || '').trim();
+            return {
+                cloudRole,
+                accountRole: actor.isCloud ? '' : String(actor.role || '').trim(),
+                roles: []
+            };
+        };
+
+        if (window.ZdosFounderConsole && typeof window.ZdosFounderConsole.attachHostBridge === 'function') {
+            window.ZdosFounderConsole.attachHostBridge({
+                getRoleSource: getFounderRoleSource,
+                showToast: (msg, type) => showToast(msg, type || 'error'),
+                navigateToConsole: () => {
+                    // 未登入時僅允許 DEV Guard 通過後的本機預覽（不改登入流程／不寫入 session）
+                    if (!state.isLoggedIn) {
+                        const rootEl = document.getElementById('root');
+                        if (!rootEl || typeof canAccessFounderConsole !== 'function' || !canAccessFounderConsole()) {
+                            showToast('此功能僅限創辦人使用', 'error');
+                            return;
+                        }
+                        window.ZdosFounderConsole.renderFounderConsole(rootEl, {
+                            roleSource: getFounderRoleSource(),
+                            onDenied: () => showToast('此功能僅限創辦人使用', 'error')
+                        });
+                        return;
+                    }
+                    state.currentView = 'founder-console';
+                    safeSetItem('zdos_current_view', 'founder-console');
+                    renderApp();
+                    zdosAfterViewNav();
+                },
+                navigateHome: () => {
+                    if (!state.isLoggedIn) {
+                        renderApp();
+                        return;
+                    }
+                    backToZDOSHome();
+                }
+            });
+        }
+
+        window.canAccessFounderConsole = function () {
+            if (!window.ZdosFounderConsole) return false;
+            return window.ZdosFounderConsole.canAccessFounderConsole(getFounderRoleSource()) === true;
+        };
+
+        window.openFounderConsole = function () {
+            if (!window.ZdosFounderConsole) {
+                showToast('此功能僅限創辦人使用', 'error');
+                return;
+            }
+            window.ZdosFounderConsole.openFounderConsole(getFounderRoleSource());
+        };
+
+        window.renderFounderConsole = function (root) {
+            if (!window.ZdosFounderConsole) return false;
+            return window.ZdosFounderConsole.renderFounderConsole(root, {
+                roleSource: getFounderRoleSource(),
+                onDenied: () => {
+                    showToast('此功能僅限創辦人使用', 'error');
+                    state.currentView = 'dashboard';
+                    safeSetItem('zdos_current_view', 'dashboard');
+                    renderApp();
+                }
+            });
         };
 
         const getEmployeeDisplayName = (empId) => {
@@ -17392,6 +17466,11 @@
             return actions;
         };
 
+        const renderMobileFounderConsoleQuick = () => {
+            if (typeof canAccessFounderConsole !== 'function' || !canAccessFounderConsole() || !window.ZdosFounderConsole) return '';
+            return window.ZdosFounderConsole.renderMobileEntryHtml();
+        };
+
         const MOBILE_HOME_QUOTE_DEFAULT = '今天的努力，\n不是為了今天，\n而是讓未來更容易。';
 
         // -- UI-001A-26 官方首頁 Hero（自帶樣式，不依賴外部 CSS；唯一角色 ai-sisi-hero.png） --
@@ -17452,6 +17531,7 @@
                 return openAnnouncementManager();
             }
             if (key === 'academy') return openAbilityAcademy();
+            if (key === 'founderConsole' || key === 'founder-console') return openFounderConsole();
             if (key === 'ai') return showToast('AI 絲絲目前為 Rule-based／Demo State，尚未串接正式 AI。', 'info');
             if (key === 'work') {
                 if (!hasSalesCenterPrivilegeForSession()) return showToast('業績中心僅限幹部使用。', 'error');
@@ -17594,7 +17674,7 @@
                             <p>${escapeHtmlText(quote)}</p>
                         </section>
                         <section aria-label="快捷入口">
-                            <div class="zdos-mh__quick">${quickHtml}</div>
+                            <div class="zdos-mh__quick">${quickHtml}${renderMobileFounderConsoleQuick()}</div>
                         </section>
                         ${renderComingSoonEntrySection('mobile')}
                         <p class="zdos-mh__footnote">UI-001A-25 · Demo State · 非正式 AI 分析${canManage ? ` · ${escapeHtmlText(VERSION_INFO.version)}` : ''}</p>
@@ -17764,6 +17844,9 @@
                                     <div class="zdos-home-ops-card-top"><span class="zdos-home-ops-icon">💬</span><span class="zdos-home-ops-arrow text-rose-400">→</span></div>
                                     <h3 class="zdos-home-ops-title">Beta 回饋</h3><p class="zdos-home-ops-desc">回報問題或建議</p>
                                 </button>
+                                ${typeof canAccessFounderConsole === 'function' && canAccessFounderConsole() && window.ZdosFounderConsole
+                                    ? window.ZdosFounderConsole.renderEntryHtml()
+                                    : ''}
                             </div>
                             ${renderComingSoonEntrySection('desktop')}
                             ${canManage ? `
@@ -22682,6 +22765,27 @@
                 return;
             }
 
+            // NEXT-003 Guard：Founder Console 僅旗標 + Engine + Founder Capability 同時成立時可進入
+            if (state.currentView === 'founder-console') {
+                if (typeof canAccessFounderConsole !== 'function' || !canAccessFounderConsole()) {
+                    state.currentView = 'dashboard';
+                    safeSetItem('zdos_current_view', 'dashboard');
+                    showToast('此功能僅限創辦人使用', 'error');
+                    renderApp();
+                    return;
+                }
+                safeSetItem('zdos_current_view', 'founder-console');
+                const ok = renderFounderConsole(root);
+                if (!ok) {
+                    state.currentView = 'dashboard';
+                    safeSetItem('zdos_current_view', 'dashboard');
+                    renderApp();
+                } else {
+                    zdosAfterViewNav();
+                }
+                return;
+            }
+
             // -- VIEW: Operation Center (UI-002 Phase 3A, Supabase read-only sales KPI) --
             if (state.currentView === 'operation-center') {
                 if (!window.ZDOSOperationCenter || !window.ZDOSOperationCenter.canUseOperationCenter(state.employeeId)) {
@@ -22942,7 +23046,7 @@
                 return;
             }
 
-            if (state.currentView !== 'module' && state.currentView !== 'announcements' && state.currentView !== 'announcement-detail' && state.currentView !== 'announcement-manager' && state.currentView !== 'notifications' && state.currentView !== 'coming-soon' && state.currentView !== 'scheduling' && state.currentView !== 'leaveCenter' && state.currentView !== 'hrHome' && state.currentView !== 'schedule-change' && state.currentView !== 'reports' && state.currentView !== 'workforce' && state.currentView !== 'operation-center' && state.currentView !== 'review' && state.currentView !== 'accounting') {
+            if (state.currentView !== 'module' && state.currentView !== 'announcements' && state.currentView !== 'announcement-detail' && state.currentView !== 'announcement-manager' && state.currentView !== 'notifications' && state.currentView !== 'coming-soon' && state.currentView !== 'scheduling' && state.currentView !== 'leaveCenter' && state.currentView !== 'hrHome' && state.currentView !== 'schedule-change' && state.currentView !== 'reports' && state.currentView !== 'workforce' && state.currentView !== 'operation-center' && state.currentView !== 'review' && state.currentView !== 'accounting' && state.currentView !== 'founder-console') {
                 state.currentView = 'dashboard';
                 safeSetItem('zdos_current_view', 'dashboard');
                 renderApp();
