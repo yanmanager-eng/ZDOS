@@ -1,0 +1,248 @@
+/**
+ * ZDP-001｜Development Platform MVP
+ * Scoped under [data-zdos-zdp-page] — does not alter other centers / Founder Console.
+ */
+
+[data-zdos-zdp-page] {
+    --zdp-gap: 0.75rem;
+    --zdp-card-bg: linear-gradient(160deg, rgba(30, 41, 59, 0.72) 0%, rgba(15, 23, 42, 0.55) 55%, rgba(8, 47, 73, 0.28) 100%);
+    --zdp-card-border: rgba(125, 211, 252, 0.16);
+    --zdp-card-shadow: 0 6px 18px rgba(2, 12, 27, 0.22);
+    --zdp-row-bg: rgba(15, 23, 42, 0.35);
+    --zdp-muted: rgb(148, 163, 184);
+    --zdp-text: rgb(226, 232, 240);
+    --zdp-title: rgb(248, 250, 252);
+    --zdp-ok: rgb(110, 231, 183);
+    --zdp-warn: rgb(252, 211, 77);
+    --zdp-bad: rgb(251, 113, 133);
+    --zdp-on: rgb(125, 211, 252);
+    color: var(--zdp-text);
+}
+
+[data-zdos-zdp-page] .zdp-header-block {
+    min-width: 0;
+    text-align: center;
+}
+
+[data-zdos-zdp-page] .zdp-title {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: var(--zdp-title);
+}
+
+[data-zdos-zdp-page] .zdp-subtitle {
+    margin: 0.15rem 0 0;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(125, 211, 252);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+[data-zdos-zdp-page] .zdp-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--zdp-gap);
+    min-width: 0;
+}
+
+[data-zdos-zdp-page] .zdp-brief {
+    border-radius: 16px;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(15, 23, 42, 0.55) 70%);
+    box-shadow: 0 4px 14px rgba(2, 12, 27, 0.16);
+    padding: 1rem 1.05rem;
+}
+
+[data-zdos-zdp-page] .zdp-brief-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--zdp-title);
+}
+
+[data-zdos-zdp-page] .zdp-brief-desc {
+    margin: 0.35rem 0 0;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--zdp-muted);
+}
+
+[data-zdos-zdp-page] .zdp-card {
+    min-width: 0;
+    border-radius: 16px;
+    border: 1px solid var(--zdp-card-border);
+    background: var(--zdp-card-bg);
+    box-shadow: var(--zdp-card-shadow);
+    padding: 1rem 1.05rem;
+}
+
+[data-zdos-zdp-page] .zdp-card-eyebrow {
+    margin: 0;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(100, 116, 139);
+}
+
+[data-zdos-zdp-page] .zdp-card-title {
+    margin: 0.3rem 0 0;
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: var(--zdp-title);
+}
+
+[data-zdos-zdp-page] .zdp-list {
+    margin: 0.75rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 0;
+    list-style: none;
+}
+
+[data-zdos-zdp-page] .zdp-item {
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--zdp-row-bg);
+    padding: 0.65rem 0.75rem;
+    min-width: 0;
+}
+
+[data-zdos-zdp-page] .zdp-item--review-current {
+    margin-top: 0.65rem;
+}
+
+[data-zdos-zdp-page] .zdp-item-id {
+    font-size: 0.6875rem;
+    font-weight: 800;
+    color: var(--zdp-on);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+[data-zdos-zdp-page] .zdp-item-title {
+    margin: 0.2rem 0 0;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--zdp-title);
+    line-height: 1.35;
+}
+
+[data-zdos-zdp-page] .zdp-item-meta {
+    margin: 0.25rem 0 0;
+    font-size: 0.6875rem;
+    color: var(--zdp-muted);
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+[data-zdos-zdp-page] .zdp-empty {
+    margin: 0.75rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--zdp-muted);
+    line-height: 1.5;
+}
+
+[data-zdos-zdp-page] .zdp-review-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 0.65rem;
+}
+
+[data-zdos-zdp-page] .zdp-review-btn {
+    flex: 1 1 auto;
+    min-width: 5.5rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(15, 23, 42, 0.55);
+    color: var(--zdp-text);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.55rem 0.65rem;
+    cursor: pointer;
+}
+
+[data-zdos-zdp-page] .zdp-review-btn--pass {
+    border-color: rgba(52, 211, 153, 0.35);
+    color: var(--zdp-ok);
+}
+
+[data-zdos-zdp-page] .zdp-review-btn--revise {
+    border-color: rgba(251, 191, 36, 0.35);
+    color: var(--zdp-warn);
+}
+
+[data-zdos-zdp-page] .zdp-review-btn--fail {
+    border-color: rgba(251, 113, 133, 0.35);
+    color: var(--zdp-bad);
+}
+
+[data-zdos-zdp-page] .zdp-review-btn.is-active {
+    filter: brightness(1.12);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+[data-zdos-zdp-page] .zdp-build-rows {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+[data-zdos-zdp-page] .zdp-build-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--zdp-row-bg);
+    padding: 0.55rem 0.7rem;
+}
+
+[data-zdos-zdp-page] .zdp-build-label {
+    font-size: 0.75rem;
+    color: var(--zdp-muted);
+}
+
+[data-zdos-zdp-page] .zdp-build-value {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--zdp-text);
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+[data-zdos-zdp-page] .zdp-build-footer {
+    margin: 0.25rem 0 0;
+    text-align: center;
+    font-size: 0.625rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    color: rgb(71, 85, 105);
+}
+
+@media (min-width: 768px) {
+    [data-zdos-zdp-page] {
+        --zdp-gap: 1rem;
+    }
+
+    [data-zdos-zdp-page] .zdp-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--zdp-gap);
+    }
+
+    [data-zdos-zdp-page] .zdp-grid .zdp-card--span {
+        grid-column: 1 / -1;
+    }
+
+    [data-zdos-zdp-page] .zdp-title {
+        font-size: 1.05rem;
+    }
+}

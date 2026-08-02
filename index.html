@@ -3258,6 +3258,7 @@
     <link rel="stylesheet" href="ui/boot-splash.css?v=20260729boot1">
     <link rel="stylesheet" href="ui/login-gate.css?v=20260729login004">
     <link rel="stylesheet" href="ui/founder-console.css?v=next-003a-20260802">
+    <link rel="stylesheet" href="ui/zdp-platform.css?v=zdp-001-20260803">
 </head>
 <body class="bg-slate-950 text-slate-100 premium-grid min-h-screen relative font-sans" style="margin:0;padding:0;">
 
@@ -3380,6 +3381,8 @@
     <script src="core/capability/capability-resolver.js"></script>
     <script src="core/capability/founder-identity-adapter.js"></script>
     <script src="core/capability/founder-console.js?v=next-003a-20260802"></script>
+    <script src="core/devplatform/zdp-registry.js?v=zdp-001-20260803"></script>
+    <script src="core/devplatform/zdp-platform.js?v=zdp-001-20260803"></script>
 
     <script src="ui/operation-center/operation-center-mock.js"></script>
     <script src="ui/operation-center/operation-center-workforce-provider.js"></script>
@@ -7664,6 +7667,7 @@
             }
             if (state.currentView === 'academy') return '能力學院';
             if (state.currentView === 'founder-console') return '創辦人工作台';
+            if (state.currentView === 'dev-platform') return '開發平台';
             if (state.currentView === 'module') return state.activeAppTab === 'inventory' ? '庫存盤點' : '業績申報';
             return '首頁';
         };
@@ -12346,6 +12350,79 @@
         window.renderFounderConsole = function (root) {
             if (!window.ZdosFounderConsole) return false;
             return window.ZdosFounderConsole.renderFounderConsole(root, {
+                roleSource: getFounderRoleSource(),
+                onDenied: () => {
+                    showToast('此功能僅限創辦人使用', 'error');
+                    state.currentView = 'dashboard';
+                    safeSetItem('zdos_current_view', 'dashboard');
+                    renderApp();
+                }
+            });
+        };
+
+        // ZDP-001｜Development Platform MVP — host bridge（不修改 Founder Console 功能）
+        if (window.ZdosDevPlatform && typeof window.ZdosDevPlatform.attachHostBridge === 'function') {
+            window.ZdosDevPlatform.attachHostBridge({
+                getRoleSource: getFounderRoleSource,
+                showToast: (msg, type) => showToast(msg, type || 'error'),
+                navigateToPlatform: () => {
+                    if (!state.isLoggedIn) {
+                        const rootEl = document.getElementById('root');
+                        if (!rootEl || typeof canAccessDevPlatform !== 'function' || !canAccessDevPlatform()) {
+                            showToast('此功能僅限創辦人使用', 'error');
+                            return;
+                        }
+                        window.ZdosDevPlatform.renderDevPlatform(rootEl, {
+                            roleSource: getFounderRoleSource(),
+                            onDenied: () => showToast('此功能僅限創辦人使用', 'error')
+                        });
+                        return;
+                    }
+                    state.currentView = 'dev-platform';
+                    safeSetItem('zdos_current_view', 'dev-platform');
+                    renderApp();
+                    zdosAfterViewNav();
+                },
+                navigateHome: () => {
+                    if (!state.isLoggedIn) {
+                        renderApp();
+                        return;
+                    }
+                    backToZDOSHome();
+                },
+                rerender: () => {
+                    const rootEl = document.getElementById('root');
+                    if (!rootEl) return;
+                    if (state.isLoggedIn && state.currentView === 'dev-platform') {
+                        renderDevPlatform(rootEl);
+                        return;
+                    }
+                    if (!state.isLoggedIn && rootEl.querySelector('[data-zdos-zdp-page="1"]')) {
+                        window.ZdosDevPlatform.renderDevPlatform(rootEl, {
+                            roleSource: getFounderRoleSource(),
+                            onDenied: () => showToast('此功能僅限創辦人使用', 'error')
+                        });
+                    }
+                }
+            });
+        }
+
+        window.canAccessDevPlatform = function () {
+            if (!window.ZdosDevPlatform) return false;
+            return window.ZdosDevPlatform.canAccessDevPlatform(getFounderRoleSource()) === true;
+        };
+
+        window.openDevPlatform = function () {
+            if (!window.ZdosDevPlatform) {
+                showToast('此功能僅限創辦人使用', 'error');
+                return;
+            }
+            window.ZdosDevPlatform.openDevPlatform(getFounderRoleSource());
+        };
+
+        window.renderDevPlatform = function (root) {
+            if (!window.ZdosDevPlatform) return false;
+            return window.ZdosDevPlatform.renderDevPlatform(root, {
                 roleSource: getFounderRoleSource(),
                 onDenied: () => {
                     showToast('此功能僅限創辦人使用', 'error');
@@ -17471,6 +17548,11 @@
             return window.ZdosFounderConsole.renderMobileEntryHtml();
         };
 
+        const renderMobileDevPlatformQuick = () => {
+            if (typeof canAccessDevPlatform !== 'function' || !canAccessDevPlatform() || !window.ZdosDevPlatform) return '';
+            return window.ZdosDevPlatform.renderMobileEntryHtml();
+        };
+
         const MOBILE_HOME_QUOTE_DEFAULT = '今天的努力，\n不是為了今天，\n而是讓未來更容易。';
 
         // -- UI-001A-26 官方首頁 Hero（自帶樣式，不依賴外部 CSS；唯一角色 ai-sisi-hero.png） --
@@ -17532,6 +17614,7 @@
             }
             if (key === 'academy') return openAbilityAcademy();
             if (key === 'founderConsole' || key === 'founder-console') return openFounderConsole();
+            if (key === 'devPlatform' || key === 'dev-platform') return openDevPlatform();
             if (key === 'ai') return showToast('AI 絲絲目前為 Rule-based／Demo State，尚未串接正式 AI。', 'info');
             if (key === 'work') {
                 if (!hasSalesCenterPrivilegeForSession()) return showToast('業績中心僅限幹部使用。', 'error');
@@ -17674,7 +17757,7 @@
                             <p>${escapeHtmlText(quote)}</p>
                         </section>
                         <section aria-label="快捷入口">
-                            <div class="zdos-mh__quick">${quickHtml}${renderMobileFounderConsoleQuick()}</div>
+                            <div class="zdos-mh__quick">${quickHtml}${renderMobileFounderConsoleQuick()}${renderMobileDevPlatformQuick()}</div>
                         </section>
                         ${renderComingSoonEntrySection('mobile')}
                         <p class="zdos-mh__footnote">UI-001A-25 · Demo State · 非正式 AI 分析${canManage ? ` · ${escapeHtmlText(VERSION_INFO.version)}` : ''}</p>
@@ -17846,6 +17929,9 @@
                                 </button>
                                 ${typeof canAccessFounderConsole === 'function' && canAccessFounderConsole() && window.ZdosFounderConsole
                                     ? window.ZdosFounderConsole.renderEntryHtml()
+                                    : ''}
+                                ${typeof canAccessDevPlatform === 'function' && canAccessDevPlatform() && window.ZdosDevPlatform
+                                    ? window.ZdosDevPlatform.renderEntryHtml()
                                     : ''}
                             </div>
                             ${renderComingSoonEntrySection('desktop')}
@@ -22786,6 +22872,27 @@
                 return;
             }
 
+            // ZDP-001 Guard：Development Platform
+            if (state.currentView === 'dev-platform') {
+                if (typeof canAccessDevPlatform !== 'function' || !canAccessDevPlatform()) {
+                    state.currentView = 'dashboard';
+                    safeSetItem('zdos_current_view', 'dashboard');
+                    showToast('此功能僅限創辦人使用', 'error');
+                    renderApp();
+                    return;
+                }
+                safeSetItem('zdos_current_view', 'dev-platform');
+                const zdpOk = renderDevPlatform(root);
+                if (!zdpOk) {
+                    state.currentView = 'dashboard';
+                    safeSetItem('zdos_current_view', 'dashboard');
+                    renderApp();
+                } else {
+                    zdosAfterViewNav();
+                }
+                return;
+            }
+
             // -- VIEW: Operation Center (UI-002 Phase 3A, Supabase read-only sales KPI) --
             if (state.currentView === 'operation-center') {
                 if (!window.ZDOSOperationCenter || !window.ZDOSOperationCenter.canUseOperationCenter(state.employeeId)) {
@@ -23046,7 +23153,7 @@
                 return;
             }
 
-            if (state.currentView !== 'module' && state.currentView !== 'announcements' && state.currentView !== 'announcement-detail' && state.currentView !== 'announcement-manager' && state.currentView !== 'notifications' && state.currentView !== 'coming-soon' && state.currentView !== 'scheduling' && state.currentView !== 'leaveCenter' && state.currentView !== 'hrHome' && state.currentView !== 'schedule-change' && state.currentView !== 'reports' && state.currentView !== 'workforce' && state.currentView !== 'operation-center' && state.currentView !== 'review' && state.currentView !== 'accounting' && state.currentView !== 'founder-console') {
+            if (state.currentView !== 'module' && state.currentView !== 'announcements' && state.currentView !== 'announcement-detail' && state.currentView !== 'announcement-manager' && state.currentView !== 'notifications' && state.currentView !== 'coming-soon' && state.currentView !== 'scheduling' && state.currentView !== 'leaveCenter' && state.currentView !== 'hrHome' && state.currentView !== 'schedule-change' && state.currentView !== 'reports' && state.currentView !== 'workforce' && state.currentView !== 'operation-center' && state.currentView !== 'review' && state.currentView !== 'accounting' && state.currentView !== 'founder-console' && state.currentView !== 'dev-platform') {
                 state.currentView = 'dashboard';
                 safeSetItem('zdos_current_view', 'dashboard');
                 renderApp();
