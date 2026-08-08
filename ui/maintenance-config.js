@@ -5,4 +5,4 @@
  * false → 正常 Boot Splash → Login → Home
  * maintenance.html 為獨立展示頁，不讀此開關、不反向跳轉。
  */
-window.MAINTENANCE_MODE = true;
+window.MAINTENANCE_MODE = false;
