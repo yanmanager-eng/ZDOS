@@ -1,0 +1,757 @@
+/**
+ * ZCX-001｜ZD Academy — first Corporate Experience consumer
+ * ZCX-003D｜Academy Corporate Experience (base styles; polish in ui/zcx-academy.css)
+ * Scoped under [data-zdos-zd-academy-page]
+ * Maps Academy UI → ZCX official Background / Header / Hero / Card / Brand.
+ * Visual-only. No Bootstrap / Demo neon language.
+ */
+
+[data-zdos-zd-academy-page] {
+  --zda-gap: var(--zcx-gap, 0.85rem);
+  --zda-text: var(--zcx-text-primary, #0b1f33);
+  --zda-title: var(--zcx-text-primary, #0b1f33);
+  --zda-muted: var(--zcx-text-secondary, #5a6b7c);
+  --zda-accent: var(--zcx-brand-primary, #0b4f8c);
+  --zda-ok: var(--zcx-ok, #147a45);
+  --zda-lock: var(--zcx-warn, #a67c00);
+  --zda-card-bg: var(--zcx-surface, #ffffff);
+  --zda-card-border: var(--zcx-border, #c9d6e4);
+  --zda-card-shadow: var(--zcx-shadow-card, 0 1px 2px rgba(11, 31, 51, 0.04));
+  --zda-row-bg: var(--zcx-surface, #ffffff);
+  color: var(--zda-text);
+  font-family: var(--zcx-font, "SF Pro Text", "PingFang TC", "Noto Sans TC", sans-serif);
+}
+
+/* ACADEMY-001｜UI-025 正式面覆蓋淺色 LMS 殘 token，避免白底教育平台風 */
+[data-zdos-zd-academy-page][data-ui="UI-025"],
+[data-zdos-zd-academy-page].zda-page--official {
+  --zda-text: #eef7ff;
+  --zda-title: #ffffff;
+  --zda-muted: rgba(176, 206, 232, 0.74);
+  --zda-accent: #1ad0ff;
+  --zda-ok: #7dffb2;
+  --zda-lock: #ffb020;
+  --zda-card-bg: rgba(80, 170, 245, 0.14);
+  --zda-card-border: rgba(140, 220, 255, 0.36);
+  --zda-card-shadow: 0 0 24px rgba(0, 170, 255, 0.16), 0 10px 22px rgba(0, 20, 50, 0.22);
+  --zda-row-bg: rgba(4, 24, 48, 0.32);
+  color: var(--zda-text);
+}
+
+/* Page shell — RC-001A：不再負 margin 露出 host Dark Slate */
+[data-zdos-zd-academy-page].zcx-page,
+[data-zdos-zd-academy-page] {
+  margin: 0;
+  width: 100%;
+  max-width: 100vw;
+}
+
+[data-zdos-zd-academy-page] .zcx-page__inner,
+[data-zdos-zd-academy-page] .zda-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zda-gap);
+  min-width: 0;
+  width: 100%;
+  max-width: var(--zcx-content-max, 430px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* —— Official Header (Academy)｜BUG-0015d：交由 zcx-shell 共用 Function Header —— */
+[data-zdos-zd-academy-page] .zda-header.zcx-header,
+[data-zdos-zd-academy-page] .zda-header {
+  /* layout owned by ui/zcx-shell.css */
+}
+
+[data-zdos-zd-academy-page] .zda-header .zdos-workspace-btn,
+[data-zdos-zd-academy-page] .zcx-header__back {
+  /* UI-HDR-001｜hit／尺寸交由 zcx-shell；此處僅語意標記 */
+  cursor: pointer;
+}
+
+
+[data-zdos-zd-academy-page] .zda-header .zdos-workspace-btn:active,
+[data-zdos-zd-academy-page] .zcx-header__back:active {
+  background: var(--zcx-brand-primary-soft, rgba(11, 79, 140, 0.08));
+}
+
+[data-zdos-zd-academy-page] .zda-header-block {
+  min-width: 0;
+  text-align: center;
+}
+
+[data-zdos-zd-academy-page] .zda-brandline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+[data-zdos-zd-academy-page] .zda-brand-mark {
+  flex: 0 0 auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--zcx-radius-sm, 8px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--zda-accent);
+  background: var(--zcx-brand-primary-soft, rgba(11, 79, 140, 0.08));
+  border: 1px solid rgba(11, 79, 140, 0.18);
+}
+
+[data-zdos-zd-academy-page] .zda-brand-mark .zdl-icon,
+[data-zdos-zd-academy-page] .zda-today-icon .zdl-icon,
+[data-zdos-zd-academy-page] .zda-map-icon .zdl-icon,
+[data-zdos-zd-academy-page] .zda-map-arrow .zdl-icon,
+[data-zdos-zd-academy-page] .zda-done-icon .zdl-icon,
+[data-zdos-zd-academy-page] .zda-done-arrow .zdl-icon,
+[data-zdos-zd-academy-page] .zda-cap-icon .zdl-icon,
+[data-zdos-zd-academy-page] .zda-detail-icon .zdl-icon,
+[data-zdos-zd-academy-page] .zda-badge-icon .zdl-icon,
+[data-zdos-zd-academy-page] .zda-prereq-mark .zdl-icon,
+[data-zdos-zd-academy-page] .zda-today-cta .zdl-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+[data-zdos-zd-academy-page] .zda-brand-mark svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  display: block;
+}
+
+[data-zdos-zd-academy-page] .zda-title {
+  margin: 0;
+  font-family: var(--zcx-font-display, "SF Pro Display", "PingFang TC", sans-serif);
+  font-size: var(--zcx-fs-title, 1.0625rem);
+  font-weight: 800;
+  color: var(--zda-title);
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-zdos-zd-academy-page] .zda-subtitle {
+  margin: 0.15rem 0 0;
+  font-size: 0.5625rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  color: var(--zcx-text-muted, #8494a7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-zdos-zd-academy-page] .zda-header-chip {
+  /* UI-HDR-001｜尺寸交由 zcx-shell；此處僅色票 */
+  color: var(--zda-accent, #8ae4ff);
+  white-space: nowrap;
+}
+
+
+/* —— Official Hero（學習總覽） —— */
+[data-zdos-zd-academy-page] .zda-hero.zcx-hero,
+[data-zdos-zd-academy-page] .zda-progress-strip,
+[data-zdos-zd-academy-page] .zda-hero {
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--zcx-radius-lg, 16px);
+  border: 1px solid rgba(176, 196, 216, 0.65);
+  background: linear-gradient(145deg, #e8f0f7 0%, #f4f8fb 52%, #eaf1f7 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.65) inset,
+    var(--zcx-shadow-hero, 0 2px 8px rgba(11, 31, 51, 0.06));
+  padding: var(--zcx-space-4, 1rem);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem 0.5rem;
+  overflow: hidden;
+  min-width: 0;
+}
+
+[data-zdos-zd-academy-page] .zda-progress-stat,
+[data-zdos-zd-academy-page] .zda-hero .zcx-hero__stat {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+}
+
+[data-zdos-zd-academy-page] .zda-progress-label,
+[data-zdos-zd-academy-page] .zcx-hero__stat-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--zcx-text-muted, #8494a7);
+}
+
+[data-zdos-zd-academy-page] .zda-progress-value,
+[data-zdos-zd-academy-page] .zcx-hero__stat-value {
+  font-size: var(--zcx-fs-callout, 0.9375rem);
+  font-weight: 800;
+  color: var(--zda-title);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-zdos-zd-academy-page] .zda-progress,
+[data-zdos-zd-academy-page] .zcx-hero__progress {
+  grid-column: 1 / -1;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(11, 79, 140, 0.08);
+  border: 1px solid rgba(11, 79, 140, 0.1);
+  overflow: hidden;
+  margin-top: 0.15rem;
+}
+
+[data-zdos-zd-academy-page] .zda-progress-bar,
+[data-zdos-zd-academy-page] .zcx-hero__progress-bar {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--zcx-brand-primary, #0b4f8c) 0%, #1567b3 100%);
+  min-width: 0;
+}
+
+/* —— Section —— */
+[data-zdos-zd-academy-page] .zda-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+[data-zdos-zd-academy-page] .zda-section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0 0.1rem;
+}
+
+[data-zdos-zd-academy-page] .zda-section-title,
+[data-zdos-zd-academy-page] .zda-card-title {
+  margin: 0;
+  font-size: var(--zcx-fs-body, 0.875rem);
+  font-weight: 800;
+  color: var(--zda-title);
+  line-height: 1.3;
+}
+
+[data-zdos-zd-academy-page] .zda-section-desc,
+[data-zdos-zd-academy-page] .zda-muted,
+[data-zdos-zd-academy-page] .zda-cap-desc,
+[data-zdos-zd-academy-page] .zda-cap-meta,
+[data-zdos-zd-academy-page] .zda-detail-desc,
+[data-zdos-zd-academy-page] .zda-detail-level,
+[data-zdos-zd-academy-page] .zda-detail-cat {
+  margin: 0;
+  font-size: var(--zcx-fs-footnote, 0.75rem);
+  color: var(--zda-muted);
+  line-height: 1.45;
+}
+
+/* —— Official Card —— */
+[data-zdos-zd-academy-page] .zda-card,
+[data-zdos-zd-academy-page] .zcx-card {
+  min-width: 0;
+  border-radius: var(--zcx-radius-lg, 16px);
+  border: 1px solid var(--zda-card-border);
+  background: var(--zda-card-bg);
+  box-shadow: var(--zda-card-shadow);
+  padding: var(--zcx-space-4, 1rem);
+}
+
+[data-zdos-zd-academy-page] .zda-empty {
+  text-align: center;
+  color: var(--zda-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* —— 今日學習 —— */
+[data-zdos-zd-academy-page] .zda-today-card {
+  width: 100%;
+  text-align: left;
+  border-radius: var(--zcx-radius-lg, 16px);
+  border: 1px solid rgba(176, 196, 216, 0.75);
+  background: linear-gradient(145deg, #e8f0f7 0%, #ffffff 55%, #f4f8fb 100%);
+  box-shadow: var(--zda-card-shadow);
+  padding: 1.05rem 1.1rem;
+  cursor: pointer;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: border-color 150ms ease, background 150ms ease, transform 120ms ease;
+}
+
+[data-zdos-zd-academy-page] .zda-today-card:active {
+  transform: scale(0.995);
+  background: var(--zcx-surface-focus, #e2eaf2);
+  border-color: rgba(11, 79, 140, 0.22);
+}
+
+[data-zdos-zd-academy-page] .zda-today-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+[data-zdos-zd-academy-page] .zda-today-icon {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: var(--zcx-radius-md, 12px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--zda-accent);
+  background: var(--zcx-brand-primary-soft, rgba(11, 79, 140, 0.08));
+  border: 1px solid rgba(11, 79, 140, 0.18);
+}
+
+[data-zdos-zd-academy-page] .zda-today-icon svg,
+[data-zdos-zd-academy-page] .zda-map-icon svg,
+[data-zdos-zd-academy-page] .zda-map-arrow svg,
+[data-zdos-zd-academy-page] .zda-done-icon svg,
+[data-zdos-zd-academy-page] .zda-done-arrow svg,
+[data-zdos-zd-academy-page] .zda-cap-icon svg,
+[data-zdos-zd-academy-page] .zda-detail-icon svg,
+[data-zdos-zd-academy-page] .zda-badge-icon svg,
+[data-zdos-zd-academy-page] .zda-prereq-mark svg,
+[data-zdos-zd-academy-page] .zda-today-cta svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  display: block;
+}
+
+[data-zdos-zd-academy-page] .zda-today-cat {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  color: var(--zcx-text-muted, #8494a7);
+}
+
+[data-zdos-zd-academy-page] .zda-today-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--zda-title);
+  line-height: 1.3;
+  font-family: var(--zcx-font-display, "SF Pro Display", "PingFang TC", sans-serif);
+}
+
+[data-zdos-zd-academy-page] .zda-today-desc,
+[data-zdos-zd-academy-page] .zda-today-meta {
+  font-size: 0.72rem;
+  color: var(--zda-muted);
+  line-height: 1.45;
+}
+
+[data-zdos-zd-academy-page] .zda-today-cta {
+  margin-top: 0.35rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  align-self: flex-start;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(180deg, #1567b3 0%, var(--zcx-brand-primary, #0b4f8c) 100%);
+  border-radius: var(--zcx-radius-md, 12px);
+  padding: 0.5rem 0.9rem;
+}
+
+/* —— 能力地圖 —— */
+[data-zdos-zd-academy-page] .zda-map-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+[data-zdos-zd-academy-page] .zda-map-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+  border-radius: var(--zcx-radius-lg, 16px);
+  border: 1px solid var(--zda-card-border);
+  background: var(--zda-card-bg);
+  box-shadow: var(--zda-card-shadow);
+  padding: 0.95rem 1rem;
+  cursor: pointer;
+  color: inherit;
+  transition: border-color 150ms ease, background 150ms ease, transform 120ms ease;
+}
+
+[data-zdos-zd-academy-page] .zda-map-card:active {
+  transform: scale(0.99);
+  background: var(--zcx-surface-focus, #e2eaf2);
+  border-color: rgba(11, 79, 140, 0.22);
+}
+
+[data-zdos-zd-academy-page] .zda-map-icon {
+  flex: 0 0 auto;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: var(--zcx-radius-md, 12px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--zda-accent);
+  background: var(--zcx-brand-primary-soft, rgba(11, 79, 140, 0.08));
+  border: 1px solid rgba(11, 79, 140, 0.16);
+}
+
+[data-zdos-zd-academy-page] .zda-map-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+[data-zdos-zd-academy-page] .zda-map-title {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--zda-title);
+}
+
+[data-zdos-zd-academy-page] .zda-map-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+[data-zdos-zd-academy-page] .zda-chip {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--zda-accent);
+  background: var(--zcx-brand-primary-soft, rgba(11, 79, 140, 0.08));
+  border: 1px solid rgba(11, 79, 140, 0.14);
+  border-radius: 6px;
+  padding: 0.18rem 0.45rem;
+  line-height: 1.2;
+}
+
+[data-zdos-zd-academy-page] .zda-map-meta {
+  font-size: 0.7rem;
+  color: var(--zda-muted);
+}
+
+[data-zdos-zd-academy-page] .zda-map-arrow {
+  color: var(--zda-accent);
+  flex: 0 0 auto;
+  display: inline-flex;
+}
+
+/* —— 最近完成 —— */
+[data-zdos-zd-academy-page] .zda-done-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+[data-zdos-zd-academy-page] .zda-done-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-align: left;
+  border-radius: var(--zcx-radius-md, 12px);
+  border: 1px solid rgba(20, 122, 69, 0.16);
+  background: var(--zda-row-bg);
+  box-shadow: var(--zda-card-shadow);
+  padding: 0.75rem 0.85rem;
+  cursor: pointer;
+  color: inherit;
+}
+
+[data-zdos-zd-academy-page] .zda-done-icon {
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--zda-ok);
+  background: var(--zcx-ok-bg, rgba(20, 122, 69, 0.1));
+  border: 1px solid rgba(20, 122, 69, 0.22);
+}
+
+[data-zdos-zd-academy-page] .zda-done-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+[data-zdos-zd-academy-page] .zda-done-name {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--zda-title);
+}
+
+[data-zdos-zd-academy-page] .zda-done-meta {
+  font-size: 0.65rem;
+  color: var(--zda-muted);
+}
+
+[data-zdos-zd-academy-page] .zda-done-arrow {
+  color: var(--zda-muted);
+  display: inline-flex;
+}
+
+/* —— List / Detail —— */
+[data-zdos-zd-academy-page] .zda-cap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+[data-zdos-zd-academy-page] .zda-cap-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
+  width: 100%;
+  text-align: left;
+  border-radius: var(--zcx-radius-md, 12px);
+  border: 1px solid var(--zda-card-border);
+  background: var(--zda-row-bg);
+  box-shadow: var(--zda-card-shadow);
+  padding: 0.8rem 0.9rem;
+  cursor: pointer;
+  color: inherit;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+[data-zdos-zd-academy-page] .zda-cap-row:active {
+  background: var(--zcx-surface-focus, #e2eaf2);
+}
+
+[data-zdos-zd-academy-page] .zda-cap-row.is-locked {
+  border-color: rgba(166, 124, 0, 0.28);
+}
+
+[data-zdos-zd-academy-page] .zda-cap-icon {
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--zda-accent);
+  background: var(--zcx-brand-primary-soft, rgba(11, 79, 140, 0.08));
+  border: 1px solid rgba(11, 79, 140, 0.14);
+  margin-top: 0.1rem;
+}
+
+[data-zdos-zd-academy-page] .zda-cap-row.is-locked .zda-cap-icon {
+  color: var(--zda-lock);
+  background: var(--zcx-warn-bg, rgba(166, 124, 0, 0.12));
+  border-color: rgba(166, 124, 0, 0.28);
+}
+
+[data-zdos-zd-academy-page] .zda-cap-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+[data-zdos-zd-academy-page] .zda-cap-name,
+[data-zdos-zd-academy-page] .zda-detail-name {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--zda-title);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+[data-zdos-zd-academy-page] .zda-detail-icon {
+  display: inline-flex;
+  color: var(--zda-accent);
+}
+
+[data-zdos-zd-academy-page] .zda-badge {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border-radius: 9999px;
+  padding: 0.25rem 0.55rem;
+  white-space: nowrap;
+}
+
+[data-zdos-zd-academy-page] .zda-badge-icon {
+  display: inline-flex;
+}
+
+[data-zdos-zd-academy-page] .zda-badge-icon svg {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+[data-zdos-zd-academy-page] .zda-badge--open {
+  color: var(--zda-ok);
+  background: var(--zcx-ok-bg, rgba(20, 122, 69, 0.1));
+  border: 1px solid rgba(20, 122, 69, 0.22);
+}
+
+[data-zdos-zd-academy-page] .zda-badge--lock {
+  color: var(--zda-lock);
+  background: var(--zcx-warn-bg, rgba(166, 124, 0, 0.12));
+  border: 1px solid rgba(166, 124, 0, 0.28);
+}
+
+[data-zdos-zd-academy-page] .zda-detail-top,
+[data-zdos-zd-academy-page] .zda-lock-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+[data-zdos-zd-academy-page] .zda-subhead {
+  margin: 0.75rem 0 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--zda-muted);
+  text-transform: none;
+  letter-spacing: 0.04em;
+}
+
+[data-zdos-zd-academy-page] .zda-lock-note {
+  margin: 0.55rem 0 0;
+  font-size: 0.72rem;
+  color: var(--zda-lock);
+}
+
+[data-zdos-zd-academy-page] .zda-lock-note--ok {
+  color: var(--zda-ok);
+}
+
+[data-zdos-zd-academy-page] .zda-prereq-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+[data-zdos-zd-academy-page] .zda-prereq-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 0.45rem;
+  border-radius: var(--zcx-radius-sm, 8px);
+  padding: 0.55rem 0.65rem;
+  background: var(--zcx-surface-muted, #e8eef4);
+  border: 1px solid var(--zcx-border, #c9d6e4);
+}
+
+[data-zdos-zd-academy-page] .zda-prereq-item.is-met {
+  border-color: rgba(20, 122, 69, 0.22);
+}
+
+[data-zdos-zd-academy-page] .zda-prereq-item.is-missing {
+  border-color: rgba(166, 124, 0, 0.28);
+}
+
+[data-zdos-zd-academy-page] .zda-prereq-mark {
+  grid-row: 1 / span 2;
+  align-self: center;
+  display: inline-flex;
+  color: var(--zda-muted);
+}
+
+[data-zdos-zd-academy-page] .zda-prereq-item.is-met .zda-prereq-mark {
+  color: var(--zda-ok);
+}
+
+[data-zdos-zd-academy-page] .zda-prereq-item.is-missing .zda-prereq-mark {
+  color: var(--zda-lock);
+}
+
+[data-zdos-zd-academy-page] .zda-prereq-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--zda-title);
+}
+
+[data-zdos-zd-academy-page] .zda-prereq-level {
+  font-size: 0.65rem;
+  color: var(--zda-muted);
+}
+
+/* Entry icons (home ops / mobile quick) — corporate mark size */
+.zdos-home-ops-icon.zda-entry-icon,
+.zdos-home-ops-icon.zda-entry-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zdos-mh__quick-icon svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+/* Corporate entry card — replace Tailwind sky/cyan demo gradients */
+.zda-entry-card {
+  text-align: left;
+  border: 1px solid var(--zcx-border, #c9d6e4);
+  background: var(--zcx-surface, #ffffff);
+  box-shadow: var(--zcx-shadow-card, 0 1px 2px rgba(11, 31, 51, 0.04));
+  border-radius: var(--zcx-radius-lg, 16px);
+}
+
+.zda-entry-card .zdos-home-ops-icon {
+  color: var(--zcx-brand-primary, #0b4f8c);
+}
+
+.zda-entry-card .zdos-home-ops-arrow {
+  color: var(--zcx-brand-primary, #0b4f8c);
+}
+
+.zda-preview-entry {
+  border-color: rgba(166, 124, 0, 0.35);
+  background: linear-gradient(135deg, rgba(255, 247, 237, 0.98), rgba(254, 243, 199, 0.9));
+}
+
+.zda-preview-entry .zdos-home-ops-arrow {
+  color: var(--zcx-warn, #a67c00);
+}
+
+@media (min-width: 768px) {
+  [data-zdos-zd-academy-page] .zda-map-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

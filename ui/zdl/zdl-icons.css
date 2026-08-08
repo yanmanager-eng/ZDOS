@@ -1,0 +1,105 @@
+/**
+ * ZCX-B04｜Official Icon Runtime
+ * Masks load from ui/assets/icons/zdl/*.svg only.
+ * Visual-only. No business logic.
+ */
+
+.zdl-icon {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  background-color: currentColor;
+  -webkit-mask: var(--zdl-icon-url) center / contain no-repeat;
+  mask: var(--zdl-icon-url) center / contain no-repeat;
+  vertical-align: middle;
+  speak: never;
+}
+
+.zdl-icon--sm {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.zdl-icon--md {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.zdl-icon--lg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.zdl-icon--xl {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.zdl-icon--home { --zdl-icon-url: url("../assets/icons/zdl/home.svg"); }
+.zdl-icon--people { --zdl-icon-url: url("../assets/icons/zdl/people.svg"); }
+.zdl-icon--schedule { --zdl-icon-url: url("../assets/icons/zdl/schedule.svg"); }
+.zdl-icon--sales { --zdl-icon-url: url("../assets/icons/zdl/sales.svg"); }
+.zdl-icon--academy { --zdl-icon-url: url("../assets/icons/zdl/academy.svg"); }
+.zdl-icon--ai { --zdl-icon-url: url("../assets/icons/zdl/ai.svg"); }
+.zdl-icon--report { --zdl-icon-url: url("../assets/icons/zdl/report.svg"); }
+.zdl-icon--notification { --zdl-icon-url: url("../assets/icons/zdl/notification.svg"); }
+.zdl-icon--logout { --zdl-icon-url: url("../assets/icons/zdl/logout.svg"); }
+.zdl-icon--settings { --zdl-icon-url: url("../assets/icons/zdl/settings.svg"); }
+.zdl-icon--apps { --zdl-icon-url: url("../assets/icons/zdl/apps.svg"); }
+.zdl-icon--back { --zdl-icon-url: url("../assets/icons/zdl/back.svg"); }
+.zdl-icon--chevron-right { --zdl-icon-url: url("../assets/icons/zdl/chevron-right.svg"); }
+.zdl-icon--check-circle { --zdl-icon-url: url("../assets/icons/zdl/check-circle.svg"); }
+.zdl-icon--lock { --zdl-icon-url: url("../assets/icons/zdl/lock.svg"); }
+.zdl-icon--progress { --zdl-icon-url: url("../assets/icons/zdl/progress.svg"); }
+.zdl-icon--warning { --zdl-icon-url: url("../assets/icons/zdl/warning.svg"); }
+.zdl-icon--success { --zdl-icon-url: url("../assets/icons/zdl/success.svg"); }
+
+/* Home bottom nav / quick / focus */
+.zdos-mh__nav-item .zdl-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.zdos-mh__quick-icon .zdl-icon,
+.zdos-mh__focus-icon .zdl-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.zdos-mh__icon-btn .zdl-icon {
+  width: 22px;
+  height: 22px;
+}
+
+/* Workspace / corporate headers */
+.zdos-workspace-back .zdl-icon,
+.zcx-header__back .zdl-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  margin-right: 0.2rem;
+}
+
+.zcx-header__mark .zdl-icon,
+.zda-brand-mark .zdl-icon,
+.zda-entry-icon .zdl-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.zdos-home-ops-icon .zdl-icon {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.zdos-home-ops-arrow .zdl-icon {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+/* HR shift chevron (mask replaces filled SVG) */
+.zdos-hr-board-shift-chevron.zdl-icon {
+  width: 0.85rem;
+  height: 0.85rem;
+  background-color: currentColor;
+}

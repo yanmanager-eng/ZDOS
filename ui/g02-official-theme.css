@@ -1,0 +1,950 @@
+/**
+ * EMERGENCY-UI-001A｜Official Theme Enforcement
+ * Source of Truth: ui/mobile-home.css (.zdos-mh) G02 Tech Blue — Founder 唯一視覺基準
+ * Visual-only. Remaps center surfaces to homepage tokens. No Auth / Logic / API.
+ *
+ * Load LAST after center CSS so overrides win.
+ */
+
+/* —— 1. Exact homepage tokens (copied from .zdos-mh; do not invent) —— */
+:root {
+  --g02-bg: #041428;
+  --g02-bg-deep: #020b1c;
+  --g02-bg-mid: #0a2f5c;
+  --g02-bg-top: #124a86;
+  --g02-navy: #0a2748;
+  --g02-panel: rgba(70, 160, 235, 0.22);
+  --g02-panel-2: rgba(90, 180, 245, 0.28);
+  --g02-border: rgba(130, 215, 255, 0.45);
+  --g02-border-soft: rgba(110, 200, 255, 0.34);
+  --g02-cyan: #1ad0ff;
+  --g02-cyan-soft: #8ae4ff;
+  --g02-glow: rgba(0, 200, 255, 0.5);
+  --g02-text: #ffffff;
+  --g02-muted: rgba(186, 220, 245, 0.86);
+  --g02-ok: #7dffb2;
+  --g02-warn: #ffb020;
+  --g02-danger: #ff3b4a;
+  --g02-radius: 18px;
+  --g02-radius-sm: 12px;
+  --g02-space: 12px;
+  --g02-glass-bg: rgba(80, 170, 245, 0.2);
+  --g02-glass-bg-strong: rgba(60, 140, 220, 0.28);
+  --g02-glass-border: rgba(140, 220, 255, 0.42);
+  --g02-glass-shadow:
+    0 0 24px rgba(0, 170, 255, 0.22),
+    0 10px 22px rgba(0, 20, 50, 0.22),
+    inset 0 1px 0 rgba(190, 235, 255, 0.22);
+  --g02-btn: #00c8ff;
+  --g02-btn-strong: #33d6ff;
+  --g02-btn-text: #031425;
+}
+
+/* —— 2. Center host group —— */
+.zdos-workspace:has(.zdos-hr-home),
+.zdos-workspace:has(.zdos-sbc-home),
+.zdos-workspace:has(.zdos-sales-shell),
+.zdos-workspace:has(.zdos-acc-center),
+.zdos-workspace:has(.zdos-my-home),
+.zdos-hr-home,
+.zdos-sbc-home,
+.zdos-sales-shell,
+.zdos-acc-center,
+.zdos-my-home,
+[data-zdos-zd-academy-page][data-ui="UI-025"],
+[data-zdos-zd-academy-page].zda-page--official {
+  /* Remap legacy center tokens → homepage G02 (no approximate palette) */
+  --zdos-hr-border: var(--g02-border-soft);
+  --zdos-hr-surface: var(--g02-glass-bg);
+  --zdos-hr-text: var(--g02-text);
+  --zdos-hr-text-2: var(--g02-muted);
+  --zdos-hr-text-3: rgba(186, 220, 245, 0.62);
+  --zdos-hr-brand: var(--g02-cyan);
+  --zdos-hr-brand-soft: rgba(0, 200, 255, 0.12);
+  --zdos-hr-sky: var(--g02-cyan-soft);
+  --zdos-hr-shadow: var(--g02-glass-shadow);
+
+  --zdos-sa-border: var(--g02-border-soft);
+  --zdos-sa-surface: var(--g02-glass-bg);
+  --zdos-sa-text: var(--g02-text);
+  --zdos-sa-text-2: var(--g02-muted);
+  --zdos-sa-text-3: rgba(186, 220, 245, 0.62);
+  --zdos-sa-brand: var(--g02-cyan);
+  --zdos-sa-brand-soft: rgba(0, 200, 255, 0.12);
+  --zdos-sa-shadow: var(--g02-glass-shadow);
+
+  --zda-bg-0: var(--g02-bg-deep);
+  --zda-bg-1: var(--g02-bg-mid);
+  --zda-glass: var(--g02-glass-bg);
+  --zda-border: var(--g02-glass-border);
+  --zda-glow: var(--g02-glass-shadow);
+  --zda-text: var(--g02-text);
+  --zda-muted: var(--g02-muted);
+  --zda-green: var(--g02-ok);
+  --zda-yellow: var(--g02-warn);
+  --zda-red: var(--g02-danger);
+  --zda-blue: var(--g02-cyan);
+  --zda-card-bg: var(--g02-glass-bg);
+  --zda-card-border: var(--g02-glass-border);
+  --zda-card-shadow: var(--g02-glass-shadow);
+  --zda-row-bg: rgba(4, 24, 48, 0.32);
+  --zda-title: var(--g02-text);
+  --zda-accent: var(--g02-cyan);
+  --zda-ok: var(--g02-ok);
+  --zda-lock: var(--g02-warn);
+
+  color: var(--g02-text) !important;
+  background-color: var(--g02-bg-deep) !important;
+  background-image:
+    radial-gradient(120% 70% at 50% -8%, rgba(50, 150, 255, 0.42) 0%, transparent 58%),
+    linear-gradient(180deg, var(--g02-bg-top) 0%, var(--g02-bg-mid) 38%, var(--g02-bg) 72%, var(--g02-bg-deep) 100%) !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Kill light LMS / corporate page fills — 頁殼實色（與最終覆蓋層一致） */
+.zdos-workspace:has(.zdos-hr-home),
+.zdos-workspace:has(.zdos-sbc-home),
+.zdos-workspace:has(.zdos-sales-shell),
+.zdos-workspace:has(.zdos-acc-center),
+.zdos-workspace:has(.zdos-my-home) {
+  background-color: var(--g02-bg-deep) !important;
+  background-image: none !important;
+}
+
+html:has(.zdos-hr-home),
+body:has(.zdos-hr-home),
+#root:has(.zdos-hr-home),
+html:has(.zdos-sbc-home),
+body:has(.zdos-sbc-home),
+#root:has(.zdos-sbc-home),
+html:has(.zdos-sales-shell),
+body:has(.zdos-sales-shell),
+#root:has(.zdos-sales-shell),
+html:has(.zdos-acc-center),
+body:has(.zdos-acc-center),
+#root:has(.zdos-acc-center),
+html:has(.zdos-my-home),
+body:has(.zdos-my-home),
+#root:has(.zdos-my-home),
+html:has([data-zdos-zd-academy-page][data-ui="UI-025"]),
+body:has([data-zdos-zd-academy-page][data-ui="UI-025"]),
+#root:has([data-zdos-zd-academy-page][data-ui="UI-025"]),
+html:has(.zdos-mh),
+body:has(.zdos-mh),
+#root:has(.zdos-mh) {
+  background: var(--g02-bg-deep) !important;
+  background-color: var(--g02-bg-deep) !important;
+  background-image: none !important;
+}
+
+/* G02-006｜人力中心 Mobile Full-Bleed（強制層：對消 #root p-2／workspace gutter） */
+html:has(.zdos-hr-home),
+body:has(.zdos-hr-home),
+#root:has(.zdos-hr-home) {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 100dvh !important;
+  overflow-x: clip !important;
+}
+
+#root:has(.zdos-hr-home) {
+  justify-content: stretch !important;
+}
+
+.zdos-workspace:has(.zdos-hr-home) {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+  min-height: 100dvh !important;
+  box-sizing: border-box !important;
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-header.zdos-app-header {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  /* UI-HDR-001｜玻璃背景／尺寸交由 zcx-shell */
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-body {
+  padding-left: max(1rem, env(safe-area-inset-left, 0px)) !important;
+  padding-right: max(1rem, env(safe-area-inset-right, 0px)) !important;
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px)) !important;
+}
+
+@media (max-width: 767px) {
+  .zdos-workspace.zdos-wcc-workspace--pager:has(.zdos-hr-home) {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    min-height: 100dvh !important;
+  }
+
+  /* HR-CENTER-V2-PHASE2｜內容左右 16px（背景仍滿版） */
+  .zdos-workspace.zdos-wcc-workspace--pager:has(.zdos-hr-home) .zdos-workspace-body {
+    padding-left: max(16px, env(safe-area-inset-left, 0px)) !important;
+    padding-right: max(16px, env(safe-area-inset-right, 0px)) !important;
+    padding-bottom: 0 !important;
+  }
+
+  .zdos-workspace.zdos-wcc-workspace--pager:has(.zdos-hr-home) .zdos-wcc-pager-chrome {
+    padding-bottom: max(0.15rem, env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+/* Kill corporate light shell on body while any official center is open */
+body.bg-slate-950:has(.zdos-hr-home),
+body.bg-slate-950:has(.zdos-sbc-home),
+body.bg-slate-950:has(.zdos-sales-shell),
+body.bg-slate-950:has(.zdos-acc-center),
+body.bg-slate-950:has(.zdos-my-home),
+body.bg-slate-950:has([data-zdos-zd-academy-page]),
+body.bg-slate-950:has(.zdos-mh) {
+  background: var(--g02-bg-deep) !important;
+  background-color: var(--g02-bg-deep) !important;
+}
+
+/* —— 3. Headers｜UI-HDR-001：外層玻璃由 zcx-shell 繪製；此處僅文字色 —— */
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-header-inner,
+.zdos-workspace:has(.zdos-sbc-home) .zdos-workspace-header-inner,
+.zdos-workspace:has(.zdos-sales-shell) .zdos-workspace-header-inner,
+.zdos-workspace:has(.zdos-acc-center) .zdos-workspace-header-inner,
+.zdos-workspace:has(.zdos-my-home) .zdos-workspace-header-inner,
+.zdos-workspace:has(.zdos-ann-center) .zdos-workspace-header-inner,
+.zdos-workspace:has(.zdos-notify-center) .zdos-workspace-header-inner,
+.zdos-workspace.zdos-fn-shell > .zdos-workspace-header .zdos-workspace-header-inner,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zdos-workspace-header-inner,
+.zda-header .zdos-workspace-header-inner {
+  background: transparent !important;
+  background-image: none !important;
+  color: var(--g02-text) !important;
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-sbc-home) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-sales-shell) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-acc-center) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-my-home) .zdos-workspace-header,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-header {
+  /* 不得覆寫 shell 玻璃背景／尺寸 */
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-title,
+.zdos-workspace:has(.zdos-sbc-home) .zdos-workspace-title,
+.zdos-workspace:has(.zdos-sales-shell) .zdos-workspace-title,
+.zdos-workspace:has(.zdos-acc-center) .zdos-workspace-title,
+.zdos-workspace:has(.zdos-my-home) .zdos-workspace-title,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-header-title {
+  color: var(--g02-text) !important;
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-back,
+.zdos-workspace:has(.zdos-sbc-home) .zdos-workspace-back,
+.zdos-workspace:has(.zdos-sales-shell) .zdos-workspace-back,
+.zdos-workspace:has(.zdos-acc-center) .zdos-workspace-back,
+.zdos-workspace:has(.zdos-my-home) .zdos-workspace-back,
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-actions .zdos-nav-btn,
+.zdos-workspace:has(.zdos-sbc-home) .zdos-workspace-actions .zdos-nav-btn,
+.zdos-workspace:has(.zdos-sales-shell) .zdos-workspace-actions .zdos-nav-btn,
+.zdos-workspace:has(.zdos-acc-center) .zdos-workspace-actions .zdos-nav-btn,
+.zdos-workspace:has(.zdos-my-home) .zdos-workspace-actions .zdos-nav-btn,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-header-back {
+  border: 1px solid var(--g02-border-soft) !important;
+  background: var(--g02-glass-bg) !important;
+  color: var(--g02-cyan-soft) !important;
+  box-shadow: none !important;
+}
+
+/* —— 4. Glass cards (kill white / light cards) —— */
+.zdos-hr-home .zdos-workspace-card,
+.zdos-hr-home .zdos-wcc-anomaly-card,
+.zdos-hr-home .zdos-wcc-quick,
+.zdos-hr-home .zdos-hr-month-section,
+.zdos-hr-home .zdos-wcc-app-section,
+.zdos-hr-home .zdos-sbc-card,
+.zdos-sbc-home .zdos-workspace-card,
+.zdos-sbc-home .zdos-wcc-anomaly-card,
+.zdos-sbc-home .zdos-wcc-quick,
+.zdos-sbc-home .zdos-hr-month-section,
+.zdos-sbc-home .zdos-wcc-app-section,
+.zdos-sbc-home .zdos-sbc-card,
+.zdos-sales-shell .zdos-workspace-card,
+.zdos-sales-shell .zdos-sales-card,
+.zdos-sales-shell .zdos-sales-hero,
+.zdos-sales-shell .zdos-sales-metric,
+.zdos-sales-shell .zdos-sales-history-card,
+.zdos-sales-shell .zdos-sales-chart-card,
+.zdos-sales-shell .zdos-sales-kpi,
+.zdos-acc-center .zdos-workspace-card,
+.zdos-my-home .zdos-my-card,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-glass-card,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-hero-card,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-learn-card,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-know-card,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-mat-card {
+  background: var(--g02-glass-bg) !important;
+  border: 1px solid var(--g02-glass-border) !important;
+  border-color: var(--g02-glass-border) !important;
+  box-shadow: var(--g02-glass-shadow) !important;
+  color: var(--g02-text) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  opacity: 1 !important;
+}
+
+/* —— 5. Text —— */
+.zdos-hr-home,
+.zdos-sbc-home,
+.zdos-sales-shell,
+.zdos-acc-center,
+.zdos-my-home,
+[data-zdos-zd-academy-page][data-ui="UI-025"],
+.zdos-hr-home h1,
+.zdos-hr-home h2,
+.zdos-hr-home h3,
+.zdos-sbc-home h1,
+.zdos-sbc-home h2,
+.zdos-sbc-home h3,
+.zdos-sales-shell h1,
+.zdos-sales-shell h2,
+.zdos-sales-shell h3,
+.zdos-acc-center h1,
+.zdos-acc-center h2,
+.zdos-acc-center h3,
+.zdos-sales-shell .zdos-sales-hero-title,
+.zdos-sales-shell .zdos-sales-card h3,
+.zdos-sales-shell .zdos-sales-metric-value,
+.zdos-sales-shell .zdos-sales-metric--primary .zdos-sales-metric-value {
+  color: var(--g02-text) !important;
+}
+
+.zdos-hr-home .zdos-hr-section-desc,
+.zdos-hr-home .zdos-wcc-subtitle,
+.zdos-hr-home .zdos-wcc-duty-empty,
+.zdos-sbc-home .zdos-sbc-muted,
+.zdos-sbc-home .zdos-hr-section-desc,
+.zdos-sales-shell .zdos-sales-eyebrow,
+.zdos-sales-shell .zdos-sales-hero-meta,
+.zdos-sales-shell .zdos-sales-metric-label,
+.zdos-sales-shell .zdos-sales-metric-note,
+.zdos-sales-shell .zdos-sales-kpi span,
+.zdos-sales-shell .zdos-sales-kpi em,
+.zdos-acc-center .text-slate-400,
+.zdos-acc-center .text-slate-500,
+.zdos-my-home .zdos-my-muted,
+.zdos-my-home .zdos-my-section-desc,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-muted,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-section-desc,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-kicker {
+  color: var(--g02-muted) !important;
+}
+
+/* Kill dark-on-light sales text leftovers */
+.zdos-sales-shell .text-slate-900,
+.zdos-sales-shell .text-slate-800,
+.zdos-sales-shell .text-slate-700,
+.zdos-sales-shell .text-slate-600,
+.zdos-sales-shell [class*="text-[#0"],
+.zdos-hr-home .text-slate-900,
+.zdos-hr-home .text-slate-800 {
+  color: var(--g02-text) !important;
+}
+
+/* —— 6. Action buttons (homepage language) —— */
+.zdos-hr-home .zdos-wcc-ops-btn,
+.zdos-sbc-home .zdos-wcc-ops-btn,
+.zdos-sbc-home .zdos-sbc-cta,
+.zdos-sbc-home .zdos-wcc-link-btn,
+.zdos-my-home .zdos-my-cta,
+.zdos-my-home .zdos-my-row-cta,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-cta,
+.zdos-sales-shell .zdos-sales-submit,
+.zdos-acc-center button.bg-gradient-to-r.from-emerald-600 {
+  background: linear-gradient(180deg, var(--g02-btn-strong) 0%, var(--g02-btn) 100%) !important;
+  color: var(--g02-btn-text) !important;
+  border: none !important;
+  box-shadow: 0 0 16px rgba(0, 200, 255, 0.28) !important;
+  opacity: 1 !important;
+}
+
+.zdos-hr-home .zdos-wcc-ops-btn span,
+.zdos-sbc-home .zdos-wcc-ops-btn span {
+  color: rgba(3, 20, 37, 0.72) !important;
+}
+
+/* Ghost / secondary */
+.zdos-my-home .zdos-my-cta--ghost,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-cta--ghost,
+.zdos-hr-home .zdos-hr-cal-btn,
+.zdos-sbc-home .zdos-hr-cal-btn {
+  background: var(--g02-glass-bg) !important;
+  color: var(--g02-cyan-soft) !important;
+  border: 1px solid var(--g02-border-soft) !important;
+  box-shadow: none !important;
+}
+
+/* —— 7. Status colors (official green / yellow / red) —— */
+.zdos-hr-home .zdos-sbc-tone--ok,
+.zdos-sbc-home .zdos-sbc-tone--ok,
+.zdos-my-home .zdos-my-tone--ok,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-tone--ok,
+.zdos-sales-shell .zdos-sales-status--done {
+  color: var(--g02-ok) !important;
+}
+.zdos-hr-home .zdos-sbc-tone--watch,
+.zdos-sbc-home .zdos-sbc-tone--watch,
+.zdos-my-home .zdos-my-tone--watch,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-tone--watch,
+.zdos-sales-shell .zdos-sales-status--pending {
+  color: var(--g02-warn) !important;
+}
+.zdos-hr-home .zdos-sbc-tone--risk,
+.zdos-sbc-home .zdos-sbc-tone--risk,
+.zdos-my-home .zdos-my-tone--risk,
+[data-zdos-zd-academy-page][data-ui="UI-025"] .zda-tone--risk {
+  color: var(--g02-danger) !important;
+}
+
+/* —— 8. Forms / inputs on dark glass —— */
+.zdos-sales-shell input,
+.zdos-sales-shell select,
+.zdos-acc-center input,
+.zdos-acc-center select,
+.zdos-hr-home input,
+.zdos-hr-home select {
+  background: rgba(4, 24, 48, 0.55) !important;
+  border: 1px solid var(--g02-border-soft) !important;
+  color: var(--g02-text) !important;
+}
+
+.zdos-sales-shell input::placeholder,
+.zdos-acc-center input::placeholder {
+  color: rgba(186, 220, 245, 0.5) !important;
+}
+
+/* —— 9. Kill light theme markers / white fills —— */
+.zdos-sales-shell.zdl-theme-light,
+.zdos-sales-shell.zcx-page,
+.zdos-hr-home.zcx-page,
+.zdos-sbc-home.zcx-page,
+.zdos-my-home.zcx-page,
+[data-zdos-zd-academy-page].zcx-page {
+  background-color: transparent !important;
+}
+
+.zdos-hr-home .bg-white,
+.zdos-sbc-home .bg-white,
+.zdos-sales-shell .bg-white,
+.zdos-acc-center .bg-white,
+.zdos-hr-home .bg-slate-50,
+.zdos-sales-shell .bg-slate-50,
+.zdos-hr-home .bg-slate-100,
+.zdos-sales-shell .bg-slate-100 {
+  background-color: var(--g02-glass-bg) !important;
+}
+
+/* Calendar cells */
+.zdos-hr-home .zdos-hr-day,
+.zdos-sbc-home .zdos-hr-day {
+  background: rgba(4, 24, 48, 0.32) !important;
+  border-color: var(--g02-border-soft) !important;
+  color: var(--g02-text) !important;
+}
+
+/* Pager chrome */
+.zdos-hr-home .zdos-wcc-pager-chrome,
+.zdos-sbc-home .zdos-wcc-pager-chrome {
+  background: rgba(8, 28, 56, 0.92) !important;
+  border-top: 1px solid var(--g02-border-soft) !important;
+}
+
+/* Accounting slate panels → glass */
+.zdos-acc-center .bg-slate-950,
+.zdos-acc-center .bg-slate-900 {
+  background: var(--g02-glass-bg) !important;
+  border: 1px solid var(--g02-glass-border) !important;
+  box-shadow: var(--g02-glass-shadow) !important;
+}
+
+/* Never dim whole page */
+.zdos-hr-home,
+.zdos-sbc-home,
+.zdos-sales-shell,
+.zdos-acc-center,
+.zdos-my-home,
+[data-zdos-zd-academy-page][data-ui="UI-025"] {
+  opacity: 1 !important;
+}
+/* =====================================================
+   EMERGENCY-G02-CENTER-RESTORE｜中心專用最終覆蓋層
+   只針對中心（:has / .zdos-*-home / .zdos-sales-shell）
+   不得影響登入頁、首頁 .zdos-mh
+   必須最後載入，壓過 index.html 內聯 RC-001A／UI-020B 淺色
+===================================================== */
+
+/* —— 頁殼：實色 G02 深藍 —— */
+html:has(.zdos-hr-home),
+body:has(.zdos-hr-home),
+#root:has(.zdos-hr-home),
+html:has(.zdos-sbc-home),
+body:has(.zdos-sbc-home),
+#root:has(.zdos-sbc-home),
+html:has(.zdos-sales-shell),
+body:has(.zdos-sales-shell),
+#root:has(.zdos-sales-shell),
+.zdos-workspace:has(.zdos-hr-home),
+.zdos-workspace:has(.zdos-sbc-home),
+.zdos-workspace:has(.zdos-sales-shell),
+.zdos-hr-home,
+.zdos-sbc-home,
+.zdos-sales-shell,
+.zdos-hr-home.zcx-page,
+.zdos-sbc-home.zcx-page,
+.zdos-sales-shell.zcx-page {
+  background: var(--g02-bg-deep, #020b1c) !important;
+  background-color: var(--g02-bg-deep, #020b1c) !important;
+  background-image: none !important;
+  color: var(--g02-text, #ffffff) !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* —— 玻璃卡片（外層） —— */
+.zdos-hr-home .zdos-workspace-card,
+.zdos-hr-home .zdos-wcc-anomaly-card,
+.zdos-hr-home .zdos-wcc-quick,
+.zdos-hr-home .zdos-hr-month-section,
+.zdos-hr-home .zdos-wcc-app-section,
+.zdos-hr-home .zdos-hr-today,
+.zdos-hr-home .zdos-hr-today--board,
+.zdos-hr-home .zdos-hr-calendar-card,
+.zdos-hr-home .zdos-hr-change-card,
+.zdos-hr-home .zdos-hr-hero,
+.zdos-hr-home .zdos-wcc-roster-store,
+.zdos-sbc-home .zdos-workspace-card,
+.zdos-sbc-home .zdos-wcc-anomaly-card,
+.zdos-sbc-home .zdos-wcc-quick,
+.zdos-sbc-home .zdos-hr-month-section,
+.zdos-sbc-home .zdos-wcc-app-section,
+.zdos-sbc-home .zdos-sbc-card,
+.zdos-sbc-home .zdos-hr-calendar-card,
+.zdos-sbc-home .zdos-hr-today,
+.zdos-sbc-home .zdos-hr-today--board,
+.zdos-sales-shell .zdos-workspace-card,
+.zdos-sales-shell .zdos-sales-card,
+.zdos-sales-shell .zdos-sales-hero,
+.zdos-sales-shell .zdos-sales-metric,
+.zdos-sales-shell .zdos-sales-history-card,
+.zdos-sales-shell .zdos-sales-chart-card,
+.zdos-sales-shell .zdos-sales-kpi {
+  background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2)) !important;
+  background-image: none !important;
+  border: 1px solid var(--g02-glass-border, rgba(140, 220, 255, 0.42)) !important;
+  border-color: var(--g02-glass-border, rgba(140, 220, 255, 0.42)) !important;
+  box-shadow: var(--g02-glass-shadow) !important;
+  color: var(--g02-text, #ffffff) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* —— 內層卡片（更深一層藍） —— */
+.zdos-hr-home .zdos-wcc-roster-shift,
+.zdos-hr-home .zdos-hr-board-shift,
+.zdos-hr-home .zdos-hr-board-cross,
+.zdos-hr-home .zdos-hr-day,
+.zdos-hr-home .zdos-hr-shift,
+.zdos-sbc-home .zdos-hr-day,
+.zdos-sbc-home .zdos-hr-board-shift,
+.zdos-sbc-home .zdos-sbc-metric,
+.zdos-sbc-home .zdos-scheduling-weekday,
+.zdos-sales-shell .zdos-sales-history-metric {
+  background: rgba(4, 20, 45, 0.72) !important;
+  background-image: none !important;
+  border-color: rgba(86, 189, 248, 0.22) !important;
+  color: var(--g02-text, #ffffff) !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* —— 人名 chip：深藍底＋亮藍邊（不覆蓋 inline 員工識別色 border 若無 !important） —— */
+.zdos-hr-home .zdos-hr-board-chip,
+.zdos-hr-home .zdos-wcc-chip,
+.zdos-sbc-home .zdos-hr-board-chip {
+  background: rgba(4, 20, 45, 0.82) !important;
+  background-image: none !important;
+  border: 1px solid rgba(86, 189, 248, 0.55) !important;
+  color: var(--g02-text, #ffffff) !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* —— 次要文字 —— */
+.zdos-hr-home .zdos-hr-section-desc,
+.zdos-hr-home .zdos-wcc-subtitle,
+.zdos-hr-home .zdos-wcc-duty-empty,
+.zdos-hr-home .zdos-hr-section-meta,
+.zdos-hr-home .text-slate-300,
+.zdos-hr-home .text-slate-400,
+.zdos-hr-home .text-slate-500,
+.zdos-hr-home .text-slate-600,
+.zdos-sbc-home .zdos-hr-section-desc,
+.zdos-sbc-home .zdos-wcc-subtitle,
+.zdos-sbc-home .zdos-sbc-muted,
+.zdos-sbc-home .zdos-wcc-duty-empty,
+.zdos-sales-shell .zdos-sales-hero-sub,
+.zdos-sales-shell .zdos-sales-metric-label,
+.zdos-sales-shell .text-slate-400,
+.zdos-sales-shell .text-slate-500 {
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86)) !important;
+}
+
+/* —— 主文字／標題（壓過 #0B1F33） —— */
+.zdos-hr-home,
+.zdos-sbc-home,
+.zdos-sales-shell,
+.zdos-hr-home h1,
+.zdos-hr-home h2,
+.zdos-hr-home h3,
+.zdos-hr-home .zdos-workspace-title,
+.zdos-hr-home .zdos-wcc-title,
+.zdos-hr-home .zdos-hr-day-num,
+.zdos-hr-home .zdos-hr-day-names,
+.zdos-sbc-home h1,
+.zdos-sbc-home h2,
+.zdos-sbc-home h3,
+.zdos-sbc-home .zdos-workspace-title,
+.zdos-sbc-home .zdos-wcc-title,
+.zdos-sbc-home .zdos-hr-day-num,
+.zdos-sales-shell h1,
+.zdos-sales-shell h2,
+.zdos-sales-shell h3,
+.zdos-sales-shell .zdos-sales-hero-title,
+.zdos-sales-shell .zdos-sales-metric-value,
+.zdos-sales-shell .zdos-sales-card h3 {
+  color: var(--g02-text, #ffffff) !important;
+}
+
+.zdos-hr-home .text-slate-900,
+.zdos-hr-home .text-slate-800,
+.zdos-hr-home .text-slate-700,
+.zdos-sbc-home .text-slate-900,
+.zdos-sbc-home .text-slate-800,
+.zdos-sales-shell .text-slate-900,
+.zdos-sales-shell .text-slate-800 {
+  color: var(--g02-text, #ffffff) !important;
+}
+
+/* —— 人力：輸入／工具列按鈕 —— */
+.zdos-hr-home .zdos-hr-today-action,
+.zdos-hr-home .zdos-hr-today-search,
+.zdos-hr-home .zdos-hr-cal-btn,
+.zdos-sbc-home .zdos-hr-cal-btn,
+.zdos-sbc-home input,
+.zdos-sbc-home select,
+.zdos-sbc-home textarea {
+  background: rgba(4, 20, 45, 0.82) !important;
+  border-color: rgba(86, 189, 248, 0.35) !important;
+  color: var(--g02-text, #ffffff) !important;
+}
+
+/* —— 班表：月曆外框／星期列／日期格（禁純白底） —— */
+.zdos-sbc-home .zdos-hr-calendar-grid,
+.zdos-sbc-home .zdos-scheduling-weekdays,
+.zdos-hr-home .zdos-hr-calendar-grid,
+.zdos-hr-home .zdos-scheduling-weekdays {
+  background: transparent !important;
+  color: var(--g02-text, #ffffff) !important;
+}
+
+.zdos-sbc-home .zdos-scheduling-weekday,
+.zdos-hr-home .zdos-scheduling-weekday {
+  background: rgba(8, 28, 56, 0.88) !important;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86)) !important;
+  border-color: rgba(86, 189, 248, 0.22) !important;
+}
+
+.zdos-sbc-home .zdos-hr-day,
+.zdos-hr-home .zdos-hr-day {
+  background: rgba(4, 20, 45, 0.55) !important;
+  border-color: rgba(86, 189, 248, 0.22) !important;
+  color: var(--g02-text, #ffffff) !important;
+}
+
+.zdos-sbc-home .zdos-hr-shift--empty,
+.zdos-hr-home .zdos-hr-shift--empty {
+  background: rgba(8, 28, 56, 0.55) !important;
+  border-color: rgba(86, 189, 248, 0.18) !important;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86)) !important;
+}
+
+/* —— 業績：輸入欄深藍玻璃（禁白底）——保留 status 語意色 —— */
+.zdos-sales-shell input,
+.zdos-sales-shell select,
+.zdos-sales-shell textarea,
+.zdos-sales-shell .zdos-sales-input,
+.zdos-sales-shell .zdos-nav-btn:not(.zdos-sales-status) {
+  background: rgba(4, 20, 45, 0.82) !important;
+  border-color: rgba(86, 189, 248, 0.35) !important;
+  color: var(--g02-text, #ffffff) !important;
+}
+
+.zdos-sales-shell .zdos-sales-status--done {
+  color: var(--g02-ok, #7dffb2) !important;
+  border-color: rgba(125, 255, 178, 0.35) !important;
+  background: rgba(125, 255, 178, 0.12) !important;
+}
+
+.zdos-sales-shell .zdos-sales-status--pending {
+  color: var(--g02-warn, #ffb020) !important;
+  border-color: rgba(255, 176, 32, 0.35) !important;
+  background: rgba(255, 176, 32, 0.12) !important;
+}
+
+/* —— Header｜UI-HDR-001：尺寸／玻璃交由 zcx-shell；此處僅文字色 —— */
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-sbc-home) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-sales-shell) .zdos-workspace-header {
+  color: var(--g02-text, #ffffff) !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* —— 底欄 —— */
+.zdos-hr-home .zdos-wcc-pager-chrome,
+.zdos-sbc-home .zdos-wcc-pager-chrome {
+  background-color: var(--g02-bg-deep, #020b1c) !important;
+  background-image: none !important;
+  color: var(--g02-text, #ffffff) !important;
+}
+
+/* —— 殺白色 overlay／低透明度父層 —— */
+.zdos-hr-home::before,
+.zdos-hr-home::after,
+.zdos-sbc-home::before,
+.zdos-sbc-home::after,
+.zdos-sales-shell::before,
+.zdos-sales-shell::after {
+  opacity: 1 !important;
+  filter: none !important;
+  background: transparent !important;
+}
+
+/* =====================================================
+   FIX-ALL-MOBILE-LAYOUT-RESTORE｜G02 範圍與中心比例
+   - 首頁 .zdos-mh：僅背景色，禁止佈局鎖定
+   - 中心：深藍玻璃保留；手機寬度 ≤430px 置中；卡片高度隨內容
+===================================================== */
+@media (max-width: 767px) {
+  .zdos-hr-home,
+  .zdos-sbc-home,
+  .zdos-sales-shell {
+    width: 100% !important;
+    max-width: 430px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .zdos-workspace:has(.zdos-hr-home),
+  .zdos-workspace:has(.zdos-sbc-home),
+  .zdos-workspace:has(.zdos-sales-shell) {
+    width: 100% !important;
+    max-width: 430px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .zdos-hr-home .zdos-workspace-card,
+  .zdos-hr-home .zdos-wcc-anomaly-card,
+  .zdos-hr-home .zdos-wcc-quick,
+  .zdos-hr-home .zdos-hr-month-section,
+  .zdos-hr-home .zdos-wcc-app-section,
+  .zdos-hr-home .zdos-hr-today,
+  .zdos-hr-home .zdos-hr-calendar-card,
+  .zdos-hr-home .zdos-hr-hero,
+  .zdos-hr-home .zdos-hr-action,
+  .zdos-sbc-home .zdos-workspace-card,
+  .zdos-sbc-home .zdos-sbc-card,
+  .zdos-sbc-home .zdos-wcc-anomaly-card,
+  .zdos-sbc-home .zdos-wcc-quick,
+  .zdos-sbc-home .zdos-hr-month-section,
+  .zdos-sbc-home .zdos-hr-calendar-card,
+  .zdos-sales-shell .zdos-workspace-card,
+  .zdos-sales-shell .zdos-sales-card,
+  .zdos-sales-shell .zdos-sales-hero,
+  .zdos-sales-shell .zdos-sales-metric {
+    height: auto !important;
+    max-height: none !important;
+  }
+}
+
+/* ============================================================
+ * HR-CENTER-V2-PHASE2｜G02 scoped（人力中心手機版）
+ * 頁殼透明；店別卡深藍玻璃；異常區保留；不影響首頁
+ * ============================================================ */
+@media (max-width: 767px) {
+  .zdos-hr-home .zdos-wcc-page,
+  .zdos-hr-home .zdos-wcc-page-body {
+    background: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .zdos-hr-home .zdos-wcc-roster-store {
+    background: rgba(8, 32, 64, 0.78) !important;
+    background-image: none !important;
+    border: 1px solid var(--g02-glass-border, rgba(140, 220, 255, 0.42)) !important;
+    border-radius: 16px !important;
+    box-shadow: var(--g02-glass-shadow) !important;
+    backdrop-filter: blur(18px) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+    color: var(--g02-text, #fff) !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .zdos-hr-home .zdos-wcc-roster-shift {
+    background: rgba(4, 20, 45, 0.78) !important;
+    background-image: none !important;
+    border-color: rgba(86, 189, 248, 0.28) !important;
+    border-radius: 12px !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .zdos-hr-home .zdos-wcc-name-chip {
+    background: rgba(4, 20, 45, 0.88) !important;
+    background-image: none !important;
+    border: 1px solid rgba(86, 189, 248, 0.55) !important;
+    color: var(--g02-text, #fff) !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    max-width: 100% !important;
+  }
+
+  .zdos-hr-home .zdos-wcc-anomaly-card {
+    background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2)) !important;
+    border: 1px solid var(--g02-glass-border, rgba(140, 220, 255, 0.42)) !important;
+    box-shadow: var(--g02-glass-shadow) !important;
+    backdrop-filter: blur(18px) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+}
+
+/* ============================================================
+ * SCHEDULE-CENTER-UI-POLISH-002｜SBC scoped（頁殼透明／月曆 chip／G02）
+ * ============================================================ */
+@media (max-width: 767px) {
+  .zdos-sbc-home .zdos-wcc-page,
+  .zdos-sbc-home .zdos-wcc-page-body {
+    background: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .zdos-sbc-home .zdos-sbc-my-card,
+  .zdos-sbc-home .zdos-sbc-card,
+  .zdos-sbc-home .zdos-sbc-leave-store,
+  .zdos-sbc-home .zdos-hr-calendar-card {
+    color: var(--g02-text, #fff) !important;
+    border-color: var(--g02-glass-border, rgba(140, 220, 255, 0.42)) !important;
+  }
+
+  .zdos-sbc-home .zdos-hr-shift {
+    background: rgba(0, 160, 230, 0.16) !important;
+    border: 1px solid rgba(86, 189, 248, 0.4) !important;
+    color: var(--g02-cyan-soft, #8ae4ff) !important;
+  }
+
+  .zdos-sbc-home .zdos-hr-shift--empty {
+    background: rgba(4, 20, 45, 0.45) !important;
+    border-color: rgba(86, 189, 248, 0.18) !important;
+    color: var(--g02-muted, rgba(186, 220, 245, 0.86)) !important;
+  }
+
+  .zdos-sbc-home .zdos-hr-day-num,
+  .zdos-sbc-home .zdos-hr-day-names {
+    color: var(--g02-text, #fff) !important;
+  }
+
+  .zdos-sbc-home .zdos-sbc-section-desc,
+  .zdos-sbc-home .zdos-hr-section-desc {
+    color: var(--g02-muted, rgba(186, 220, 245, 0.86)) !important;
+  }
+}
+
+/* =====================================================
+   UI-HOME-RETURN-FIX-001 + EMERGENCY WHITE-BORDER FIX
+   根因：html.zdos-zcx-shell-active 曾設 #eaf1f8 淺底 → notch／上下露白。
+   shell 宿主已改深藍；此處再保險壓過殘留淺底。
+   僅宿主背景／高度／padding；不改 .zdos-mh 版型；不用 ::before/::after 假色條。
+===================================================== */
+html.zdos-zcx-shell-active,
+html.zdos-zcx-shell-active body,
+html.zdos-zcx-shell-active body.bg-slate-950,
+html.zdos-zcx-shell-active body.premium-grid,
+html.zdos-zcx-shell-active #root,
+html.zdos-zcx-shell-active:has(.zdos-mh),
+html.zdos-zcx-shell-active:has(.zdos-mh) body,
+html.zdos-zcx-shell-active:has(.zdos-mh) body.bg-slate-950,
+html.zdos-zcx-shell-active:has(.zdos-mh) body.premium-grid,
+html.zdos-zcx-shell-active:has(.zdos-mh) #root {
+  background: var(--g02-bg-deep, #020b1c) !important;
+  background-color: var(--g02-bg-deep, #020b1c) !important;
+  background-image: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+html.zdos-zcx-shell-active:has(.zdos-mh),
+html.zdos-zcx-shell-active:has(.zdos-mh) body,
+html.zdos-zcx-shell-active:has(.zdos-mh) body.bg-slate-950,
+html.zdos-zcx-shell-active:has(.zdos-mh) body.premium-grid,
+html.zdos-zcx-shell-active:has(.zdos-mh) #root {
+  height: 100dvh !important;
+  height: 100svh !important;
+  min-height: 100dvh !important;
+  min-height: 100svh !important;
+  max-height: 100dvh !important;
+  max-height: 100svh !important;
+  overflow: hidden !important;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  overscroll-behavior: none !important;
+}
+
+html.zdos-zcx-shell-active:has(.zdos-mh) #root {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100dvh !important;
+  height: 100svh !important;
+  max-height: 100dvh !important;
+  max-height: 100svh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  overflow: hidden !important;
+}

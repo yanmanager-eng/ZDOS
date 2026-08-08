@@ -1,0 +1,2202 @@
+/**
+ * SCHEDULE-002｜班表班務中心 Theme（G02 Tech Blue Glass）
+ * Visual / IA chrome only — scoped to SBC surfaces.
+ * Does not alter Auth / SoT / flow logic.
+ *
+ * Scope:
+ *   .zdos-workspace:has(.zdos-sbc-home)
+ *   .zdos-sbc-home
+ */
+
+.zdos-workspace:has(.zdos-sbc-home) {
+  --g02-bg: #041428;
+  --g02-bg-deep: #020b1c;
+  --g02-bg-mid: #0a2f5c;
+  --g02-bg-top: #124a86;
+  --g02-panel: rgba(70, 160, 235, 0.22);
+  --g02-border: rgba(130, 215, 255, 0.45);
+  --g02-border-soft: rgba(110, 200, 255, 0.34);
+  --g02-cyan: #1ad0ff;
+  --g02-cyan-soft: #8ae4ff;
+  --g02-text: #ffffff;
+  --g02-muted: rgba(186, 220, 245, 0.86);
+  --g02-ok: #7dffb2;
+  --g02-warn: #ffb020;
+  --g02-danger: #ff3b4a;
+  --g02-radius: 18px;
+  --g02-radius-sm: 12px;
+  --g02-glass-bg: rgba(80, 170, 245, 0.2);
+  --g02-glass-bg-strong: rgba(60, 140, 220, 0.28);
+  --g02-glass-border: rgba(140, 220, 255, 0.42);
+  --g02-glass-shadow:
+    0 0 24px rgba(0, 170, 255, 0.22),
+    0 10px 22px rgba(0, 20, 50, 0.22),
+    inset 0 1px 0 rgba(190, 235, 255, 0.22);
+  --g02-btn: #00c8ff;
+  --g02-btn-strong: #33d6ff;
+  --g02-btn-text: #031425;
+  --sbc-font: "SF Pro Text", "Avenir Next", "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
+  --sbc-display: "Avenir Next", "SF Pro Display", "Segoe UI", "PingFang TC", "Noto Sans TC", sans-serif;
+
+  /* Override ZCX-003A light corporate when SBC is active */
+  --zdos-hr-border: var(--g02-border-soft);
+  --zdos-hr-surface: var(--g02-glass-bg);
+  --zdos-hr-text: var(--g02-text);
+  --zdos-hr-text-2: var(--g02-muted);
+  --zdos-hr-text-3: rgba(186, 220, 245, 0.62);
+  --zdos-hr-brand: var(--g02-cyan);
+  --zdos-hr-brand-soft: rgba(0, 200, 255, 0.12);
+  --zdos-hr-sky: var(--g02-cyan-soft);
+  --zdos-hr-shadow: var(--g02-glass-shadow);
+
+  color: var(--g02-text);
+  font-family: var(--sbc-font);
+  background-color: var(--g02-bg-deep) !important;
+  background-image:
+    radial-gradient(120% 70% at 50% -8%, rgba(50, 150, 255, 0.36) 0%, transparent 58%),
+    linear-gradient(180deg, var(--g02-bg-top) 0%, var(--g02-bg-mid) 38%, var(--g02-bg) 72%, var(--g02-bg-deep) 100%) !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+html:has(.zdos-sbc-home),
+body:has(.zdos-sbc-home) {
+  background: var(--g02-bg-deep, #020b1c) !important;
+}
+
+.zdos-workspace:has(.zdos-sbc-home) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-sbc-home) .zdos-workspace-header.zdos-app-header {
+  /* UI-HDR-001｜尺寸／背景／safe-area 交由 zcx-shell（本頁即 SoT 來源） */
+}
+
+.zdos-workspace:has(.zdos-sbc-home) .zdos-workspace-back,
+.zdos-workspace:has(.zdos-sbc-home) .zdos-workspace-actions .zdos-nav-btn {
+  border: 1px solid var(--g02-border-soft) !important;
+  background: var(--g02-glass-bg) !important;
+  color: var(--g02-cyan-soft) !important;
+  box-shadow: none !important;
+}
+
+.zdos-workspace:has(.zdos-sbc-home) .zdos-workspace-title,
+.zdos-workspace:has(.zdos-sbc-home) .zdos-wcc-title {
+  font-family: var(--sbc-display) !important;
+  color: var(--g02-text) !important;
+  letter-spacing: 0.04em;
+}
+
+.zdos-workspace:has(.zdos-sbc-home) .zdos-wcc-subtitle {
+  color: var(--g02-muted) !important;
+  font-weight: 500;
+}
+
+.zdos-sbc-home.zcx-page,
+.zdos-sbc-home.zdos-hr-home {
+  /* EMERGENCY-G02-CENTER-RESTORE｜與頁殼同色，禁止透出淺色父層 */
+  background: var(--g02-bg-deep, #020b1c) !important;
+  background-image: none !important;
+  color: var(--g02-text);
+}
+
+/* —— Glass cards —— */
+.zdos-sbc-home .zdos-sbc-card,
+.zdos-sbc-home .zdos-wcc-anomaly-card,
+.zdos-sbc-home .zdos-wcc-quick,
+.zdos-sbc-home .zdos-hr-month-section,
+.zdos-sbc-home .zdos-wcc-app-section,
+.zdos-sbc-home .zdos-workspace-card {
+  background: var(--g02-glass-bg) !important;
+  border: 1px solid var(--g02-glass-border) !important;
+  border-radius: var(--g02-radius) !important;
+  box-shadow: var(--g02-glass-shadow) !important;
+  color: var(--g02-text);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.zdos-sbc-home .zdos-wcc-page-title,
+.zdos-sbc-home .zdos-wcc-section-head h3,
+.zdos-sbc-home .zdos-sbc-section-title {
+  font-family: var(--sbc-display);
+  color: var(--g02-text) !important;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.zdos-sbc-home .zdos-hr-section-desc,
+.zdos-sbc-home .zdos-wcc-duty-empty,
+.zdos-sbc-home .zdos-sbc-muted {
+  color: var(--g02-muted) !important;
+}
+
+/* —— Status tones —— */
+.zdos-sbc-tone {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.zdos-sbc-tone::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+.zdos-sbc-tone--ok { color: var(--g02-ok); }
+.zdos-sbc-tone--watch { color: var(--g02-warn); }
+.zdos-sbc-tone--risk { color: var(--g02-danger); }
+
+/* —— Overview metrics —— */
+.zdos-sbc-health {
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.75rem;
+}
+.zdos-sbc-health-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.zdos-sbc-health-score {
+  font-family: var(--sbc-display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--g02-cyan);
+}
+.zdos-sbc-health-score span {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--g02-muted);
+}
+.zdos-sbc-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+.zdos-sbc-metric {
+  padding: 0.55rem 0.65rem;
+  border-radius: var(--g02-radius-sm);
+  border: 1px solid var(--g02-border-soft);
+  background: rgba(4, 24, 48, 0.35);
+}
+.zdos-sbc-metric b {
+  display: block;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--g02-text);
+}
+.zdos-sbc-metric span {
+  font-size: 0.6875rem;
+  color: var(--g02-muted);
+}
+
+/* —— Alert / pending rows —— */
+.zdos-sbc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.zdos-sbc-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.7rem 0.8rem;
+  border-radius: var(--g02-radius-sm);
+  border: 1px solid var(--g02-border-soft);
+  background: rgba(4, 24, 48, 0.32);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease;
+}
+.zdos-sbc-row:hover,
+.zdos-sbc-row:focus-visible {
+  border-color: var(--g02-cyan);
+  background: rgba(0, 200, 255, 0.1);
+  outline: none;
+}
+.zdos-sbc-row-title {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--g02-text);
+}
+.zdos-sbc-row-meta {
+  margin: 0.2rem 0 0;
+  font-size: 0.6875rem;
+  color: var(--g02-muted);
+  line-height: 1.35;
+}
+.zdos-sbc-row-action {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: var(--g02-btn-text);
+  background: var(--g02-btn);
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  white-space: nowrap;
+}
+
+/* —— Ops buttons —— */
+.zdos-sbc-home .zdos-wcc-ops-btn {
+  min-height: 48px;
+  border: 1px solid var(--g02-glass-border) !important;
+  background: var(--g02-glass-bg-strong) !important;
+  color: var(--g02-text) !important;
+  border-radius: var(--g02-radius-sm) !important;
+  box-shadow: var(--g02-glass-shadow) !important;
+}
+.zdos-sbc-home .zdos-wcc-ops-btn span {
+  color: var(--g02-muted) !important;
+}
+.zdos-sbc-home .zdos-wcc-ops-btn:active {
+  background: rgba(0, 200, 255, 0.22) !important;
+}
+
+.zdos-sbc-cta,
+.zdos-sbc-home .zdos-wcc-link-btn,
+.zdos-sbc-home .zdos-wcc-cal-today-btn,
+.zdos-sbc-home .zdos-wcc-app-link {
+  min-height: 40px;
+  border: none !important;
+  border-radius: 999px !important;
+  background: var(--g02-btn) !important;
+  color: var(--g02-btn-text) !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 16px rgba(0, 200, 255, 0.28) !important;
+}
+
+.zdos-sbc-home .zdos-hr-cal-btn,
+.zdos-sbc-home .zdos-nav-btn.zdos-hr-cal-btn {
+  border: 1px solid var(--g02-border-soft) !important;
+  background: rgba(4, 24, 48, 0.35) !important;
+  color: var(--g02-muted) !important;
+}
+.zdos-sbc-home .zdos-hr-cal-btn.is-active {
+  background: rgba(0, 200, 255, 0.18) !important;
+  border-color: var(--g02-cyan) !important;
+  color: var(--g02-text) !important;
+}
+
+/* —— Calendar demoted surface —— */
+.zdos-sbc-home .zdos-hr-day,
+.zdos-sbc-home .zdos-wcc-month {
+  color: var(--g02-text);
+}
+.zdos-sbc-home .zdos-hr-day {
+  border-color: var(--g02-border-soft) !important;
+  background: rgba(4, 24, 48, 0.28) !important;
+}
+.zdos-sbc-home .zdos-hr-day--today {
+  border-color: var(--g02-cyan) !important;
+  box-shadow: 0 0 0 1px rgba(0, 200, 255, 0.35);
+}
+
+/* —— Event log —— */
+.zdos-sbc-event {
+  padding: 0.75rem 0.85rem;
+  border-radius: var(--g02-radius-sm);
+  border: 1px solid var(--g02-border-soft);
+  background: rgba(4, 24, 48, 0.32);
+  margin-bottom: 0.5rem;
+}
+.zdos-sbc-event-grid {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 0.2rem 0.5rem;
+  font-size: 0.6875rem;
+  color: var(--g02-muted);
+}
+.zdos-sbc-event-grid b {
+  color: var(--g02-cyan-soft);
+  font-weight: 700;
+}
+.zdos-sbc-event-grid span {
+  color: var(--g02-text);
+  word-break: break-word;
+}
+
+/* —— Pager chrome —— */
+.zdos-sbc-home .zdos-wcc-pager-chrome {
+  background: rgba(8, 28, 56, 0.92) !important;
+  border-top: 1px solid var(--g02-border-soft) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.zdos-sbc-home .zdos-wcc-pager-btn {
+  border: 1px solid var(--g02-border-soft) !important;
+  background: var(--g02-glass-bg) !important;
+  color: var(--g02-cyan-soft) !important;
+}
+.zdos-sbc-home .zdos-wcc-pager-dot {
+  background: rgba(140, 220, 255, 0.28) !important;
+}
+.zdos-sbc-home .zdos-wcc-pager-dot.is-active {
+  background: var(--g02-cyan) !important;
+  box-shadow: 0 0 10px rgba(0, 200, 255, 0.55);
+}
+.zdos-sbc-home .zdos-wcc-pager-count {
+  color: var(--g02-muted) !important;
+}
+
+.zdos-sbc-home .zdos-wcc-app-item {
+  border: 1px solid var(--g02-border-soft) !important;
+  background: rgba(4, 24, 48, 0.32) !important;
+  color: var(--g02-text) !important;
+}
+.zdos-sbc-home .zdos-wcc-app-item p {
+  color: var(--g02-muted) !important;
+}
+.zdos-sbc-home .zdos-wcc-app-item b {
+  color: var(--g02-text) !important;
+}
+
+.zdos-sbc-section {
+  margin-bottom: 0.85rem;
+}
+.zdos-sbc-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.zdos-sbc-section-head h3 {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+  .zdos-sbc-metrics {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .zdos-sbc-desktop-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* EMERGENCY-G02-CENTER-RESTORE｜班表班務月曆禁純白底 */
+.zdos-sbc-home .zdos-hr-calendar-card,
+.zdos-sbc-home .zdos-hr-month-section,
+.zdos-sbc-home .zdos-workspace-card {
+  background: var(--g02-glass-bg) !important;
+  background-image: none !important;
+  border-color: var(--g02-glass-border) !important;
+  color: var(--g02-text) !important;
+  box-shadow: var(--g02-glass-shadow) !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.zdos-sbc-home .zdos-scheduling-weekday {
+  background: rgba(8, 28, 56, 0.88) !important;
+  color: var(--g02-muted) !important;
+}
+
+.zdos-sbc-home .zdos-hr-day {
+  background: rgba(4, 20, 45, 0.55) !important;
+  border-color: rgba(86, 189, 248, 0.22) !important;
+  color: var(--g02-text) !important;
+}
+
+.zdos-sbc-home .zdos-hr-day-num,
+.zdos-sbc-home .zdos-hr-day-names {
+  color: var(--g02-text) !important;
+}
+
+/* ============================================================
+ * FIX-ALL-MOBILE-LAYOUT-RESTORE｜班表班務中心手機比例
+ * ============================================================ */
+@media (max-width: 767px) {
+  .zdos-workspace:has(.zdos-sbc-home),
+  .zdos-sbc-home {
+    width: 100%;
+    max-width: 430px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+
+  .zdos-sbc-home .zdos-workspace-card,
+  .zdos-sbc-home .zdos-sbc-card,
+  .zdos-sbc-home .zdos-wcc-anomaly-card,
+  .zdos-sbc-home .zdos-wcc-quick,
+  .zdos-sbc-home .zdos-hr-month-section,
+  .zdos-sbc-home .zdos-hr-calendar-card,
+  .zdos-sbc-home .zdos-wcc-month {
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .zdos-sbc-home .zdos-hr-calendar-grid {
+    grid-auto-rows: auto !important;
+    height: auto !important;
+  }
+
+  .zdos-sbc-home .zdos-hr-day {
+    min-height: 3.6rem !important;
+    height: auto !important;
+  }
+}
+
+/* ============================================================
+ * SCHEDULE-CENTER-UX-RESTRUCTURE-001／002｜手機營運中心 IA
+ * 002｜第一層高頻入口（我的班表／本店休假／店務行事曆）
+ * SCHEDULE-CENTER-UI-POLISH-002｜Tab／戰情卡／月曆／兩欄快捷
+ * ============================================================ */
+.zdos-sbc-home .zdos-sbc-primary-wrap {
+  margin-bottom: 10px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.zdos-sbc-home .zdos-sbc-primary-entries {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.zdos-sbc-home .zdos-sbc-primary-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  min-height: 58px;
+  padding: 0.45rem 0.3rem;
+  border-radius: 14px;
+  border: 1px solid var(--g02-glass-border, rgba(140, 220, 255, 0.42));
+  background: rgba(8, 32, 64, 0.72);
+  box-shadow: var(--g02-glass-shadow, 0 0 18px rgba(0, 170, 255, 0.14));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+/* FIX-007｜移除入口數字 Badge */
+.zdos-sbc-home .zdos-sbc-primary-num {
+  display: none !important;
+}
+
+.zdos-sbc-home .zdos-sbc-primary-label {
+  font-size: 0.74rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  white-space: normal;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  max-width: 100%;
+  color: inherit;
+}
+
+.zdos-sbc-home .zdos-sbc-primary-entry.is-active,
+.zdos-sbc-home .zdos-sbc-primary-entry:active {
+  color: var(--g02-text, #fff);
+  border-color: rgba(140, 230, 255, 0.75);
+  background: linear-gradient(180deg, rgba(0, 200, 255, 0.28), rgba(0, 140, 220, 0.16));
+  box-shadow:
+    inset 0 0 0 1px rgba(26, 208, 255, 0.45),
+    0 0 14px rgba(0, 180, 255, 0.18);
+}
+
+.zdos-sbc-home .zdos-sbc-primary-entry--calendar {
+  color: var(--g02-cyan-soft, #8ae4ff);
+}
+
+.zdos-sbc-home .zdos-sbc-leave-all-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 6px;
+  min-height: 32px;
+  padding: 0 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(110, 200, 255, 0.28);
+  background: transparent;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.zdos-sbc-home .zdos-sbc-leave-all-link.is-active {
+  color: var(--g02-cyan-soft, #8ae4ff);
+  border-color: rgba(140, 230, 255, 0.55);
+  background: rgba(0, 200, 255, 0.1);
+}
+
+.zdos-sbc-home .zdos-sbc-page-title--compact {
+  margin-bottom: 0.35rem !important;
+}
+
+/* 舊 tab 樣式保留（相容） */
+.zdos-sbc-home .zdos-sbc-mode-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--g02-border-soft, rgba(110, 200, 255, 0.34));
+  background: rgba(4, 20, 45, 0.62);
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.zdos-sbc-home .zdos-sbc-mode-tab {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 42px;
+  padding: 0.45rem 0.3rem;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zdos-sbc-home .zdos-sbc-mode-tab.is-active {
+  background: linear-gradient(180deg, rgba(0, 200, 255, 0.28), rgba(0, 140, 220, 0.16));
+  color: var(--g02-text, #fff);
+  box-shadow:
+    inset 0 0 0 1px rgba(26, 208, 255, 0.55),
+    0 0 14px rgba(0, 180, 255, 0.18);
+}
+
+.zdos-sbc-home .zdos-sbc-mode-panel {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  touch-action: pan-y pinch-zoom;
+}
+
+.zdos-sbc-home .zdos-sbc-mode-panel.is-enter {
+  animation: zdos-sbc-mode-enter 220ms ease;
+}
+
+@keyframes zdos-sbc-mode-enter {
+  from { opacity: 0.35; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zdos-sbc-home .zdos-sbc-mode-panel.is-enter { animation: none; }
+  .zdos-sbc-home .zdos-sbc-mode-tab { transition: none; }
+}
+
+.zdos-sbc-home .zdos-sbc-card,
+.zdos-sbc-home .zdos-sbc-my-card,
+.zdos-sbc-home .zdos-sbc-leave-store {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--g02-glass-border, rgba(140, 220, 255, 0.42));
+  background: rgba(8, 32, 64, 0.72);
+  box-shadow: var(--g02-glass-shadow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--g02-text, #fff);
+}
+
+/* FIX-004｜我的班表：日期＋個人月曆（無今日班別卡／無額外提示增高） */
+.zdos-sbc-home .zdos-sbc-my-card {
+  position: relative;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(8, 32, 64, 0.72);
+  box-shadow: var(--g02-glass-shadow);
+  overflow: hidden;
+}
+
+.zdos-sbc-home .zdos-sbc-my-card::before {
+  display: none;
+}
+
+.zdos-sbc-home .zdos-sbc-my-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  min-width: 0;
+}
+
+/* G2/G3 Hotfix｜移除首頁裝飾年月日後，僅保留「今天」定位鈕 */
+.zdos-sbc-home .zdos-sbc-my-head--actions {
+  justify-content: flex-end;
+  margin-bottom: 6px;
+}
+
+.zdos-sbc-home .zdos-sbc-my-date {
+  display: none !important;
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  color: var(--g02-text, #fff);
+  min-width: 0;
+}
+
+/* 已移除的今日班別／舊格線：保險隱藏 */
+.zdos-sbc-home .zdos-sbc-my-shift-row,
+.zdos-sbc-home .zdos-sbc-my-grid,
+.zdos-sbc-home .zdos-sbc-my-cell,
+.zdos-sbc-home .zdos-sbc-kicker,
+.zdos-sbc-home .zdos-sbc-mine-month-head,
+.zdos-sbc-home .zdos-sbc-mine-month-title {
+  display: none !important;
+}
+
+.zdos-sbc-home .zdos-sbc-entry-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.55rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid var(--g02-border-soft, rgba(110, 200, 255, 0.34));
+  background: rgba(0, 200, 255, 0.12);
+  color: var(--g02-cyan-soft, #8ae4ff);
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.zdos-sbc-home .zdos-sbc-entry-btn--block {
+  width: 100%;
+}
+
+.zdos-sbc-home .zdos-sbc-entry-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* FIX-004｜個人班表恢復本店月曆規格（不壓縮欄位／不加額外 padding） */
+.zdos-sbc-home .zdos-sbc-mine-month {
+  margin: 0;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.zdos-sbc-home .zdos-sbc-mine-month .zdos-wcc-cal-toolbar {
+  margin-bottom: 0.45rem;
+}
+
+.zdos-sbc-home .zdos-sbc-mine-month .zdos-hr-calendar-card {
+  margin: 0;
+  /* 與本店班表同一套 .zdos-sbc-home .zdos-hr-* 規則，不另壓尺寸 */
+}
+
+.zdos-sbc-home .zdos-sbc-mine-month .zdos-sched-info-btn,
+.zdos-sbc-home .zdos-sbc-my-card .zdos-sched-info-btn,
+.zdos-sbc-home .zdos-sbc-store-leave-panel .zdos-sched-info-btn {
+  display: none !important;
+}
+
+/* SCHEDULE-CENTER-FIX-005／006｜本店休假檢視：格內姓名、無「休」chip */
+.zdos-sbc-home .zdos-sbc-store-leave-panel .zdos-hr-shift,
+.zdos-sbc-home .zdos-sbc-store-leave-panel .zdos-hr-day-names,
+.zdos-sbc-home .zdos-sbc-store-leave-panel .zdos-hr-leave,
+.zdos-sbc-home .zdos-sbc-store-leave-mark {
+  display: none !important;
+}
+
+/* FIX-009｜休假檢視：主標＋右側門市；店長可切換 */
+.zdos-sbc-home .zdos-sbc-store-leave-head {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.25rem;
+  margin-bottom: 0.65rem;
+  min-width: 0;
+}
+
+.zdos-sbc-home .zdos-sbc-store-leave-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem 0.75rem;
+  min-width: 0;
+}
+
+.zdos-sbc-home .zdos-sbc-store-leave-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--g02-text, #fff);
+}
+
+.zdos-sbc-home .zdos-sbc-leave-store-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--g02-cyan-soft, #8ae4ff);
+  white-space: nowrap;
+}
+
+.zdos-sbc-home .zdos-sbc-leave-store-switch {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.zdos-sbc-home .zdos-sbc-leave-store-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0.28rem 0.55rem;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(26, 208, 255, 0.35);
+  background: rgba(26, 208, 255, 0.08);
+  color: var(--g02-cyan-soft, #8ae4ff);
+  font-size: 0.84rem;
+  font-weight: 750;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.zdos-sbc-home .zdos-sbc-leave-store-btn:hover,
+.zdos-sbc-home .zdos-sbc-leave-store-switch.is-open .zdos-sbc-leave-store-btn {
+  border-color: rgba(26, 208, 255, 0.55);
+  background: rgba(26, 208, 255, 0.14);
+}
+
+.zdos-sbc-home .zdos-sbc-leave-store-caret {
+  font-size: 0.7rem;
+  opacity: 0.85;
+}
+
+.zdos-sbc-home .zdos-sbc-leave-store-menu {
+  position: absolute;
+  top: calc(100% + 0.28rem);
+  right: 0;
+  z-index: 40;
+  min-width: 8.5rem;
+  padding: 0.28rem;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(10, 22, 36, 0.96);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.zdos-sbc-home .zdos-sbc-leave-store-option {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0.45rem 0.6rem;
+  border: 0;
+  border-radius: 0.45rem;
+  background: transparent;
+  color: var(--g02-text, #fff);
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+}
+
+.zdos-sbc-home .zdos-sbc-leave-store-option:hover {
+  background: rgba(26, 208, 255, 0.12);
+}
+
+.zdos-sbc-home .zdos-sbc-leave-store-option.is-active {
+  color: var(--g02-cyan, #1ad0ff);
+  background: rgba(26, 208, 255, 0.1);
+}
+
+.zdos-sbc-home .zdos-sbc-leave-store-option.is-disabled {
+  color: rgba(186, 220, 245, 0.45);
+  font-weight: 600;
+}
+
+.zdos-sbc-home .zdos-sbc-store-leave-sub {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+}
+
+@media (max-width: 767px) {
+  .zdos-sbc-home .zdos-sbc-store-leave-title-row {
+    align-items: center;
+  }
+}
+
+.zdos-sbc-home .zdos-sbc-store-leave-day {
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0.15rem;
+  min-height: 3.6rem !important;
+  padding: 0.22rem 0.14rem !important;
+}
+
+.zdos-sbc-home .zdos-sbc-store-leave-day.has-leave {
+  border-color: rgba(255, 176, 32, 0.4) !important;
+  background: rgba(255, 176, 32, 0.07) !important;
+}
+
+.zdos-sbc-home .zdos-sbc-store-leave-day.is-selected {
+  border-color: var(--g02-cyan, #1ad0ff) !important;
+  box-shadow: inset 0 0 0 1px rgba(26, 208, 255, 0.45);
+}
+
+.zdos-sbc-home .zdos-sbc-store-leave-names {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1px;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.zdos-sbc-home .zdos-sbc-store-leave-name {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  font-size: 0.52rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--g02-warn, #ffb020);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zdos-sbc-home .zdos-sbc-store-leave-more {
+  display: block;
+  width: 100%;
+  font-size: 0.48rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--g02-cyan-soft, #8ae4ff);
+  text-align: center;
+}
+
+/* FIX-007｜取消下方長列表詳情（改浮層） */
+.zdos-sbc-home .zdos-sbc-store-leave-detail {
+  display: none !important;
+}
+
+.zdos-sbc-home .zdos-sbc-my-today {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 10px;
+  padding: 0.55rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(96, 180, 255, 0.22);
+  background: rgba(4, 20, 45, 0.45);
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.zdos-sbc-home .zdos-sbc-my-today-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.zdos-sbc-home .zdos-sbc-my-today-k {
+  flex: 0 0 auto;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+}
+
+.zdos-sbc-home .zdos-sbc-my-today-v {
+  flex: 1 1 auto;
+  margin: 0;
+  text-align: right;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--g02-text, #fff);
+  word-break: break-word;
+}
+
+/* FIX-007｜本店休假日期詳情浮層 */
+html.zdos-sbc-leave-sheet-open,
+body.zdos-sbc-leave-sheet-open {
+  overflow: hidden !important;
+}
+
+.zdos-sbc-leave-sheet-shell {
+  position: fixed;
+  inset: 0;
+  z-index: 9100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0.75rem 0.75rem max(0.75rem, env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+  background: rgba(1, 8, 22, 0.62);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.zdos-sbc-leave-sheet-panel {
+  width: min(100%, 430px);
+  max-height: min(52vh, 360px);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: 18px 18px 14px 14px;
+  border: 1px solid var(--g02-glass-border, rgba(140, 220, 255, 0.42));
+  background: rgba(8, 32, 64, 0.96);
+  box-shadow: var(--g02-glass-shadow, 0 0 28px rgba(0, 170, 255, 0.2));
+  color: var(--g02-text, #fff);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.zdos-sbc-leave-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(110, 200, 255, 0.18);
+}
+
+.zdos-sbc-leave-sheet-header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.zdos-sbc-leave-sheet-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(110, 200, 255, 0.28);
+  background: rgba(0, 200, 255, 0.08);
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+  cursor: pointer;
+}
+
+.zdos-sbc-leave-sheet-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.85rem 1rem 1rem;
+}
+
+.zdos-sbc-leave-sheet-count {
+  margin: 0 0 0.55rem;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: var(--g02-cyan-soft, #8ae4ff);
+}
+
+.zdos-sbc-leave-sheet-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.zdos-sbc-leave-sheet-list li {
+  padding: 0.45rem 0.6rem;
+  border-radius: 10px;
+  border: 1px solid rgba(96, 180, 255, 0.18);
+  background: rgba(4, 20, 45, 0.5);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.zdos-sbc-leave-sheet-empty {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .zdos-sbc-leave-sheet-shell {
+    align-items: center;
+  }
+
+  .zdos-sbc-leave-sheet-panel {
+    border-radius: 18px;
+    max-height: min(60vh, 420px);
+  }
+}
+
+@media (max-width: 390px) {
+  .zdos-sbc-leave-sheet-panel {
+    max-height: min(48vh, 320px);
+  }
+
+  .zdos-sbc-home .zdos-sbc-primary-label {
+    font-size: 0.66rem;
+  }
+}
+
+.zdos-sbc-home .zdos-sbc-section-desc {
+  margin: 0 0 0.65rem;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+}
+
+.zdos-sbc-home .zdos-sbc-leave-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.zdos-sbc-home .zdos-sbc-leave-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--g02-muted);
+}
+
+.zdos-sbc-home .zdos-sbc-leave-date input[type="date"] {
+  min-height: 36px;
+  padding: 0.3rem 0.5rem;
+  border-radius: 10px;
+  border: 1px solid var(--g02-border-soft);
+  background: rgba(4, 20, 45, 0.7);
+  color: var(--g02-text);
+}
+
+.zdos-sbc-home .zdos-sbc-leave-store {
+  margin-bottom: 10px;
+}
+
+.zdos-sbc-home .zdos-sbc-leave-store-name {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.zdos-sbc-home .zdos-sbc-leave-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--g02-cyan-soft, #8ae4ff);
+}
+
+.zdos-sbc-home .zdos-sbc-leave-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.zdos-sbc-home .zdos-sbc-leave-name {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0.4rem 0.55rem;
+  border-radius: 10px;
+  border: 1px solid rgba(96, 180, 255, 0.18);
+  background: rgba(4, 20, 45, 0.5);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.zdos-sbc-home .zdos-sbc-leave-name em {
+  font-style: normal;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--g02-muted);
+}
+
+.zdos-sbc-home .zdos-sbc-empty {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--g02-muted);
+}
+
+/* 快捷操作｜手機固定兩欄 */
+.zdos-sbc-home .zdos-sbc-ops-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  margin-bottom: 4px;
+  max-width: 100%;
+}
+
+.zdos-sbc-home .zdos-sbc-ops-grid .zdos-wcc-ops-btn,
+.zdos-sbc-home .zdos-sbc-ops-grid .zdos-wcc-ops-btn--wide {
+  grid-column: auto !important;
+  width: 100%;
+  min-width: 0;
+  min-height: 84px;
+  height: auto;
+  padding: 0.8rem 0.55rem;
+  box-sizing: border-box;
+}
+
+.zdos-sbc-home .zdos-sbc-ops-grid .zdos-wcc-ops-btn span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 本店班表｜手機月曆防爆版 */
+.zdos-sbc-home .zdos-sbc-store-panel,
+.zdos-sbc-home .zdos-hr-calendar-card,
+.zdos-sbc-home .zdos-wcc-cal-toolbar,
+.zdos-sbc-home .zdos-hr-section-head {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.zdos-sbc-home .zdos-hr-calendar-card {
+  padding: 0.55rem !important;
+  overflow-x: hidden;
+}
+
+.zdos-sbc-home .zdos-scheduling-calendar-head,
+.zdos-sbc-home .zdos-hr-calendar-grid {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 4px !important;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.zdos-sbc-home .zdos-scheduling-weekday {
+  min-width: 0;
+  font-size: 0.62rem !important;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.zdos-sbc-home .zdos-hr-day {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100%;
+  min-height: 3.55rem !important;
+  height: auto !important;
+  padding: 0.22rem 0.14rem !important;
+  gap: 0.12rem !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.zdos-sbc-home .zdos-hr-day-num {
+  font-size: 0.62rem !important;
+  line-height: 1.1;
+}
+
+.zdos-sbc-home .zdos-hr-shift,
+.zdos-sbc-home .zdos-hr-leave {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: 1.15rem;
+  line-height: 1.15rem;
+  padding: 0 0.15rem !important;
+  font-size: 0.52rem !important;
+  font-weight: 800;
+  border-radius: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.zdos-sbc-home .zdos-hr-day-names {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  font-size: 0.48rem !important;
+  line-height: 1.15;
+  max-height: 1.3em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.zdos-sbc-home .zdos-hr-day-more {
+  font-size: 0.48rem;
+}
+
+@media (max-width: 767px) {
+  .zdos-workspace:has(.zdos-sbc-home),
+  .zdos-sbc-home,
+  .zdos-sbc-home .zdos-wcc-page,
+  .zdos-sbc-home .zdos-wcc-page-body,
+  .zdos-sbc-home .zdos-sbc-mode-panel,
+  .zdos-sbc-home .zdos-sbc-store-panel {
+    overflow-x: hidden !important;
+    max-width: 100%;
+  }
+
+  .zdos-workspace:has(.zdos-sbc-home) .zdos-workspace-body {
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  .zdos-sbc-home .zdos-wcc-page-body {
+    gap: 12px;
+  }
+
+  .zdos-sbc-home .zdos-sbc-primary-entries {
+    gap: 5px;
+  }
+
+  .zdos-sbc-home .zdos-sbc-primary-entry {
+    min-height: 54px;
+    padding: 0.4rem 0.2rem;
+  }
+
+  .zdos-sbc-home .zdos-sbc-primary-label {
+    font-size: 0.68rem;
+  }
+}
+
+/* iPhone 390 */
+@media (min-width: 390px) and (max-width: 429px) {
+  .zdos-sbc-home .zdos-sbc-my-date { font-size: 1.1rem; }
+  .zdos-sbc-home .zdos-sbc-mode-tab { font-size: 0.8rem; }
+  .zdos-sbc-home .zdos-sbc-primary-label { font-size: 0.7rem; }
+  .zdos-sbc-home .zdos-sbc-primary-entry { min-height: 56px; }
+  .zdos-sbc-home .zdos-hr-day { min-height: 3.7rem !important; }
+  .zdos-sbc-home .zdos-hr-shift,
+  .zdos-sbc-home .zdos-hr-leave { font-size: 0.55rem !important; }
+}
+
+/* iPhone 430 */
+@media (min-width: 430px) and (max-width: 767px) {
+  .zdos-sbc-home .zdos-sbc-my-date { font-size: 1.15rem; }
+  .zdos-sbc-home .zdos-sbc-mode-tab { font-size: 0.84rem; min-height: 44px; }
+  .zdos-sbc-home .zdos-sbc-primary-label { font-size: 0.74rem; }
+  .zdos-sbc-home .zdos-sbc-primary-entry { min-height: 58px; }
+  .zdos-sbc-home .zdos-hr-day { min-height: 3.9rem !important; padding: 0.28rem 0.18rem !important; }
+  .zdos-sbc-home .zdos-hr-shift,
+  .zdos-sbc-home .zdos-hr-leave { font-size: 0.58rem !important; min-height: 1.25rem; line-height: 1.25rem; }
+  .zdos-sbc-home .zdos-sbc-ops-grid .zdos-wcc-ops-btn { min-height: 90px; }
+}
+
+@media (max-width: 767px) {
+  .zdos-sbc-home .zdos-wcc-page[data-wcc-page="0"] .zdos-wcc-page-body {
+    overflow-x: hidden !important;
+  }
+}
+
+/* ============================================================
+ * STORE-CALENDAR-001B-2｜店務行事曆月曆檢視（≠ 班表；scoped）
+ * ============================================================ */
+.zdos-workspace:has(.zdos-store-cal),
+.zdos-store-cal-workspace {
+  background-color: var(--g02-bg-deep, #020b1c) !important;
+  color: var(--g02-text, #fff);
+}
+
+.zdos-store-cal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+}
+
+.zdos-store-cal-card {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--g02-glass-border, rgba(140, 220, 255, 0.42));
+  background: rgba(8, 32, 64, 0.72);
+  box-shadow: var(--g02-glass-shadow, 0 0 24px rgba(0, 170, 255, 0.18));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--g02-text, #fff);
+  overflow-x: hidden;
+}
+
+.zdos-store-cal-store-name {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--g02-text, #fff);
+}
+
+.zdos-store-cal-meta-row,
+.zdos-store-cal-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.zdos-store-cal-meta-row {
+  margin-bottom: 8px;
+  justify-content: flex-start;
+}
+
+.zdos-store-cal-store-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 40px;
+  padding: 0.4rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid var(--g02-border-soft, rgba(110, 200, 255, 0.34));
+  background: rgba(0, 200, 255, 0.1);
+  color: var(--g02-text, #fff);
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-store-cal-store-switch-caret {
+  font-size: 0.7rem;
+  color: var(--g02-cyan-soft, #8ae4ff);
+}
+
+.zdos-store-cal-month {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+}
+
+.zdos-store-cal-month--solo {
+  text-align: left;
+}
+
+.zdos-store-cal-section-head {
+  margin-bottom: 0.65rem;
+}
+
+.zdos-store-cal-section-head h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--g02-text, #fff);
+}
+
+.zdos-store-cal-date-chip {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--g02-cyan-soft, #8ae4ff);
+}
+
+.zdos-store-cal-empty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 1.5rem 0.85rem;
+  text-align: center;
+}
+
+.zdos-store-cal-empty-icon {
+  font-size: 1.75rem;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+.zdos-store-cal-empty {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--g02-text, #fff);
+}
+
+.zdos-store-cal-empty-sub {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+}
+
+.zdos-store-cal-month-entry {
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.zdos-store-cal-month-view-btn {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.55rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--g02-border-soft, rgba(110, 200, 255, 0.34));
+  background: rgba(0, 200, 255, 0.1);
+  color: var(--g02-cyan-soft, #8ae4ff);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.zdos-store-cal-month-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  margin-bottom: 10px;
+}
+
+.zdos-store-cal-month-label {
+  flex: 1 1 auto;
+  margin: 0;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--g02-text, #fff);
+  min-width: 0;
+}
+
+.zdos-store-cal-month-btn,
+.zdos-store-cal-today-btn {
+  flex: 0 0 auto;
+  border-radius: 10px;
+  border: 1px solid var(--g02-border-soft, rgba(110, 200, 255, 0.34));
+  background: rgba(0, 200, 255, 0.1);
+  color: var(--g02-cyan-soft, #8ae4ff);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.zdos-store-cal-month-btn {
+  width: 36px;
+  height: 36px;
+  font-size: 1.1rem;
+}
+
+.zdos-store-cal-today-btn {
+  min-height: 36px;
+  padding: 0 0.7rem;
+  font-size: 0.75rem;
+}
+
+.zdos-store-cal-weekdays,
+.zdos-store-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.zdos-store-cal-weekdays {
+  margin-bottom: 4px;
+}
+
+.zdos-store-cal-weekday {
+  min-width: 0;
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+}
+
+.zdos-store-cal-day {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+  min-width: 0;
+  width: 100%;
+  min-height: 52px;
+  padding: 4px 2px;
+  border-radius: 10px;
+  border: 1px solid rgba(96, 180, 255, 0.18);
+  background: rgba(4, 20, 45, 0.45);
+  color: var(--g02-text, #fff);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.zdos-store-cal-day--empty {
+  border-color: transparent;
+  background: transparent;
+  min-height: 52px;
+  pointer-events: none;
+}
+
+.zdos-store-cal-day.is-today {
+  border-color: rgba(110, 220, 255, 0.55);
+  box-shadow: 0 0 0 1px rgba(0, 200, 255, 0.2);
+}
+
+.zdos-store-cal-day.is-selected {
+  border-color: rgba(140, 230, 255, 0.85);
+  background: rgba(0, 160, 220, 0.22);
+}
+
+.zdos-store-cal-day.has-events {
+  background: rgba(0, 120, 180, 0.18);
+}
+
+.zdos-store-cal-day-num {
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.zdos-store-cal-day-hint {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 1px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--g02-cyan-soft, #8ae4ff);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.zdos-store-cal-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.zdos-store-cal-item {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.zdos-store-cal-item-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0.55rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(96, 180, 255, 0.2);
+  background: rgba(4, 20, 45, 0.5);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.zdos-store-cal-item-btn:active {
+  border-color: rgba(140, 230, 255, 0.55);
+  background: rgba(0, 140, 200, 0.22);
+}
+
+.zdos-store-cal-item-title {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--g02-text, #fff);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.zdos-store-cal-item-time {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+}
+
+@media (max-width: 767px) {
+  .zdos-workspace:has(.zdos-store-cal),
+  .zdos-store-cal {
+    width: 100%;
+    max-width: 430px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-x: hidden;
+  }
+
+  .zdos-store-cal-card {
+    padding: 12px;
+  }
+
+  .zdos-store-cal-day {
+    min-height: 48px;
+    padding: 3px 1px;
+  }
+
+  .zdos-store-cal-day-num {
+    font-size: 0.72rem;
+  }
+
+  .zdos-store-cal-day-hint {
+    font-size: 0.54rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .zdos-store-cal-day {
+    min-height: 46px;
+  }
+
+  .zdos-store-cal-day-hint {
+    font-size: 0.5rem;
+  }
+}
+
+/* ============================================================
+ * STORE-CALENDAR-001C-1/2｜事件 Modal／詳情／刪除確認
+ * ============================================================ */
+html.zdos-store-cal-modal-open,
+body.zdos-store-cal-modal-open {
+  overflow: hidden !important;
+}
+
+.zdos-store-cal-add-btn {
+  white-space: nowrap;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+}
+
+.zdos-store-cal-modal-shell {
+  position: fixed;
+  inset: 0;
+  z-index: 9200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: max(0.75rem, env(safe-area-inset-top, 0px)) 0.75rem max(0.75rem, env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+  background: rgba(1, 8, 22, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  overflow: hidden;
+}
+
+.zdos-store-cal-modal-panel {
+  width: min(100%, 430px);
+  max-width: 100%;
+  max-height: min(92vh, 720px);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: 18px 18px 14px 14px;
+  border: 1px solid var(--g02-glass-border, rgba(140, 220, 255, 0.42));
+  background: rgba(8, 32, 64, 0.94);
+  box-shadow: var(--g02-glass-shadow, 0 0 28px rgba(0, 170, 255, 0.22));
+  color: var(--g02-text, #fff);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.zdos-store-cal-modal-form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: inherit;
+}
+
+.zdos-store-cal-modal-header,
+.zdos-store-cal-modal-footer {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+}
+
+.zdos-store-cal-modal-header {
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(110, 200, 255, 0.18);
+}
+
+.zdos-store-cal-modal-heading {
+  min-width: 0;
+}
+
+.zdos-store-cal-modal-kicker {
+  margin: 0 0 0.15rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--g02-cyan-soft, #8ae4ff);
+}
+
+.zdos-store-cal-modal-heading h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--g02-text, #fff);
+}
+
+.zdos-store-cal-modal-store {
+  margin: 0.2rem 0 0;
+  font-size: 0.75rem;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+}
+
+.zdos-store-cal-modal-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(110, 200, 255, 0.28);
+  background: rgba(0, 200, 255, 0.08);
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+  cursor: pointer;
+}
+
+.zdos-store-cal-modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.85rem 1rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-store-cal-modal-error {
+  margin: 0;
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 120, 120, 0.45);
+  background: rgba(90, 20, 30, 0.45);
+  color: #ffd0d0;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.zdos-store-cal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.zdos-store-cal-field > span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+}
+
+.zdos-store-cal-field > span em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--g02-cyan-soft, #8ae4ff);
+  margin-left: 0.25rem;
+}
+
+.zdos-store-cal-field input,
+.zdos-store-cal-field select,
+.zdos-store-cal-field textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-height: 42px;
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(110, 200, 255, 0.28);
+  background: rgba(4, 20, 45, 0.72);
+  color: var(--g02-text, #fff);
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.zdos-store-cal-field textarea {
+  min-height: 84px;
+  resize: none;
+  line-height: 1.45;
+}
+
+.zdos-store-cal-field input:focus,
+.zdos-store-cal-field select:focus,
+.zdos-store-cal-field textarea:focus {
+  border-color: rgba(140, 230, 255, 0.7);
+  box-shadow: 0 0 0 1px rgba(0, 200, 255, 0.2);
+}
+
+.zdos-store-cal-modal-footer {
+  border-top: 1px solid rgba(110, 200, 255, 0.18);
+  padding-bottom: max(0.9rem, env(safe-area-inset-bottom, 0px));
+}
+
+.zdos-store-cal-modal-cancel,
+.zdos-store-cal-modal-submit,
+.zdos-store-cal-modal-danger {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 0.55rem;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.zdos-store-cal-modal-cancel {
+  border: 1px solid rgba(110, 200, 255, 0.24);
+  background: rgba(4, 20, 45, 0.55);
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+}
+
+.zdos-store-cal-modal-submit {
+  border: 1px solid rgba(110, 220, 255, 0.45);
+  background: rgba(0, 160, 220, 0.28);
+  color: var(--g02-cyan-soft, #8ae4ff);
+}
+
+.zdos-store-cal-modal-danger {
+  border: 1px solid rgba(255, 120, 140, 0.45);
+  background: rgba(120, 30, 45, 0.35);
+  color: #ffb8c4;
+}
+
+.zdos-store-cal-confirm-shell {
+  z-index: 9300;
+}
+
+.zdos-store-cal-confirm-panel {
+  max-height: none;
+}
+
+.zdos-store-cal-detail-panel {
+  max-height: min(88vh, 640px);
+}
+
+.zdos-store-cal-detail-body {
+  gap: 0.65rem;
+}
+
+.zdos-store-cal-detail-row,
+.zdos-store-cal-detail-note {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  padding: 0.55rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(96, 180, 255, 0.16);
+  background: rgba(4, 20, 45, 0.45);
+}
+
+.zdos-store-cal-detail-row span,
+.zdos-store-cal-detail-note span {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+}
+
+.zdos-store-cal-detail-row b,
+.zdos-store-cal-detail-note p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--g02-text, #fff);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.zdos-store-cal-detail-footer {
+  flex-wrap: wrap;
+}
+
+.zdos-store-cal-detail-footer.has-actions .zdos-store-cal-modal-cancel {
+  flex: 1 1 100%;
+  order: 3;
+}
+
+.zdos-store-cal-detail-footer.has-actions .zdos-store-cal-modal-danger,
+.zdos-store-cal-detail-footer.has-actions .zdos-store-cal-modal-submit {
+  flex: 1 1 calc(50% - 0.4rem);
+}
+
+@media (min-width: 768px) {
+  .zdos-store-cal-modal-shell {
+    align-items: center;
+  }
+
+  .zdos-store-cal-modal-panel {
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 430px) {
+  .zdos-store-cal-modal-shell {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .zdos-store-cal-modal-panel {
+    width: 100%;
+    max-height: min(90vh, 680px);
+  }
+}
+
+@media (max-width: 390px) {
+  .zdos-store-cal-add-btn {
+    font-size: 0.66rem !important;
+    padding-left: 0.45rem !important;
+    padding-right: 0.45rem !important;
+  }
+
+  .zdos-store-cal-modal-body {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+  }
+
+  .zdos-store-cal-modal-footer {
+    gap: 0.5rem;
+  }
+
+  .zdos-store-cal-modal-cancel,
+  .zdos-store-cal-modal-submit,
+  .zdos-store-cal-modal-danger {
+    font-size: 0.82rem;
+    padding: 0 0.4rem;
+  }
+
+  .zdos-store-cal-detail-footer.has-actions .zdos-store-cal-modal-danger,
+  .zdos-store-cal-detail-footer.has-actions .zdos-store-cal-modal-submit {
+    flex: 1 1 calc(50% - 0.3rem);
+  }
+}
+
+/* ============================================================
+ * G3 OFFICIAL LAYOUT V1｜班表班務首頁＝月曆班表極簡
+ * - 無今日班別／摘要
+ * - 390／430 首頁無 Scroll、無白邊
+ * ============================================================ */
+.zdos-sbc-home--g3,
+.zdos-sbc-home[data-g3="G3-SBC-OFFICIAL"] {
+  background: #020b1c !important;
+  color: var(--g02-text, #fff);
+}
+
+.zdos-sbc-home--g3 .zdos-sbc-my-today,
+.zdos-sbc-home--g3 .zdos-sbc-my-date,
+.zdos-sbc-home--g3 .zdos-sbc-my-head:not(.zdos-sbc-my-head--actions) {
+  display: none !important;
+}
+
+.zdos-sbc-home--g3 .zdos-sbc-primary-entries--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.zdos-sbc-home--g3 .zdos-sbc-primary-entries--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* SCHEDULE-UI-001｜含店務行事曆時四欄（我的／本店／全店／店務行事曆） */
+.zdos-sbc-home--g3 .zdos-sbc-primary-entries--4 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+@media (min-width: 390px) {
+  .zdos-sbc-home--g3 .zdos-sbc-primary-entries--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.zdos-sbc-home--g3 .zdos-sbc-primary-entry {
+  min-height: 44px;
+  padding: 0.4rem 0.35rem;
+}
+
+.zdos-sbc-home--g3 .zdos-sbc-leave-all-link {
+  display: none !important;
+}
+
+.zdos-sbc-home--g3 .zdos-sbc-cal-only {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
+  padding: 10px;
+  border-radius: 16px;
+  border: 1px solid var(--g02-glass-border, rgba(140, 220, 255, 0.42));
+  background: rgba(8, 32, 64, 0.72);
+  box-shadow: var(--g02-glass-shadow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.zdos-sbc-home--g3 .zdos-sbc-mine-month {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.zdos-sbc-home--g3 .zdos-sbc-mine-month .zdos-wcc-cal-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 0.4rem;
+  min-width: 0;
+}
+
+.zdos-sbc-home--g3 .zdos-sbc-mine-month .zdos-wcc-cal-toolbar > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.zdos-sbc-home--g3 .zdos-sbc-g3-home-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden !important;
+}
+
+.zdos-sbc-home--g3 .zdos-sbc-mode-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden !important;
+}
+
+.zdos-sbc-home--g3 .zdos-sbc-mode-panel > * {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.zdos-sbc-home--g3.zdos-sbc-home--pager .zdos-wcc-page[data-wcc-page="0"] .zdos-wcc-page-body {
+  overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 0.35rem;
+}
+
+.zdos-sbc-home--g3 .zdos-hr-calendar-grid {
+  flex: 1 1 auto;
+}
+
+.zdos-sbc-home--g3 .zdos-hr-calendar-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  background: transparent !important;
+}
+
+@media (max-width: 430px) {
+  .zdos-workspace:has(.zdos-sbc-home--g3),
+  .zdos-sbc-home--g3 {
+    background: #020b1c !important;
+  }
+
+  .zdos-sbc-home--g3.zdos-sbc-home--pager,
+  .zdos-sbc-home--g3.zdos-sbc-home--pager .zdos-wcc-pager,
+  .zdos-sbc-home--g3.zdos-sbc-home--pager .zdos-wcc-page[data-wcc-page="0"] {
+    overflow: hidden !important;
+  }
+
+  .zdos-sbc-home--g3 .zdos-sbc-primary-wrap {
+    margin-bottom: 6px;
+  }
+
+  .zdos-sbc-home--g3 .zdos-hr-day {
+    min-height: 2.85rem !important;
+  }
+
+  .zdos-sbc-home--g3 .zdos-hr-day-num {
+    font-size: 0.72rem !important;
+  }
+
+  .zdos-sbc-home--g3 .zdos-hr-shift {
+    font-size: 0.52rem !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .zdos-sbc-home--g3 .zdos-hr-day {
+    min-height: 2.55rem !important;
+  }
+
+  .zdos-sbc-home--g3 .zdos-sbc-primary-entry {
+    min-height: 40px;
+  }
+
+  .zdos-sbc-home--g3 .zdos-sbc-primary-label {
+    font-size: 0.78rem;
+  }
+}

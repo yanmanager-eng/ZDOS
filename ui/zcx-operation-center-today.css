@@ -1,0 +1,7466 @@
+/**
+ * OPERATION-CENTER-001～006｜總覽＋Queue＋Summary＋Timeline＋Insight
+ * Scoped to .zdos-op-center / .zdos-mgmt-center — 不改首頁。
+ */
+
+.zdos-mgmt-center,
+.zdos-op-center {
+  --opc-bg: #041428;
+  --opc-bg-deep: #020b1c;
+  --opc-cyan: #1ad0ff;
+  --opc-cyan-soft: #8ae4ff;
+  --opc-text: #ffffff;
+  --opc-muted: rgba(186, 220, 245, 0.86);
+  --opc-ok: #7dffb2;
+  --opc-warn: #fcd34d;
+  --opc-danger: #ff8a95;
+  --opc-radius: 18px;
+  --opc-font: "SF Pro Text", "Avenir Next", "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
+  color: var(--opc-text);
+  font-family: var(--opc-font);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 0 max(20px, env(safe-area-inset-bottom, 0px));
+}
+
+.zdos-mgmt-center__hero,
+.zdos-op-center__hero {
+  border-radius: var(--opc-radius);
+  border: 1px solid rgba(130, 215, 255, 0.28);
+  background:
+    linear-gradient(160deg, rgba(18, 74, 134, 0.4) 0%, rgba(4, 20, 40, 0.9) 55%, rgba(2, 11, 28, 0.96) 100%);
+  box-shadow: 0 0 24px rgba(0, 170, 255, 0.12), 0 10px 22px rgba(0, 20, 50, 0.22);
+  padding: 1rem 1.1rem 1.15rem;
+  margin-bottom: 0.9rem;
+}
+
+.zdos-mgmt-center__eyebrow,
+.zdos-op-center__eyebrow {
+  margin: 0 0 0.3rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(138, 228, 255, 0.85);
+}
+
+.zdos-mgmt-center__title,
+.zdos-op-center__title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.zdos-mgmt-center__sub,
+.zdos-op-center__sub {
+  margin: 0.35rem 0 0;
+  font-size: 0.74rem;
+  color: var(--opc-muted);
+  line-height: 1.45;
+}
+
+.zdos-mgmt-center__card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.3);
+  background: linear-gradient(180deg, rgba(18, 74, 134, 0.35) 0%, rgba(4, 20, 40, 0.85) 100%);
+  padding: 1rem 1.05rem;
+  cursor: pointer;
+  color: inherit;
+}
+
+.zdos-mgmt-center__card:hover {
+  border-color: rgba(26, 208, 255, 0.5);
+  background: linear-gradient(180deg, rgba(26, 100, 170, 0.45) 0%, rgba(6, 30, 55, 0.9) 100%);
+}
+
+.zdos-mgmt-center__card-kicker {
+  margin: 0 0 0.25rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--opc-cyan-soft);
+}
+
+.zdos-mgmt-center__card-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.zdos-mgmt-center__card-desc {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: var(--opc-muted);
+}
+
+.zdos-op-section {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.72);
+  padding: 0.9rem 1rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.zdos-op-section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.zdos-op-section__title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.zdos-op-section__meta {
+  margin: 0;
+  font-size: 0.66rem;
+  color: rgba(148, 180, 210, 0.8);
+}
+
+.zdos-op-store-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+}
+
+@media (max-width: 380px) {
+  .zdos-op-store-grid { grid-template-columns: 1fr; }
+}
+
+.zdos-op-store {
+  border-radius: 12px;
+  border: 1px solid rgba(130, 215, 255, 0.2);
+  background: rgba(2, 11, 28, 0.65);
+  padding: 0.65rem 0.7rem;
+}
+
+/* OPERATION-CENTER-001B｜可點擊門市卡 */
+button.zdos-op-store--link {
+  display: block;
+  width: 100%;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease;
+}
+
+button.zdos-op-store--link:hover {
+  border-color: rgba(26, 208, 255, 0.5);
+  background: rgba(8, 40, 70, 0.75);
+}
+
+button.zdos-op-store--link:active {
+  transform: scale(0.985);
+}
+
+.zdos-op-store__name {
+  margin: 0 0 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--opc-cyan-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+}
+
+.zdos-op-store__chev {
+  font-size: 1rem;
+  font-weight: 700;
+  opacity: 0.75;
+}
+
+.zdos-op-store__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem 0.45rem;
+}
+
+.zdos-op-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.zdos-op-stat span {
+  font-size: 0.62rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-stat b {
+  font-size: 0.95rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.zdos-op-stat--warn b { color: var(--opc-warn); }
+.zdos-op-stat--danger b { color: var(--opc-danger); }
+.zdos-op-stat--ok b { color: var(--opc-ok); }
+
+.zdos-op-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.zdos-op-list li {
+  padding: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.74rem;
+  color: rgba(220, 235, 250, 0.92);
+}
+
+.zdos-op-list li:first-child { border-top: 0; }
+
+.zdos-op-list__btn {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.zdos-op-list__btn:hover {
+  color: var(--opc-cyan-soft);
+}
+
+.zdos-op-list__meta {
+  flex-shrink: 0;
+  font-size: 0.66rem;
+  color: rgba(148, 180, 210, 0.8);
+}
+
+.zdos-op-section__cta {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.55rem;
+  min-height: 32px;
+  padding: 0.25rem 0.7rem;
+  border-radius: 9px;
+  border: 1px solid rgba(26, 208, 255, 0.35);
+  background: rgba(0, 200, 255, 0.1);
+  color: var(--opc-cyan-soft);
+  font-size: 0.7rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-section__cta:hover {
+  background: rgba(0, 200, 255, 0.18);
+}
+
+.zdos-op-empty {
+  margin: 0;
+  font-size: 0.74rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-status {
+  border-radius: 16px;
+  border: 1px solid rgba(125, 255, 178, 0.28);
+  background: rgba(6, 78, 59, 0.28);
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.zdos-op-status--alert {
+  border-color: rgba(252, 211, 77, 0.35);
+  background: rgba(120, 53, 15, 0.28);
+}
+
+.zdos-op-status__label {
+  margin: 0 0 0.25rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: rgba(186, 220, 245, 0.8);
+}
+
+.zdos-op-status__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.zdos-op-status__desc {
+  margin: 0.3rem 0 0;
+  font-size: 0.72rem;
+  color: var(--opc-muted);
+}
+
+.zdos-op-status--ok .zdos-op-status__title { color: var(--opc-ok); }
+.zdos-op-status--alert .zdos-op-status__title { color: var(--opc-warn); }
+
+.zdos-op-status__toggle {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.zdos-op-status__toggle-text { min-width: 0; flex: 1; }
+
+.zdos-op-status__caret {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: rgba(252, 211, 77, 0.9);
+  white-space: nowrap;
+}
+
+.zdos-op-status__sources {
+  list-style: none;
+  margin: 0.7rem 0 0;
+  padding: 0.55rem 0 0;
+  border-top: 1px solid rgba(252, 211, 77, 0.22);
+}
+
+.zdos-op-status__sources li { margin: 0; }
+
+.zdos-op-status__source-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.4rem 0;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 245, 220, 0.95);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.zdos-op-status__source-btn:hover {
+  color: #fff;
+}
+
+/* OPERATION-CENTER-002｜今日待辦 Action Queue */
+.zdos-op-queue {
+  border-radius: 16px;
+  border: 1px solid rgba(248, 113, 113, 0.32);
+  background: linear-gradient(160deg, rgba(127, 29, 29, 0.28) 0%, rgba(4, 20, 40, 0.88) 70%);
+  padding: 0.9rem 1rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.zdos-op-queue--clear {
+  border-color: rgba(125, 255, 178, 0.28);
+  background: linear-gradient(160deg, rgba(6, 78, 59, 0.28) 0%, rgba(4, 20, 40, 0.88) 70%);
+}
+
+.zdos-op-queue__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.zdos-op-queue__badge {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.zdos-op-queue__title {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 800;
+}
+
+.zdos-op-queue--clear .zdos-op-queue__title {
+  color: var(--opc-ok);
+}
+
+.zdos-op-queue:not(.zdos-op-queue--clear) .zdos-op-queue__title {
+  color: #fecaca;
+}
+
+.zdos-op-queue__sub {
+  margin: 0.2rem 0 0;
+  font-size: 0.68rem;
+  color: var(--opc-muted);
+}
+
+.zdos-op-queue__list {
+  list-style: none;
+  margin: 0.7rem 0 0;
+  padding: 0.55rem 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.zdos-op-queue__list li { margin: 0; }
+
+.zdos-op-queue__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.55rem 0.15rem;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: transparent;
+  color: rgba(255, 240, 240, 0.95);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.zdos-op-queue__list li:last-child .zdos-op-queue__item {
+  border-bottom: 0;
+}
+
+.zdos-op-queue__item:hover {
+  color: #fff;
+}
+
+.zdos-op-queue__item-label { min-width: 0; }
+
+.zdos-op-queue__item-count {
+  flex-shrink: 0;
+  min-width: 2.2rem;
+  padding: 0.12rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(252, 165, 165, 0.35);
+  background: rgba(127, 29, 29, 0.35);
+  color: #fecaca;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+/* OPERATION-CENTER-003｜今日營運摘要 */
+.zdos-op-summary {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.28);
+  background:
+    linear-gradient(165deg, rgba(18, 74, 134, 0.42) 0%, rgba(4, 20, 40, 0.92) 62%, rgba(2, 11, 28, 0.96) 100%);
+  padding: 0.95rem 1rem 1.05rem;
+  margin-bottom: 0.75rem;
+}
+
+.zdos-op-summary.is-ok {
+  border-color: rgba(125, 255, 178, 0.28);
+}
+
+.zdos-op-summary.is-alert {
+  border-color: rgba(252, 211, 77, 0.35);
+}
+
+.zdos-op-summary__eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(138, 228, 255, 0.85);
+}
+
+.zdos-op-summary__title {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 800;
+}
+
+.zdos-op-summary.is-ok .zdos-op-summary__title { color: var(--opc-ok); }
+.zdos-op-summary.is-alert .zdos-op-summary__title { color: var(--opc-warn); }
+
+.zdos-op-summary__desc {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: var(--opc-muted);
+}
+
+.zdos-op-summary__block {
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.zdos-op-summary__label {
+  margin: 0 0 0.4rem;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-summary__stores {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+}
+
+@media (max-width: 380px) {
+  .zdos-op-summary__stores { grid-template-columns: 1fr; }
+}
+
+.zdos-op-summary__store {
+  border-radius: 10px;
+  border: 1px solid rgba(130, 215, 255, 0.18);
+  background: rgba(2, 11, 28, 0.55);
+  padding: 0.5rem 0.55rem;
+}
+
+.zdos-op-summary__store-name {
+  margin: 0 0 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--opc-cyan-soft);
+}
+
+.zdos-op-summary__store-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.2rem 0.35rem;
+  font-size: 0.64rem;
+  color: rgba(186, 220, 245, 0.86);
+}
+
+.zdos-op-summary__store-stats b {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+
+.zdos-op-summary__store-stats .is-alert,
+.zdos-op-summary__store-stats .is-alert b {
+  color: var(--opc-danger);
+}
+
+.zdos-op-summary__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.zdos-op-summary__chips span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 26px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(2, 11, 28, 0.55);
+  font-size: 0.68rem;
+  color: rgba(186, 220, 245, 0.9);
+}
+
+.zdos-op-summary__chips b {
+  font-weight: 800;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.zdos-op-summary__line {
+  margin: 0;
+  font-size: 0.74rem;
+  color: rgba(220, 235, 250, 0.92);
+  line-height: 1.45;
+}
+
+.zdos-op-summary__block--status .zdos-op-summary__status-title {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.zdos-op-summary.is-ok .zdos-op-summary__status-title { color: var(--opc-ok); }
+.zdos-op-summary.is-alert .zdos-op-summary__status-title { color: var(--opc-warn); }
+
+/* OPERATION-CENTER-004｜今日營運時間軸 */
+.zdos-op-timeline {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.72);
+  padding: 0.9rem 1rem 1.05rem;
+  margin-bottom: 0.75rem;
+}
+
+.zdos-op-timeline__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+
+.zdos-op-timeline__title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.zdos-op-timeline__meta {
+  margin: 0;
+  font-size: 0.66rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-timeline__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-timeline__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.2rem 1fr;
+  gap: 0.55rem 0.7rem;
+  padding: 0 0 0.85rem 0.35rem;
+}
+
+.zdos-op-timeline__item:last-child { padding-bottom: 0; }
+
+.zdos-op-timeline__rail {
+  position: absolute;
+  left: calc(3.2rem + 0.2rem);
+  top: 0.55rem;
+  bottom: -0.15rem;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(26, 208, 255, 0.45), rgba(26, 208, 255, 0.08));
+}
+
+.zdos-op-timeline__item:last-child .zdos-op-timeline__rail { display: none; }
+
+.zdos-op-timeline__time {
+  position: relative;
+  z-index: 1;
+  font-size: 0.72rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--opc-cyan-soft);
+  padding-top: 0.1rem;
+}
+
+.zdos-op-timeline__time::before {
+  content: "";
+  position: absolute;
+  right: -0.95rem;
+  top: 0.35rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid rgba(26, 208, 255, 0.7);
+  background: #041428;
+  box-shadow: 0 0 0 3px rgba(4, 20, 40, 0.9);
+}
+
+.zdos-op-timeline__item--leave .zdos-op-timeline__time::before { border-color: rgba(252, 211, 77, 0.8); }
+.zdos-op-timeline__item--change .zdos-op-timeline__time::before { border-color: rgba(167, 139, 250, 0.85); }
+.zdos-op-timeline__item--ann .zdos-op-timeline__time::before { border-color: rgba(125, 255, 178, 0.8); }
+
+.zdos-op-timeline__body {
+  min-width: 0;
+  padding-top: 0.05rem;
+}
+
+.zdos-op-timeline__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.55rem;
+}
+
+.zdos-op-timeline__type {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: rgba(226, 246, 255, 0.95);
+}
+
+.zdos-op-timeline__store {
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-timeline__content {
+  margin: 0.2rem 0 0;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: rgba(220, 235, 250, 0.95);
+}
+
+.zdos-op-timeline__status {
+  margin: 0.2rem 0 0;
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+/* OPERATION-CENTER-006｜今日管理提醒 */
+.zdos-op-insight {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.24);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.zdos-op-insight--ok {
+  border-color: rgba(125, 255, 178, 0.28);
+  background: linear-gradient(165deg, rgba(6, 78, 59, 0.22) 0%, rgba(4, 20, 40, 0.88) 70%);
+}
+
+.zdos-op-insight--watch {
+  border-color: rgba(252, 211, 77, 0.35);
+  background: linear-gradient(165deg, rgba(120, 53, 15, 0.24) 0%, rgba(4, 20, 40, 0.88) 70%);
+}
+
+.zdos-op-insight--action {
+  border-color: rgba(248, 113, 113, 0.38);
+  background: linear-gradient(165deg, rgba(127, 29, 29, 0.26) 0%, rgba(4, 20, 40, 0.88) 70%);
+}
+
+.zdos-op-insight__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin-bottom: 0.65rem;
+}
+
+.zdos-op-insight__badge {
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.zdos-op-insight__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(138, 228, 255, 0.85);
+}
+
+.zdos-op-insight__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.zdos-op-insight--ok .zdos-op-insight__title { color: var(--opc-ok); }
+.zdos-op-insight--watch .zdos-op-insight__title { color: var(--opc-warn); }
+.zdos-op-insight--action .zdos-op-insight__title { color: #fecaca; }
+
+.zdos-op-insight__desc {
+  margin: 0.25rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: var(--opc-muted);
+}
+
+.zdos-op-insight__list {
+  list-style: none;
+  margin: 0;
+  padding: 0.55rem 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.zdos-op-insight__list li { margin: 0; }
+
+.zdos-op-insight__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.55rem 0.1rem;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.zdos-op-insight__list li:last-child .zdos-op-insight__item {
+  border-bottom: 0;
+}
+
+.zdos-op-insight__item:hover {
+  color: #fff;
+}
+
+.zdos-op-insight__item-badge {
+  flex-shrink: 0;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.zdos-op-insight__item-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+}
+
+.zdos-op-insight__item-cat {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-insight__item--action .zdos-op-insight__item-cat { color: #fecaca; }
+.zdos-op-insight__item--watch .zdos-op-insight__item-cat { color: #fde68a; }
+.zdos-op-insight__item--ok .zdos-op-insight__item-cat { color: #a7f3d0; }
+
+.zdos-op-insight__item-title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: rgba(255, 245, 245, 0.96);
+}
+
+.zdos-op-insight__item-detail {
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.86);
+}
+
+.zdos-op-insight__item-go {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  font-size: 1rem;
+  color: rgba(148, 180, 210, 0.75);
+}
+
+/* OPERATION-CENTER-007｜營運趨勢 */
+.zdos-op-trend {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.24);
+  background:
+    linear-gradient(165deg, rgba(15, 55, 100, 0.4) 0%, rgba(4, 20, 40, 0.9) 68%, rgba(2, 11, 28, 0.96) 100%);
+  padding: 0.9rem 1rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.zdos-op-trend--up {
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+.zdos-op-trend--down {
+  border-color: rgba(125, 255, 178, 0.3);
+}
+
+.zdos-op-trend__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(138, 228, 255, 0.85);
+}
+
+.zdos-op-trend__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: rgba(230, 245, 255, 0.96);
+}
+
+.zdos-op-trend__desc {
+  margin: 0.25rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: rgba(200, 225, 245, 0.9);
+}
+
+.zdos-op-trend__meta {
+  margin: 0.2rem 0 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-trend__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 380px) {
+  .zdos-op-trend__grid { grid-template-columns: 1fr; }
+}
+
+.zdos-op-trend__card {
+  border-radius: 10px;
+  border: 1px solid rgba(130, 215, 255, 0.18);
+  background: rgba(2, 11, 28, 0.55);
+  padding: 0.5rem 0.55rem;
+}
+
+.zdos-op-trend__card.is-up {
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+.zdos-op-trend__card.is-down {
+  border-color: rgba(125, 255, 178, 0.28);
+}
+
+.zdos-op-trend__card-label {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-trend__card-value {
+  margin: 0.25rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+
+.zdos-op-trend__card-value span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-left: 0.2rem;
+}
+
+.zdos-op-trend__card.is-up .zdos-op-trend__card-value span { color: #fecaca; }
+.zdos-op-trend__card.is-down .zdos-op-trend__card-value span { color: #a7f3d0; }
+.zdos-op-trend__card.is-flat .zdos-op-trend__card-value span { color: rgba(186, 220, 245, 0.85); }
+
+.zdos-op-trend__card-sub {
+  margin: 0.15rem 0 0;
+  font-size: 0.62rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-trend__line {
+  margin: 0.7rem 0 0;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: rgba(200, 225, 245, 0.9);
+}
+
+/* OPERATION-CENTER-008｜營運紀錄 Audit Timeline */
+.zdos-op-audit {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1.05rem;
+  margin-bottom: 0.75rem;
+}
+
+.zdos-op-audit__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(138, 228, 255, 0.85);
+}
+
+.zdos-op-audit__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: rgba(230, 245, 255, 0.96);
+}
+
+.zdos-op-audit__desc {
+  margin: 0.2rem 0 0;
+  font-size: 0.66rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-audit__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.7rem 0 0.55rem;
+}
+
+.zdos-op-audit__filter {
+  min-height: 28px;
+  padding: 0.15rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(2, 11, 28, 0.55);
+  color: rgba(186, 220, 245, 0.9);
+  font-size: 0.66rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.zdos-op-audit__filter.is-active {
+  border-color: rgba(26, 208, 255, 0.55);
+  background: rgba(18, 74, 134, 0.45);
+  color: #fff;
+}
+
+.zdos-op-audit__list {
+  list-style: none;
+  margin: 0;
+  padding: 0.35rem 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.zdos-op-audit__item {
+  display: grid;
+  grid-template-columns: 3.1rem 1fr;
+  gap: 0.45rem 0.65rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.zdos-op-audit__item:last-child { border-bottom: 0; }
+
+.zdos-op-audit__time {
+  font-size: 0.72rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--opc-cyan-soft);
+  padding-top: 0.1rem;
+}
+
+.zdos-op-audit__body { min-width: 0; }
+
+.zdos-op-audit__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.35rem 0.55rem;
+}
+
+.zdos-op-audit__event {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-audit__status {
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: rgba(148, 180, 210, 0.9);
+}
+
+.zdos-op-audit__meta {
+  margin: 0.2rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(200, 225, 245, 0.9);
+}
+
+.zdos-op-audit__source {
+  margin: 0.2rem 0 0;
+  font-size: 0.62rem;
+  color: rgba(148, 180, 210, 0.8);
+}
+
+.zdos-op-audit__item--leave .zdos-op-audit__time { color: #fde68a; }
+.zdos-op-audit__item--employee_auth .zdos-op-audit__time { color: #c4b5fd; }
+.zdos-op-audit__item--permission .zdos-op-audit__time { color: #a7f3d0; }
+.zdos-op-audit__item--announcement .zdos-op-audit__time { color: #86efac; }
+
+/* OPERATION-CENTER-009｜每日營運報告 */
+.zdos-op-report {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.28);
+  background:
+    linear-gradient(165deg, rgba(12, 48, 88, 0.5) 0%, rgba(4, 20, 40, 0.92) 65%, rgba(2, 11, 28, 0.96) 100%);
+  padding: 0.95rem 1rem 1.05rem;
+  margin-bottom: 0.75rem;
+}
+
+.zdos-op-report--ok {
+  border-color: rgba(125, 255, 178, 0.3);
+}
+
+.zdos-op-report--attention {
+  border-color: rgba(252, 211, 77, 0.38);
+}
+
+.zdos-op-report__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(138, 228, 255, 0.85);
+}
+
+.zdos-op-report__title {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: rgba(230, 245, 255, 0.96);
+}
+
+.zdos-op-report__desc {
+  margin: 0.3rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.zdos-op-report--ok .zdos-op-report__desc { color: var(--opc-ok); }
+.zdos-op-report--attention .zdos-op-report__desc { color: var(--opc-warn); }
+
+.zdos-op-report__meta {
+  margin: 0.2rem 0 0;
+  font-size: 0.68rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-report__block {
+  margin-top: 0.7rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.zdos-op-report__label {
+  margin: 0 0 0.35rem;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: rgba(148, 180, 210, 0.9);
+}
+
+.zdos-op-report__line {
+  margin: 0;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: rgba(220, 235, 250, 0.95);
+}
+
+.zdos-op-report__sub {
+  margin: 0.3rem 0 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-report__stores {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.zdos-op-report__store {
+  display: grid;
+  grid-template-columns: 2.2rem repeat(4, minmax(0, 1fr));
+  gap: 0.25rem;
+  align-items: center;
+  padding: 0.4rem 0.45rem;
+  border-radius: 8px;
+  border: 1px solid rgba(130, 215, 255, 0.16);
+  background: rgba(2, 11, 28, 0.5);
+  font-size: 0.64rem;
+  color: rgba(186, 220, 245, 0.9);
+}
+
+.zdos-op-report__store-id {
+  font-weight: 800;
+  color: var(--opc-cyan-soft);
+}
+
+.zdos-op-report__store b {
+  font-weight: 800;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.zdos-op-report__store .is-alert,
+.zdos-op-report__store .is-alert b {
+  color: var(--opc-danger);
+}
+
+.zdos-op-report__list {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0;
+}
+
+.zdos-op-report__list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.28rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.7rem;
+  color: rgba(210, 230, 245, 0.92);
+}
+
+.zdos-op-report__list li:last-child { border-bottom: 0; }
+
+.zdos-op-report__list b {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+
+.zdos-op-report__ok {
+  color: var(--opc-ok) !important;
+  font-weight: 700;
+}
+
+@media (max-width: 380px) {
+  .zdos-op-report__store {
+    grid-template-columns: 2rem 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+}
+
+/* OPERATION-CENTER-010｜營運報告中心 Period Report */
+.zdos-op-period {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-op-period__hero {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.24);
+  background:
+    linear-gradient(165deg, rgba(14, 60, 110, 0.48) 0%, rgba(4, 20, 40, 0.92) 70%);
+  padding: 0.95rem 1rem 1rem;
+}
+
+.zdos-op-period__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(138, 228, 255, 0.85);
+}
+
+.zdos-op-period__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(235, 246, 255, 0.98);
+}
+
+.zdos-op-period__sub {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-period__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.zdos-op-period__tab {
+  min-height: 34px;
+  min-width: 4.2rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(2, 11, 28, 0.55);
+  color: rgba(186, 220, 245, 0.9);
+  font-size: 0.74rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-period__tab.is-active {
+  border-color: rgba(26, 208, 255, 0.55);
+  background: rgba(18, 74, 134, 0.5);
+  color: #fff;
+}
+
+.zdos-mgmt-center .zdos-mgmt-center__card + .zdos-mgmt-center__card {
+  margin-top: 0.65rem;
+}
+
+/* OPERATION-CENTER-011｜改善追蹤中心 */
+.zdos-op-improve {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-op-improve__hero {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.24);
+  background:
+    linear-gradient(165deg, rgba(20, 70, 90, 0.45) 0%, rgba(4, 20, 40, 0.92) 70%);
+  padding: 0.95rem 1rem 1rem;
+}
+
+.zdos-op-improve__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(138, 228, 255, 0.85);
+}
+
+.zdos-op-improve__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(235, 246, 255, 0.98);
+}
+
+.zdos-op-improve__sub {
+  margin: 0.3rem 0 0;
+  font-size: 0.68rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-improve__suggest,
+.zdos-op-improve__board {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1rem;
+}
+
+.zdos-op-improve__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-improve__block-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.zdos-op-improve__block-meta {
+  margin: 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-improve__suggest-list,
+.zdos-op-improve__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-improve__suggest-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.zdos-op-improve__suggest-main { flex: 1; min-width: 0; }
+
+.zdos-op-improve__suggest-title {
+  margin: 0;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-improve__suggest-detail,
+.zdos-op-improve__suggest-src {
+  margin: 0.2rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-improve__suggest-src { color: rgba(148, 180, 210, 0.85); }
+
+.zdos-op-improve__suggest-btn {
+  flex-shrink: 0;
+  min-height: 30px;
+  padding: 0.2rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid rgba(26, 208, 255, 0.4);
+  background: rgba(18, 74, 134, 0.45);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-improve__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-improve__filter {
+  min-height: 28px;
+  padding: 0.15rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(2, 11, 28, 0.55);
+  color: rgba(186, 220, 245, 0.9);
+  font-size: 0.66rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.zdos-op-improve__filter.is-active {
+  border-color: rgba(26, 208, 255, 0.55);
+  background: rgba(18, 74, 134, 0.45);
+  color: #fff;
+}
+
+.zdos-op-improve__item {
+  margin-top: 0.55rem;
+  padding: 0.7rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(130, 215, 255, 0.18);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-improve__item--pending { border-color: rgba(252, 211, 77, 0.35); }
+.zdos-op-improve__item--in_progress { border-color: rgba(56, 189, 248, 0.4); }
+.zdos-op-improve__item--tracking { border-color: rgba(167, 139, 250, 0.4); }
+.zdos-op-improve__item--completed { border-color: rgba(125, 255, 178, 0.3); }
+
+.zdos-op-improve__item-status {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: rgba(148, 180, 210, 0.9);
+}
+
+.zdos-op-improve__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-improve__item-detail,
+.zdos-op-improve__item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-improve__item-meta { color: rgba(148, 180, 210, 0.85); }
+
+.zdos-op-improve__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.55rem;
+}
+
+.zdos-op-improve__status-btn {
+  min-height: 26px;
+  padding: 0.12rem 0.45rem;
+  border-radius: 7px;
+  border: 1px solid rgba(130, 215, 255, 0.2);
+  background: transparent;
+  color: rgba(186, 220, 245, 0.88);
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.zdos-op-improve__status-btn.is-active {
+  border-color: rgba(26, 208, 255, 0.5);
+  background: rgba(18, 74, 134, 0.4);
+  color: #fff;
+}
+
+.zdos-op-improve__item-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.5rem;
+}
+
+.zdos-op-improve__link {
+  border: 0;
+  background: transparent;
+  color: var(--opc-cyan-soft);
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+
+.zdos-op-improve__done {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--opc-ok);
+}
+
+.zdos-op-improve__history {
+  list-style: none;
+  margin: 0.55rem 0 0;
+  padding: 0.5rem 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.zdos-op-improve__history li {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 0.64rem;
+  color: rgba(186, 220, 245, 0.9);
+}
+
+.zdos-op-improve__history li:last-child { border-bottom: 0; }
+
+.zdos-op-improve__history time {
+  display: block;
+  font-weight: 800;
+  color: var(--opc-cyan-soft);
+}
+
+.zdos-op-improve__history p {
+  margin: 0.15rem 0 0;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+/* OPERATION-CENTER-012｜問題中心 Issue Center */
+.zdos-op-issue {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-op-issue__hero {
+  border-radius: 16px;
+  border: 1px solid rgba(248, 113, 113, 0.28);
+  background:
+    linear-gradient(165deg, rgba(90, 30, 40, 0.4) 0%, rgba(4, 20, 40, 0.92) 70%);
+  padding: 0.95rem 1rem 1rem;
+}
+
+.zdos-op-issue__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(252, 165, 165, 0.9);
+}
+
+.zdos-op-issue__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(255, 245, 245, 0.98);
+}
+
+.zdos-op-issue__flow {
+  margin: 0.35rem 0 0;
+  font-size: 0.68rem;
+  line-height: 1.45;
+  color: rgba(220, 200, 200, 0.9);
+}
+
+.zdos-op-issue__suggest,
+.zdos-op-issue__board {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1rem;
+}
+
+.zdos-op-issue__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-issue__block-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.zdos-op-issue__block-meta {
+  margin: 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-issue__suggest-list,
+.zdos-op-issue__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-issue__suggest-list li {
+  display: flex;
+  gap: 0.55rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.zdos-op-issue__suggest-main { flex: 1; min-width: 0; }
+
+.zdos-op-issue__suggest-title {
+  margin: 0;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-issue__suggest-detail,
+.zdos-op-issue__suggest-meta {
+  margin: 0.2rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-issue__suggest-btn {
+  flex-shrink: 0;
+  align-self: flex-start;
+  min-height: 30px;
+  padding: 0.2rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  background: rgba(127, 29, 29, 0.4);
+  color: #fecaca;
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-issue__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-issue__filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.zdos-op-issue__chip {
+  min-height: 26px;
+  padding: 0.12rem 0.5rem;
+  border-radius: 7px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(2, 11, 28, 0.55);
+  color: rgba(186, 220, 245, 0.9);
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.zdos-op-issue__chip.is-active {
+  border-color: rgba(26, 208, 255, 0.55);
+  background: rgba(18, 74, 134, 0.45);
+  color: #fff;
+}
+
+.zdos-op-issue__item {
+  margin-top: 0.55rem;
+  padding: 0.7rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(130, 215, 255, 0.18);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-issue__item--open { border-color: rgba(252, 211, 77, 0.35); }
+.zdos-op-issue__item--investigating { border-color: rgba(56, 189, 248, 0.4); }
+.zdos-op-issue__item--resolved { border-color: rgba(125, 255, 178, 0.3); }
+.zdos-op-issue__item--converted { border-color: rgba(167, 139, 250, 0.4); }
+
+.zdos-op-issue__item-sev--critical { box-shadow: inset 3px 0 0 #f87171; }
+.zdos-op-issue__item-sev--high { box-shadow: inset 3px 0 0 #fbbf24; }
+.zdos-op-issue__item-sev--medium { box-shadow: inset 3px 0 0 #38bdf8; }
+.zdos-op-issue__item-sev--low { box-shadow: inset 3px 0 0 #94a3b8; }
+
+.zdos-op-issue__item-kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: rgba(148, 180, 210, 0.9);
+}
+
+.zdos-op-issue__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-issue__item-detail,
+.zdos-op-issue__item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-issue__item-meta { color: rgba(148, 180, 210, 0.85); }
+
+.zdos-op-issue__actions { margin-top: 0.55rem; }
+
+.zdos-op-issue__actions-label {
+  margin: 0.35rem 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-issue__actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.zdos-op-issue__status-btn,
+.zdos-op-issue__sev-btn {
+  min-height: 26px;
+  padding: 0.12rem 0.45rem;
+  border-radius: 7px;
+  border: 1px solid rgba(130, 215, 255, 0.2);
+  background: transparent;
+  color: rgba(186, 220, 245, 0.88);
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.zdos-op-issue__status-btn:disabled,
+.zdos-op-issue__sev-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.zdos-op-issue__status-btn.is-active,
+.zdos-op-issue__sev-btn.is-active {
+  border-color: rgba(26, 208, 255, 0.5);
+  background: rgba(18, 74, 134, 0.4);
+  color: #fff;
+}
+
+.zdos-op-issue__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+}
+
+.zdos-op-issue__link {
+  border: 0;
+  background: transparent;
+  color: var(--opc-cyan-soft);
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+
+.zdos-op-issue__converted {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #c4b5fd;
+}
+
+/* OPERATION-CENTER-013｜標準化中心 Standard Center */
+.zdos-op-std {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-op-std__hero {
+  border-radius: 16px;
+  border: 1px solid rgba(125, 255, 178, 0.28);
+  background:
+    linear-gradient(165deg, rgba(10, 70, 55, 0.42) 0%, rgba(4, 20, 40, 0.92) 70%);
+  padding: 0.95rem 1rem 1rem;
+}
+
+.zdos-op-std__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(167, 243, 208, 0.9);
+}
+
+.zdos-op-std__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(240, 255, 248, 0.98);
+}
+
+.zdos-op-std__flow {
+  margin: 0.35rem 0 0;
+  font-size: 0.68rem;
+  color: rgba(186, 220, 210, 0.9);
+}
+
+.zdos-op-std__suggest,
+.zdos-op-std__board {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1rem;
+}
+
+.zdos-op-std__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-std__block-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.zdos-op-std__block-meta {
+  margin: 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-std__suggest-list,
+.zdos-op-std__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-std__suggest-list li {
+  display: flex;
+  gap: 0.55rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.zdos-op-std__suggest-main { flex: 1; min-width: 0; }
+
+.zdos-op-std__suggest-title {
+  margin: 0;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-std__suggest-detail,
+.zdos-op-std__suggest-meta {
+  margin: 0.2rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-std__suggest-btn {
+  flex-shrink: 0;
+  align-self: flex-start;
+  min-height: 30px;
+  padding: 0.2rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid rgba(125, 255, 178, 0.4);
+  background: rgba(6, 78, 59, 0.4);
+  color: #a7f3d0;
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-std__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-std__filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.zdos-op-std__chip {
+  min-height: 26px;
+  padding: 0.12rem 0.5rem;
+  border-radius: 7px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(2, 11, 28, 0.55);
+  color: rgba(186, 220, 245, 0.9);
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.zdos-op-std__chip.is-active {
+  border-color: rgba(125, 255, 178, 0.5);
+  background: rgba(6, 78, 59, 0.4);
+  color: #fff;
+}
+
+.zdos-op-std__item {
+  margin-top: 0.55rem;
+  padding: 0.7rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(130, 215, 255, 0.18);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-std__item--draft { border-color: rgba(148, 180, 210, 0.35); }
+.zdos-op-std__item--active { border-color: rgba(125, 255, 178, 0.35); }
+.zdos-op-std__item--archived { border-color: rgba(100, 116, 139, 0.4); }
+
+.zdos-op-std__item-kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: rgba(148, 180, 210, 0.9);
+}
+
+.zdos-op-std__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-std__item-summary,
+.zdos-op-std__item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-std__item-meta { color: rgba(148, 180, 210, 0.85); }
+
+.zdos-op-std__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.55rem;
+}
+
+.zdos-op-std__status-btn {
+  min-height: 26px;
+  padding: 0.12rem 0.45rem;
+  border-radius: 7px;
+  border: 1px solid rgba(130, 215, 255, 0.2);
+  background: transparent;
+  color: rgba(186, 220, 245, 0.88);
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.zdos-op-std__status-btn.is-active {
+  border-color: rgba(125, 255, 178, 0.5);
+  background: rgba(6, 78, 59, 0.4);
+  color: #fff;
+}
+
+.zdos-op-std__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+}
+
+.zdos-op-std__link {
+  border: 0;
+  background: transparent;
+  color: var(--opc-cyan-soft);
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+
+.zdos-op-std__sop {
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.zdos-op-std__sop-label {
+  margin: 0.35rem 0 0.25rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: rgba(148, 180, 210, 0.9);
+}
+
+.zdos-op-std__steps {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: rgba(220, 235, 250, 0.95);
+}
+
+.zdos-op-std__steps li { margin: 0.15rem 0; }
+
+.zdos-op-std__versions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.64rem;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-std__versions li {
+  padding: 0.2rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.zdos-op-std__versions li:last-child { border-bottom: 0; }
+
+/* OPERATION-CENTER-014｜知識中心 Knowledge Center */
+.zdos-op-know {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-op-know__hero {
+  border-radius: 16px;
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  background:
+    linear-gradient(165deg, rgba(55, 30, 90, 0.42) 0%, rgba(4, 20, 40, 0.92) 70%);
+  padding: 0.95rem 1rem 1rem;
+}
+
+.zdos-op-know__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(196, 181, 253, 0.9);
+}
+
+.zdos-op-know__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(248, 245, 255, 0.98);
+}
+
+.zdos-op-know__flow {
+  margin: 0.35rem 0 0;
+  font-size: 0.68rem;
+  color: rgba(210, 200, 245, 0.9);
+}
+
+.zdos-op-know__suggest,
+.zdos-op-know__board {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1rem;
+}
+
+.zdos-op-know__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-know__block-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.zdos-op-know__block-meta {
+  margin: 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-know__suggest-list,
+.zdos-op-know__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-know__suggest-list li {
+  display: flex;
+  gap: 0.55rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.zdos-op-know__suggest-main { flex: 1; min-width: 0; }
+
+.zdos-op-know__suggest-title {
+  margin: 0;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-know__suggest-detail,
+.zdos-op-know__suggest-meta {
+  margin: 0.2rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-know__suggest-btn {
+  flex-shrink: 0;
+  align-self: flex-start;
+  min-height: 30px;
+  padding: 0.2rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid rgba(167, 139, 250, 0.45);
+  background: rgba(76, 29, 149, 0.4);
+  color: #ddd6fe;
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-know__search {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-know__search-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 34px;
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid rgba(130, 215, 255, 0.25);
+  background: rgba(2, 11, 28, 0.65);
+  color: #fff;
+  font-size: 0.74rem;
+}
+
+.zdos-op-know__search-btn {
+  flex-shrink: 0;
+  min-height: 34px;
+  padding: 0.25rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(167, 139, 250, 0.45);
+  background: rgba(76, 29, 149, 0.4);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-know__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-know__filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.zdos-op-know__chip {
+  min-height: 26px;
+  padding: 0.12rem 0.5rem;
+  border-radius: 7px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(2, 11, 28, 0.55);
+  color: rgba(186, 220, 245, 0.9);
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.zdos-op-know__chip.is-active {
+  border-color: rgba(167, 139, 250, 0.55);
+  background: rgba(76, 29, 149, 0.4);
+  color: #fff;
+}
+
+.zdos-op-know__item {
+  margin-top: 0.55rem;
+  padding: 0.7rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(130, 215, 255, 0.18);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-know__item-kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: rgba(196, 181, 253, 0.9);
+}
+
+.zdos-op-know__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-know__item-body,
+.zdos-op-know__item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.45;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-know__item-meta { color: rgba(148, 180, 210, 0.85); }
+
+.zdos-op-know__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.45rem;
+}
+
+.zdos-op-know__link-chip {
+  min-height: 24px;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  background: rgba(76, 29, 149, 0.28);
+  color: #ddd6fe;
+  font-size: 0.6rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.zdos-op-know__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+}
+
+.zdos-op-know__link {
+  border: 0;
+  background: transparent;
+  color: var(--opc-cyan-soft);
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* OPERATION-CENTER-015｜訓練中心 Training Center */
+.zdos-op-train {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-op-train__hero {
+  border-radius: 16px;
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  background:
+    linear-gradient(165deg, rgba(6, 78, 59, 0.42) 0%, rgba(4, 20, 40, 0.92) 70%);
+  padding: 0.95rem 1rem 1rem;
+}
+
+.zdos-op-train__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(167, 243, 208, 0.9);
+}
+
+.zdos-op-train__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(240, 255, 248, 0.98);
+}
+
+.zdos-op-train__flow,
+.zdos-op-train__role {
+  margin: 0.3rem 0 0;
+  font-size: 0.68rem;
+  color: rgba(186, 220, 210, 0.9);
+}
+
+.zdos-op-train__suggest,
+.zdos-op-train__board {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1rem;
+}
+
+.zdos-op-train__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-train__block-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.zdos-op-train__block-meta {
+  margin: 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-train__suggest-list,
+.zdos-op-train__list,
+.zdos-op-train__asg {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-train__suggest-list li {
+  display: flex;
+  gap: 0.55rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.zdos-op-train__suggest-main { flex: 1; min-width: 0; }
+
+.zdos-op-train__suggest-title {
+  margin: 0;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-train__suggest-detail,
+.zdos-op-train__suggest-meta {
+  margin: 0.2rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-train__suggest-btn {
+  flex-shrink: 0;
+  align-self: flex-start;
+  min-height: 30px;
+  padding: 0.2rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid rgba(52, 211, 153, 0.45);
+  background: rgba(6, 78, 59, 0.45);
+  color: #a7f3d0;
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-train__item {
+  margin-top: 0.55rem;
+  padding: 0.7rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(130, 215, 255, 0.18);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-train__item--active { border-color: rgba(52, 211, 153, 0.35); }
+.zdos-op-train__item--draft { border-color: rgba(148, 180, 210, 0.35); }
+.zdos-op-train__item--archived { border-color: rgba(100, 116, 139, 0.4); }
+
+.zdos-op-train__item-kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: rgba(167, 243, 208, 0.9);
+}
+
+.zdos-op-train__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-train__item-desc,
+.zdos-op-train__item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-train__item-meta { color: rgba(148, 180, 210, 0.85); }
+
+.zdos-op-train__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+}
+
+.zdos-op-train__link {
+  border: 0;
+  background: transparent;
+  color: var(--opc-cyan-soft);
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+
+.zdos-op-train__asg {
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.zdos-op-train__asg-item {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.zdos-op-train__asg-item:last-child { border-bottom: 0; }
+
+.zdos-op-train__asg-main { flex: 1; min-width: 0; }
+
+.zdos-op-train__asg-name {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-train__asg-meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.62rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-train__bar {
+  margin-top: 0.3rem;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.zdos-op-train__bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #059669, #34d399);
+}
+
+.zdos-op-train__asg-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.zdos-op-train__mini {
+  min-height: 26px;
+  padding: 0.1rem 0.45rem;
+  border-radius: 7px;
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  background: rgba(6, 78, 59, 0.35);
+  color: #a7f3d0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-train__done {
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: var(--opc-ok);
+}
+
+/* OPERATION-CENTER-016｜能力中心 Competency Center */
+.zdos-op-comp {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-op-comp__hero {
+  border-radius: 16px;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  background:
+    linear-gradient(165deg, rgba(120, 53, 15, 0.42) 0%, rgba(4, 20, 40, 0.92) 70%);
+  padding: 0.95rem 1rem 1rem;
+}
+
+.zdos-op-comp__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(253, 230, 138, 0.92);
+}
+
+.zdos-op-comp__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(255, 251, 235, 0.98);
+}
+
+.zdos-op-comp__flow,
+.zdos-op-comp__role {
+  margin: 0.3rem 0 0;
+  font-size: 0.68rem;
+  color: rgba(230, 210, 170, 0.9);
+}
+
+.zdos-op-comp__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.zdos-op-comp__tab {
+  min-height: 30px;
+  padding: 0.25rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid rgba(251, 191, 36, 0.28);
+  background: rgba(4, 20, 40, 0.7);
+  color: rgba(253, 230, 138, 0.85);
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-comp__tab.is-active {
+  border-color: rgba(251, 191, 36, 0.55);
+  background: rgba(120, 53, 15, 0.55);
+  color: #fde68a;
+}
+
+.zdos-op-comp__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.zdos-op-comp__chip {
+  min-height: 26px;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(130, 215, 255, 0.2);
+  background: rgba(2, 11, 28, 0.55);
+  color: rgba(186, 220, 245, 0.88);
+  font-size: 0.6rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-comp__chip.is-active {
+  border-color: rgba(251, 191, 36, 0.45);
+  background: rgba(120, 53, 15, 0.4);
+  color: #fde68a;
+}
+
+.zdos-op-comp__board {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1rem;
+}
+
+.zdos-op-comp__block-head,
+.zdos-op-comp__profile-bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-comp__block-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.zdos-op-comp__block-meta {
+  margin: 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-comp__list,
+.zdos-op-comp__asg,
+.zdos-op-comp__skills {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-comp__item {
+  margin-top: 0.55rem;
+  padding: 0.7rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-comp__item-kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: rgba(253, 230, 138, 0.9);
+}
+
+.zdos-op-comp__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-comp__item-desc,
+.zdos-op-comp__item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-comp__item-meta { color: rgba(148, 180, 210, 0.85); }
+
+.zdos-op-comp__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+}
+
+.zdos-op-comp__link {
+  border: 0;
+  background: transparent;
+  color: #fbbf24;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+
+.zdos-op-comp__asg {
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.zdos-op-comp__asg-item {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.zdos-op-comp__asg-item:last-child { border-bottom: 0; }
+
+.zdos-op-comp__asg-main { flex: 1; min-width: 0; }
+
+.zdos-op-comp__asg-name {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-comp__asg-meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.62rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-comp__asg-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.zdos-op-comp__mini {
+  min-height: 26px;
+  padding: 0.1rem 0.45rem;
+  border-radius: 7px;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  background: rgba(120, 53, 15, 0.4);
+  color: #fde68a;
+  font-size: 0.6rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-comp__done {
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: var(--opc-ok);
+}
+
+.zdos-op-comp__skills li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.55rem;
+  align-items: baseline;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 0.68rem;
+  color: rgba(220, 235, 250, 0.92);
+}
+
+.zdos-op-comp__skills li:last-child { border-bottom: 0; }
+
+.zdos-op-comp__skills strong {
+  color: #fbbf24;
+  font-size: 0.64rem;
+}
+
+.zdos-op-comp__skills em {
+  font-style: normal;
+  font-size: 0.6rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-comp__matrix-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.zdos-op-comp__matrix {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 420px;
+  font-size: 0.62rem;
+}
+
+.zdos-op-comp__matrix th,
+.zdos-op-comp__matrix td {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.4rem 0.45rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.zdos-op-comp__matrix th {
+  background: rgba(120, 53, 15, 0.35);
+  color: rgba(253, 230, 138, 0.95);
+  font-weight: 800;
+  max-width: 5.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.zdos-op-comp__matrix th:first-child,
+.zdos-op-comp__matrix td:first-child {
+  text-align: left;
+  position: sticky;
+  left: 0;
+  background: rgba(4, 20, 40, 0.96);
+  z-index: 1;
+  min-width: 5.5rem;
+}
+
+.zdos-op-comp__emp {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-comp__emp-meta {
+  margin: 0.1rem 0 0;
+  font-size: 0.58rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-comp__cell span {
+  display: block;
+  font-weight: 800;
+  color: rgba(253, 230, 138, 0.95);
+}
+
+.zdos-op-comp__cell em {
+  display: block;
+  margin-top: 0.1rem;
+  font-style: normal;
+  font-size: 0.55rem;
+  color: var(--opc-ok);
+}
+
+.zdos-op-comp__cell--empty {
+  color: rgba(100, 116, 139, 0.7);
+}
+
+.zdos-op-comp__cell.is-certified {
+  background: rgba(6, 78, 59, 0.28);
+}
+
+/* OPERATION-CENTER-017｜人才發展中心 Talent Development Center */
+.zdos-op-talent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-op-talent__hero {
+  border-radius: 16px;
+  border: 1px solid rgba(251, 113, 133, 0.35);
+  background:
+    linear-gradient(165deg, rgba(136, 19, 55, 0.42) 0%, rgba(4, 20, 40, 0.92) 70%);
+  padding: 0.95rem 1rem 1rem;
+}
+
+.zdos-op-talent__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(254, 205, 211, 0.92);
+}
+
+.zdos-op-talent__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(255, 241, 242, 0.98);
+}
+
+.zdos-op-talent__flow,
+.zdos-op-talent__role {
+  margin: 0.3rem 0 0;
+  font-size: 0.68rem;
+  color: rgba(250, 200, 210, 0.9);
+}
+
+.zdos-op-talent__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.zdos-op-talent__tab {
+  min-height: 30px;
+  padding: 0.25rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid rgba(251, 113, 133, 0.28);
+  background: rgba(4, 20, 40, 0.7);
+  color: rgba(254, 205, 211, 0.85);
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-talent__tab.is-active {
+  border-color: rgba(251, 113, 133, 0.55);
+  background: rgba(136, 19, 55, 0.55);
+  color: #fecdd3;
+}
+
+.zdos-op-talent__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.zdos-op-talent__chip {
+  min-height: 26px;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(130, 215, 255, 0.2);
+  background: rgba(2, 11, 28, 0.55);
+  color: rgba(186, 220, 245, 0.88);
+  font-size: 0.6rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-talent__chip.is-active {
+  border-color: rgba(251, 113, 133, 0.45);
+  background: rgba(136, 19, 55, 0.4);
+  color: #fecdd3;
+}
+
+.zdos-op-talent__board {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1rem;
+}
+
+.zdos-op-talent__block-head,
+.zdos-op-talent__profile-bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-talent__block-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.zdos-op-talent__block-meta {
+  margin: 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-talent__list,
+.zdos-op-talent__goals,
+.zdos-op-talent__mini-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-talent__item {
+  margin-top: 0.55rem;
+  padding: 0.7rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(251, 113, 133, 0.2);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-talent__item--ready {
+  border-color: rgba(251, 113, 133, 0.4);
+  background: rgba(136, 19, 55, 0.18);
+}
+
+.zdos-op-talent__item-kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: rgba(254, 205, 211, 0.9);
+}
+
+.zdos-op-talent__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-talent__item-desc,
+.zdos-op-talent__item-meta,
+.zdos-op-talent__note {
+  margin: 0.25rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-talent__item-meta { color: rgba(148, 180, 210, 0.85); }
+
+.zdos-op-talent__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+}
+
+.zdos-op-talent__link {
+  border: 0;
+  background: transparent;
+  color: #fb7185;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+
+.zdos-op-talent__goals {
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.zdos-op-talent__goal-item {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.zdos-op-talent__goal-item:last-child { border-bottom: 0; }
+
+.zdos-op-talent__goal-main { flex: 1; min-width: 0; }
+
+.zdos-op-talent__goal-name {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-talent__goal-meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.62rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-talent__goal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.zdos-op-talent__mini {
+  min-height: 26px;
+  padding: 0.1rem 0.45rem;
+  border-radius: 7px;
+  border: 1px solid rgba(251, 113, 133, 0.4);
+  background: rgba(136, 19, 55, 0.4);
+  color: #fecdd3;
+  font-size: 0.6rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-talent__done {
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: var(--opc-ok);
+}
+
+.zdos-op-talent__bar {
+  margin-top: 0.3rem;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.zdos-op-talent__bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #be123c, #fb7185);
+}
+
+.zdos-op-talent__mini-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 0.68rem;
+  color: rgba(220, 235, 250, 0.92);
+}
+
+.zdos-op-talent__mini-list li:last-child { border-bottom: 0; }
+
+.zdos-op-talent__mini-list strong {
+  color: #fb7185;
+  font-size: 0.64rem;
+}
+
+.zdos-op-talent__mini-list em {
+  font-style: normal;
+  font-size: 0.6rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+/* OPERATION-CENTER-018｜績效管理中心 Performance Center */
+.zdos-op-perf {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-op-perf__hero {
+  border-radius: 16px;
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  background:
+    linear-gradient(165deg, rgba(8, 51, 68, 0.5) 0%, rgba(4, 20, 40, 0.92) 70%);
+  padding: 0.95rem 1rem 1rem;
+}
+
+.zdos-op-perf__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(165, 243, 252, 0.92);
+}
+
+.zdos-op-perf__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(236, 254, 255, 0.98);
+}
+
+.zdos-op-perf__flow,
+.zdos-op-perf__role {
+  margin: 0.3rem 0 0;
+  font-size: 0.68rem;
+  color: rgba(165, 220, 230, 0.9);
+}
+
+.zdos-op-perf__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.zdos-op-perf__tab {
+  min-height: 30px;
+  padding: 0.25rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid rgba(34, 211, 238, 0.28);
+  background: rgba(4, 20, 40, 0.7);
+  color: rgba(165, 243, 252, 0.85);
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-perf__tab.is-active {
+  border-color: rgba(34, 211, 238, 0.55);
+  background: rgba(8, 51, 68, 0.65);
+  color: #a5f3fc;
+}
+
+.zdos-op-perf__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.zdos-op-perf__chip {
+  min-height: 26px;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(130, 215, 255, 0.2);
+  background: rgba(2, 11, 28, 0.55);
+  color: rgba(186, 220, 245, 0.88);
+  font-size: 0.6rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-perf__chip.is-active {
+  border-color: rgba(34, 211, 238, 0.45);
+  background: rgba(8, 51, 68, 0.5);
+  color: #a5f3fc;
+}
+
+.zdos-op-perf__board {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1rem;
+}
+
+.zdos-op-perf__block-head,
+.zdos-op-perf__profile-bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-perf__block-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.zdos-op-perf__block-meta {
+  margin: 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-perf__list,
+.zdos-op-perf__criteria,
+.zdos-op-perf__scores {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-perf__item {
+  margin-top: 0.55rem;
+  padding: 0.7rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-perf__item--completed {
+  border-color: rgba(52, 211, 153, 0.35);
+}
+
+.zdos-op-perf__item--evaluated {
+  border-color: rgba(34, 211, 238, 0.4);
+}
+
+.zdos-op-perf__item-kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: rgba(165, 243, 252, 0.9);
+}
+
+.zdos-op-perf__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-perf__item-desc,
+.zdos-op-perf__item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-perf__item-meta { color: rgba(148, 180, 210, 0.85); }
+
+.zdos-op-perf__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+}
+
+.zdos-op-perf__link {
+  border: 0;
+  background: transparent;
+  color: #22d3ee;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+
+.zdos-op-perf__criteria,
+.zdos-op-perf__scores {
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.zdos-op-perf__criteria li,
+.zdos-op-perf__scores li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.55rem;
+  align-items: baseline;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 0.68rem;
+  color: rgba(220, 235, 250, 0.92);
+}
+
+.zdos-op-perf__criteria li:last-child,
+.zdos-op-perf__scores li:last-child { border-bottom: 0; }
+
+.zdos-op-perf__criteria strong,
+.zdos-op-perf__scores strong {
+  color: #22d3ee;
+  font-size: 0.64rem;
+}
+
+.zdos-op-perf__criteria em,
+.zdos-op-perf__scores em {
+  font-style: normal;
+  font-size: 0.6rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+/* OPERATION-CENTER-019｜薪酬與激勵中心 Reward Center */
+.zdos-op-reward {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-op-reward__hero {
+  border-radius: 16px;
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  background:
+    linear-gradient(165deg, rgba(113, 63, 18, 0.45) 0%, rgba(4, 20, 40, 0.92) 70%);
+  padding: 0.95rem 1rem 1rem;
+}
+
+.zdos-op-reward__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(253, 224, 71, 0.92);
+}
+
+.zdos-op-reward__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(254, 249, 195, 0.98);
+}
+
+.zdos-op-reward__flow,
+.zdos-op-reward__role {
+  margin: 0.3rem 0 0;
+  font-size: 0.68rem;
+  color: rgba(250, 230, 170, 0.9);
+}
+
+.zdos-op-reward__payroll-note {
+  margin: 0.35rem 0 0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: rgba(253, 224, 71, 0.85);
+}
+
+.zdos-op-reward__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.zdos-op-reward__tab {
+  min-height: 30px;
+  padding: 0.25rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid rgba(250, 204, 21, 0.28);
+  background: rgba(4, 20, 40, 0.7);
+  color: rgba(253, 224, 71, 0.85);
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-reward__tab.is-active {
+  border-color: rgba(250, 204, 21, 0.55);
+  background: rgba(113, 63, 18, 0.55);
+  color: #fde047;
+}
+
+.zdos-op-reward__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.zdos-op-reward__chip {
+  min-height: 26px;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(130, 215, 255, 0.2);
+  background: rgba(2, 11, 28, 0.55);
+  color: rgba(186, 220, 245, 0.88);
+  font-size: 0.6rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-reward__chip.is-active {
+  border-color: rgba(250, 204, 21, 0.45);
+  background: rgba(113, 63, 18, 0.4);
+  color: #fde047;
+}
+
+.zdos-op-reward__board,
+.zdos-op-reward__suggest {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1rem;
+}
+
+.zdos-op-reward__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-reward__block-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.zdos-op-reward__block-meta {
+  margin: 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-reward__list,
+.zdos-op-reward__honor,
+.zdos-op-reward__suggest-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-reward__item {
+  margin-top: 0.55rem;
+  padding: 0.7rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(250, 204, 21, 0.2);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-reward__item--approved {
+  border-color: rgba(250, 204, 21, 0.45);
+}
+
+.zdos-op-reward__item--pending {
+  border-color: rgba(251, 191, 36, 0.35);
+}
+
+.zdos-op-reward__item-kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: rgba(253, 224, 71, 0.9);
+}
+
+.zdos-op-reward__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-reward__item-desc,
+.zdos-op-reward__item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-reward__item-meta { color: rgba(148, 180, 210, 0.85); }
+
+.zdos-op-reward__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+}
+
+.zdos-op-reward__link {
+  border: 0;
+  background: transparent;
+  color: #facc15;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+
+.zdos-op-reward__detail {
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 0.62rem;
+  color: rgba(148, 180, 210, 0.9);
+}
+
+.zdos-op-reward__detail p { margin: 0.15rem 0 0; }
+
+.zdos-op-reward__honor {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+}
+
+.zdos-op-reward__honor-card {
+  padding: 0.75rem 0.7rem;
+  border-radius: 12px;
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  background:
+    linear-gradient(145deg, rgba(113, 63, 18, 0.35) 0%, rgba(2, 11, 28, 0.7) 100%);
+}
+
+.zdos-op-reward__honor-kicker {
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: rgba(253, 224, 71, 0.9);
+}
+
+.zdos-op-reward__honor-name {
+  margin: 0.25rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: rgba(254, 249, 195, 0.98);
+}
+
+.zdos-op-reward__honor-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.95);
+}
+
+.zdos-op-reward__honor-desc {
+  margin: 0.25rem 0 0;
+  font-size: 0.66rem;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-reward__suggest-list li {
+  display: flex;
+  gap: 0.55rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.zdos-op-reward__suggest-title {
+  margin: 0;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-reward__suggest-desc,
+.zdos-op-reward__suggest-meta {
+  margin: 0.2rem 0 0;
+  font-size: 0.66rem;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-reward__suggest-btn {
+  flex-shrink: 0;
+  align-self: flex-start;
+  min-height: 30px;
+  padding: 0.2rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid rgba(250, 204, 21, 0.45);
+  background: rgba(113, 63, 18, 0.45);
+  color: #fde047;
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* OPERATION-CENTER-020｜組織分析中心 Organization Analytics */
+.zdos-op-org {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-op-org__hero {
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background:
+    linear-gradient(165deg, rgba(30, 41, 59, 0.65) 0%, rgba(4, 20, 40, 0.92) 70%);
+  padding: 0.95rem 1rem 1rem;
+}
+
+.zdos-op-org__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(203, 213, 225, 0.92);
+}
+
+.zdos-op-org__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(248, 250, 252, 0.98);
+}
+
+.zdos-op-org__flow,
+.zdos-op-org__role {
+  margin: 0.3rem 0 0;
+  font-size: 0.68rem;
+  color: rgba(186, 200, 220, 0.9);
+}
+
+.zdos-op-org__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.zdos-op-org__tab {
+  min-height: 30px;
+  padding: 0.25rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: rgba(4, 20, 40, 0.7);
+  color: rgba(203, 213, 225, 0.88);
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-org__tab.is-active {
+  border-color: rgba(148, 163, 184, 0.55);
+  background: rgba(51, 65, 85, 0.65);
+  color: #e2e8f0;
+}
+
+.zdos-op-org__board {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1rem;
+}
+
+.zdos-op-org__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0.7rem 0 0.45rem;
+}
+
+.zdos-op-org__block-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.zdos-op-org__block-meta {
+  margin: 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-org__highlights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.zdos-op-org__hi {
+  padding: 0.55rem 0.6rem;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-org__hi-label {
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: rgba(148, 180, 210, 0.9);
+}
+
+.zdos-op-org__hi-value {
+  margin: 0.2rem 0 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: rgba(241, 245, 249, 0.98);
+}
+
+.zdos-op-org__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+}
+
+.zdos-op-org__metrics--panel {
+  margin-top: 0;
+}
+
+.zdos-op-org__metrics > div {
+  padding: 0.45rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(2, 11, 28, 0.45);
+}
+
+.zdos-op-org__metrics span {
+  display: block;
+  font-size: 0.58rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-org__metrics strong {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.84rem;
+  color: rgba(241, 245, 249, 0.96);
+}
+
+.zdos-op-org__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-org__card {
+  margin-top: 0.55rem;
+  padding: 0.7rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-org__kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: rgba(186, 200, 220, 0.9);
+}
+
+.zdos-op-org__card-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-org__bars,
+.zdos-op-org__mini {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-org__bars li,
+.zdos-op-org__mini li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.7rem;
+  color: rgba(220, 235, 250, 0.92);
+}
+
+.zdos-op-org__bars li {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.zdos-op-org__bars strong {
+  color: #94a3b8;
+}
+
+.zdos-op-org__mini em {
+  font-style: normal;
+  font-size: 0.6rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-org__sources {
+  margin: 0.75rem 0 0;
+  font-size: 0.6rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+/* OPERATION-CENTER-021｜策略儀表板 Strategy Dashboard */
+.zdos-op-strat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-op-strat__hero {
+  border-radius: 16px;
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  background:
+    linear-gradient(165deg, rgba(19, 78, 74, 0.5) 0%, rgba(4, 20, 40, 0.92) 70%);
+  padding: 0.95rem 1rem 1rem;
+}
+
+.zdos-op-strat__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(153, 246, 228, 0.92);
+}
+
+.zdos-op-strat__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(240, 253, 250, 0.98);
+}
+
+.zdos-op-strat__flow,
+.zdos-op-strat__role {
+  margin: 0.3rem 0 0;
+  font-size: 0.68rem;
+  color: rgba(167, 230, 220, 0.9);
+}
+
+.zdos-op-strat__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.zdos-op-strat__tab {
+  min-height: 30px;
+  padding: 0.25rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid rgba(45, 212, 191, 0.28);
+  background: rgba(4, 20, 40, 0.7);
+  color: rgba(153, 246, 228, 0.85);
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-strat__tab.is-active {
+  border-color: rgba(45, 212, 191, 0.55);
+  background: rgba(19, 78, 74, 0.6);
+  color: #99f6e4;
+}
+
+.zdos-op-strat__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.zdos-op-strat__chip {
+  min-height: 26px;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(130, 215, 255, 0.2);
+  background: rgba(2, 11, 28, 0.55);
+  color: rgba(186, 220, 245, 0.88);
+  font-size: 0.6rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-strat__chip.is-active {
+  border-color: rgba(45, 212, 191, 0.45);
+  background: rgba(19, 78, 74, 0.45);
+  color: #99f6e4;
+}
+
+.zdos-op-strat__board {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1rem;
+}
+
+.zdos-op-strat__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0.55rem 0;
+}
+
+.zdos-op-strat__block-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.zdos-op-strat__block-meta {
+  margin: 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-strat__list,
+.zdos-op-strat__kpi-list,
+.zdos-op-strat__mini-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-strat__item {
+  margin-top: 0.55rem;
+  padding: 0.7rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-strat__item--completed { border-color: rgba(52, 211, 153, 0.4); }
+.zdos-op-strat__item--at_risk { border-color: rgba(251, 191, 36, 0.45); }
+.zdos-op-strat__item--on_track { border-color: rgba(45, 212, 191, 0.45); }
+
+.zdos-op-strat__item-kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: rgba(153, 246, 228, 0.9);
+}
+
+.zdos-op-strat__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-strat__item-desc,
+.zdos-op-strat__item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-strat__item-meta { color: rgba(148, 180, 210, 0.85); }
+
+.zdos-op-strat__bar {
+  margin-top: 0.35rem;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.zdos-op-strat__bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #0f766e, #2dd4bf);
+}
+
+.zdos-op-strat__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+}
+
+.zdos-op-strat__link {
+  border: 0;
+  background: transparent;
+  color: #2dd4bf;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+
+.zdos-op-strat__kpi-list {
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.zdos-op-strat__kpi-list li {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.zdos-op-strat__kpi-list li:last-child { border-bottom: 0; }
+
+.zdos-op-strat__kpi-name {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-strat__kpi-meta {
+  margin: 0.1rem 0 0;
+  font-size: 0.6rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-strat__mini-list {
+  margin-top: 0.2rem;
+}
+
+.zdos-op-strat__mini-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 0.7rem;
+  color: rgba(220, 235, 250, 0.92);
+}
+
+.zdos-op-strat__mini-list em {
+  font-style: normal;
+  font-size: 0.6rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-strat__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin-top: 0.45rem;
+}
+
+.zdos-op-strat__metrics > div {
+  padding: 0.45rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(2, 11, 28, 0.45);
+}
+
+.zdos-op-strat__metrics span {
+  display: block;
+  font-size: 0.58rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-strat__metrics strong {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.84rem;
+  color: rgba(240, 253, 250, 0.96);
+}
+
+.zdos-op-strat__headline {
+  margin: 0 0 0.55rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: rgba(153, 246, 228, 0.95);
+}
+
+.zdos-op-strat__highlights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.zdos-op-strat__hi {
+  padding: 0.55rem 0.6rem;
+  border-radius: 10px;
+  border: 1px solid rgba(45, 212, 191, 0.22);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-strat__hi-label {
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: rgba(148, 180, 210, 0.9);
+}
+
+.zdos-op-strat__hi-value {
+  margin: 0.2rem 0 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: rgba(240, 253, 250, 0.98);
+}
+
+.zdos-op-strat__mini {
+  min-height: 26px;
+  padding: 0.1rem 0.45rem;
+  border-radius: 7px;
+  border: 1px solid rgba(45, 212, 191, 0.4);
+  background: rgba(19, 78, 74, 0.45);
+  color: #99f6e4;
+  font-size: 0.6rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* OPERATION-CENTER-022｜風險管理中心 Risk Management Center */
+.zdos-op-risk {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-op-risk__hero {
+  border-radius: 16px;
+  border: 1px solid rgba(251, 146, 60, 0.35);
+  background:
+    linear-gradient(165deg, rgba(124, 45, 18, 0.48) 0%, rgba(4, 20, 40, 0.92) 70%);
+  padding: 0.95rem 1rem 1rem;
+}
+
+.zdos-op-risk__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(254, 215, 170, 0.92);
+}
+
+.zdos-op-risk__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(255, 247, 237, 0.98);
+}
+
+.zdos-op-risk__flow,
+.zdos-op-risk__role {
+  margin: 0.3rem 0 0;
+  font-size: 0.68rem;
+  color: rgba(254, 215, 170, 0.9);
+}
+
+.zdos-op-risk__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.zdos-op-risk__tab {
+  min-height: 30px;
+  padding: 0.25rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid rgba(251, 146, 60, 0.28);
+  background: rgba(4, 20, 40, 0.7);
+  color: rgba(254, 215, 170, 0.85);
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-risk__tab.is-active {
+  border-color: rgba(251, 146, 60, 0.55);
+  background: rgba(124, 45, 18, 0.55);
+  color: #fed7aa;
+}
+
+.zdos-op-risk__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.zdos-op-risk__chip {
+  min-height: 26px;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(130, 215, 255, 0.2);
+  background: rgba(2, 11, 28, 0.55);
+  color: rgba(186, 220, 245, 0.88);
+  font-size: 0.6rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-risk__chip.is-active {
+  border-color: rgba(251, 146, 60, 0.45);
+  background: rgba(124, 45, 18, 0.4);
+  color: #fed7aa;
+}
+
+.zdos-op-risk__board {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1rem;
+}
+
+.zdos-op-risk__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-risk__block-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.zdos-op-risk__block-meta {
+  margin: 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-risk__list,
+.zdos-op-risk__mit-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-risk__item {
+  margin-top: 0.55rem;
+  padding: 0.7rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(251, 146, 60, 0.22);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-risk__item--critical { border-color: rgba(248, 113, 113, 0.55); }
+.zdos-op-risk__item--high { border-color: rgba(251, 146, 60, 0.5); }
+.zdos-op-risk__item--medium { border-color: rgba(251, 191, 36, 0.4); }
+.zdos-op-risk__item--low { border-color: rgba(148, 163, 184, 0.35); }
+.zdos-op-risk__item--st-resolved { border-color: rgba(52, 211, 153, 0.35); }
+
+.zdos-op-risk__item-kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: rgba(254, 215, 170, 0.9);
+}
+
+.zdos-op-risk__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-risk__item-desc,
+.zdos-op-risk__item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-risk__item-meta { color: rgba(148, 180, 210, 0.85); }
+
+.zdos-op-risk__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+}
+
+.zdos-op-risk__link {
+  border: 0;
+  background: transparent;
+  color: #fb923c;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+
+.zdos-op-risk__mit-list {
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.zdos-op-risk__mit-list li {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.zdos-op-risk__mit-list li:last-child { border-bottom: 0; }
+
+.zdos-op-risk__mit-action {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-risk__mit-meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.6rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-risk__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-risk__metrics > div {
+  padding: 0.45rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(2, 11, 28, 0.45);
+}
+
+.zdos-op-risk__metrics span {
+  display: block;
+  font-size: 0.58rem;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-op-risk__metrics strong {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.84rem;
+  color: rgba(255, 247, 237, 0.96);
+}
+
+/* OPERATION-CENTER-023｜稽核管理中心 Audit Center */
+.zdos-op-audc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-op-audc__hero {
+  border-radius: 16px;
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  background:
+    linear-gradient(165deg, rgba(30, 58, 138, 0.48) 0%, rgba(4, 20, 40, 0.92) 70%);
+  padding: 0.95rem 1rem 1rem;
+}
+
+.zdos-op-audc__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(191, 219, 254, 0.92);
+}
+
+.zdos-op-audc__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(239, 246, 255, 0.98);
+}
+
+.zdos-op-audc__flow,
+.zdos-op-audc__role {
+  margin: 0.3rem 0 0;
+  font-size: 0.68rem;
+  color: rgba(191, 219, 254, 0.9);
+}
+
+.zdos-op-audc__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.zdos-op-audc__tab {
+  min-height: 30px;
+  padding: 0.25rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid rgba(96, 165, 250, 0.28);
+  background: rgba(4, 20, 40, 0.7);
+  color: rgba(191, 219, 254, 0.85);
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-op-audc__tab.is-active {
+  border-color: rgba(96, 165, 250, 0.55);
+  background: rgba(30, 58, 138, 0.55);
+  color: #bfdbfe;
+}
+
+.zdos-op-audc__board {
+  border-radius: 16px;
+  border: 1px solid rgba(130, 215, 255, 0.22);
+  background: rgba(4, 20, 40, 0.78);
+  padding: 0.9rem 1rem 1rem;
+}
+
+.zdos-op-audc__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-op-audc__block-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.zdos-op-audc__block-meta {
+  margin: 0;
+  font-size: 0.64rem;
+  color: rgba(148, 180, 210, 0.85);
+}
+
+.zdos-op-audc__list,
+.zdos-op-audc__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zdos-op-audc__item {
+  margin-top: 0.55rem;
+  padding: 0.7rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(96, 165, 250, 0.22);
+  background: rgba(2, 11, 28, 0.55);
+}
+
+.zdos-op-audc__item.is-focus,
+.zdos-op-audc__item--completed {
+  border-color: rgba(96, 165, 250, 0.45);
+}
+
+.zdos-op-audc__item--in_progress {
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.zdos-op-audc__item-kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: rgba(191, 219, 254, 0.9);
+}
+
+.zdos-op-audc__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-audc__item-desc,
+.zdos-op-audc__item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: rgba(186, 220, 245, 0.88);
+}
+
+.zdos-op-audc__item-meta { color: rgba(148, 180, 210, 0.85); }
+
+.zdos-op-audc__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+}
+
+.zdos-op-audc__link {
+  border: 0;
+  background: transparent;
+  color: #60a5fa;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+
+.zdos-op-audc__items {
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.zdos-op-audc__items li {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.zdos-op-audc__items li:last-child { border-bottom: 0; }
+
+.zdos-op-audc__q {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: rgba(240, 248, 255, 0.96);
+}
+
+.zdos-op-audc__mini {
+  flex-shrink: 0;
+  min-height: 26px;
+  padding: 0.1rem 0.45rem;
+  border-radius: 7px;
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  background: rgba(30, 58, 138, 0.45);
+  color: #bfdbfe;
+  font-size: 0.6rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* OPERATION-CENTER-024｜品質管理中心 */
+.zdos-op-qual {
+  --qual-ink: #ecfccb;
+  --qual-muted: rgba(190, 242, 100, 0.72);
+  --qual-line: rgba(132, 204, 22, 0.28);
+  --qual-fill: rgba(63, 98, 18, 0.35);
+  display: grid;
+  gap: 0.85rem;
+}
+.zdos-op-qual__hero {
+  padding: 1rem 0.15rem 0.25rem;
+  border-bottom: 1px solid var(--qual-line);
+}
+.zdos-op-qual__eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #a3e635;
+}
+.zdos-op-qual__title {
+  margin: 0.35rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--qual-ink);
+}
+.zdos-op-qual__flow,
+.zdos-op-qual__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: var(--qual-muted);
+}
+.zdos-op-qual__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.zdos-op-qual__tab {
+  border: 1px solid var(--qual-line);
+  background: rgba(20, 32, 12, 0.55);
+  color: #d9f99d;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-qual__tab.is-active {
+  background: rgba(101, 163, 13, 0.35);
+  border-color: rgba(163, 230, 53, 0.55);
+  color: #f7fee7;
+}
+.zdos-op-qual__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-qual__chip {
+  border: 1px solid rgba(132, 204, 22, 0.22);
+  background: transparent;
+  color: rgba(217, 249, 157, 0.85);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-qual__chip.is-active {
+  background: var(--qual-fill);
+  border-color: rgba(163, 230, 53, 0.5);
+  color: #f7fee7;
+}
+.zdos-op-qual__board {
+  display: grid;
+  gap: 0.65rem;
+}
+.zdos-op-qual__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-qual__block-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--qual-ink);
+}
+.zdos-op-qual__block-meta {
+  margin: 0;
+  font-size: 0.58rem;
+  color: rgba(163, 230, 53, 0.55);
+}
+.zdos-op-qual__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-qual__item {
+  border: 1px solid var(--qual-line);
+  background: rgba(24, 38, 14, 0.72);
+  border-radius: 12px;
+  padding: 0.75rem 0.8rem;
+}
+.zdos-op-qual__item--under {
+  border-color: rgba(251, 146, 60, 0.45);
+}
+.zdos-op-qual__item--converted {
+  border-color: rgba(163, 230, 53, 0.45);
+}
+.zdos-op-qual__item--ok {
+  border-color: rgba(74, 222, 128, 0.35);
+}
+.zdos-op-qual__item-kicker {
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #bef264;
+}
+.zdos-op-qual__item-title {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #f7fee7;
+}
+.zdos-op-qual__item-desc,
+.zdos-op-qual__item-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: rgba(217, 249, 157, 0.78);
+}
+.zdos-op-qual__item-meta { color: rgba(190, 242, 100, 0.7); }
+.zdos-op-qual__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+.zdos-op-qual__link {
+  border: 0;
+  background: transparent;
+  color: #a3e635;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+.zdos-op-qual__report {
+  border: 1px solid rgba(163, 230, 53, 0.35);
+  background: rgba(54, 83, 20, 0.4);
+  border-radius: 12px;
+  padding: 0.75rem 0.8rem;
+  margin-bottom: 0.55rem;
+}
+.zdos-op-qual__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(190, 242, 100, 0.65);
+}
+
+/* OPERATION-CENTER-025｜客戶體驗中心 */
+.zdos-op-cx {
+  --cx-ink: #cffafe;
+  --cx-muted: rgba(103, 232, 249, 0.72);
+  --cx-line: rgba(34, 211, 238, 0.28);
+  --cx-fill: rgba(14, 116, 144, 0.35);
+  display: grid;
+  gap: 0.85rem;
+}
+.zdos-op-cx__hero {
+  padding: 1rem 0.15rem 0.25rem;
+  border-bottom: 1px solid var(--cx-line);
+}
+.zdos-op-cx__eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #22d3ee;
+}
+.zdos-op-cx__title {
+  margin: 0.35rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--cx-ink);
+}
+.zdos-op-cx__flow,
+.zdos-op-cx__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: var(--cx-muted);
+}
+.zdos-op-cx__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.zdos-op-cx__tab {
+  border: 1px solid var(--cx-line);
+  background: rgba(8, 32, 40, 0.55);
+  color: #a5f3fc;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-cx__tab.is-active {
+  background: rgba(8, 145, 178, 0.4);
+  border-color: rgba(34, 211, 238, 0.55);
+  color: #ecfeff;
+}
+.zdos-op-cx__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-cx__chip {
+  border: 1px solid rgba(34, 211, 238, 0.22);
+  background: transparent;
+  color: rgba(165, 243, 252, 0.85);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-cx__chip.is-active {
+  background: var(--cx-fill);
+  border-color: rgba(34, 211, 238, 0.5);
+  color: #ecfeff;
+}
+.zdos-op-cx__board {
+  display: grid;
+  gap: 0.65rem;
+}
+.zdos-op-cx__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-cx__block-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--cx-ink);
+}
+.zdos-op-cx__block-meta {
+  margin: 0;
+  font-size: 0.58rem;
+  color: rgba(34, 211, 238, 0.55);
+}
+.zdos-op-cx__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-cx__item {
+  border: 1px solid var(--cx-line);
+  background: rgba(12, 40, 48, 0.72);
+  border-radius: 12px;
+  padding: 0.75rem 0.8rem;
+}
+.zdos-op-cx__item--praise { border-color: rgba(52, 211, 153, 0.4); }
+.zdos-op-cx__item--suggestion { border-color: rgba(251, 191, 36, 0.4); }
+.zdos-op-cx__item--mixed { border-color: rgba(34, 211, 238, 0.35); }
+.zdos-op-cx__item--high { border-color: rgba(248, 113, 113, 0.5); }
+.zdos-op-cx__item--medium { border-color: rgba(251, 146, 60, 0.45); }
+.zdos-op-cx__item--low { border-color: rgba(125, 211, 252, 0.35); }
+.zdos-op-cx__item--st-converted { border-color: rgba(52, 211, 153, 0.45); }
+.zdos-op-cx__item-kicker {
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #67e8f9;
+}
+.zdos-op-cx__item-title {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ecfeff;
+}
+.zdos-op-cx__item-desc,
+.zdos-op-cx__item-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: rgba(165, 243, 252, 0.78);
+}
+.zdos-op-cx__item-meta { color: rgba(103, 232, 249, 0.7); }
+.zdos-op-cx__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+.zdos-op-cx__link {
+  border: 0;
+  background: transparent;
+  color: #22d3ee;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+.zdos-op-cx__report {
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  background: rgba(14, 116, 144, 0.35);
+  border-radius: 12px;
+  padding: 0.75rem 0.8rem;
+  margin-bottom: 0.55rem;
+}
+.zdos-op-cx__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(103, 232, 249, 0.65);
+}
+
+/* OPERATION-CENTER-026｜供應鏈與資源管理中心 */
+.zdos-op-sc {
+  --sc-ink: #fef3c7;
+  --sc-muted: rgba(252, 211, 77, 0.72);
+  --sc-line: rgba(245, 158, 11, 0.3);
+  --sc-fill: rgba(146, 64, 14, 0.35);
+  display: grid;
+  gap: 0.85rem;
+}
+.zdos-op-sc__hero {
+  padding: 1rem 0.15rem 0.25rem;
+  border-bottom: 1px solid var(--sc-line);
+}
+.zdos-op-sc__eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #fbbf24;
+}
+.zdos-op-sc__title {
+  margin: 0.35rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--sc-ink);
+}
+.zdos-op-sc__flow,
+.zdos-op-sc__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: var(--sc-muted);
+}
+.zdos-op-sc__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.zdos-op-sc__tab {
+  border: 1px solid var(--sc-line);
+  background: rgba(40, 24, 8, 0.55);
+  color: #fde68a;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-sc__tab.is-active {
+  background: rgba(180, 83, 9, 0.4);
+  border-color: rgba(251, 191, 36, 0.55);
+  color: #fffbeb;
+}
+.zdos-op-sc__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-sc__chip {
+  border: 1px solid rgba(245, 158, 11, 0.22);
+  background: transparent;
+  color: rgba(253, 230, 138, 0.85);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-sc__chip.is-active {
+  background: var(--sc-fill);
+  border-color: rgba(251, 191, 36, 0.5);
+  color: #fffbeb;
+}
+.zdos-op-sc__board { display: grid; gap: 0.65rem; }
+.zdos-op-sc__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-sc__block-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--sc-ink);
+}
+.zdos-op-sc__block-meta {
+  margin: 0;
+  font-size: 0.58rem;
+  color: rgba(251, 191, 36, 0.55);
+}
+.zdos-op-sc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-sc__item {
+  border: 1px solid var(--sc-line);
+  background: rgba(42, 28, 12, 0.72);
+  border-radius: 12px;
+  padding: 0.75rem 0.8rem;
+}
+.zdos-op-sc__item--ok { border-color: rgba(74, 222, 128, 0.35); }
+.zdos-op-sc__item--low { border-color: rgba(251, 146, 60, 0.5); }
+.zdos-op-sc__item--out { border-color: rgba(248, 113, 113, 0.55); }
+.zdos-op-sc__item--rel-high { border-color: rgba(74, 222, 128, 0.35); }
+.zdos-op-sc__item--rel-medium { border-color: rgba(251, 191, 36, 0.4); }
+.zdos-op-sc__item--rel-low { border-color: rgba(248, 113, 113, 0.45); }
+.zdos-op-sc__item--ord-ordered { border-color: rgba(251, 191, 36, 0.45); }
+.zdos-op-sc__item--ord-received { border-color: rgba(74, 222, 128, 0.4); }
+.zdos-op-sc__item--ord-cancelled { border-color: rgba(148, 163, 184, 0.35); }
+.zdos-op-sc__item--risk-high { border-color: rgba(248, 113, 113, 0.55); }
+.zdos-op-sc__item--risk-medium { border-color: rgba(251, 146, 60, 0.45); }
+.zdos-op-sc__item-kicker {
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #fcd34d;
+}
+.zdos-op-sc__item-title {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fffbeb;
+}
+.zdos-op-sc__item-desc,
+.zdos-op-sc__item-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: rgba(253, 230, 138, 0.78);
+}
+.zdos-op-sc__item-meta { color: rgba(252, 211, 77, 0.7); }
+.zdos-op-sc__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+.zdos-op-sc__link {
+  border: 0;
+  background: transparent;
+  color: #fbbf24;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+.zdos-op-sc__report {
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  background: rgba(120, 53, 15, 0.4);
+  border-radius: 12px;
+  padding: 0.75rem 0.8rem;
+  margin-bottom: 0.55rem;
+}
+.zdos-op-sc__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(252, 211, 77, 0.65);
+}
+
+/* OPERATION-CENTER-027｜財務分析中心 */
+.zdos-op-fin {
+  --fin-ink: #d1fae5;
+  --fin-muted: rgba(110, 231, 183, 0.72);
+  --fin-line: rgba(16, 185, 129, 0.28);
+  --fin-fill: rgba(6, 78, 59, 0.4);
+  display: grid;
+  gap: 0.85rem;
+}
+.zdos-op-fin__hero {
+  padding: 1rem 0.15rem 0.25rem;
+  border-bottom: 1px solid var(--fin-line);
+}
+.zdos-op-fin__eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #34d399;
+}
+.zdos-op-fin__title {
+  margin: 0.35rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--fin-ink);
+}
+.zdos-op-fin__flow,
+.zdos-op-fin__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: var(--fin-muted);
+}
+.zdos-op-fin__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.zdos-op-fin__tab {
+  border: 1px solid var(--fin-line);
+  background: rgba(6, 32, 24, 0.55);
+  color: #a7f3d0;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-fin__tab.is-active {
+  background: rgba(4, 120, 87, 0.45);
+  border-color: rgba(52, 211, 153, 0.55);
+  color: #ecfdf5;
+}
+.zdos-op-fin__board { display: grid; gap: 0.65rem; }
+.zdos-op-fin__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-fin__block-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--fin-ink);
+}
+.zdos-op-fin__block-meta {
+  margin: 0;
+  font-size: 0.58rem;
+  color: rgba(52, 211, 153, 0.55);
+}
+.zdos-op-fin__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+.zdos-op-fin__metrics--panel {
+  margin-top: 0;
+  margin-bottom: 0.55rem;
+}
+.zdos-op-fin__metrics > div {
+  border: 1px solid rgba(16, 185, 129, 0.18);
+  background: rgba(6, 60, 45, 0.35);
+  border-radius: 10px;
+  padding: 0.45rem 0.55rem;
+}
+.zdos-op-fin__metrics span {
+  display: block;
+  font-size: 0.58rem;
+  color: rgba(167, 243, 208, 0.7);
+}
+.zdos-op-fin__metrics strong {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.85rem;
+  color: #ecfdf5;
+}
+.zdos-op-fin__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-fin__item {
+  border: 1px solid var(--fin-line);
+  background: rgba(8, 40, 30, 0.72);
+  border-radius: 12px;
+  padding: 0.75rem 0.8rem;
+}
+.zdos-op-fin__item--high { border-color: rgba(248, 113, 113, 0.5); }
+.zdos-op-fin__item--medium { border-color: rgba(251, 146, 60, 0.45); }
+.zdos-op-fin__item--low { border-color: rgba(110, 231, 183, 0.35); }
+.zdos-op-fin__item-kicker {
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #6ee7b7;
+}
+.zdos-op-fin__item-title {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ecfdf5;
+}
+.zdos-op-fin__item-desc,
+.zdos-op-fin__item-meta,
+.zdos-op-fin__note {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: rgba(167, 243, 208, 0.78);
+}
+.zdos-op-fin__mini {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.zdos-op-fin__mini li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.12);
+  padding: 0.35rem 0;
+  font-size: 0.72rem;
+  color: #d1fae5;
+}
+.zdos-op-fin__mini em {
+  font-style: normal;
+  color: rgba(110, 231, 183, 0.7);
+  font-size: 0.65rem;
+}
+.zdos-op-fin__report {
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  background: rgba(6, 78, 59, 0.4);
+  border-radius: 12px;
+  padding: 0.75rem 0.8rem;
+  margin-bottom: 0.55rem;
+}
+.zdos-op-fin__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(110, 231, 183, 0.65);
+}
+
+/* OPERATION-CENTER-028｜執行力管理中心 */
+.zdos-op-exec {
+  --exec-ink: #ffe4e6;
+  --exec-muted: rgba(251, 113, 133, 0.72);
+  --exec-line: rgba(244, 63, 94, 0.3);
+  --exec-fill: rgba(136, 19, 55, 0.4);
+  display: grid;
+  gap: 0.85rem;
+}
+.zdos-op-exec__hero {
+  padding: 1rem 0.15rem 0.25rem;
+  border-bottom: 1px solid var(--exec-line);
+}
+.zdos-op-exec__eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #fb7185;
+}
+.zdos-op-exec__title {
+  margin: 0.35rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--exec-ink);
+}
+.zdos-op-exec__flow,
+.zdos-op-exec__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: var(--exec-muted);
+}
+.zdos-op-exec__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.zdos-op-exec__tab {
+  border: 1px solid var(--exec-line);
+  background: rgba(40, 12, 20, 0.55);
+  color: #fecdd3;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-exec__tab.is-active {
+  background: rgba(190, 18, 60, 0.4);
+  border-color: rgba(251, 113, 133, 0.55);
+  color: #fff1f2;
+}
+.zdos-op-exec__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-exec__chip {
+  border: 1px solid rgba(244, 63, 94, 0.22);
+  background: transparent;
+  color: rgba(254, 205, 211, 0.85);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-exec__chip.is-active {
+  background: var(--exec-fill);
+  border-color: rgba(251, 113, 133, 0.5);
+  color: #fff1f2;
+}
+.zdos-op-exec__board { display: grid; gap: 0.65rem; }
+.zdos-op-exec__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+.zdos-op-exec__block-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--exec-ink);
+}
+.zdos-op-exec__block-meta {
+  margin: 0;
+  font-size: 0.58rem;
+  color: rgba(251, 113, 133, 0.55);
+}
+.zdos-op-exec__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-exec__item {
+  border: 1px solid var(--exec-line);
+  background: rgba(48, 14, 24, 0.72);
+  border-radius: 12px;
+  padding: 0.75rem 0.8rem;
+}
+.zdos-op-exec__item--delayed,
+.zdos-op-exec__item--p-high { border-color: rgba(248, 113, 113, 0.55); }
+.zdos-op-exec__item--completed { border-color: rgba(251, 191, 36, 0.4); }
+.zdos-op-exec__item--verified { border-color: rgba(74, 222, 128, 0.4); }
+.zdos-op-exec__item--in_progress { border-color: rgba(251, 113, 133, 0.45); }
+.zdos-op-exec__item-kicker {
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #fda4af;
+}
+.zdos-op-exec__item-title {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fff1f2;
+}
+.zdos-op-exec__item-desc,
+.zdos-op-exec__item-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: rgba(254, 205, 211, 0.78);
+}
+.zdos-op-exec__item-meta { color: rgba(251, 113, 133, 0.72); }
+.zdos-op-exec__bar {
+  margin-top: 0.45rem;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.zdos-op-exec__bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #fb7185, #f43f5e);
+}
+.zdos-op-exec__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+.zdos-op-exec__metrics > div {
+  border: 1px solid rgba(244, 63, 94, 0.18);
+  background: rgba(80, 10, 30, 0.35);
+  border-radius: 10px;
+  padding: 0.4rem 0.5rem;
+}
+.zdos-op-exec__metrics span {
+  display: block;
+  font-size: 0.58rem;
+  color: rgba(254, 205, 211, 0.7);
+}
+.zdos-op-exec__metrics strong {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.85rem;
+  color: #fff1f2;
+}
+.zdos-op-exec__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+.zdos-op-exec__link {
+  border: 0;
+  background: transparent;
+  color: #fb7185;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+.zdos-op-exec__hist {
+  list-style: none;
+  margin: 0.45rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.62rem;
+  color: rgba(254, 205, 211, 0.65);
+}
+.zdos-op-exec__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(251, 113, 133, 0.65);
+}
+
+/* OPERATION-CENTER-029｜專案管理中心 */
+.zdos-op-proj {
+  --proj-ink: #e0f2fe;
+  --proj-muted: rgba(125, 211, 252, 0.72);
+  --proj-line: rgba(56, 189, 248, 0.3);
+  --proj-fill: rgba(7, 89, 133, 0.4);
+  display: grid;
+  gap: 0.85rem;
+}
+.zdos-op-proj__hero {
+  padding: 1rem 0.15rem 0.25rem;
+  border-bottom: 1px solid var(--proj-line);
+}
+.zdos-op-proj__eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #38bdf8;
+}
+.zdos-op-proj__title {
+  margin: 0.35rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--proj-ink);
+}
+.zdos-op-proj__flow,
+.zdos-op-proj__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: var(--proj-muted);
+}
+.zdos-op-proj__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.zdos-op-proj__tab {
+  border: 1px solid var(--proj-line);
+  background: rgba(8, 28, 40, 0.55);
+  color: #bae6fd;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-proj__tab.is-active {
+  background: rgba(3, 105, 161, 0.45);
+  border-color: rgba(56, 189, 248, 0.55);
+  color: #f0f9ff;
+}
+.zdos-op-proj__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-proj__chip {
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  background: transparent;
+  color: rgba(186, 230, 253, 0.85);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-proj__chip.is-active {
+  background: var(--proj-fill);
+  border-color: rgba(56, 189, 248, 0.5);
+  color: #f0f9ff;
+}
+.zdos-op-proj__board { display: grid; gap: 0.65rem; }
+.zdos-op-proj__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-proj__block-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--proj-ink);
+}
+.zdos-op-proj__block-meta {
+  margin: 0;
+  font-size: 0.58rem;
+  color: rgba(56, 189, 248, 0.55);
+}
+.zdos-op-proj__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-proj__item {
+  border: 1px solid var(--proj-line);
+  background: rgba(10, 36, 52, 0.72);
+  border-radius: 12px;
+  padding: 0.75rem 0.8rem;
+}
+.zdos-op-proj__item.is-focus,
+.zdos-op-proj__item--completed { border-color: rgba(74, 222, 128, 0.4); }
+.zdos-op-proj__item--active { border-color: rgba(56, 189, 248, 0.5); }
+.zdos-op-proj__item--planning { border-color: rgba(148, 163, 184, 0.35); }
+.zdos-op-proj__item--risk-high { border-color: rgba(248, 113, 113, 0.5); }
+.zdos-op-proj__item--risk-medium { border-color: rgba(251, 146, 60, 0.45); }
+.zdos-op-proj__item--rs-mitigated { border-color: rgba(74, 222, 128, 0.35); }
+.zdos-op-proj__item-kicker {
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #7dd3fc;
+}
+.zdos-op-proj__item-title {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #f0f9ff;
+}
+.zdos-op-proj__item-desc,
+.zdos-op-proj__item-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: rgba(186, 230, 253, 0.78);
+}
+.zdos-op-proj__item-meta { color: rgba(125, 211, 252, 0.7); }
+.zdos-op-proj__bar {
+  margin-top: 0.45rem;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.zdos-op-proj__bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+}
+.zdos-op-proj__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+.zdos-op-proj__link {
+  border: 0;
+  background: transparent;
+  color: #38bdf8;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+.zdos-op-proj__mini {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.62rem;
+  color: rgba(186, 230, 253, 0.65);
+}
+.zdos-op-proj__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(125, 211, 252, 0.65);
+}
+
+/* OPERATION-CENTER-030｜文件與制度中心 */
+.zdos-op-doc {
+  --doc-ink: #e2e8f0;
+  --doc-muted: rgba(148, 163, 184, 0.78);
+  --doc-line: rgba(148, 163, 184, 0.28);
+  --doc-fill: rgba(51, 65, 85, 0.45);
+  display: grid;
+  gap: 0.85rem;
+}
+.zdos-op-doc__hero {
+  padding: 1rem 0.15rem 0.25rem;
+  border-bottom: 1px solid var(--doc-line);
+}
+.zdos-op-doc__eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #94a3b8;
+}
+.zdos-op-doc__title {
+  margin: 0.35rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--doc-ink);
+}
+.zdos-op-doc__flow,
+.zdos-op-doc__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: var(--doc-muted);
+}
+.zdos-op-doc__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.zdos-op-doc__tab {
+  border: 1px solid var(--doc-line);
+  background: rgba(15, 23, 42, 0.55);
+  color: #cbd5e1;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-doc__tab.is-active {
+  background: rgba(71, 85, 105, 0.5);
+  border-color: rgba(203, 213, 225, 0.45);
+  color: #f8fafc;
+}
+.zdos-op-doc__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-doc__chip {
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: transparent;
+  color: rgba(203, 213, 225, 0.85);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-doc__chip.is-active {
+  background: var(--doc-fill);
+  border-color: rgba(203, 213, 225, 0.45);
+  color: #f8fafc;
+}
+.zdos-op-doc__board { display: grid; gap: 0.65rem; }
+.zdos-op-doc__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+.zdos-op-doc__block-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--doc-ink);
+}
+.zdos-op-doc__block-meta {
+  margin: 0;
+  font-size: 0.58rem;
+  color: rgba(148, 163, 184, 0.55);
+}
+.zdos-op-doc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-doc__item {
+  border: 1px solid var(--doc-line);
+  background: rgba(30, 41, 59, 0.72);
+  border-radius: 12px;
+  padding: 0.75rem 0.8rem;
+}
+.zdos-op-doc__item--draft { border-color: rgba(148, 163, 184, 0.3); }
+.zdos-op-doc__item--review { border-color: rgba(251, 191, 36, 0.4); }
+.zdos-op-doc__item--published { border-color: rgba(74, 222, 128, 0.4); }
+.zdos-op-doc__item--archived { border-color: rgba(100, 116, 139, 0.35); opacity: 0.85; }
+.zdos-op-doc__item-kicker {
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #94a3b8;
+}
+.zdos-op-doc__item-title {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #f8fafc;
+}
+.zdos-op-doc__item-desc,
+.zdos-op-doc__item-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: rgba(203, 213, 225, 0.78);
+}
+.zdos-op-doc__item-meta { color: rgba(148, 163, 184, 0.75); }
+.zdos-op-doc__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+.zdos-op-doc__link {
+  border: 0;
+  background: transparent;
+  color: #cbd5e1;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+.zdos-op-doc__mini {
+  list-style: none;
+  margin: 0.45rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.62rem;
+  color: rgba(203, 213, 225, 0.65);
+}
+.zdos-op-doc__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(148, 163, 184, 0.65);
+}
+
+/* OPERATION-CENTER-031｜會議管理中心 */
+.zdos-op-meet {
+  --meet-ink: #ffedd5;
+  --meet-muted: rgba(253, 186, 116, 0.75);
+  --meet-line: rgba(251, 146, 60, 0.3);
+  --meet-fill: rgba(154, 52, 18, 0.4);
+  display: grid;
+  gap: 0.85rem;
+}
+.zdos-op-meet__hero {
+  padding: 1rem 0.15rem 0.25rem;
+  border-bottom: 1px solid var(--meet-line);
+}
+.zdos-op-meet__eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #fb923c;
+}
+.zdos-op-meet__title {
+  margin: 0.35rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--meet-ink);
+}
+.zdos-op-meet__flow,
+.zdos-op-meet__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: var(--meet-muted);
+}
+.zdos-op-meet__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.zdos-op-meet__tab {
+  border: 1px solid var(--meet-line);
+  background: rgba(40, 20, 8, 0.55);
+  color: #fed7aa;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-meet__tab.is-active {
+  background: rgba(194, 65, 12, 0.45);
+  border-color: rgba(251, 146, 60, 0.55);
+  color: #fff7ed;
+}
+.zdos-op-meet__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-meet__chip {
+  border: 1px solid rgba(251, 146, 60, 0.22);
+  background: transparent;
+  color: rgba(254, 215, 170, 0.85);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.zdos-op-meet__chip.is-active {
+  background: var(--meet-fill);
+  border-color: rgba(251, 146, 60, 0.5);
+  color: #fff7ed;
+}
+.zdos-op-meet__board { display: grid; gap: 0.65rem; }
+.zdos-op-meet__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-meet__block-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--meet-ink);
+}
+.zdos-op-meet__block-meta {
+  margin: 0;
+  font-size: 0.58rem;
+  color: rgba(251, 146, 60, 0.55);
+}
+.zdos-op-meet__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-meet__item {
+  border: 1px solid var(--meet-line);
+  background: rgba(48, 24, 10, 0.72);
+  border-radius: 12px;
+  padding: 0.75rem 0.8rem;
+}
+.zdos-op-meet__item--scheduled { border-color: rgba(251, 191, 36, 0.4); }
+.zdos-op-meet__item--in_progress { border-color: rgba(251, 146, 60, 0.5); }
+.zdos-op-meet__item--completed { border-color: rgba(74, 222, 128, 0.4); }
+.zdos-op-meet__item--cancelled { border-color: rgba(148, 163, 184, 0.35); opacity: 0.85; }
+.zdos-op-meet__item--dec-open { border-color: rgba(251, 146, 60, 0.5); }
+.zdos-op-meet__item--dec-done { border-color: rgba(74, 222, 128, 0.4); }
+.zdos-op-meet__item-kicker {
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #fdba74;
+}
+.zdos-op-meet__item-title {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fff7ed;
+}
+.zdos-op-meet__item-desc,
+.zdos-op-meet__item-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: rgba(254, 215, 170, 0.78);
+}
+.zdos-op-meet__item-meta { color: rgba(253, 186, 116, 0.72); }
+.zdos-op-meet__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+.zdos-op-meet__link {
+  border: 0;
+  background: transparent;
+  color: #fb923c;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+.zdos-op-meet__mini {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.62rem;
+  color: rgba(254, 215, 170, 0.65);
+}
+.zdos-op-meet__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(253, 186, 116, 0.65);
+}
+
+/* OPERATION-CENTER-032｜創新中心 */
+.zdos-op-innov {
+  display: grid;
+  gap: 0.85rem;
+  color: #fdf2f8;
+}
+.zdos-op-innov__hero {
+  padding: 0.15rem 0.1rem 0.35rem;
+}
+.zdos-op-innov__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: rgba(244, 114, 182, 0.85);
+}
+.zdos-op-innov__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fce7f3;
+}
+.zdos-op-innov__flow,
+.zdos-op-innov__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: rgba(251, 207, 232, 0.72);
+}
+.zdos-op-innov__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-innov__tab {
+  border: 1px solid rgba(244, 114, 182, 0.28);
+  background: rgba(131, 24, 67, 0.22);
+  color: rgba(252, 231, 243, 0.88);
+  border-radius: 0.55rem;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.zdos-op-innov__tab.is-active {
+  background: rgba(219, 39, 119, 0.45);
+  border-color: rgba(244, 114, 182, 0.55);
+  color: #fff;
+}
+.zdos-op-innov__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-innov__chip {
+  border: 1px solid rgba(251, 191, 36, 0.28);
+  background: rgba(120, 53, 15, 0.18);
+  color: rgba(254, 243, 199, 0.88);
+  border-radius: 999px;
+  padding: 0.22rem 0.55rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.zdos-op-innov__chip.is-active {
+  background: rgba(217, 119, 6, 0.4);
+  border-color: rgba(251, 191, 36, 0.55);
+  color: #fffbeb;
+}
+.zdos-op-innov__board { display: grid; gap: 0.65rem; }
+.zdos-op-innov__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-innov__block-title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #fce7f3;
+}
+.zdos-op-innov__block-meta {
+  margin: 0;
+  font-size: 0.6rem;
+  color: rgba(251, 207, 232, 0.55);
+}
+.zdos-op-innov__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-innov__item {
+  border: 1px solid rgba(244, 114, 182, 0.28);
+  background: rgba(80, 7, 46, 0.28);
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.75rem;
+}
+.zdos-op-innov__item--proposed { border-color: rgba(251, 191, 36, 0.4); }
+.zdos-op-innov__item--evaluating { border-color: rgba(244, 114, 182, 0.5); }
+.zdos-op-innov__item--approved { border-color: rgba(52, 211, 153, 0.45); }
+.zdos-op-innov__item--rejected { border-color: rgba(148, 163, 184, 0.35); opacity: 0.85; }
+.zdos-op-innov__item--experimenting { border-color: rgba(251, 146, 60, 0.5); }
+.zdos-op-innov__item--completed { border-color: rgba(74, 222, 128, 0.4); }
+.zdos-op-innov__item--standardized { border-color: rgba(250, 204, 21, 0.55); }
+.zdos-op-innov__item-kicker {
+  margin: 0 0 0.2rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: rgba(251, 207, 232, 0.7);
+}
+.zdos-op-innov__item-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #fdf2f8;
+}
+.zdos-op-innov__item-desc,
+.zdos-op-innov__item-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(252, 231, 243, 0.72);
+  white-space: pre-wrap;
+}
+.zdos-op-innov__item-meta { color: rgba(253, 224, 171, 0.72); }
+.zdos-op-innov__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+.zdos-op-innov__link {
+  border: 1px solid rgba(244, 114, 182, 0.35);
+  background: rgba(157, 23, 77, 0.28);
+  color: #fce7f3;
+  border-radius: 0.45rem;
+  padding: 0.22rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.zdos-op-innov__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(251, 207, 232, 0.65);
+}
+
+/* OPERATION-CENTER-033｜品牌管理中心 */
+.zdos-op-brand {
+  display: grid;
+  gap: 0.85rem;
+  color: #f0fdfa;
+}
+.zdos-op-brand__hero {
+  padding: 0.15rem 0.1rem 0.35rem;
+}
+.zdos-op-brand__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: rgba(45, 212, 191, 0.85);
+}
+.zdos-op-brand__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ccfbf1;
+}
+.zdos-op-brand__flow,
+.zdos-op-brand__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: rgba(153, 246, 228, 0.72);
+}
+.zdos-op-brand__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-brand__tab {
+  border: 1px solid rgba(45, 212, 191, 0.28);
+  background: rgba(19, 78, 74, 0.28);
+  color: rgba(204, 251, 241, 0.88);
+  border-radius: 0.55rem;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.zdos-op-brand__tab.is-active {
+  background: rgba(13, 148, 136, 0.5);
+  border-color: rgba(45, 212, 191, 0.55);
+  color: #fff;
+}
+.zdos-op-brand__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-brand__chip {
+  border: 1px solid rgba(52, 211, 153, 0.28);
+  background: rgba(6, 78, 59, 0.22);
+  color: rgba(209, 250, 229, 0.88);
+  border-radius: 999px;
+  padding: 0.22rem 0.55rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.zdos-op-brand__chip.is-active {
+  background: rgba(5, 150, 105, 0.42);
+  border-color: rgba(52, 211, 153, 0.55);
+  color: #ecfdf5;
+}
+.zdos-op-brand__board { display: grid; gap: 0.65rem; }
+.zdos-op-brand__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-brand__block-title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #ccfbf1;
+}
+.zdos-op-brand__block-meta {
+  margin: 0;
+  font-size: 0.6rem;
+  color: rgba(153, 246, 228, 0.55);
+}
+.zdos-op-brand__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-brand__item,
+.zdos-op-brand__profile {
+  border: 1px solid rgba(45, 212, 191, 0.28);
+  background: rgba(4, 47, 46, 0.35);
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.75rem;
+}
+.zdos-op-brand__item--logo { border-color: rgba(250, 204, 21, 0.45); }
+.zdos-op-brand__item--standard { border-color: rgba(56, 189, 248, 0.4); }
+.zdos-op-brand__item--story { border-color: rgba(167, 139, 250, 0.4); }
+.zdos-op-brand__item--version { border-color: rgba(52, 211, 153, 0.4); }
+.zdos-op-brand__item--usage { border-color: rgba(148, 163, 184, 0.35); }
+.zdos-op-brand__item-kicker {
+  margin: 0 0 0.2rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: rgba(153, 246, 228, 0.7);
+}
+.zdos-op-brand__item-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #f0fdfa;
+}
+.zdos-op-brand__item-desc,
+.zdos-op-brand__item-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(204, 251, 241, 0.72);
+  white-space: pre-wrap;
+}
+.zdos-op-brand__item-meta { color: rgba(167, 243, 208, 0.72); }
+.zdos-op-brand__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+.zdos-op-brand__link {
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  background: rgba(15, 118, 110, 0.32);
+  color: #ccfbf1;
+  border-radius: 0.45rem;
+  padding: 0.22rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.zdos-op-brand__mini {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.62rem;
+  color: rgba(167, 243, 208, 0.65);
+}
+.zdos-op-brand__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(153, 246, 228, 0.65);
+}
+
+/* OPERATION-CENTER-034｜企業學院中心 */
+.zdos-op-acad {
+  display: grid;
+  gap: 0.85rem;
+  color: #eef2ff;
+}
+.zdos-op-acad__hero {
+  padding: 0.15rem 0.1rem 0.35rem;
+}
+.zdos-op-acad__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: rgba(129, 140, 248, 0.9);
+}
+.zdos-op-acad__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #e0e7ff;
+}
+.zdos-op-acad__flow,
+.zdos-op-acad__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: rgba(199, 210, 254, 0.72);
+}
+.zdos-op-acad__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-acad__tab {
+  border: 1px solid rgba(129, 140, 248, 0.3);
+  background: rgba(49, 46, 129, 0.32);
+  color: rgba(224, 231, 255, 0.9);
+  border-radius: 0.55rem;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.zdos-op-acad__tab.is-active {
+  background: rgba(79, 70, 229, 0.5);
+  border-color: rgba(165, 180, 252, 0.55);
+  color: #fff;
+}
+.zdos-op-acad__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-acad__chip {
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  background: rgba(76, 29, 149, 0.22);
+  color: rgba(237, 233, 254, 0.88);
+  border-radius: 999px;
+  padding: 0.22rem 0.55rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.zdos-op-acad__chip.is-active {
+  background: rgba(124, 58, 237, 0.42);
+  border-color: rgba(167, 139, 250, 0.55);
+  color: #f5f3ff;
+}
+.zdos-op-acad__board { display: grid; gap: 0.65rem; }
+.zdos-op-acad__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-acad__block-title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #e0e7ff;
+}
+.zdos-op-acad__block-meta {
+  margin: 0;
+  font-size: 0.6rem;
+  color: rgba(199, 210, 254, 0.55);
+}
+.zdos-op-acad__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-acad__item {
+  border: 1px solid rgba(129, 140, 248, 0.3);
+  background: rgba(30, 27, 75, 0.4);
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.75rem;
+}
+.zdos-op-acad__item--course { border-color: rgba(129, 140, 248, 0.45); }
+.zdos-op-acad__item--path { border-color: rgba(56, 189, 248, 0.4); }
+.zdos-op-acad__item--instructor { border-color: rgba(251, 191, 36, 0.4); }
+.zdos-op-acad__item--cert { border-color: rgba(52, 211, 153, 0.45); }
+.zdos-op-acad__item--assessment { border-color: rgba(244, 114, 182, 0.4); }
+.zdos-op-acad__item--assigned { border-color: rgba(251, 191, 36, 0.4); }
+.zdos-op-acad__item--in_progress { border-color: rgba(96, 165, 250, 0.45); }
+.zdos-op-acad__item--completed { border-color: rgba(74, 222, 128, 0.4); }
+.zdos-op-acad__item-kicker {
+  margin: 0 0 0.2rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: rgba(199, 210, 254, 0.72);
+}
+.zdos-op-acad__item-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #eef2ff;
+}
+.zdos-op-acad__item-desc,
+.zdos-op-acad__item-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(224, 231, 255, 0.72);
+  white-space: pre-wrap;
+}
+.zdos-op-acad__item-meta { color: rgba(196, 181, 253, 0.75); }
+.zdos-op-acad__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+.zdos-op-acad__link {
+  border: 1px solid rgba(129, 140, 248, 0.35);
+  background: rgba(67, 56, 202, 0.35);
+  color: #e0e7ff;
+  border-radius: 0.45rem;
+  padding: 0.22rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.zdos-op-acad__mini {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.62rem;
+  color: rgba(196, 181, 253, 0.7);
+}
+.zdos-op-acad__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(199, 210, 254, 0.65);
+}
+
+/* OPERATION-CENTER-035｜Founder Command Center */
+.zdos-op-fcc {
+  display: grid;
+  gap: 0.85rem;
+  color: #fffbeb;
+}
+.zdos-op-fcc__hero {
+  padding: 0.15rem 0.1rem 0.35rem;
+}
+.zdos-op-fcc__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: rgba(251, 191, 36, 0.9);
+}
+.zdos-op-fcc__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fef3c7;
+}
+.zdos-op-fcc__flow,
+.zdos-op-fcc__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: rgba(253, 230, 138, 0.72);
+}
+.zdos-op-fcc__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-fcc__tab {
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  background: rgba(120, 53, 15, 0.32);
+  color: rgba(254, 243, 199, 0.9);
+  border-radius: 0.55rem;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.zdos-op-fcc__tab.is-active {
+  background: rgba(217, 119, 6, 0.5);
+  border-color: rgba(251, 191, 36, 0.55);
+  color: #fff;
+}
+.zdos-op-fcc__board { display: grid; gap: 0.65rem; }
+.zdos-op-fcc__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-fcc__block-title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #fef3c7;
+}
+.zdos-op-fcc__block-meta {
+  margin: 0;
+  font-size: 0.6rem;
+  color: rgba(253, 230, 138, 0.55);
+}
+.zdos-op-fcc__scorecard {
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  background: rgba(69, 26, 3, 0.4);
+  border-radius: 0.85rem;
+  padding: 0.9rem 0.95rem;
+}
+.zdos-op-fcc__scorecard--A { border-color: rgba(74, 222, 128, 0.5); }
+.zdos-op-fcc__scorecard--B { border-color: rgba(52, 211, 153, 0.45); }
+.zdos-op-fcc__scorecard--C { border-color: rgba(251, 191, 36, 0.5); }
+.zdos-op-fcc__scorecard--D,
+.zdos-op-fcc__scorecard--F { border-color: rgba(248, 113, 113, 0.5); }
+.zdos-op-fcc__score {
+  margin: 0.2rem 0 0;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #fefce8;
+  line-height: 1;
+}
+.zdos-op-fcc__score span {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(253, 230, 138, 0.75);
+  margin-left: 0.2rem;
+}
+.zdos-op-fcc__score-label {
+  margin: 0.35rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fde68a;
+}
+.zdos-op-fcc__dims {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.zdos-op-fcc__dims li {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 0.15rem 0.6rem;
+  border: 1px solid rgba(251, 191, 36, 0.22);
+  border-radius: 0.55rem;
+  padding: 0.45rem 0.6rem;
+  background: rgba(69, 26, 3, 0.28);
+  font-size: 0.72rem;
+}
+.zdos-op-fcc__dims span { color: rgba(253, 230, 138, 0.75); font-weight: 700; }
+.zdos-op-fcc__dims strong { color: #fffbeb; font-weight: 800; }
+.zdos-op-fcc__dims em {
+  grid-column: 1 / -1;
+  font-style: normal;
+  color: rgba(253, 224, 171, 0.65);
+  font-size: 0.64rem;
+}
+.zdos-op-fcc__mini-stats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-fcc__mini-stats li {
+  border: 1px solid rgba(251, 191, 36, 0.28);
+  background: rgba(120, 53, 15, 0.28);
+  border-radius: 999px;
+  padding: 0.22rem 0.55rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fde68a;
+}
+.zdos-op-fcc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-fcc__item {
+  border: 1px solid rgba(251, 191, 36, 0.28);
+  background: rgba(69, 26, 3, 0.32);
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.75rem;
+}
+.zdos-op-fcc__item--warn,
+.zdos-op-fcc__item--high,
+.zdos-op-fcc__item--critical { border-color: rgba(248, 113, 113, 0.45); }
+.zdos-op-fcc__item--medium { border-color: rgba(251, 191, 36, 0.45); }
+.zdos-op-fcc__item--low { border-color: rgba(148, 163, 184, 0.35); }
+.zdos-op-fcc__item-kicker {
+  margin: 0 0 0.2rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: rgba(253, 230, 138, 0.72);
+}
+.zdos-op-fcc__item-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #fffbeb;
+}
+.zdos-op-fcc__item-desc,
+.zdos-op-fcc__item-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(254, 243, 199, 0.72);
+  white-space: pre-wrap;
+}
+.zdos-op-fcc__item-meta { color: rgba(253, 224, 171, 0.72); }
+.zdos-op-fcc__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+.zdos-op-fcc__link {
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  background: rgba(180, 83, 9, 0.35);
+  color: #fef3c7;
+  border-radius: 0.45rem;
+  padding: 0.22rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.zdos-op-fcc__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(253, 230, 138, 0.65);
+}
+
+/* PHASE-2-036｜智慧決策中心 */
+.zdos-op-di {
+  display: grid;
+  gap: 0.85rem;
+  color: #ecfeff;
+}
+.zdos-op-di__hero {
+  padding: 0.15rem 0.1rem 0.35rem;
+}
+.zdos-op-di__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: rgba(34, 211, 238, 0.9);
+}
+.zdos-op-di__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #cffafe;
+}
+.zdos-op-di__flow,
+.zdos-op-di__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: rgba(165, 243, 252, 0.72);
+}
+.zdos-op-di__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-di__tab {
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  background: rgba(21, 94, 117, 0.32);
+  color: rgba(207, 250, 254, 0.9);
+  border-radius: 0.55rem;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.zdos-op-di__tab.is-active {
+  background: rgba(8, 145, 178, 0.5);
+  border-color: rgba(34, 211, 238, 0.55);
+  color: #fff;
+}
+.zdos-op-di__board { display: grid; gap: 0.65rem; }
+.zdos-op-di__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-di__block-title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #cffafe;
+}
+.zdos-op-di__block-meta {
+  margin: 0;
+  font-size: 0.6rem;
+  color: rgba(165, 243, 252, 0.55);
+}
+.zdos-op-di__scorecard {
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  background: rgba(8, 51, 68, 0.45);
+  border-radius: 0.85rem;
+  padding: 0.9rem 0.95rem;
+}
+.zdos-op-di__scorecard--高 { border-color: rgba(248, 113, 113, 0.5); }
+.zdos-op-di__scorecard--中 { border-color: rgba(251, 191, 36, 0.5); }
+.zdos-op-di__scorecard--低 { border-color: rgba(52, 211, 153, 0.45); }
+.zdos-op-di__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-di__item {
+  border: 1px solid rgba(34, 211, 238, 0.28);
+  background: rgba(8, 47, 73, 0.38);
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.75rem;
+}
+.zdos-op-di__item--critical,
+.zdos-op-di__item--high,
+.zdos-op-di__item--strong { border-color: rgba(248, 113, 113, 0.45); }
+.zdos-op-di__item--medium { border-color: rgba(251, 191, 36, 0.4); }
+.zdos-op-di__item--low,
+.zdos-op-di__item--soft { border-color: rgba(148, 163, 184, 0.35); }
+.zdos-op-di__item--open { border-color: rgba(34, 211, 238, 0.45); }
+.zdos-op-di__item--done { border-color: rgba(74, 222, 128, 0.4); }
+.zdos-op-di__item-kicker {
+  margin: 0 0 0.2rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: rgba(165, 243, 252, 0.72);
+}
+.zdos-op-di__item-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #ecfeff;
+}
+.zdos-op-di__item-desc,
+.zdos-op-di__item-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(207, 250, 254, 0.72);
+  white-space: pre-wrap;
+}
+.zdos-op-di__item-meta { color: rgba(125, 211, 252, 0.75); }
+.zdos-op-di__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+.zdos-op-di__link {
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  background: rgba(14, 116, 144, 0.35);
+  color: #cffafe;
+  border-radius: 0.45rem;
+  padding: 0.22rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.zdos-op-di__chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-di__chips li {
+  border: 1px solid rgba(34, 211, 238, 0.28);
+  background: rgba(21, 94, 117, 0.28);
+  border-radius: 999px;
+  padding: 0.22rem 0.55rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #a5f3fc;
+}
+.zdos-op-di__note {
+  margin: 0;
+  font-size: 0.62rem;
+  color: rgba(165, 243, 252, 0.55);
+}
+.zdos-op-di__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(165, 243, 252, 0.65);
+}
+
+/* PHASE-2-037｜企業知識圖譜中心 */
+.zdos-op-kg {
+  display: grid;
+  gap: 0.85rem;
+  color: #ecfdf5;
+}
+.zdos-op-kg__hero {
+  padding: 0.15rem 0.1rem 0.35rem;
+}
+.zdos-op-kg__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: rgba(52, 211, 153, 0.9);
+}
+.zdos-op-kg__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #d1fae5;
+}
+.zdos-op-kg__flow,
+.zdos-op-kg__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: rgba(167, 243, 208, 0.72);
+}
+.zdos-op-kg__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-kg__tab {
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  background: rgba(6, 78, 59, 0.32);
+  color: rgba(209, 250, 229, 0.9);
+  border-radius: 0.55rem;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.zdos-op-kg__tab.is-active {
+  background: rgba(5, 150, 105, 0.5);
+  border-color: rgba(52, 211, 153, 0.55);
+  color: #fff;
+}
+.zdos-op-kg__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-kg__chip {
+  border: 1px solid rgba(110, 231, 183, 0.28);
+  background: rgba(6, 78, 59, 0.22);
+  color: rgba(209, 250, 229, 0.88);
+  border-radius: 999px;
+  padding: 0.22rem 0.55rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.zdos-op-kg__chip.is-active {
+  background: rgba(16, 185, 129, 0.42);
+  border-color: rgba(52, 211, 153, 0.55);
+  color: #ecfdf5;
+}
+.zdos-op-kg__board { display: grid; gap: 0.65rem; }
+.zdos-op-kg__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-kg__block-title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #d1fae5;
+}
+.zdos-op-kg__block-meta {
+  margin: 0;
+  font-size: 0.6rem;
+  color: rgba(167, 243, 208, 0.55);
+}
+.zdos-op-kg__scorecard {
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  background: rgba(6, 78, 59, 0.4);
+  border-radius: 0.85rem;
+  padding: 0.9rem 0.95rem;
+}
+.zdos-op-kg__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-kg__item {
+  border: 1px solid rgba(52, 211, 153, 0.28);
+  background: rgba(2, 44, 34, 0.4);
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.75rem;
+}
+.zdos-op-kg__item--case { border-color: rgba(251, 191, 36, 0.45); }
+.zdos-op-kg__item--rel { border-color: rgba(56, 189, 248, 0.4); }
+.zdos-op-kg__item--path { border-color: rgba(167, 139, 250, 0.45); }
+.zdos-op-kg__item-kicker {
+  margin: 0 0 0.2rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: rgba(167, 243, 208, 0.72);
+}
+.zdos-op-kg__item-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #ecfdf5;
+}
+.zdos-op-kg__item-desc,
+.zdos-op-kg__item-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(209, 250, 229, 0.72);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.zdos-op-kg__item-meta { color: rgba(110, 231, 183, 0.75); }
+.zdos-op-kg__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+.zdos-op-kg__link {
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  background: rgba(4, 120, 87, 0.35);
+  color: #d1fae5;
+  border-radius: 0.45rem;
+  padding: 0.22rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.zdos-op-kg__mini {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.62rem;
+  color: rgba(167, 243, 208, 0.7);
+}
+.zdos-op-kg__note {
+  margin: 0;
+  font-size: 0.62rem;
+  color: rgba(167, 243, 208, 0.55);
+}
+.zdos-op-kg__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(167, 243, 208, 0.65);
+}
+
+/* PHASE-2-038｜跨店營運模擬中心 */
+.zdos-op-sim {
+  display: grid;
+  gap: 0.85rem;
+  color: #f0f9ff;
+}
+.zdos-op-sim__hero {
+  padding: 0.15rem 0.1rem 0.35rem;
+}
+.zdos-op-sim__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: rgba(56, 189, 248, 0.9);
+}
+.zdos-op-sim__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #e0f2fe;
+}
+.zdos-op-sim__flow,
+.zdos-op-sim__role,
+.zdos-op-sim__note {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: rgba(186, 230, 253, 0.72);
+}
+.zdos-op-sim__note {
+  font-size: 0.62rem;
+  color: rgba(125, 211, 252, 0.6);
+}
+.zdos-op-sim__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-sim__tab {
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: rgba(12, 74, 110, 0.32);
+  color: rgba(224, 242, 254, 0.9);
+  border-radius: 0.55rem;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.zdos-op-sim__tab.is-active {
+  background: rgba(2, 132, 199, 0.5);
+  border-color: rgba(56, 189, 248, 0.55);
+  color: #fff;
+}
+.zdos-op-sim__board { display: grid; gap: 0.65rem; }
+.zdos-op-sim__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-sim__block-title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #e0f2fe;
+}
+.zdos-op-sim__block-meta {
+  margin: 0;
+  font-size: 0.6rem;
+  color: rgba(186, 230, 253, 0.55);
+}
+.zdos-op-sim__scorecard {
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: rgba(12, 74, 110, 0.4);
+  border-radius: 0.85rem;
+  padding: 0.9rem 0.95rem;
+}
+.zdos-op-sim__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-sim__item {
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  background: rgba(8, 47, 73, 0.4);
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.75rem;
+}
+.zdos-op-sim__item--draft { border-color: rgba(148, 163, 184, 0.35); }
+.zdos-op-sim__item--ran { border-color: rgba(56, 189, 248, 0.45); }
+.zdos-op-sim__item--saved { border-color: rgba(74, 222, 128, 0.4); }
+.zdos-op-sim__item--compare { border-color: rgba(251, 191, 36, 0.45); }
+.zdos-op-sim__item-kicker {
+  margin: 0 0 0.2rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: rgba(186, 230, 253, 0.72);
+}
+.zdos-op-sim__item-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #f0f9ff;
+}
+.zdos-op-sim__item-desc,
+.zdos-op-sim__item-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(224, 242, 254, 0.72);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.zdos-op-sim__item-meta { color: rgba(125, 211, 252, 0.75); }
+.zdos-op-sim__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+.zdos-op-sim__link {
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: rgba(3, 105, 161, 0.35);
+  color: #e0f2fe;
+  border-radius: 0.45rem;
+  padding: 0.22rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.zdos-op-sim__mini {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.62rem;
+  color: rgba(125, 211, 252, 0.7);
+}
+.zdos-op-sim__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(186, 230, 253, 0.65);
+}
+
+/* PHASE-2-039｜Enterprise Benchmark Center */
+.zdos-op-bm {
+  display: grid;
+  gap: 0.85rem;
+}
+.zdos-op-bm__hero {
+  padding: 0.15rem 0.1rem 0.35rem;
+}
+.zdos-op-bm__eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: rgba(251, 113, 133, 0.9);
+}
+.zdos-op-bm__title {
+  margin: 0.2rem 0 0.35rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(255, 241, 242, 0.96);
+}
+.zdos-op-bm__flow,
+.zdos-op-bm__role,
+.zdos-op-bm__note {
+  margin: 0.15rem 0 0;
+  font-size: 0.72rem;
+  color: rgba(254, 205, 211, 0.78);
+}
+.zdos-op-bm__note {
+  color: rgba(253, 164, 175, 0.7);
+}
+.zdos-op-bm__days,
+.zdos-op-bm__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-bm__day,
+.zdos-op-bm__tab {
+  border: 1px solid rgba(251, 113, 133, 0.28);
+  background: rgba(136, 19, 55, 0.22);
+  color: rgba(254, 205, 211, 0.9);
+  border-radius: 0.5rem;
+  padding: 0.32rem 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+.zdos-op-bm__day.is-active,
+.zdos-op-bm__tab.is-active {
+  border-color: rgba(251, 113, 133, 0.7);
+  background: rgba(225, 29, 72, 0.35);
+  color: #fff1f2;
+}
+.zdos-op-bm__board { display: grid; gap: 0.65rem; }
+.zdos-op-bm__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-bm__block-title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: rgba(255, 241, 242, 0.95);
+}
+.zdos-op-bm__block-meta {
+  margin: 0;
+  font-size: 0.62rem;
+  color: rgba(253, 164, 175, 0.65);
+}
+.zdos-op-bm__scorecard {
+  border: 1px solid rgba(251, 113, 133, 0.35);
+  background: linear-gradient(145deg, rgba(136, 19, 55, 0.35), rgba(15, 23, 42, 0.55));
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.85rem;
+}
+.zdos-op-bm__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-bm__item {
+  border: 1px solid rgba(251, 113, 133, 0.28);
+  background: rgba(15, 23, 42, 0.45);
+  border-radius: 0.7rem;
+  padding: 0.65rem 0.75rem;
+}
+.zdos-op-bm__item--rank { border-color: rgba(251, 191, 36, 0.4); }
+.zdos-op-bm__item--pair { border-color: rgba(244, 63, 94, 0.4); }
+.zdos-op-bm__item--practice { border-color: rgba(52, 211, 153, 0.35); }
+.zdos-op-bm__item--report { border-color: rgba(251, 113, 133, 0.45); }
+.zdos-op-bm__item--high { border-color: rgba(248, 113, 113, 0.55); }
+.zdos-op-bm__item--medium { border-color: rgba(251, 191, 36, 0.45); }
+.zdos-op-bm__item--low { border-color: rgba(148, 163, 184, 0.35); }
+.zdos-op-bm__item--up { border-color: rgba(74, 222, 128, 0.4); }
+.zdos-op-bm__item--down { border-color: rgba(251, 113, 133, 0.45); }
+.zdos-op-bm__item-kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: rgba(253, 164, 175, 0.85);
+}
+.zdos-op-bm__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: rgba(255, 241, 242, 0.96);
+}
+.zdos-op-bm__item-desc,
+.zdos-op-bm__item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(254, 205, 211, 0.78);
+  white-space: pre-wrap;
+}
+.zdos-op-bm__item-meta { color: rgba(253, 164, 175, 0.72); }
+.zdos-op-bm__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+.zdos-op-bm__link {
+  border: 1px solid rgba(251, 113, 133, 0.4);
+  background: rgba(190, 18, 60, 0.25);
+  color: #ffe4e6;
+  border-radius: 0.45rem;
+  padding: 0.22rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.zdos-op-bm__mini {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.62rem;
+  color: rgba(253, 164, 175, 0.75);
+}
+.zdos-op-bm__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(254, 205, 211, 0.65);
+}
+
+/* PHASE-2-040｜ZDOS Enterprise OS */
+.zdos-op-eos {
+  display: grid;
+  gap: 0.85rem;
+}
+.zdos-op-eos__hero {
+  padding: 0.15rem 0.1rem 0.35rem;
+}
+.zdos-op-eos__eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: rgba(45, 212, 191, 0.92);
+}
+.zdos-op-eos__title {
+  margin: 0.2rem 0 0.35rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(240, 253, 250, 0.96);
+}
+.zdos-op-eos__flow,
+.zdos-op-eos__role,
+.zdos-op-eos__note {
+  margin: 0.15rem 0 0;
+  font-size: 0.72rem;
+  color: rgba(153, 246, 228, 0.8);
+}
+.zdos-op-eos__note {
+  color: rgba(94, 234, 212, 0.7);
+}
+.zdos-op-eos__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-eos__tab {
+  border: 1px solid rgba(45, 212, 191, 0.28);
+  background: rgba(13, 148, 136, 0.18);
+  color: rgba(167, 243, 208, 0.92);
+  border-radius: 0.5rem;
+  padding: 0.32rem 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+.zdos-op-eos__tab.is-active {
+  border-color: rgba(45, 212, 191, 0.7);
+  background: rgba(15, 118, 110, 0.45);
+  color: #f0fdfa;
+}
+.zdos-op-eos__board { display: grid; gap: 0.65rem; }
+.zdos-op-eos__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-eos__block-title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: rgba(240, 253, 250, 0.95);
+}
+.zdos-op-eos__block-meta {
+  margin: 0;
+  font-size: 0.62rem;
+  color: rgba(94, 234, 212, 0.65);
+}
+.zdos-op-eos__scorecard {
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  background: linear-gradient(145deg, rgba(13, 148, 136, 0.32), rgba(15, 23, 42, 0.55));
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.85rem;
+}
+.zdos-op-eos__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-eos__item {
+  border: 1px solid rgba(45, 212, 191, 0.28);
+  background: rgba(15, 23, 42, 0.45);
+  border-radius: 0.7rem;
+  padding: 0.65rem 0.75rem;
+}
+.zdos-op-eos__item--layer { border-color: rgba(52, 211, 153, 0.4); }
+.zdos-op-eos__item--builtin { border-color: rgba(45, 212, 191, 0.4); }
+.zdos-op-eos__item--custom { border-color: rgba(251, 191, 36, 0.4); }
+.zdos-op-eos__item--cap { border-color: rgba(56, 189, 248, 0.35); }
+.zdos-op-eos__item--release { border-color: rgba(167, 243, 208, 0.4); }
+.zdos-op-eos__item--ok { border-color: rgba(74, 222, 128, 0.4); }
+.zdos-op-eos__item--watch { border-color: rgba(251, 191, 36, 0.45); }
+.zdos-op-eos__item--warn { border-color: rgba(248, 113, 113, 0.5); }
+.zdos-op-eos__item-kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: rgba(94, 234, 212, 0.85);
+}
+.zdos-op-eos__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: rgba(240, 253, 250, 0.96);
+}
+.zdos-op-eos__item-desc,
+.zdos-op-eos__item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(167, 243, 208, 0.78);
+  white-space: pre-wrap;
+}
+.zdos-op-eos__item-meta { color: rgba(94, 234, 212, 0.72); }
+.zdos-op-eos__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+.zdos-op-eos__link {
+  border: 1px solid rgba(45, 212, 191, 0.4);
+  background: rgba(15, 118, 110, 0.3);
+  color: #ccfbf1;
+  border-radius: 0.45rem;
+  padding: 0.22rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.zdos-op-eos__mini {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.62rem;
+  color: rgba(153, 246, 228, 0.75);
+}
+.zdos-op-eos__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(167, 243, 208, 0.65);
+}
+
+/* PHASE-3-041｜System Governance Center */
+.zdos-op-gov {
+  display: grid;
+  gap: 0.85rem;
+}
+.zdos-op-gov__hero {
+  padding: 0.15rem 0.1rem 0.35rem;
+}
+.zdos-op-gov__eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: rgba(251, 146, 60, 0.95);
+}
+.zdos-op-gov__title {
+  margin: 0.2rem 0 0.35rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(255, 247, 237, 0.96);
+}
+.zdos-op-gov__flow,
+.zdos-op-gov__role,
+.zdos-op-gov__note {
+  margin: 0.15rem 0 0;
+  font-size: 0.72rem;
+  color: rgba(254, 215, 170, 0.82);
+}
+.zdos-op-gov__note {
+  color: rgba(253, 186, 116, 0.72);
+}
+.zdos-op-gov__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.zdos-op-gov__tab {
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  background: rgba(154, 52, 18, 0.22);
+  color: rgba(254, 215, 170, 0.92);
+  border-radius: 0.5rem;
+  padding: 0.32rem 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+.zdos-op-gov__tab.is-active {
+  border-color: rgba(251, 146, 60, 0.75);
+  background: rgba(194, 65, 12, 0.42);
+  color: #fff7ed;
+}
+.zdos-op-gov__board { display: grid; gap: 0.65rem; }
+.zdos-op-gov__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.zdos-op-gov__block-title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: rgba(255, 247, 237, 0.95);
+}
+.zdos-op-gov__block-meta {
+  margin: 0;
+  font-size: 0.62rem;
+  color: rgba(253, 186, 116, 0.65);
+}
+.zdos-op-gov__scorecard {
+  border: 1px solid rgba(251, 146, 60, 0.35);
+  background: linear-gradient(145deg, rgba(154, 52, 18, 0.35), rgba(15, 23, 42, 0.55));
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.85rem;
+}
+.zdos-op-gov__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.zdos-op-gov__item {
+  border: 1px solid rgba(251, 146, 60, 0.28);
+  background: rgba(15, 23, 42, 0.45);
+  border-radius: 0.7rem;
+  padding: 0.65rem 0.75rem;
+}
+.zdos-op-gov__item--active { border-color: rgba(74, 222, 128, 0.4); }
+.zdos-op-gov__item--beta { border-color: rgba(56, 189, 248, 0.4); }
+.zdos-op-gov__item--planned { border-color: rgba(148, 163, 184, 0.4); }
+.zdos-op-gov__item--deprecated { border-color: rgba(248, 113, 113, 0.45); }
+.zdos-op-gov__item--log { border-color: rgba(251, 191, 36, 0.4); }
+.zdos-op-gov__item--release { border-color: rgba(251, 146, 60, 0.5); }
+.zdos-op-gov__item--dep { border-color: rgba(253, 186, 116, 0.4); }
+.zdos-op-gov__item--ok { border-color: rgba(74, 222, 128, 0.4); }
+.zdos-op-gov__item--watch { border-color: rgba(251, 191, 36, 0.45); }
+.zdos-op-gov__item--warn { border-color: rgba(248, 113, 113, 0.5); }
+.zdos-op-gov__item-kicker {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: rgba(253, 186, 116, 0.88);
+}
+.zdos-op-gov__item-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: rgba(255, 247, 237, 0.96);
+}
+.zdos-op-gov__item-desc,
+.zdos-op-gov__item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(254, 215, 170, 0.8);
+  white-space: pre-wrap;
+}
+.zdos-op-gov__item-meta { color: rgba(253, 186, 116, 0.72); }
+.zdos-op-gov__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+.zdos-op-gov__link {
+  border: 1px solid rgba(251, 146, 60, 0.4);
+  background: rgba(194, 65, 12, 0.3);
+  color: #ffedd5;
+  border-radius: 0.45rem;
+  padding: 0.22rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.zdos-op-gov__mini {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.62rem;
+  color: rgba(254, 215, 170, 0.75);
+}
+.zdos-op-gov__empty {
+  margin: 0;
+  padding: 1rem 0.2rem;
+  font-size: 0.78rem;
+  color: rgba(254, 215, 170, 0.65);
+}

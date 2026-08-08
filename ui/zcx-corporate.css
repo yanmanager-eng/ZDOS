@@ -1,0 +1,522 @@
+/**
+ * ZCX-001｜ZDOS Corporate Experience Foundation
+ * ZCX-002｜Home Corporate Experience — Bottom Nav / Home Hero surface tokens
+ * Official brand experience primitives — Background / Header / Hero / Card / Brand / Nav.
+ * Visual-only. No business logic / registry / engine / permission.
+ *
+ * Consumers map local tokens → --zcx-* (Academy, Mobile Home).
+ */
+
+:root {
+  /* —— Brand Color（RC-002B Premium · Azure 企業科技藍） —— */
+  --zcx-brand-primary: #0b4f8c;
+  --zcx-brand-secondary: #1567b3;
+  --zcx-brand-primary-strong: #093f70;
+  --zcx-brand-primary-soft: rgba(11, 79, 140, 0.1);
+  --zcx-brand-sky: #1567b3;
+  --zcx-brand-sky-soft: rgba(21, 103, 179, 0.14);
+
+  /* —— Page / Section / Card 三層 —— */
+  --zcx-bg: #eaf1f8;
+  --zcx-bg-glow: #eef5fc;
+  --zcx-bg-end: #f4f8fc;
+  --zcx-section: #f4f8fc;
+  --zcx-page-bg:
+    radial-gradient(110% 70% at 50% -8%, rgba(21, 103, 179, 0.08) 0%, transparent 58%),
+    linear-gradient(180deg, var(--zcx-bg-glow) 0%, var(--zcx-bg) 42%, var(--zcx-bg-end) 100%);
+
+  /* —— Surface —— */
+  --zcx-surface: #ffffff;
+  --zcx-surface-muted: #f4f8fc;
+  --zcx-surface-focus: #e8f0f8;
+  --zcx-border: #d4e2f1;
+  --zcx-border-soft: #d4e2f1;
+
+  /* —— Text —— */
+  --zcx-text-primary: #0b1f33;
+  --zcx-text-secondary: #6a7788;
+  --zcx-text-muted: #6a7788;
+  --zcx-text-on-brand: #ffffff;
+
+  /* —— Status —— */
+  --zcx-ok: var(--zds-ok, #147a45);
+  --zcx-ok-bg: var(--zds-ok-bg, rgba(20, 122, 69, 0.1));
+  --zcx-warn: var(--zds-warn, #a67c00);
+  --zcx-warn-bg: var(--zds-warn-bg, rgba(166, 124, 0, 0.12));
+  --zcx-alert: var(--zds-alert, #c62828);
+  --zcx-alert-bg: var(--zds-alert-bg, rgba(198, 40, 40, 0.1));
+
+  /* —— Typography —— */
+  --zcx-font: "SF Pro Text", "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
+  --zcx-font-display: "SF Pro Display", "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
+  --zcx-fs-caption: 0.6875rem;   /* 11 */
+  --zcx-fs-footnote: 0.75rem;    /* 12 */
+  --zcx-fs-body: 0.875rem;       /* 14 */
+  --zcx-fs-callout: 0.9375rem;   /* 15 */
+  --zcx-fs-title: 1.0625rem;     /* 17 */
+  --zcx-fs-hero: 1.25rem;        /* 20 */
+  --zcx-fw-regular: 400;
+  --zcx-fw-medium: 500;
+  --zcx-fw-semibold: 600;
+  --zcx-fw-bold: 700;
+  --zcx-fw-heavy: 800;
+  --zcx-lh-tight: 1.2;
+  --zcx-lh-normal: 1.45;
+  --zcx-tracking-brand: 0.06em;
+  --zcx-tracking-label: 0.08em;
+
+  /* —— Spacing（4px base） —— */
+  --zcx-space-1: 0.25rem;
+  --zcx-space-2: 0.5rem;
+  --zcx-space-3: 0.75rem;
+  --zcx-space-4: 1rem;
+  --zcx-space-5: 1.25rem;
+  --zcx-space-6: 1.5rem;
+  --zcx-space-8: 2rem;
+  --zcx-gap: 0.85rem;
+
+  /* —— Radius —— */
+  --zcx-radius-sm: 8px;
+  --zcx-radius-md: 12px;
+  --zcx-radius-lg: 16px;
+  --zcx-radius-xl: 20px;
+  --zcx-radius-full: 9999px;
+
+  /* —— Elevation（RC-002B Premium Depth · 無霓虹） —— */
+  --zcx-shadow-card: 0 10px 28px rgba(30, 55, 90, 0.06);
+  --zcx-shadow-header: 0 8px 24px rgba(20, 40, 80, 0.08);
+  --zcx-shadow-hero: 0 18px 50px rgba(15, 50, 90, 0.12);
+  --zcx-shadow-kpi: 0 12px 30px rgba(25, 45, 90, 0.08);
+  --zcx-shadow-launcher: 0 8px 22px rgba(30, 55, 90, 0.08);
+
+  /* —— Layout / iPhone —— */
+  --zcx-header-h: 52px;
+  --zcx-bottom-h: 56px;
+  --zcx-touch-min: 44px;
+  --zcx-content-max: 430px;
+  --zcx-safe-top: env(safe-area-inset-top, 0px);
+  --zcx-safe-right: env(safe-area-inset-right, 0px);
+  --zcx-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --zcx-safe-left: env(safe-area-inset-left, 0px);
+
+  /* —— Home Hero（RC-002B：科技藍白漸層 · 有重量） —— */
+  --zcx-hero-home-bg: linear-gradient(145deg, #f8fbff 0%, #eef5fc 48%, #ddeaf7 100%);
+  --zcx-hero-home-border: #d2e2f2;
+  --zcx-hero-home-ink: #0b1f33;
+  --zcx-hero-home-muted: #6a7788;
+  --zcx-hero-home-sky: #0b4f8c;
+
+  /* —— Motion —— */
+  --zcx-motion: 200ms var(--zdl-ease-standard, cubic-bezier(0.25, 0.1, 0.25, 1));
+  --zcx-motion-fast: 180ms var(--zdl-ease-standard, cubic-bezier(0.25, 0.1, 0.25, 1));
+}
+
+/* ============================================================
+ * 1. Unified Page Background
+ * ============================================================ */
+.zcx-page {
+  box-sizing: border-box;
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 100vw;
+  margin: 0;
+  padding:
+    calc(var(--zcx-safe-top) + var(--zcx-space-3))
+    max(var(--zcx-space-4), var(--zcx-safe-right))
+    calc(var(--zcx-safe-bottom) + var(--zcx-space-6))
+    max(var(--zcx-space-4), var(--zcx-safe-left));
+  background: var(--zcx-page-bg);
+  color: var(--zcx-text-primary);
+  font-family: var(--zcx-font);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+.zcx-page *,
+.zcx-page *::before,
+.zcx-page *::after {
+  box-sizing: border-box;
+}
+
+.zcx-page__inner {
+  width: 100%;
+  max-width: var(--zcx-content-max);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--zcx-gap);
+  min-width: 0;
+}
+
+/* ============================================================
+ * 2. Official Header
+ * ============================================================ */
+.zcx-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--zcx-space-2);
+  min-height: var(--zcx-header-h);
+  margin: calc(-1 * var(--zcx-space-3)) calc(-1 * var(--zcx-space-4)) var(--zcx-space-1);
+  padding:
+    calc(var(--zcx-safe-top) + var(--zcx-space-2))
+    max(var(--zcx-space-4), var(--zcx-safe-right))
+    var(--zcx-space-2)
+    max(var(--zcx-space-4), var(--zcx-safe-left));
+  background: #ffffff;
+  backdrop-filter: blur(12px) saturate(1.05);
+  -webkit-backdrop-filter: blur(12px) saturate(1.05);
+  border-bottom: 1px solid var(--zcx-border);
+  box-shadow: var(--zcx-shadow-header);
+  border-radius: 0;
+}
+
+.zcx-header__back {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  min-width: 2.75rem;
+  padding: 0.375rem 0.65rem;
+  border-radius: var(--zcx-radius-sm);
+  border: 1px solid var(--zcx-border);
+  background: var(--zcx-surface);
+  color: var(--zcx-brand-primary);
+  font-size: var(--zcx-fs-caption);
+  font-weight: var(--zcx-fw-bold);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: var(--zcx-shadow-card);
+}
+
+.zcx-header__back:active {
+  background: var(--zcx-brand-primary-soft);
+}
+
+.zcx-header__block {
+  min-width: 0;
+  text-align: center;
+}
+
+.zcx-header__brandline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.zcx-header__mark {
+  flex: 0 0 auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--zcx-radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--zcx-brand-primary);
+  background: var(--zcx-brand-primary-soft);
+  border: 1px solid rgba(11, 79, 140, 0.18);
+}
+
+.zcx-header__mark svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  display: block;
+}
+
+.zcx-header__title {
+  margin: 0;
+  font-family: var(--zcx-font-display);
+  font-size: var(--zcx-fs-title);
+  font-weight: var(--zcx-fw-heavy);
+  letter-spacing: var(--zcx-tracking-brand);
+  line-height: var(--zcx-lh-tight);
+  color: var(--zcx-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zcx-header__subtitle {
+  margin: 0.15rem 0 0;
+  font-size: 0.5625rem;
+  font-weight: var(--zcx-fw-regular);
+  letter-spacing: var(--zcx-tracking-label);
+  color: var(--zcx-text-muted);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: none;
+}
+
+.zcx-header__chip {
+  flex: 0 0 auto;
+  font-size: var(--zcx-fs-caption);
+  font-weight: var(--zcx-fw-bold);
+  color: var(--zcx-brand-primary);
+  border: 1px solid rgba(11, 79, 140, 0.2);
+  background: var(--zcx-brand-primary-soft);
+  border-radius: var(--zcx-radius-full);
+  padding: 0.28rem 0.6rem;
+  white-space: nowrap;
+}
+
+.zcx-header__spacer {
+  flex: 0 0 auto;
+  width: 2.75rem;
+  min-height: 1px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ============================================================
+ * 3. Official Hero
+ * ============================================================ */
+.zcx-hero {
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--zcx-radius-lg);
+  border: 1px solid rgba(176, 196, 216, 0.65);
+  background: linear-gradient(145deg, #e8f0f7 0%, #f4f8fb 52%, #eaf1f7 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.65) inset,
+    var(--zcx-shadow-hero);
+  padding: var(--zcx-space-4);
+  overflow: hidden;
+  min-width: 0;
+}
+
+.zcx-hero__eyebrow {
+  margin: 0;
+  font-size: var(--zcx-fs-caption);
+  font-weight: var(--zcx-fw-semibold);
+  letter-spacing: var(--zcx-tracking-label);
+  color: var(--zcx-text-secondary);
+}
+
+.zcx-hero__title {
+  margin: 0.25rem 0 0;
+  font-family: var(--zcx-font-display);
+  font-size: var(--zcx-fs-hero);
+  font-weight: var(--zcx-fw-heavy);
+  line-height: var(--zcx-lh-tight);
+  color: var(--zcx-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.zcx-hero__desc {
+  margin: 0.35rem 0 0;
+  font-size: var(--zcx-fs-footnote);
+  line-height: var(--zcx-lh-normal);
+  color: var(--zcx-text-secondary);
+}
+
+.zcx-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--zcx-space-2);
+  margin-top: var(--zcx-space-3);
+}
+
+.zcx-hero__stat {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.zcx-hero__stat-label {
+  font-size: 0.625rem;
+  font-weight: var(--zcx-fw-semibold);
+  letter-spacing: 0.04em;
+  color: var(--zcx-text-muted);
+}
+
+.zcx-hero__stat-value {
+  font-size: var(--zcx-fs-callout);
+  font-weight: var(--zcx-fw-heavy);
+  color: var(--zcx-text-primary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zcx-hero__progress {
+  margin-top: var(--zcx-space-3);
+  height: 6px;
+  border-radius: var(--zcx-radius-full);
+  background: rgba(11, 79, 140, 0.08);
+  border: 1px solid rgba(11, 79, 140, 0.1);
+  overflow: hidden;
+}
+
+.zcx-hero__progress-bar {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--zcx-brand-primary) 0%, #1567b3 100%);
+  min-width: 0;
+}
+
+/* ============================================================
+ * 4. Official Card
+ * ============================================================ */
+.zcx-card {
+  min-width: 0;
+  border-radius: var(--zcx-radius-lg);
+  border: 1px solid var(--zcx-border);
+  background: var(--zcx-surface);
+  box-shadow: var(--zcx-shadow-card);
+  padding: var(--zcx-space-4);
+  color: var(--zcx-text-primary);
+}
+
+.zcx-card--interactive {
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  color: inherit;
+  transition: border-color var(--zcx-motion), background var(--zcx-motion), transform 120ms ease;
+}
+
+.zcx-card--interactive:active {
+  transform: scale(0.995);
+  background: var(--zcx-surface-focus);
+  border-color: rgba(11, 79, 140, 0.22);
+}
+
+.zcx-card__title {
+  margin: 0;
+  font-size: var(--zcx-fs-body);
+  font-weight: var(--zcx-fw-heavy);
+  color: var(--zcx-text-primary);
+  line-height: var(--zcx-lh-tight);
+}
+
+.zcx-card__meta {
+  margin: 0.25rem 0 0;
+  font-size: var(--zcx-fs-footnote);
+  color: var(--zcx-text-secondary);
+  line-height: var(--zcx-lh-normal);
+}
+
+/* ============================================================
+ * 5. Shared CTA / Badge（企業，非 Demo pill 霓虹）
+ * ============================================================ */
+.zcx-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--zcx-fs-footnote);
+  font-weight: var(--zcx-fw-bold);
+  color: var(--zcx-text-on-brand);
+  background: linear-gradient(180deg, #1567b3 0%, var(--zcx-brand-primary) 100%);
+  border-radius: var(--zcx-radius-md);
+  padding: 0.5rem 0.9rem;
+  border: none;
+}
+
+.zcx-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.625rem;
+  font-weight: var(--zcx-fw-bold);
+  letter-spacing: 0.03em;
+  border-radius: var(--zcx-radius-full);
+  padding: 0.22rem 0.55rem;
+  white-space: nowrap;
+}
+
+.zcx-badge--ok {
+  color: var(--zcx-ok);
+  background: var(--zcx-ok-bg);
+  border: 1px solid rgba(20, 122, 69, 0.22);
+}
+
+.zcx-badge--warn {
+  color: var(--zcx-warn);
+  background: var(--zcx-warn-bg);
+  border: 1px solid rgba(166, 124, 0, 0.25);
+}
+
+.zcx-badge--alert {
+  color: var(--zcx-alert);
+  background: var(--zcx-alert-bg);
+  border: 1px solid rgba(198, 40, 40, 0.22);
+}
+
+.zcx-badge--brand {
+  color: var(--zcx-brand-primary);
+  background: var(--zcx-brand-primary-soft);
+  border: 1px solid rgba(11, 79, 140, 0.18);
+}
+
+/* ============================================================
+ * 6. Official Bottom Navigation
+ * ============================================================ */
+.zcx-bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  height: calc(var(--zcx-bottom-h) + var(--zcx-safe-bottom));
+  padding-bottom: var(--zcx-safe-bottom);
+  background: rgba(255, 255, 255, 0.94);
+  border-top: 1px solid var(--zcx-border-soft);
+  backdrop-filter: blur(14px) saturate(1.04);
+  -webkit-backdrop-filter: blur(14px) saturate(1.04);
+  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.8) inset;
+}
+
+.zcx-bottom-nav__item {
+  border: none;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: var(--zcx-touch-min);
+  min-width: 0;
+  color: var(--zcx-text-muted);
+  font-size: 0.625rem;
+  font-weight: var(--zcx-fw-semibold);
+  cursor: pointer;
+  padding: 0;
+}
+
+.zcx-bottom-nav__item svg {
+  width: 20px;
+  height: 20px;
+}
+
+.zcx-bottom-nav__item.is-active,
+.zcx-bottom-nav__item[aria-current="page"] {
+  color: var(--zcx-brand-primary);
+  background: var(--zcx-brand-primary-soft);
+  border-radius: var(--zcx-radius-md);
+  margin: 4px 6px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --zcx-content-max: 680px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --zcx-motion: 0ms;
+  }
+}

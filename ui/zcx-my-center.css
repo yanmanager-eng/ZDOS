@@ -1,0 +1,457 @@
+/**
+ * MY-001 Official｜我的中心（員工個人工作中心）
+ * G02 Tech Blue Glass · 允許垂直 Scroll · 不改 Auth／資料結構／權限／G1／G2
+ */
+
+.zdos-workspace:has(.zdos-my-home) {
+  --g02-bg: #041428;
+  --g02-bg-deep: #020b1c;
+  --g02-bg-mid: #0a2f5c;
+  --g02-bg-top: #124a86;
+  --g02-border: rgba(130, 215, 255, 0.45);
+  --g02-border-soft: rgba(110, 200, 255, 0.34);
+  --g02-cyan: #1ad0ff;
+  --g02-cyan-soft: #8ae4ff;
+  --g02-text: #ffffff;
+  --g02-muted: rgba(186, 220, 245, 0.86);
+  --g02-ok: #7dffb2;
+  --g02-warn: #ffb020;
+  --g02-danger: #ff3b4a;
+  --g02-radius: 14px;
+  --g02-radius-sm: 10px;
+  --g02-glass-bg: rgba(80, 170, 245, 0.2);
+  --g02-glass-bg-strong: rgba(60, 140, 220, 0.28);
+  --g02-glass-border: rgba(140, 220, 255, 0.42);
+  --g02-glass-shadow:
+    0 0 18px rgba(0, 170, 255, 0.18),
+    0 8px 18px rgba(0, 20, 50, 0.22),
+    inset 0 1px 0 rgba(190, 235, 255, 0.18);
+  --g02-btn: #00c8ff;
+  --g02-btn-text: #031425;
+  --my-font: "SF Pro Text", "Avenir Next", "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
+  --my-display: "Avenir Next", "SF Pro Display", "Segoe UI", "PingFang TC", "Noto Sans TC", sans-serif;
+
+  color: var(--g02-text);
+  font-family: var(--my-font);
+  background-color: var(--g02-bg-deep) !important;
+  background-image:
+    radial-gradient(120% 70% at 50% -8%, rgba(50, 150, 255, 0.36) 0%, transparent 58%),
+    linear-gradient(180deg, var(--g02-bg-top) 0%, var(--g02-bg-mid) 38%, var(--g02-bg) 72%, var(--g02-bg-deep) 100%) !important;
+  /* 覆蓋 g02-official-theme 對 my-home 的 background-image:none */
+  -webkit-font-smoothing: antialiased;
+  width: 100%;
+  max-width: 100%;
+  height: 100dvh !important;
+  height: 100svh !important;
+  max-height: 100dvh !important;
+  overflow: hidden !important;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  padding-left: max(10px, env(safe-area-inset-left, 0px)) !important;
+  padding-right: max(10px, env(safe-area-inset-right, 0px)) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+}
+
+html:has(.zdos-my-home),
+body:has(.zdos-my-home),
+#root:has(.zdos-my-home) {
+  background: var(--g02-bg-deep, #020b1c) !important;
+  background-color: var(--g02-bg-deep, #020b1c) !important;
+  background-image: none !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  overflow: hidden !important;
+  overflow-x: hidden !important;
+}
+
+/* UI-HDR-001｜Header 尺寸／玻璃交由 zcx-shell */
+.zdos-workspace:has(.zdos-my-home) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-my-home) .zdos-workspace-header.zdos-app-header {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.zdos-workspace:has(.zdos-my-home) .zdos-workspace-header-inner {
+  /* size owned by zcx-shell */
+}
+
+.zdos-workspace:has(.zdos-my-home) .zdos-workspace-back,
+.zdos-workspace:has(.zdos-my-home) .zdos-workspace-actions .zdos-nav-btn {
+  border: 1px solid var(--g02-border-soft) !important;
+  background: var(--g02-glass-bg) !important;
+  color: var(--g02-cyan-soft) !important;
+  box-shadow: none !important;
+}
+
+
+.zdos-workspace:has(.zdos-my-home) .zdos-workspace-title {
+  margin: 0;
+  text-align: center;
+  font-family: var(--my-display);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--g02-text) !important;
+}
+
+.zdos-workspace:has(.zdos-my-home) .zdos-workspace-body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  padding: 0.4rem 0 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: transparent !important;
+}
+
+.zdos-my-home.zcx-page {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  color: var(--g02-text);
+  max-width: 430px;
+  width: 100%;
+  margin: 0 auto;
+  flex: 0 0 auto;
+  min-height: 0;
+  overflow: visible;
+  display: block;
+  padding: 0 0 max(1.25rem, calc(env(safe-area-inset-bottom, 0px) + 0.85rem)) !important;
+}
+
+.zdos-my-home .zdos-my-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  flex: none;
+  min-height: 0;
+  overflow: visible;
+  justify-content: flex-start;
+  padding-bottom: 0.25rem;
+}
+
+.zdos-my-home .zdos-my-card {
+  background: var(--g02-glass-bg);
+  border: 1px solid var(--g02-glass-border);
+  border-radius: var(--g02-radius);
+  box-shadow: var(--g02-glass-shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 0.5rem 0.65rem;
+  color: var(--g02-text);
+  flex: 0 0 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.zdos-my-home .zdos-my-card--profile { padding: 0.55rem 0.7rem; }
+.zdos-my-home .zdos-my-card--account { padding: 0.45rem 0.65rem; }
+
+.zdos-my-home .zdos-my-section-title {
+  margin: 0;
+  font-family: var(--my-display);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.zdos-my-home .zdos-my-section-desc,
+.zdos-my-home .zdos-my-muted {
+  margin: 0.05rem 0 0;
+  font-size: 0.62rem;
+  color: var(--g02-muted);
+  line-height: 1.3;
+}
+
+.zdos-my-home .zdos-my-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.zdos-my-tone {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.zdos-my-tone::before {
+  content: "";
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 999px;
+  background: currentColor;
+}
+.zdos-my-tone--ok { color: var(--g02-ok); }
+.zdos-my-tone--watch { color: var(--g02-warn); }
+.zdos-my-tone--risk { color: var(--g02-danger); }
+
+.zdos-my-profile {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 0.55rem;
+  align-items: center;
+}
+.zdos-my-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--g02-border-soft);
+  background: rgba(4, 24, 48, 0.55);
+  display: grid;
+  place-items: center;
+}
+.zdos-my-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.zdos-my-avatar-fallback {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--g02-cyan-soft);
+}
+.zdos-my-profile-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+.zdos-my-identity-name {
+  margin: 0;
+  font-family: var(--my-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.15;
+}
+.zdos-my-identity-meta {
+  margin: 0.12rem 0 0.28rem;
+  font-size: 0.66rem;
+  color: var(--g02-muted);
+}
+.zdos-my-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.18rem 0.4rem;
+}
+.zdos-my-profile-grid span {
+  min-width: 0;
+  font-size: 0.64rem;
+  color: rgba(230, 244, 255, 0.92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.zdos-my-profile-grid b {
+  display: inline-block;
+  min-width: 2em;
+  margin-right: 0.25rem;
+  color: var(--g02-muted);
+  font-weight: 700;
+}
+.zdos-my-profile-grid__wide { grid-column: 1 / -1; }
+
+.zdos-my-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.3rem;
+}
+.zdos-my-chip {
+  min-width: 0;
+  min-height: 40px;
+  padding: 0.35rem 0.45rem;
+  border-radius: var(--g02-radius-sm);
+  border: 1px solid var(--g02-border-soft);
+  background: rgba(4, 24, 48, 0.35);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.zdos-my-chip--wide { grid-column: 1 / -1; }
+.zdos-my-chip b {
+  display: block;
+  font-size: 0.6rem;
+  color: var(--g02-muted);
+  font-weight: 700;
+}
+.zdos-my-chip span {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zdos-my-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.28rem;
+}
+.zdos-my-metrics--dense { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.zdos-my-metrics--5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.zdos-my-metric {
+  padding: 0.32rem 0.4rem;
+  border-radius: var(--g02-radius-sm);
+  border: 1px solid var(--g02-border-soft);
+  background: rgba(4, 24, 48, 0.35);
+  min-width: 0;
+}
+.zdos-my-metric b {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.zdos-my-metric span {
+  font-size: 0.58rem;
+  color: var(--g02-muted);
+}
+
+.zdos-my-honor-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.28rem;
+}
+.zdos-my-honor {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  border: 1px solid var(--g02-border-soft);
+}
+.zdos-my-honor.is-on {
+  color: #031425;
+  background: linear-gradient(180deg, #7dffb2, #1ad0ff);
+  border-color: transparent;
+}
+.zdos-my-honor.is-off {
+  color: rgba(186, 220, 245, 0.55);
+  background: rgba(4, 24, 48, 0.28);
+}
+
+.zdos-my-entry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.28rem;
+}
+.zdos-my-entry {
+  min-width: 0;
+  min-height: 44px;
+  padding: 0.35rem 0.3rem;
+  border-radius: var(--g02-radius-sm);
+  border: 1px solid var(--g02-border-soft);
+  background: rgba(4, 24, 48, 0.35);
+  color: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+.zdos-my-entry span {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 800;
+}
+.zdos-my-entry small {
+  display: block;
+  margin-top: 0.12rem;
+  font-size: 0.58rem;
+  color: var(--g02-muted);
+}
+
+.zdos-my-cta {
+  min-height: 34px;
+  border: none;
+  border-radius: 999px;
+  background: var(--g02-btn);
+  color: var(--g02-btn-text);
+  font-weight: 800;
+  font-size: 0.68rem;
+  padding: 0.28rem 0.75rem;
+  box-shadow: none;
+  cursor: pointer;
+}
+.zdos-my-cta--ghost {
+  background: rgba(10, 36, 68, 0.75);
+  color: var(--g02-cyan-soft);
+  border: 1px solid var(--g02-border-soft);
+}
+.zdos-my-account-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+.zdos-my-account-row .zdos-my-cta {
+  width: 100%;
+  text-align: center;
+  padding-left: 0.2rem;
+  padding-right: 0.2rem;
+}
+
+.zdos-my-home .zdos-my-subtitle {
+  margin: 0.05rem 0 0;
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: var(--g02-muted);
+  text-align: center;
+}
+
+.zdos-my-header-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+.zdos-my-header-brand img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+@media (max-width: 390px) {
+  .zdos-my-home .zdos-my-stack { gap: 0.3rem; }
+  .zdos-my-home .zdos-my-card { padding: 0.42rem 0.55rem; }
+  .zdos-my-identity-name { font-size: 0.96rem; }
+  .zdos-my-metric b { font-size: 0.72rem; }
+  .zdos-my-entry { min-height: 40px; }
+}
+
+/* ============================================================
+ * MY Official｜Scroll 模式（內容自然高度；不強制單畫面壓縮）
+ * ============================================================ */
+@media (max-width: 430px) {
+  .zdos-workspace:has(.zdos-my-home) .zdos-workspace-header { /* UI-HDR-001｜shell */ }
+  .zdos-workspace:has(.zdos-my-home) .zdos-workspace-header-inner { /* shell */ }
+  .zdos-workspace:has(.zdos-my-home) .zdos-workspace-body {
+    padding-top: 0.35rem !important;
+  }
+  .zdos-my-home.zcx-page {
+    padding-bottom: max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 1rem)) !important;
+  }
+  .zdos-my-home .zdos-my-stack {
+    gap: 0.5rem !important;
+  }
+  .zdos-my-home .zdos-my-card {
+    flex: 0 0 auto !important;
+    min-height: 0;
+  }
+}

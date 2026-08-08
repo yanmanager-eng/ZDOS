@@ -1,0 +1,221 @@
+/**
+ * RC-002B｜Corporate Premium Visual Polish
+ * Depth / contrast +15–20% across official centers.
+ * CSS-only. No business logic / HTML structure changes.
+ */
+
+/* —— Shared card depth —— */
+.zdos-workspace:has(.zdos-hr-home),
+.zdos-workspace:has(.zdos-lc17),
+.zdos-workspace:has(.zdos-sch-center),
+.zdos-workspace:has(.zdos-sales-shell),
+.zdos-workspace:has(.zdos-review-shell) {
+  --zcx-premium-page: #eaf1f8;
+  --zcx-premium-section: #f4f8fc;
+  --zcx-premium-card: #ffffff;
+  --zcx-premium-border: #d4e2f1;
+  --zcx-premium-text: #0b1f33;
+  --zcx-premium-muted: #6a7788;
+  --zcx-premium-brand: #0b4f8c;
+  --zcx-premium-brand-2: #1567b3;
+  --zcx-premium-shadow: 0 10px 28px rgba(30, 55, 90, 0.06);
+  --zcx-premium-header-shadow: 0 8px 24px rgba(20, 40, 80, 0.08);
+  --zcx-premium-hero-shadow: 0 18px 50px rgba(15, 50, 90, 0.12);
+  background: var(--zcx-premium-page) !important;
+  color: var(--zcx-premium-text);
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-sales-shell) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-review-shell) .zdos-workspace-header {
+  /* UI-HDR-001｜玻璃／尺寸交由 zcx-shell */
+}
+
+/* HR */
+.zdos-hr-home {
+  background: transparent;
+}
+.zdos-hr-home .zdos-hr-hero {
+  background: linear-gradient(145deg, #f8fbff 0%, #eef5fc 48%, #ddeaf7 100%) !important;
+  border: 1px solid #d2e2f2 !important;
+  box-shadow: var(--zcx-premium-hero-shadow) !important;
+}
+.zdos-hr-home .zdos-hr-hero__title {
+  font-weight: 700 !important;
+  color: #0b1f33 !important;
+}
+.zdos-hr-home .zdos-hr-hero__desc,
+.zdos-hr-home .zdos-hr-hero__eyebrow,
+.zdos-hr-home .zdos-hr-section-meta {
+  color: #6a7788 !important;
+  font-weight: 500;
+}
+.zdos-hr-home .zdos-hr-today,
+.zdos-hr-home .zdos-hr-today--board,
+.zdos-hr-home .zdos-hr-calendar-card,
+.zdos-hr-home .zdos-hr-action,
+.zdos-hr-home .zdos-hr-change-card {
+  background: #ffffff !important;
+  background-image: none !important;
+  border: 1px solid #d4e2f1 !important;
+  box-shadow: var(--zcx-premium-shadow) !important;
+}
+.zdos-hr-home .zdos-hr-board-shift {
+  background: #f4f8fc !important;
+  border-color: #d4e2f1 !important;
+}
+.zdos-hr-home .zdos-hr-day--today {
+  border-color: rgba(11, 79, 140, 0.55) !important;
+  background: rgba(11, 79, 140, 0.1) !important;
+  box-shadow: inset 0 0 0 1px rgba(11, 79, 140, 0.14) !important;
+}
+
+/* Schedule */
+.zdos-lc17 .zdos-sch-hero,
+.zdos-sch-center .zdos-sch-hero {
+  background: linear-gradient(145deg, #f8fbff 0%, #eef5fc 48%, #ddeaf7 100%) !important;
+  border: 1px solid #d2e2f2 !important;
+  box-shadow: var(--zcx-premium-hero-shadow) !important;
+}
+.zdos-lc17 .zdos-lc17-toolbar,
+.zdos-lc17 .zdos-lc17-cal,
+.zdos-lc17 .zdos-sch-card,
+.zdos-sch-center .zcx-card {
+  background: #ffffff !important;
+  background-image: none !important;
+  border: 1px solid #d4e2f1 !important;
+  box-shadow: var(--zcx-premium-shadow) !important;
+}
+.zdos-lc17 .zdos-lc17-kpi {
+  background: #ffffff !important;
+  border: 1px solid #d4e2f1 !important;
+  box-shadow: 0 8px 22px rgba(30, 55, 90, 0.06) !important;
+}
+.zdos-lc17 .zdos-lc17-day {
+  background: #f4f8fc !important;
+  border: 1px solid #d4e2f1 !important;
+}
+.zdos-lc17 .zdos-lc17-day--today {
+  background: rgba(11, 79, 140, 0.1) !important;
+  border-color: rgba(11, 79, 140, 0.55) !important;
+}
+.zdos-lc17 .zdos-sch-hero__title,
+.zdos-sch-center .zdos-sch-hero__title {
+  font-weight: 700 !important;
+  color: #0b1f33 !important;
+}
+.zdos-lc17 .zdos-sch-meta,
+.zdos-lc17 .zdos-sch-hero__desc,
+.zdos-lc17 .zdos-sch-hero__eyebrow {
+  color: #6a7788 !important;
+}
+
+/* Sales */
+.zdos-sales-shell .zdos-sales-hero {
+  background: linear-gradient(145deg, #f8fbff 0%, #eef5fc 48%, #ddeaf7 100%) !important;
+  border: 1px solid #d2e2f2 !important;
+  box-shadow: var(--zcx-premium-hero-shadow) !important;
+}
+.zdos-sales-shell .zdos-sales-card,
+.zdos-sales-shell .zdos-sales-metric,
+.zdos-sales-shell .zdos-sales-history-card {
+  background: #ffffff !important;
+  border: 1px solid #d4e2f1 !important;
+  box-shadow: var(--zcx-premium-shadow) !important;
+}
+.zdos-sales-shell .zdos-sales-hero-title {
+  font-weight: 700 !important;
+  color: #0b1f33 !important;
+}
+.zdos-sales-shell .zdos-sales-hero-meta,
+.zdos-sales-shell .zdos-sales-eyebrow,
+.zdos-sales-shell .zdos-sales-metric-note {
+  color: #6a7788 !important;
+}
+.zdos-sales-shell .zdos-sales-metric-value {
+  color: #0b4f8c !important;
+  font-weight: 800 !important;
+}
+.zdos-sales-shell .zdos-sales-form input,
+.zdos-sales-shell .zdos-sales-form select {
+  border-color: #d4e2f1 !important;
+  background: #ffffff !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Sales Review */
+.zdos-workspace:has(.zdos-review-shell) {
+  background: #eaf1f8 !important;
+}
+.zdos-review-shell .zdos-workspace-card {
+  background: #ffffff !important;
+  border: 1px solid #d4e2f1 !important;
+  box-shadow: var(--zcx-premium-shadow) !important;
+}
+.zdos-review-shell .zdos-review-empty__title {
+  font-weight: 700;
+  color: #0b1f33;
+}
+.zdos-review-shell .zdos-review-empty__desc {
+  color: #6a7788;
+  font-weight: 500;
+}
+
+/* Academy */
+[data-zdos-zd-academy-page] {
+  --zda-card-border: #d4e2f1;
+  --zda-card-shadow: 0 10px 28px rgba(30, 55, 90, 0.06);
+  --zda-muted: #6a7788;
+  --zda-title: #0b1f33;
+  --zda-accent: #0b4f8c;
+  background-color: #eaf1f8 !important;
+}
+[data-zdos-zd-academy-page] .zda-header.zcx-header,
+[data-zdos-zd-academy-page] .zda-header {
+  background: #ffffff !important;
+  border-bottom: 1px solid #d4e2f1 !important;
+  box-shadow: 0 8px 24px rgba(20, 40, 80, 0.08) !important;
+}
+[data-zdos-zd-academy-page] .zda-hero,
+[data-zdos-zd-academy-page] .zda-progress-strip {
+  background: linear-gradient(145deg, #f8fbff 0%, #eef5fc 48%, #ddeaf7 100%) !important;
+  border: 1px solid #d2e2f2 !important;
+  box-shadow: 0 18px 50px rgba(15, 50, 90, 0.12) !important;
+}
+[data-zdos-zd-academy-page] .zda-card,
+[data-zdos-zd-academy-page] .zcx-card,
+[data-zdos-zd-academy-page] .zda-map-card,
+[data-zdos-zd-academy-page] .zda-cap-row,
+[data-zdos-zd-academy-page] .zda-today-card,
+[data-zdos-zd-academy-page] .zda-done-row {
+  background: #ffffff !important;
+  border-color: #d4e2f1 !important;
+  box-shadow: 0 10px 28px rgba(30, 55, 90, 0.06) !important;
+}
+[data-zdos-zd-academy-page] .zda-title,
+[data-zdos-zd-academy-page] .zda-map-title,
+[data-zdos-zd-academy-page] .zda-cap-name,
+[data-zdos-zd-academy-page] .zda-section-title {
+  font-weight: 700 !important;
+  color: #0b1f33 !important;
+}
+[data-zdos-zd-academy-page] .zda-subtitle,
+[data-zdos-zd-academy-page] .zda-muted,
+[data-zdos-zd-academy-page] .zda-map-meta,
+[data-zdos-zd-academy-page] .zda-cap-meta {
+  color: #6a7788 !important;
+  font-weight: 500;
+}
+[data-zdos-zd-academy-page] .zda-progress-value {
+  color: #0b4f8c !important;
+  font-weight: 800 !important;
+}
+[data-zdos-zd-academy-page] .zda-progress-bar {
+  background: linear-gradient(90deg, #0b4f8c 0%, #1567b3 100%) !important;
+}
+[data-zdos-zd-academy-page] .zda-cap-row.is-locked {
+  border-color: rgba(166, 124, 0, 0.4) !important;
+  background: #fffdf7 !important;
+}

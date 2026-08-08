@@ -1,0 +1,403 @@
+/**
+ * EMPLOYEE-INTAKE-001／002｜新人建檔＋轉正式
+ * Visual chrome only — scoped to .zdos-emp-intake / list status
+ */
+
+.zdos-workspace:has(.zdos-emp-intake),
+.zdos-emp-intake {
+  --g02-bg: #041428;
+  --g02-bg-deep: #020b1c;
+  --g02-bg-mid: #0a2f5c;
+  --g02-bg-top: #124a86;
+  --g02-border: rgba(130, 215, 255, 0.45);
+  --g02-cyan: #1ad0ff;
+  --g02-cyan-soft: #8ae4ff;
+  --g02-text: #ffffff;
+  --g02-muted: rgba(186, 220, 245, 0.86);
+  --g02-ok: #7dffb2;
+  --g02-danger: #ff3b4a;
+  --g02-radius: 18px;
+  --g02-radius-sm: 12px;
+  --intake-font: "SF Pro Text", "Avenir Next", "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
+  color: var(--g02-text);
+  font-family: var(--intake-font);
+}
+
+html:has(.zdos-emp-intake),
+body:has(.zdos-emp-intake),
+#root:has(.zdos-emp-intake) {
+  background: var(--g02-bg-deep, #020b1c) !important;
+}
+
+.zdos-emp-intake {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0 0 max(20px, env(safe-area-inset-bottom, 0px));
+}
+
+.zdos-emp-intake__card {
+  border-radius: var(--g02-radius);
+  border: 1px solid rgba(130, 215, 255, 0.28);
+  background:
+    linear-gradient(160deg, rgba(18, 74, 134, 0.35) 0%, rgba(4, 20, 40, 0.88) 55%, rgba(2, 11, 28, 0.95) 100%);
+  box-shadow:
+    0 0 24px rgba(0, 170, 255, 0.12),
+    0 10px 22px rgba(0, 20, 50, 0.22);
+  padding: 1rem 1.05rem 1.15rem;
+}
+
+.zdos-emp-intake__eyebrow {
+  margin: 0;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--g02-cyan-soft);
+}
+
+.zdos-emp-intake__title {
+  margin: 0.35rem 0 0;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--g02-text);
+}
+
+.zdos-emp-intake__desc {
+  margin: 0.4rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--g02-muted);
+}
+
+.zdos-emp-intake__form {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.zdos-emp-intake__section {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.75rem 0.8rem 0.85rem;
+  border-radius: 14px;
+  border: 1px solid rgba(130, 215, 255, 0.18);
+  background: rgba(2, 11, 28, 0.35);
+}
+
+.zdos-emp-intake__section-title {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--g02-cyan-soft, #8ae4ff);
+}
+
+.zdos-emp-intake__status-hint {
+  margin: 0;
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: rgba(252, 211, 77, 0.92);
+}
+
+.zdos-emp-intake__status-hint strong {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 800;
+}
+
+.zdos-emp-intake__field {
+  display: grid;
+  gap: 0.28rem;
+  min-width: 0;
+}
+
+.zdos-emp-intake__field label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: rgba(186, 220, 245, 0.92);
+}
+
+.zdos-emp-intake__field label span {
+  color: var(--g02-danger);
+  margin-left: 0.15rem;
+}
+
+.zdos-emp-intake__field input,
+.zdos-emp-intake__field select {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 44px;
+  border-radius: var(--g02-radius-sm);
+  border: 1px solid rgba(130, 215, 255, 0.28);
+  background: rgba(2, 11, 28, 0.72);
+  color: var(--g02-text);
+  padding: 0.55rem 0.75rem;
+  font-size: 0.92rem;
+  outline: none;
+}
+
+.zdos-emp-intake__field input:focus,
+.zdos-emp-intake__field select:focus {
+  border-color: rgba(26, 208, 255, 0.7);
+  box-shadow: 0 0 0 3px rgba(0, 200, 255, 0.14);
+}
+
+.zdos-emp-intake__actions {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 0.55rem;
+  margin-top: 0.25rem;
+}
+
+.zdos-emp-intake__btn {
+  min-height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(130, 215, 255, 0.28);
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-emp-intake__btn--ghost {
+  background: rgba(4, 20, 40, 0.55);
+  color: var(--g02-muted);
+}
+
+.zdos-emp-intake__btn--primary {
+  background: linear-gradient(180deg, #33d6ff 0%, #00c8ff 100%);
+  border-color: rgba(140, 220, 255, 0.55);
+  color: #031425;
+}
+
+.zdos-emp-intake__note {
+  margin: 0.85rem 0 0;
+  font-size: 0.68rem;
+  color: rgba(186, 220, 245, 0.7);
+  line-height: 1.4;
+}
+
+.zdos-emp-intake__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0.4rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid rgba(86, 189, 248, 0.4);
+  background: rgba(0, 200, 255, 0.12);
+  color: var(--g02-cyan-soft, #8ae4ff);
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-emp-intake__cta:hover {
+  background: rgba(0, 200, 255, 0.2);
+}
+
+/* EMPLOYEE-INTAKE-002｜狀態＋轉正式 */
+.zdos-emp-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0.12rem 0.45rem;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(30, 41, 59, 0.55);
+  color: #cbd5e1;
+  font-size: 0.68rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.zdos-emp-status--active {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(6, 78, 59, 0.45);
+  color: #6ee7b7;
+}
+
+.zdos-emp-status--pending {
+  border-color: rgba(251, 191, 36, 0.45);
+  background: rgba(120, 53, 15, 0.4);
+  color: #fcd34d;
+}
+
+.zdos-emp-status--other {
+  border-color: rgba(148, 163, 184, 0.3);
+  background: rgba(30, 41, 59, 0.55);
+  color: #94a3b8;
+}
+
+.zdos-emp-convert-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.35rem;
+  min-height: 28px;
+  padding: 0.2rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid rgba(86, 189, 248, 0.45);
+  background: rgba(0, 200, 255, 0.14);
+  color: #8ae4ff;
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.zdos-emp-convert-btn:hover {
+  background: rgba(0, 200, 255, 0.24);
+}
+
+.zdos-emp-convert__preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.65rem;
+  margin-top: 0.9rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(251, 191, 36, 0.28);
+  background: rgba(120, 53, 15, 0.22);
+  font-size: 0.72rem;
+  color: var(--g02-muted, rgba(186, 220, 245, 0.86));
+}
+
+.zdos-emp-convert__preview-meta {
+  width: 100%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  color: rgba(252, 211, 77, 0.95);
+}
+
+/* EMPLOYEE-AUTH-001｜員工詳情建立／重設登入帳號 */
+.zdos-emp-auth-panel {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.zdos-emp-auth-panel__title {
+  margin: 0 0 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: rgba(186, 220, 245, 0.95);
+}
+
+.zdos-emp-auth-panel__hint,
+.zdos-emp-auth-panel__meta {
+  margin: 0 0 0.7rem;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: rgba(148, 180, 210, 0.88);
+}
+
+.zdos-emp-auth-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0.35rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid rgba(26, 208, 255, 0.45);
+  background: linear-gradient(180deg, rgba(18, 74, 134, 0.55) 0%, rgba(4, 20, 40, 0.85) 100%);
+  color: #8ae4ff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zdos-emp-auth-btn:hover {
+  background: linear-gradient(180deg, rgba(26, 100, 170, 0.65) 0%, rgba(6, 30, 55, 0.9) 100%);
+}
+
+.zdos-emp-auth-btn--ghost {
+  border-color: rgba(148, 163, 184, 0.4);
+  background: rgba(15, 23, 42, 0.55);
+  color: #cbd5e1;
+}
+
+.zdos-emp-auth-btn--ghost:hover {
+  border-color: rgba(26, 208, 255, 0.4);
+  color: #8ae4ff;
+  background: rgba(8, 40, 70, 0.65);
+}
+
+.zdos-emp-auth-reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 12050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(2, 8, 20, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.zdos-emp-auth-reveal__card {
+  width: min(100%, 360px);
+  border-radius: 18px;
+  border: 1px solid rgba(130, 215, 255, 0.35);
+  background:
+    linear-gradient(160deg, rgba(18, 74, 134, 0.45) 0%, rgba(4, 20, 40, 0.95) 60%, rgba(2, 11, 28, 0.98) 100%);
+  box-shadow: 0 0 28px rgba(0, 170, 255, 0.14), 0 16px 32px rgba(0, 0, 0, 0.35);
+  padding: 1.15rem 1.2rem 1.25rem;
+  color: #fff;
+  font-family: "SF Pro Text", "Avenir Next", "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
+}
+
+.zdos-emp-auth-reveal__eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: rgba(138, 228, 255, 0.85);
+}
+
+.zdos-emp-auth-reveal__title {
+  margin: 0 0 0.45rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.zdos-emp-auth-reveal__desc,
+.zdos-emp-auth-reveal__note {
+  margin: 0 0 0.85rem;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: rgba(186, 220, 245, 0.86);
+}
+
+.zdos-emp-auth-reveal__label {
+  margin: 0 0 0.2rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: rgba(148, 180, 210, 0.8);
+}
+
+.zdos-emp-auth-reveal__value {
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+  font-weight: 800;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #e2f6ff;
+  word-break: break-all;
+}
+
+.zdos-emp-auth-reveal__value--pwd {
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid rgba(26, 208, 255, 0.35);
+  background: rgba(0, 20, 40, 0.55);
+  color: #7dffb2;
+  letter-spacing: 0.04em;
+}
+
+.zdos-emp-auth-reveal .zdos-emp-auth-btn {
+  width: 100%;
+  margin-top: 0.25rem;
+}

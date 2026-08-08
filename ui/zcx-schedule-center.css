@@ -1,0 +1,914 @@
+/**
+ * ZCX-003B｜Schedule Center Corporate Experience
+ * Extends ZCX-003A HR visual contract → Leave／Schedule／Change surfaces.
+ * Visual-only. No business logic / permission / registry / engine.
+ *
+ * Scope:
+ *   .zdos-workspace:has(.zdos-lc17)     — 排假／排班中心（UI-017）
+ *   .zdos-workspace:has(.zdos-sch-center) — 班表異動 Hub
+ */
+
+/* ============================================================
+ * Shared page chrome（與 ZCX-003A 同系，禁止第二套 Theme）
+ * ============================================================ */
+.zdos-workspace:has(.zdos-lc17),
+.zdos-workspace:has(.zdos-sch-center) {
+  --zdos-sch-space-2: var(--zdl-space-2, var(--zcx-space-2, 0.5rem));
+  --zdos-sch-space-4: var(--zdl-space-4, var(--zcx-space-4, 1rem));
+  --zdos-sch-space-6: var(--zdl-space-6, var(--zcx-space-6, 1.5rem));
+  --zdos-sch-space-8: var(--zdl-space-8, var(--zcx-space-8, 2rem));
+  --zdos-sch-motion: var(--zcx-motion, var(--zdl-motion, 200ms cubic-bezier(0.25, 0.1, 0.25, 1)));
+  --zdos-sch-radius-sm: var(--zdl-radius-sm, var(--zcx-radius-sm, 8px));
+  --zdos-sch-radius-md: var(--zdl-radius-md, var(--zcx-radius-md, 12px));
+  --zdos-sch-radius-lg: var(--zdl-radius-lg, var(--zcx-radius-lg, 16px));
+  /* EMERGENCY-G02-CENTER-RESTORE｜token remap → 首頁 G02（禁白底企業面） */
+  --zdos-sch-border: var(--g02-border-soft, rgba(110, 200, 255, 0.34));
+  --zdos-sch-surface: var(--g02-glass-bg, rgba(80, 170, 245, 0.2));
+  --zdos-sch-text: var(--g02-text, #ffffff);
+  --zdos-sch-text-2: var(--g02-muted, rgba(186, 220, 245, 0.86));
+  --zdos-sch-text-3: rgba(186, 220, 245, 0.62);
+  --zdos-sch-brand: var(--g02-cyan, #1ad0ff);
+  --zdos-sch-brand-soft: rgba(0, 200, 255, 0.12);
+  --zdos-sch-shadow: var(--g02-glass-shadow, 0 0 24px rgba(0, 170, 255, 0.22));
+
+  box-sizing: border-box;
+  min-height: 100dvh;
+  max-width: 100vw;
+  color: var(--zdos-sch-text);
+  font-family: var(--zdl-font-sans, var(--zcx-font, "SF Pro Text", "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif));
+  background-color: var(--g02-bg-deep, #020b1c);
+  background-image: none;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  padding-left: max(var(--zdos-sch-space-4), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--zdos-sch-space-4), env(safe-area-inset-right, 0px));
+  padding-bottom: max(var(--zdos-sch-space-6), env(safe-area-inset-bottom, 0px));
+}
+
+/* BUG-0015d｜排假／班表異動 Header 交由 zcx-shell */
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-header.zdos-app-header,
+.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-header.zdos-app-header {
+  /* UI-HDR-001｜尺寸／safe-area／圓角交由 zcx-shell（班表班務 SoT） */
+  position: relative !important;
+  top: auto !important;
+  margin-top: 0 !important;
+  /* background／border 可由 theme 上色，但不得改 height／pad／radius */
+}
+
+
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-header-inner,
+.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-header-inner {
+  /* size owned by zcx-shell */
+}
+
+
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-back,
+.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-back {
+  border: 1px solid var(--zdos-sch-border);
+  background: var(--zdos-sch-surface);
+  color: var(--zdos-sch-brand);
+  font-weight: 700;
+  box-shadow: var(--zdos-sch-shadow);
+  transition: background var(--zdos-sch-motion), border-color var(--zdos-sch-motion);
+}
+
+
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-back:active,
+.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-back:active {
+  background: var(--zdos-sch-brand-soft);
+}
+
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-title,
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-title--scheduling,
+.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-title {
+  margin: 0;
+  text-align: center;
+  font-family: var(--zdl-font-display, var(--zcx-font-display, inherit));
+  font-size: var(--zdl-fs-title, 1.0625rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--zdos-sch-text) !important;
+}
+
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-actions .zdos-nav-btn,
+.zdos-workspace:has(.zdos-lc17) .zdos-lc17-btn,
+.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-actions .zdos-nav-btn {
+  min-height: 36px;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--zdos-sch-radius-sm);
+  border: 1px solid rgba(11, 79, 140, 0.22) !important;
+  background: var(--zdos-sch-brand-soft) !important;
+  color: var(--zdos-sch-brand) !important;
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 700;
+  box-shadow: none;
+  transition: background var(--zdos-sch-motion), border-color var(--zdos-sch-motion);
+}
+
+.zdos-workspace:has(.zdos-lc17) .zdos-lc17-btn--batch {
+  border-color: rgba(198, 40, 40, 0.28) !important;
+  background: rgba(198, 40, 40, 0.08) !important;
+  color: var(--zdl-color-alert, #c62828) !important;
+}
+
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-body,
+.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-body {
+  color: var(--zdos-sch-text);
+}
+
+/* Neutralize leftover demo text utilities inside these centers */
+.zdos-workspace:has(.zdos-lc17) .text-white,
+.zdos-workspace:has(.zdos-lc17) .text-slate-100,
+.zdos-workspace:has(.zdos-lc17) .text-slate-200,
+.zdos-workspace:has(.zdos-sch-center) .text-white,
+.zdos-workspace:has(.zdos-sch-center) .text-slate-100,
+.zdos-workspace:has(.zdos-sch-center) .text-slate-200 {
+  color: var(--zdos-sch-text) !important;
+}
+
+.zdos-workspace:has(.zdos-lc17) .text-slate-300,
+.zdos-workspace:has(.zdos-lc17) .text-slate-400,
+.zdos-workspace:has(.zdos-sch-center) .text-slate-300,
+.zdos-workspace:has(.zdos-sch-center) .text-slate-400 {
+  color: var(--zdos-sch-text-2) !important;
+}
+
+.zdos-workspace:has(.zdos-lc17) .text-slate-500,
+.zdos-workspace:has(.zdos-lc17) .text-slate-600,
+.zdos-workspace:has(.zdos-sch-center) .text-slate-500,
+.zdos-workspace:has(.zdos-sch-center) .text-slate-600 {
+  color: var(--zdos-sch-text-3) !important;
+}
+
+.zdos-workspace:has(.zdos-lc17) .text-rose-300,
+.zdos-workspace:has(.zdos-lc17) .text-cyan-200,
+.zdos-workspace:has(.zdos-lc17) .text-cyan-300,
+.zdos-workspace:has(.zdos-sch-center) .text-cyan-200,
+.zdos-workspace:has(.zdos-sch-center) .text-cyan-300,
+.zdos-workspace:has(.zdos-sch-center) .text-sky-200,
+.zdos-workspace:has(.zdos-sch-center) .text-sky-300,
+.zdos-workspace:has(.zdos-sch-center) .text-violet-200 {
+  color: var(--zdos-sch-brand) !important;
+}
+
+.zdos-workspace:has(.zdos-sch-center) .text-amber-200,
+.zdos-workspace:has(.zdos-sch-center) .text-amber-300 {
+  color: var(--zdl-color-warn, #a67c00) !important;
+}
+
+.zdos-workspace:has(.zdos-sch-center) .text-emerald-300 {
+  color: var(--zdl-color-ok, #147a45) !important;
+}
+
+.zdos-workspace:has(.zdos-sch-center) .text-rose-300 {
+  color: var(--zdl-color-alert, #c62828) !important;
+}
+
+/* ============================================================
+ * Leave / Schedule Center (zdos-lc17)
+ * ============================================================ */
+.zdos-lc17 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zdos-sch-space-4, 1rem);
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  padding-bottom: max(var(--zdos-sch-space-4, 1rem), env(safe-area-inset-bottom, 0px));
+  color: var(--zdos-sch-text, #0b1f33);
+}
+
+.zdos-lc17.zcx-page {
+  padding: 0;
+  min-height: 0;
+  background: transparent;
+}
+
+.zdos-lc17 .zdos-sch-hero {
+  position: relative;
+  padding: var(--zdos-sch-space-4, 1rem);
+  border-radius: var(--zdos-sch-radius-lg, 16px);
+  border: 1px solid rgba(176, 196, 216, 0.65);
+  background: linear-gradient(145deg, #e8f0f7 0%, #f4f8fb 52%, #eaf1f7 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.65) inset,
+    var(--zdos-sch-shadow);
+  overflow: hidden;
+}
+
+.zdos-lc17 .zdos-sch-hero__eyebrow {
+  margin: 0;
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--zdos-sch-text-2);
+}
+
+.zdos-lc17 .zdos-sch-hero__title {
+  margin: 0.25rem 0 0;
+  font-family: var(--zdl-font-display, inherit);
+  font-size: var(--zdl-fs-title-lg, 1.25rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--zdos-sch-text);
+}
+
+.zdos-lc17 .zdos-sch-hero__desc {
+  margin: 0.35rem 0 0;
+  font-size: var(--zdl-fs-footnote, 0.75rem);
+  line-height: 1.45;
+  color: var(--zdos-sch-text-2);
+}
+
+.zdos-lc17 .zdos-lc17-toolbar,
+.zdos-lc17 .zdos-lc17-cal,
+.zdos-lc17 .zdos-sch-card {
+  background: var(--zdos-sch-surface) !important;
+  background-image: none !important;
+  border: 1px solid var(--zdos-sch-border) !important;
+  border-radius: var(--zdos-sch-radius-lg, 16px) !important;
+  box-shadow: var(--zdos-sch-shadow) !important;
+  padding: var(--zdos-sch-space-4, 1rem);
+  color: var(--zdos-sch-text, #0b1f33);
+}
+
+.zdos-lc17 .zdos-sch-kicker {
+  margin: 0;
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--zdos-sch-brand) !important;
+}
+
+.zdos-lc17 .zdos-sch-meta {
+  margin: 0.2rem 0 0;
+  font-size: var(--zdl-fs-footnote, 0.75rem);
+  color: var(--zdos-sch-text-3) !important;
+}
+
+.zdos-lc17 .zdos-sch-section-title {
+  margin: 0 0 0.5rem;
+  font-size: var(--zdl-fs-body, 0.875rem);
+  font-weight: 800;
+  color: var(--zdos-sch-text);
+  font-family: var(--zdl-font-display, inherit);
+}
+
+.zdos-lc17 .zdos-leave-primary-add {
+  min-height: 2.25rem;
+  padding: 0 0.85rem;
+  border-radius: var(--zdos-sch-radius-md, 12px);
+  border: none;
+  background: linear-gradient(180deg, #1567b3 0%, var(--zdos-sch-brand) 100%);
+  color: #ffffff !important;
+  font-size: var(--zdl-fs-footnote, 0.75rem);
+  font-weight: 800;
+  transition: opacity var(--zdos-sch-motion), transform 120ms ease;
+}
+
+.zdos-lc17 .zdos-leave-primary-add:active {
+  transform: scale(0.98);
+}
+
+.zdos-lc17 .zdos-lc17-search {
+  margin-top: var(--zdos-sch-space-2, 0.5rem);
+  height: 2.5rem;
+  border-radius: var(--zdos-sch-radius-md, 12px);
+  border: 1px solid var(--zdos-sch-border) !important;
+  background: #f5f9fd !important;
+  color: var(--zdos-sch-text) !important;
+  font-size: var(--zdl-fs-body, 0.875rem);
+  font-weight: 600;
+  transition: border-color var(--zdos-sch-motion), box-shadow var(--zdos-sch-motion);
+}
+
+.zdos-lc17 .zdos-lc17-search:focus {
+  border-color: rgba(11, 79, 140, 0.45) !important;
+  box-shadow: 0 0 0 3px rgba(11, 79, 140, 0.12);
+  outline: none;
+}
+
+.zdos-lc17 .zdos-lc17-kpi {
+  min-height: 3.5rem;
+  padding: 0.65rem 0.6rem;
+  border-radius: var(--zdos-sch-radius-md, 12px);
+  border: 1px solid var(--zdos-sch-border) !important;
+  background: var(--zdos-sch-surface) !important;
+  box-shadow: var(--zdos-sch-shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.zdos-lc17 .zdos-lc17-kpi-label {
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 700;
+  color: var(--zdos-sch-text-2) !important;
+  letter-spacing: 0.03em;
+}
+
+.zdos-lc17 .zdos-lc17-kpi-value {
+  margin-top: 0.2rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--zdos-sch-brand) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.zdos-lc17 .zdos-lc17-stat {
+  min-height: 2.15rem;
+  border-radius: var(--zdos-sch-radius-sm, 8px);
+  border: 1px solid var(--zdos-sch-border) !important;
+  background: #f5f9fd !important;
+  color: var(--zdos-sch-text) !important;
+}
+
+.zdos-lc17 .zdos-lc17-stat-count {
+  color: var(--zdos-sch-brand) !important;
+}
+
+.zdos-lc17 .zdos-scheduling-month-btn {
+  border-radius: var(--zdos-sch-radius-sm, 8px);
+  border-color: var(--zdos-sch-border);
+  background: var(--zdos-sch-surface);
+  color: var(--zdos-sch-brand);
+  transition: background var(--zdos-sch-motion), border-color var(--zdos-sch-motion);
+}
+
+.zdos-lc17 .zdos-scheduling-month-label {
+  color: var(--zdos-sch-text);
+  font-weight: 800;
+}
+
+.zdos-lc17 .zdos-scheduling-weekday {
+  color: var(--zdos-sch-text-3);
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 700;
+}
+
+.zdos-lc17 .zdos-lc17-day {
+  min-height: 3.4rem;
+  border-radius: var(--zdos-sch-radius-md, 12px);
+  border: 1px solid var(--zdos-sch-border) !important;
+  background: rgba(4, 20, 45, 0.55) !important;
+  transition: background var(--zdos-sch-motion), border-color var(--zdos-sch-motion);
+}
+
+.zdos-lc17 .zdos-lc17-day--today {
+  border-color: rgba(11, 79, 140, 0.55) !important;
+  background: #eef5fc !important;
+  box-shadow: inset 0 0 0 1px rgba(11, 79, 140, 0.12);
+}
+
+.zdos-lc17 .zdos-lc17-day--has {
+  background: var(--zdos-sch-surface) !important;
+  border-color: rgba(11, 79, 140, 0.22) !important;
+}
+
+.zdos-lc17 .zdos-lc17-day--match {
+  box-shadow: 0 0 0 2px rgba(11, 79, 140, 0.28);
+}
+
+.zdos-lc17 .zdos-lc17-day--watch {
+  border-color: rgba(166, 124, 0, 0.4) !important;
+  box-shadow: inset 0 0 0 1px rgba(166, 124, 0, 0.12);
+}
+
+.zdos-lc17 .zdos-lc17-day--risk {
+  border-color: rgba(198, 40, 40, 0.4) !important;
+  background: rgba(198, 40, 40, 0.06) !important;
+}
+
+.zdos-lc17 .zdos-lc17-day-num {
+  color: var(--zdos-sch-text) !important;
+  font-weight: 800;
+}
+
+.zdos-lc17 .zdos-lc17-day--today .zdos-lc17-day-num {
+  color: var(--zdos-sch-brand) !important;
+}
+
+.zdos-lc17 .zdos-lc17-day--watch .zdos-lc17-day-risk {
+  color: var(--zdl-color-warn, #a67c00) !important;
+}
+
+.zdos-lc17 .zdos-lc17-day--risk .zdos-lc17-day-risk {
+  color: var(--zdl-color-alert, #c62828) !important;
+}
+
+/* Leave tags — keep meaning, corporate soft surfaces */
+.zdos-lc17 .zdos-lc17-tag {
+  border-radius: 6px;
+  font-weight: 800;
+}
+
+.zdos-lc17 .zdos-lc17-tag--vacation,
+.zdos-lc17 .zdos-lc17-tag--vacation-choice {
+  background: rgba(20, 122, 69, 0.1);
+  border-color: rgba(20, 122, 69, 0.28);
+  color: var(--zdl-color-ok, #147a45);
+}
+
+.zdos-lc17 .zdos-lc17-tag--sick {
+  background: rgba(198, 40, 40, 0.1);
+  border-color: rgba(198, 40, 40, 0.28);
+  color: var(--zdl-color-alert, #c62828);
+}
+
+.zdos-lc17 .zdos-lc17-tag--personal {
+  background: rgba(166, 124, 0, 0.1);
+  border-color: rgba(166, 124, 0, 0.28);
+  color: var(--zdl-color-warn, #a67c00);
+}
+
+.zdos-lc17 .zdos-lc17-tag--official {
+  background: var(--zdos-sch-brand-soft);
+  border-color: rgba(11, 79, 140, 0.28);
+  color: var(--zdos-sch-brand);
+}
+
+.zdos-lc17 .zdos-lc17-tag--marriage,
+.zdos-lc17 .zdos-lc17-tag--funeral,
+.zdos-lc17 .zdos-lc17-tag--other {
+  background: #eef2f6;
+  border-color: var(--zdos-sch-border);
+  color: var(--zdos-sch-text-2);
+}
+
+.zdos-lc17 .zdos-sch-footer {
+  margin: 0;
+  text-align: center;
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  color: var(--zdos-sch-text-3);
+}
+
+/* Store switcher pills inside leave center */
+.zdos-lc17 .zdos-scheduling-store-btn {
+  border-radius: var(--zdos-sch-radius-sm, 8px);
+  border: 1px solid var(--zdos-sch-border);
+  background: var(--zdos-sch-surface);
+  color: var(--zdos-sch-text-2);
+  transition: background var(--zdos-sch-motion), border-color var(--zdos-sch-motion), color var(--zdos-sch-motion);
+}
+
+.zdos-lc17 .zdos-scheduling-store-btn--active {
+  border-color: rgba(11, 79, 140, 0.4);
+  background: var(--zdos-sch-brand-soft);
+  color: var(--zdos-sch-brand);
+}
+
+/* Info sheet — keep modal readable on light app */
+.zdos-lc17-info-panel {
+  background: var(--zdos-sch-surface) !important;
+  border-color: var(--zdos-sch-border) !important;
+  color: var(--zdos-sch-text);
+  box-shadow: 0 -8px 32px rgba(10, 37, 64, 0.12);
+}
+
+.zdos-lc17-info-k { color: var(--zdos-sch-text-3) !important; }
+.zdos-lc17-info-v { color: var(--zdos-sch-text) !important; }
+.zdos-lc17-person {
+  border: 1px solid var(--zdos-sch-border) !important;
+  background: #f5f9fd !important;
+  color: var(--zdos-sch-text);
+}
+.zdos-lc17-person.is-match {
+  border-color: rgba(11, 79, 140, 0.45) !important;
+  background: var(--zdos-sch-brand-soft) !important;
+}
+
+/* ============================================================
+ * Schedule Change Hub (zdos-sch-center)
+ * ============================================================ */
+.zdos-sch-center {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zdos-sch-space-4, 1rem);
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  padding-bottom: max(var(--zdos-sch-space-4, 1rem), env(safe-area-inset-bottom, 0px));
+  color: var(--zdos-sch-text);
+}
+
+.zdos-sch-center.zcx-page {
+  padding: 0;
+  min-height: 0;
+  background: transparent;
+}
+
+.zdos-sch-center .zdos-sch-hero {
+  padding: var(--zdos-sch-space-4, 1rem);
+  border-radius: var(--zdos-sch-radius-lg, 16px);
+  border: 1px solid rgba(176, 196, 216, 0.65);
+  background: linear-gradient(145deg, #e8f0f7 0%, #f4f8fb 52%, #eaf1f7 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.65) inset,
+    var(--zdos-sch-shadow);
+}
+
+.zdos-sch-center .zdos-sch-hero__eyebrow {
+  margin: 0;
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--zdos-sch-text-2);
+}
+
+.zdos-sch-center .zdos-sch-hero__title {
+  margin: 0.25rem 0 0;
+  font-family: var(--zdl-font-display, inherit);
+  font-size: var(--zdl-fs-title-lg, 1.25rem);
+  font-weight: 800;
+  color: var(--zdos-sch-text);
+}
+
+.zdos-sch-center .zdos-sch-hero__desc {
+  margin: 0.35rem 0 0;
+  font-size: var(--zdl-fs-footnote, 0.75rem);
+  color: var(--zdos-sch-text-2);
+}
+
+.zdos-sch-center .zdos-sch-action-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--zdos-sch-space-2, 0.5rem);
+}
+
+.zdos-sch-center .zdos-sch-action-btn {
+  min-height: 4.25rem;
+  padding: 0.75rem;
+  border-radius: var(--zdos-sch-radius-lg, 16px);
+  border: 1px solid var(--zdos-sch-border);
+  background: var(--zdos-sch-surface);
+  box-shadow: var(--zdos-sch-shadow);
+  text-align: left;
+  color: var(--zdos-sch-text);
+  transition: background var(--zdos-sch-motion), border-color var(--zdos-sch-motion), transform 120ms ease;
+}
+
+.zdos-sch-center .zdos-sch-action-btn:active {
+  transform: scale(0.99);
+  background: var(--zdos-sch-brand-soft);
+  border-color: rgba(11, 79, 140, 0.28);
+}
+
+.zdos-sch-center .zdos-sch-action-btn__title {
+  display: block;
+  font-size: var(--zdl-fs-body, 0.875rem);
+  font-weight: 800;
+  color: var(--zdos-sch-text);
+}
+
+.zdos-sch-center .zdos-sch-action-btn__meta {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  color: var(--zdos-sch-text-3);
+  font-weight: 600;
+}
+
+.zdos-sch-center .zdos-sch-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--zdos-sch-space-2, 0.5rem);
+}
+
+.zdos-sch-center .zdos-sch-tab {
+  min-height: 2rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--zdos-sch-radius-sm, 8px);
+  border: 1px solid var(--zdos-sch-border);
+  background: var(--zdos-sch-surface);
+  color: var(--zdos-sch-text-2);
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 700;
+  transition: background var(--zdos-sch-motion), border-color var(--zdos-sch-motion), color var(--zdos-sch-motion);
+}
+
+.zdos-sch-center .zdos-sch-tab.is-active {
+  border-color: rgba(11, 79, 140, 0.35);
+  background: var(--zdos-sch-brand-soft);
+  color: var(--zdos-sch-brand);
+}
+
+.zdos-sch-center .zdos-workspace-card,
+.zdos-sch-center .zdos-scr-card {
+  background: var(--zdos-sch-surface) !important;
+  border: 1px solid var(--zdos-sch-border) !important;
+  border-radius: var(--zdos-sch-radius-lg, 16px) !important;
+  box-shadow: var(--zdos-sch-shadow) !important;
+  color: var(--zdos-sch-text);
+}
+
+.zdos-sch-center select,
+.zdos-sch-center input[type="search"],
+.zdos-sch-center input:not([type="checkbox"]):not([type="radio"]),
+.zdos-sch-center textarea {
+  border: 1px solid var(--zdos-sch-border) !important;
+  background: #f5f9fd !important;
+  color: var(--zdos-sch-text) !important;
+  border-radius: var(--zdos-sch-radius-md, 12px) !important;
+}
+
+.zdos-sch-center .zdos-sch-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.35rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--zdos-sch-radius-sm, 8px);
+  border: 1px solid var(--zdos-sch-border);
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 700;
+  background: #f5f9fd;
+  color: var(--zdos-sch-brand);
+}
+
+.zdos-sch-center .zdos-sch-badge--ok {
+  color: var(--zdl-color-ok, #147a45);
+  background: rgba(20, 122, 69, 0.1);
+  border-color: rgba(20, 122, 69, 0.28);
+}
+
+.zdos-sch-center .zdos-sch-badge--alert {
+  color: var(--zdl-color-alert, #c62828);
+  background: rgba(198, 40, 40, 0.08);
+  border-color: rgba(198, 40, 40, 0.28);
+}
+
+.zdos-sch-center .zdos-sch-badge--warn {
+  color: var(--zdl-color-warn, #a67c00);
+  background: rgba(166, 124, 0, 0.1);
+  border-color: rgba(166, 124, 0, 0.28);
+}
+
+.zdos-sch-center .zdos-sch-badge--info {
+  color: var(--zdos-sch-brand);
+  background: var(--zdos-sch-brand-soft);
+  border-color: rgba(11, 79, 140, 0.28);
+}
+
+.zdos-sch-center .zdos-scr-card .zdos-nav-btn {
+  border-radius: var(--zdos-sch-radius-sm, 8px);
+  border: 1px solid var(--zdos-sch-border);
+  background: var(--zdos-sch-surface);
+  color: var(--zdos-sch-text-2);
+  transition: background var(--zdos-sch-motion), border-color var(--zdos-sch-motion);
+}
+
+.zdos-sch-center .zdos-scr-timeline-dot {
+  background: var(--zdos-sch-brand) !important;
+}
+
+.zdos-sch-center .zdos-sch-footer,
+.zdos-sch-center .zdos-sch-footnote {
+  margin: 0;
+  text-align: center;
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  color: var(--zdos-sch-text-3);
+}
+
+@media (max-width: 430px) {
+  .zdos-lc17 .zdos-sch-hero,
+  .zdos-sch-center .zdos-sch-hero,
+  .zdos-lc17 .zdos-lc17-toolbar,
+  .zdos-lc17 .zdos-lc17-cal {
+    padding: 0.75rem;
+  }
+
+  .zdos-sch-center .zdos-sch-action-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+ * DS-001｜ZDOS Dark Technology — Leave / Schedule / Change
+ * Visual-only override. Logic, registry, permissions and data untouched.
+ * ============================================================ */
+.zdos-workspace:has(.zdos-lc17),
+.zdos-workspace:has(.zdos-sch-center) {
+  --zdos-sch-border: rgba(0, 184, 255, 0.3);
+  --zdos-sch-surface: rgba(8, 28, 58, 0.74);
+  --zdos-sch-text: #f7fbff;
+  --zdos-sch-text-2: rgba(205, 228, 247, 0.82);
+  --zdos-sch-text-3: rgba(170, 204, 232, 0.66);
+  --zdos-sch-brand: #00b8ff;
+  --zdos-sch-brand-soft: rgba(0, 184, 255, 0.12);
+  --zdos-sch-shadow: 0 12px 30px rgba(0, 5, 15, 0.36), 0 0 18px rgba(0, 170, 255, 0.08);
+  color-scheme: dark;
+  color: var(--zdos-sch-text);
+  background-color: #00050f;
+  background-image:
+    radial-gradient(circle at 84% 4%, rgba(0, 128, 255, 0.19), transparent 32%),
+    linear-gradient(180deg, #00050f 0%, #020b20 48%, #000711 100%);
+}
+
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-header.zdos-app-header,
+.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-header.zdos-app-header {
+  /* UI-HDR-001｜玻璃／尺寸交由 zcx-shell */
+}
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-title,
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-title--scheduling,
+.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-title { color: #fff !important; }
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-back,
+.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-back,
+.zdos-workspace:has(.zdos-lc17) .zdos-workspace-actions .zdos-nav-btn,
+.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-actions .zdos-nav-btn {
+  border-color: rgba(0, 184, 255, 0.34) !important;
+  background: rgba(8, 28, 58, 0.74) !important;
+  color: #6ed8ff !important;
+}
+
+.zdos-lc17 .zdos-sch-hero,
+.zdos-sch-center .zdos-sch-hero,
+.zdos-lc17 .zdos-lc17-toolbar,
+.zdos-lc17 .zdos-lc17-cal,
+.zdos-lc17 .zdos-lc17-card,
+.zdos-sch-center .zdos-workspace-card,
+.zdos-sch-center .zdos-scr-card,
+.zdos-sch-center .zdos-sch-action-btn {
+  color: var(--zdos-sch-text) !important;
+  border-color: rgba(0, 184, 255, 0.28) !important;
+  background: linear-gradient(145deg, rgba(8, 31, 65, 0.78), rgba(3, 16, 38, 0.86)) !important;
+  box-shadow: var(--zdos-sch-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(125%);
+  backdrop-filter: blur(16px) saturate(125%);
+}
+
+.zdos-lc17 .zdos-sch-hero__eyebrow,
+.zdos-sch-center .zdos-sch-hero__eyebrow,
+.zdos-workspace:has(.zdos-lc17) .text-cyan-200,
+.zdos-workspace:has(.zdos-lc17) .text-cyan-300,
+.zdos-workspace:has(.zdos-sch-center) .text-cyan-200,
+.zdos-workspace:has(.zdos-sch-center) .text-cyan-300,
+.zdos-workspace:has(.zdos-sch-center) .text-sky-200,
+.zdos-workspace:has(.zdos-sch-center) .text-sky-300 { color: #6ed8ff !important; }
+.zdos-lc17 .zdos-sch-hero__title,
+.zdos-sch-center .zdos-sch-hero__title,
+.zdos-sch-center .zdos-sch-action-btn__title,
+.zdos-workspace:has(.zdos-lc17) .text-white,
+.zdos-workspace:has(.zdos-lc17) .text-slate-100,
+.zdos-workspace:has(.zdos-lc17) .text-slate-200,
+.zdos-workspace:has(.zdos-sch-center) .text-white,
+.zdos-workspace:has(.zdos-sch-center) .text-slate-100,
+.zdos-workspace:has(.zdos-sch-center) .text-slate-200 { color: #fff !important; }
+.zdos-lc17 .zdos-sch-hero__desc,
+.zdos-sch-center .zdos-sch-hero__desc,
+.zdos-sch-center .zdos-sch-action-btn__meta,
+.zdos-workspace:has(.zdos-lc17) .text-slate-300,
+.zdos-workspace:has(.zdos-lc17) .text-slate-400,
+.zdos-workspace:has(.zdos-lc17) .text-slate-500,
+.zdos-workspace:has(.zdos-lc17) .text-slate-600,
+.zdos-workspace:has(.zdos-sch-center) .text-slate-300,
+.zdos-workspace:has(.zdos-sch-center) .text-slate-400,
+.zdos-workspace:has(.zdos-sch-center) .text-slate-500,
+.zdos-workspace:has(.zdos-sch-center) .text-slate-600 { color: var(--zdos-sch-text-3) !important; }
+
+.zdos-lc17 button,
+.zdos-sch-center button,
+.zdos-lc17 select,
+.zdos-lc17 input,
+.zdos-lc17 textarea,
+.zdos-sch-center select,
+.zdos-sch-center input,
+.zdos-sch-center textarea,
+.zdos-sch-center .zdos-sch-tab,
+.zdos-sch-center .zdos-scr-card .zdos-nav-btn {
+  border-color: rgba(0, 184, 255, 0.26) !important;
+  background-color: rgba(3, 18, 40, 0.82) !important;
+  color: #f7fbff !important;
+}
+.zdos-lc17 input::placeholder,
+.zdos-lc17 textarea::placeholder,
+.zdos-sch-center input::placeholder,
+.zdos-sch-center textarea::placeholder { color: rgba(170, 204, 232, 0.52); }
+.zdos-sch-center .zdos-sch-tab.is-active,
+.zdos-lc17 .is-active {
+  border-color: rgba(0, 184, 255, 0.62) !important;
+  background: rgba(0, 184, 255, 0.16) !important;
+  color: #8de3ff !important;
+  box-shadow: 0 0 18px rgba(0, 184, 255, 0.12);
+}
+
+.zdos-sch-center .zdos-sch-badge { background: rgba(0, 184, 255, 0.1); color: #6ed8ff; }
+.zdos-sch-center .zdos-sch-badge--ok { color: #72f5c5; background: rgba(16, 185, 129, 0.11); border-color: rgba(34, 211, 153, 0.34); }
+.zdos-sch-center .zdos-sch-badge--warn { color: #ffd27a; background: rgba(255, 176, 32, 0.11); border-color: rgba(255, 176, 32, 0.34); }
+.zdos-sch-center .zdos-sch-badge--alert { color: #ff8791; background: rgba(255, 59, 74, 0.11); border-color: rgba(255, 59, 74, 0.34); }
+.zdos-sch-center .zdos-sch-footer,
+.zdos-sch-center .zdos-sch-footnote { color: var(--zdos-sch-text-3); }
+
+@media (prefers-reduced-motion: reduce) {
+  .zdos-lc17 *, .zdos-lc17 *::before, .zdos-lc17 *::after,
+  .zdos-sch-center *, .zdos-sch-center *::before, .zdos-sch-center *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+ * DS-001A｜Mobile Hotfix
+ * Keep last and outrank zcx-premium.css, which loads later.
+ * ============================================================ */
+html.zdos-zcx-shell-active:has(.zdos-lc17),
+html.zdos-zcx-shell-active:has(.zdos-lc17) body,
+html.zdos-zcx-shell-active:has(.zdos-lc17) #root,
+html.zdos-zcx-shell-active:has(.zdos-sch-center),
+html.zdos-zcx-shell-active:has(.zdos-sch-center) body,
+html.zdos-zcx-shell-active:has(.zdos-sch-center) #root {
+  background-color: #00050f !important;
+  background-image:
+    radial-gradient(circle at 84% 4%, rgba(0, 128, 255, 0.19), transparent 32%),
+    linear-gradient(180deg, #00050f 0%, #020b20 48%, #000711 100%) !important;
+  color: #f7fbff !important;
+}
+
+.zdos-workspace.zdos-workspace:has(.zdos-lc17),
+.zdos-workspace.zdos-workspace:has(.zdos-sch-center) {
+  background-color: #00050f !important;
+  background-image:
+    radial-gradient(circle at 84% 4%, rgba(0, 128, 255, 0.19), transparent 32%),
+    linear-gradient(180deg, #00050f 0%, #020b20 48%, #000711 100%) !important;
+  color: #f7fbff !important;
+}
+
+.zdos-workspace.zdos-workspace:has(.zdos-lc17) .zdos-workspace-header,
+.zdos-workspace.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-header {
+  /* UI-HDR-001｜尺寸／safe-area／圓角交由 zcx-shell（班表班務 SoT） */
+  position: relative !important;
+  top: auto !important;
+  margin-top: 0 !important;
+  /* background／border 可由 theme 上色，但不得改 height／pad／radius */
+}
+
+
+.zdos-lc17.zdos-lc17 .zdos-sch-hero,
+.zdos-lc17.zdos-lc17 .zdos-lc17-toolbar,
+.zdos-lc17.zdos-lc17 .zdos-lc17-cal,
+.zdos-lc17.zdos-lc17 .zdos-lc17-card,
+.zdos-lc17.zdos-lc17 .zdos-lc17-kpi,
+.zdos-lc17.zdos-lc17 .zdos-lc17-stat,
+.zdos-lc17.zdos-lc17 .zdos-lc17-day,
+.zdos-sch-center.zdos-sch-center .zdos-sch-hero,
+.zdos-sch-center.zdos-sch-center .zdos-workspace-card,
+.zdos-sch-center.zdos-sch-center .zdos-scr-card,
+.zdos-sch-center.zdos-sch-center .zdos-sch-action-btn {
+  color: #f7fbff !important;
+  border-color: rgba(0, 184, 255, 0.28) !important;
+  background: linear-gradient(145deg, rgba(8, 31, 65, 0.8), rgba(3, 16, 38, 0.9)) !important;
+  background-image: linear-gradient(145deg, rgba(8, 31, 65, 0.8), rgba(3, 16, 38, 0.9)) !important;
+  box-shadow: var(--zdos-sch-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+.zdos-lc17.zdos-lc17 .zdos-lc17-search,
+.zdos-lc17.zdos-lc17 button,
+.zdos-lc17.zdos-lc17 select,
+.zdos-lc17.zdos-lc17 input,
+.zdos-lc17.zdos-lc17 textarea,
+.zdos-sch-center.zdos-sch-center button,
+.zdos-sch-center.zdos-sch-center select,
+.zdos-sch-center.zdos-sch-center input,
+.zdos-sch-center.zdos-sch-center textarea {
+  border-color: rgba(0, 184, 255, 0.26) !important;
+  background-color: rgba(3, 18, 40, 0.84) !important;
+  color: #f7fbff !important;
+}
+
+.zdos-lc17.zdos-lc17 .zdos-lc17-day-num,
+.zdos-lc17.zdos-lc17 .zdos-lc17-kpi-value,
+.zdos-lc17.zdos-lc17 .zdos-lc17-kpi-label,
+.zdos-sch-center.zdos-sch-center .zdos-sch-hero__title,
+.zdos-sch-center.zdos-sch-center .zdos-sch-action-btn__title {
+  color: #f7fbff !important;
+}
+
+@media (max-width: 430px) {
+  /* BUG-0015｜禁止 workspace 自掛 safe-area；top inset 只在共用 Header */
+  .zdos-workspace.zdos-workspace:has(.zdos-lc17),
+  .zdos-workspace.zdos-workspace:has(.zdos-sch-center) {
+    gap: 0.65rem !important;
+    padding-top: 0 !important;
+  }
+
+  .zdos-workspace.zdos-workspace:has(.zdos-lc17) .zdos-workspace-header,
+  .zdos-workspace.zdos-workspace:has(.zdos-sch-center) .zdos-workspace-header {
+  /* UI-HDR-001｜尺寸／safe-area／圓角交由 zcx-shell（班表班務 SoT） */
+  position: relative !important;
+  top: auto !important;
+  margin-top: 0 !important;
+  /* background／border 可由 theme 上色，但不得改 height／pad／radius */
+}
+
+
+  .zdos-lc17.zdos-lc17,
+  .zdos-sch-center.zdos-sch-center,
+  .zdos-lc17.zdos-lc17 .zdos-lc17-cal,
+  .zdos-lc17.zdos-lc17 .zdos-leave-calendar-grid {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+}

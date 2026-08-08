@@ -1,0 +1,3625 @@
+/**
+ * ZCX-003A｜HR Center Corporate Experience
+ * Maps HR Center surfaces → ZDL-001 / ZCX-001 tokens.
+ * Visual-only. No business logic / permission / registry / engine.
+ *
+ * Scope:
+ *   .zdos-workspace:has(.zdos-hr-home)
+ *   .zdos-hr-home
+ */
+
+/* ============================================================
+ * Page + Official Header
+ * G02-006｜Mobile Full-Bleed：背景滿版至螢幕邊緣；內距只留在內容／Header
+ * ============================================================ */
+
+/* Host zero-box：對消 #root 的 Tailwind p-2／p-4 與預設 margin */
+html:has(.zdos-hr-home),
+body:has(.zdos-hr-home),
+#root:has(.zdos-hr-home) {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100dvh;
+  background: var(--g02-bg-deep, #020b1c) !important;
+  background-color: var(--g02-bg-deep, #020b1c) !important;
+  background-image: none !important;
+  overflow-x: clip;
+  /* G02-HR-SAFEAREA-001｜不鎖 overflow-y／不鎖 height — Safe Area 由背景色延伸 */
+}
+
+#root:has(.zdos-hr-home) {
+  justify-content: stretch !important;
+  box-sizing: border-box;
+}
+
+.zdos-workspace:has(.zdos-hr-home) {
+  --zdos-hr-space-2: var(--zdl-space-2, var(--zcx-space-2, 0.5rem));   /* 8 */
+  --zdos-hr-space-4: var(--zdl-space-4, var(--zcx-space-4, 1rem));     /* 16 */
+  --zdos-hr-space-6: var(--zdl-space-6, var(--zcx-space-6, 1.5rem));   /* 24 */
+  --zdos-hr-space-8: var(--zdl-space-8, var(--zcx-space-8, 2rem));     /* 32 */
+  --zdos-hr-motion: var(--zcx-motion, var(--zdl-motion, 200ms cubic-bezier(0.25, 0.1, 0.25, 1)));
+  --zdos-hr-radius-sm: var(--zdl-radius-sm, var(--zcx-radius-sm, 8px));
+  --zdos-hr-radius-md: var(--zdl-radius-md, var(--zcx-radius-md, 12px));
+  --zdos-hr-radius-lg: var(--zdl-radius-lg, var(--zcx-radius-lg, 16px));
+  /* EMERGENCY-UI-001A｜沿用首頁 G02 token（禁止白底企業風） */
+  --zdos-hr-border: var(--g02-border-soft, rgba(110, 200, 255, 0.34));
+  --zdos-hr-surface: var(--g02-glass-bg, rgba(80, 170, 245, 0.2));
+  --zdos-hr-text: var(--g02-text, #ffffff);
+  --zdos-hr-text-2: var(--g02-muted, rgba(186, 220, 245, 0.86));
+  --zdos-hr-text-3: rgba(186, 220, 245, 0.62);
+  --zdos-hr-brand: var(--g02-cyan, #1ad0ff);
+  --zdos-hr-brand-soft: rgba(0, 200, 255, 0.12);
+  --zdos-hr-sky: var(--g02-cyan-soft, #8ae4ff);
+  --zdos-hr-shadow: var(--g02-glass-shadow, 0 0 24px rgba(0, 170, 255, 0.22));
+
+  box-sizing: border-box;
+  min-height: 100dvh;
+  /* 外層滿寬：取消 max-w-5xl／mx-auto／px-2 造成的 gutter */
+  max-width: 100% !important;
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  color: var(--zdos-hr-text);
+  font-family: var(--zdl-font-sans, var(--zcx-font, "SF Pro Text", "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif));
+  /* 頁殼實色深藍；玻璃感留給卡片 */
+  background-color: var(--g02-bg-deep, #020b1c) !important;
+  background-image: none !important;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+/* BUG-0015d｜HR Header 尺寸／safe-area／背景交由 zcx-shell */
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-header.zdos-app-header {
+  /* UI-HDR-001｜尺寸／safe-area／圓角交由 zcx-shell（班表班務 SoT） */
+  position: relative !important;
+  top: auto !important;
+  margin-top: 0 !important;
+  /* background／border 可由 theme 上色，但不得改 height／pad／radius */
+}
+
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-header-inner {
+  /* size owned by zcx-shell */
+}
+
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-back {
+  justify-self: start;
+  border: 1px solid var(--g02-border-soft, rgba(110, 200, 255, 0.34));
+  background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2));
+  color: var(--g02-cyan-soft, #8ae4ff);
+  font-weight: 700;
+  box-shadow: var(--zdos-hr-shadow);
+  transition: background var(--zdos-hr-motion), border-color var(--zdos-hr-motion);
+}
+
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-back:active {
+  background: var(--zdos-hr-brand-soft);
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-wcc-header-center {
+  justify-self: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-actions {
+  justify-self: end;
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-title {
+  margin: 0;
+  text-align: center;
+  font-family: var(--zdl-font-display, var(--zcx-font-display, inherit));
+  font-size: var(--zdl-fs-title, var(--zcx-fs-title, 1.0625rem));
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--zdos-hr-text);
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-actions .zdos-nav-btn,
+.zdos-workspace:has(.zdos-hr-home) .zdos-hr-header-today {
+  min-height: 36px;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--zdos-hr-radius-sm);
+  border: 1px solid rgba(11, 79, 140, 0.22);
+  background: var(--zdos-hr-brand-soft);
+  color: var(--zdos-hr-brand);
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 700;
+  box-shadow: none;
+  transition: background var(--zdos-hr-motion), border-color var(--zdos-hr-motion);
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-body {
+  color: var(--zdos-hr-text);
+  /* 內容內距（卡片區）— 背景仍由外層 workspace 滿版延伸 */
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  padding-left: max(var(--zdos-hr-space-4, 1rem), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--zdos-hr-space-4, 1rem), env(safe-area-inset-right, 0px));
+  padding-bottom: max(var(--zdos-hr-space-4, 1rem), env(safe-area-inset-bottom, 0px));
+}
+
+/* G02-HR-SAFEAREA-001｜內容卡維持 G02 玻璃深藍（防白卡／淺灰企業卡回潮） */
+.zdos-hr-home .zdos-wcc-roster-store,
+.zdos-hr-home .zdos-wcc-roster-shift,
+.zdos-hr-home .zdos-wcc-anomaly-card,
+.zdos-hr-home .zdos-wcc-page-body .zdos-workspace-card {
+  background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2));
+  border-color: var(--g02-glass-border, rgba(140, 220, 255, 0.42));
+  color: var(--g02-text, #fff);
+  max-width: 100%;
+}
+
+/* ============================================================
+ * HR Home shell
+ * ============================================================ */
+.zdos-hr-home {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zdos-hr-space-4, 1rem);
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  padding-bottom: max(var(--zdos-hr-space-4, 1rem), env(safe-area-inset-bottom, 0px));
+  font-family: var(--zdl-font-sans, var(--zcx-font, inherit));
+  color: var(--zdos-hr-text, #0b1f33);
+}
+
+.zdos-hr-home.zcx-page {
+  padding: 0;
+  min-height: 0;
+  background: transparent;
+}
+
+/* ============================================================
+ * Official Hero
+ * ============================================================ */
+.zdos-hr-home .zdos-hr-hero {
+  position: relative;
+  isolation: isolate;
+  padding: var(--zdos-hr-space-4, 1rem);
+  border-radius: var(--zdos-hr-radius-lg, 16px);
+  border: 1px solid rgba(176, 196, 216, 0.65);
+  background:
+    linear-gradient(145deg, #e8f0f7 0%, #f4f8fb 52%, #eaf1f7 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.65) inset,
+    var(--zdos-hr-shadow, 0 2px 8px rgba(10, 37, 64, 0.05));
+  overflow: hidden;
+  min-width: 0;
+}
+
+.zdos-hr-home .zdos-hr-hero__eyebrow {
+  margin: 0;
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--zdos-hr-text-2, #5a6b7c);
+}
+
+.zdos-hr-home .zdos-hr-hero__title {
+  margin: 0.25rem 0 0;
+  font-family: var(--zdl-font-display, var(--zcx-font-display, inherit));
+  font-size: var(--zdl-fs-title-lg, var(--zcx-fs-hero, 1.25rem));
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--zdos-hr-text, #0b1f33);
+}
+
+.zdos-hr-home .zdos-hr-hero__desc {
+  margin: 0.35rem 0 0;
+  font-size: var(--zdl-fs-footnote, 0.75rem);
+  line-height: 1.45;
+  color: var(--zdos-hr-text-2, #5a6b7c);
+}
+
+/* ============================================================
+ * Official Cards — Today / Calendar / Schedule Change
+ * ============================================================ */
+.zdos-hr-home .zdos-hr-today,
+.zdos-hr-home .zdos-hr-today--board,
+.zdos-hr-home .zdos-hr-calendar-card,
+.zdos-hr-home .zdos-hr-change-card {
+  background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2)) !important;
+  background-image: none !important;
+  border: 1px solid var(--g02-glass-border, rgba(140, 220, 255, 0.42)) !important;
+  border-radius: var(--zdos-hr-radius-lg, 16px) !important;
+  box-shadow: var(--g02-glass-shadow, 0 0 24px rgba(0, 170, 255, 0.22)) !important;
+  color: var(--g02-text, #ffffff) !important;
+}
+
+.zdos-hr-home .zdos-hr-today--board {
+  padding: var(--zdos-hr-space-4, 1rem) !important;
+}
+
+.zdos-hr-home .zdos-hr-section-kicker,
+.zdos-hr-home .zdos-hr-today-toolbar .zdos-hr-section-kicker,
+.zdos-hr-home .text-cyan-300 {
+  color: var(--zdos-hr-brand, #0b4f8c) !important;
+  font-size: var(--zdl-fs-caption, 0.6875rem) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em;
+}
+
+.zdos-hr-home .zdos-hr-section-meta,
+.zdos-hr-home .text-slate-300,
+.zdos-hr-home .text-slate-500,
+.zdos-hr-home .text-slate-600 {
+  color: var(--zdos-hr-text-3, #8494a7) !important;
+}
+
+.zdos-hr-home .text-slate-100,
+.zdos-hr-home .text-white,
+.zdos-hr-home h2.text-sm {
+  color: var(--zdos-hr-text, #0b1f33) !important;
+}
+
+.zdos-hr-home .zdos-hr-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--zdos-hr-space-2, 0.5rem);
+  flex-wrap: wrap;
+  margin-bottom: var(--zdos-hr-space-2, 0.5rem);
+}
+
+.zdos-hr-home .zdos-hr-section-title {
+  margin: 0;
+  font-size: var(--zdl-fs-body, 0.875rem);
+  font-weight: 800;
+  color: var(--zdos-hr-text, #0b1f33);
+  font-family: var(--zdl-font-display, inherit);
+}
+
+.zdos-hr-home .zdos-hr-section-desc {
+  margin: 0.2rem 0 0;
+  font-size: var(--zdl-fs-footnote, 0.75rem);
+  color: var(--zdos-hr-text-3, #8494a7);
+}
+
+/* Today board internals */
+.zdos-hr-home .zdos-hr-today-action {
+  height: 2rem;
+  padding: 0 0.65rem;
+  border-radius: var(--zdos-hr-radius-sm, 8px);
+  border: 1px solid #d0e1f9;
+  background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2));
+  color: var(--zdos-hr-text-2, #5a6b7c);
+  font-size: 0.625rem;
+  font-weight: 700;
+  transition: background var(--zdos-hr-motion), border-color var(--zdos-hr-motion), color var(--zdos-hr-motion);
+}
+
+.zdos-hr-home .zdos-hr-today-action.is-active {
+  border-color: rgba(11, 79, 140, 0.35);
+  background: var(--zdos-hr-brand-soft, rgba(11, 79, 140, 0.08));
+  color: var(--zdos-hr-brand, #0b4f8c);
+}
+
+.zdos-hr-home .zdos-hr-today-search {
+  margin-top: var(--zdos-hr-space-2, 0.5rem);
+  height: 2.5rem;
+  border-radius: var(--zdos-hr-radius-md, 12px);
+  border: 1px solid #d0e1f9;
+  background: #f5f9fd;
+  color: var(--zdos-hr-text, #0b1f33);
+  font-size: var(--zdl-fs-body, 0.875rem);
+  font-weight: 600;
+  transition: border-color var(--zdos-hr-motion), box-shadow var(--zdos-hr-motion);
+}
+
+.zdos-hr-home .zdos-hr-today-search:focus {
+  border-color: rgba(11, 79, 140, 0.45);
+  box-shadow: 0 0 0 3px rgba(11, 79, 140, 0.12);
+  outline: none;
+}
+
+.zdos-hr-home .zdos-hr-today-search::placeholder {
+  color: var(--zdos-hr-text-3, #8494a7);
+}
+
+.zdos-hr-home .zdos-hr-today-store {
+  margin-top: var(--zdos-hr-space-4, 1rem);
+  padding-top: var(--zdos-hr-space-4, 1rem);
+  border-top: 1px solid #d0e1f9;
+}
+
+.zdos-hr-home .zdos-hr-today-store:first-of-type {
+  margin-top: var(--zdos-hr-space-2, 0.5rem);
+  padding-top: 0;
+  border-top: 0;
+}
+
+.zdos-hr-home .zdos-hr-today-store > h2 {
+  margin: 0;
+  font-size: var(--zdl-fs-callout, 0.9375rem);
+  font-weight: 800;
+  color: var(--zdos-hr-text, #0b1f33) !important;
+}
+
+.zdos-hr-home .zdos-hr-board-shift {
+  margin-top: var(--zdos-hr-space-2, 0.5rem);
+  border-radius: var(--zdos-hr-radius-md, 12px);
+  border: 1px solid #d0e1f9;
+  background: #f5f9fd;
+  overflow: hidden;
+}
+
+.zdos-hr-home .zdos-hr-board-shift.is-current {
+  border-color: rgba(11, 79, 140, 0.4);
+  box-shadow: inset 0 0 0 1px rgba(11, 79, 140, 0.08);
+  background: #eef5fc;
+}
+
+.zdos-hr-home .zdos-hr-board-shift.is-risk {
+  border-color: rgba(198, 40, 40, 0.35);
+  background: rgba(198, 40, 40, 0.06);
+}
+
+/* Keep M/A/N readable on light surfaces — brand family, not neon */
+.zdos-hr-home .zdos-hr-board-shift[data-shift="M"] {
+  border-color: rgba(11, 79, 140, 0.28);
+}
+.zdos-hr-home .zdos-hr-board-shift[data-shift="A"] {
+  border-color: rgba(166, 124, 0, 0.28);
+}
+.zdos-hr-home .zdos-hr-board-shift[data-shift="N"] {
+  border-color: rgba(11, 79, 140, 0.22);
+}
+
+.zdos-hr-home .zdos-hr-board-shift[data-shift="M"] .zdos-hr-board-shift-title {
+  color: var(--zdos-hr-brand, #0b4f8c);
+}
+.zdos-hr-home .zdos-hr-board-shift[data-shift="A"] .zdos-hr-board-shift-title {
+  color: var(--zdl-color-warn, #a67c00);
+}
+.zdos-hr-home .zdos-hr-board-shift[data-shift="N"] .zdos-hr-board-shift-title {
+  color: #3d5a80;
+}
+
+.zdos-hr-home .zdos-hr-board-shift-title {
+  font-size: var(--zdl-fs-body, 0.875rem);
+  font-weight: 800;
+}
+
+.zdos-hr-home .zdos-hr-board-shift-stats {
+  color: var(--zdos-hr-text-2, #5a6b7c);
+}
+.zdos-hr-home .zdos-hr-board-shift-stats .ok {
+  color: var(--zdl-color-ok, #147a45);
+}
+.zdos-hr-home .zdos-hr-board-shift-stats .miss {
+  color: var(--zdl-color-alert, #c62828);
+}
+
+.zdos-hr-home .zdos-hr-board-shift-chevron {
+  color: var(--zdos-hr-text-3, #8494a7);
+  transition: transform var(--zdos-hr-motion);
+}
+
+.zdos-hr-home .zdos-hr-board-chip {
+  border-radius: var(--zdos-hr-radius-sm, 8px);
+  border: 1px solid #d0e1f9;
+  background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2));
+  transition: border-color var(--zdos-hr-motion), background var(--zdos-hr-motion);
+}
+
+.zdos-hr-home .zdos-hr-board-chip.is-self {
+  border-color: rgba(11, 79, 140, 0.45);
+  background: var(--zdos-hr-brand-soft, rgba(11, 79, 140, 0.08));
+}
+
+.zdos-hr-home .zdos-hr-board-chip.is-match {
+  border-color: rgba(11, 79, 140, 0.65);
+  background: rgba(11, 79, 140, 0.12);
+  box-shadow: 0 0 0 1px rgba(11, 79, 140, 0.12);
+}
+
+.zdos-hr-home .zdos-hr-today-empty,
+.zdos-hr-home .zdos-hr-board-empty {
+  color: var(--zdos-hr-text-3, #8494a7) !important;
+  font-weight: 600;
+}
+
+.zdos-hr-home .zdos-hr-board-cross {
+  margin-top: var(--zdos-hr-space-2, 0.5rem);
+  border-radius: var(--zdos-hr-radius-md, 12px);
+  border: 1px solid rgba(11, 79, 140, 0.22);
+  background: #f0f6fc;
+}
+
+.zdos-hr-home .zdos-hr-board-cross-title {
+  color: var(--zdos-hr-brand, #0b4f8c);
+  font-weight: 800;
+}
+
+.zdos-hr-home .zdos-hr-board-cross-note {
+  color: var(--zdos-hr-text-3, #8494a7);
+}
+
+.zdos-hr-home .zdos-hr-board-staffing {
+  border: 1px solid rgba(198, 40, 40, 0.28);
+  background: rgba(198, 40, 40, 0.08);
+  color: var(--zdl-color-alert, #c62828);
+  border-radius: var(--zdos-hr-radius-sm, 8px);
+}
+
+/* ============================================================
+ * Calendar
+ * ============================================================ */
+.zdos-hr-home .zdos-hr-calendar-card {
+  padding: var(--zdos-hr-space-4, 1rem) !important;
+}
+
+.zdos-hr-home .zdos-hr-cal-toggle {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zdos-hr-space-2, 0.5rem);
+}
+
+.zdos-hr-home .zdos-hr-cal-toggle .zdos-nav-btn,
+.zdos-hr-home .zdos-hr-cal-btn {
+  min-height: 2rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--zdos-hr-radius-sm, 8px);
+  border: 1px solid #d0e1f9;
+  background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2));
+  color: var(--zdos-hr-text-2, #5a6b7c);
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 700;
+  transition: background var(--zdos-hr-motion), border-color var(--zdos-hr-motion), color var(--zdos-hr-motion);
+}
+
+.zdos-hr-home .zdos-hr-cal-btn.is-active,
+.zdos-hr-home .zdos-hr-cal-toggle .zdos-nav-btn[aria-selected="true"] {
+  border-color: rgba(11, 79, 140, 0.35);
+  background: var(--zdos-hr-brand-soft, rgba(11, 79, 140, 0.08));
+  color: var(--zdos-hr-brand, #0b4f8c);
+}
+
+.zdos-hr-home .zdos-scheduling-month-btn {
+  border-radius: var(--zdos-hr-radius-sm, 8px);
+  border-color: #d0e1f9;
+  background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2));
+  color: var(--zdos-hr-brand, #0b4f8c);
+  transition: background var(--zdos-hr-motion), border-color var(--zdos-hr-motion);
+}
+
+.zdos-hr-home .zdos-scheduling-month-label {
+  color: var(--zdos-hr-text, #0b1f33);
+  font-weight: 800;
+}
+
+.zdos-hr-home .zdos-scheduling-weekday {
+  color: var(--zdos-hr-text-3, #8494a7);
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.zdos-hr-home .zdos-hr-day {
+  min-height: 4.5rem;
+  border-radius: var(--zdos-hr-radius-md, 12px);
+  border: 1px solid #d0e1f9;
+  background: #f8fafc;
+  color: var(--zdos-hr-text, #0b1f33);
+  transition: background var(--zdos-hr-motion), border-color var(--zdos-hr-motion), transform 120ms ease;
+}
+
+.zdos-hr-home .zdos-hr-day:active {
+  transform: scale(0.99);
+  background: var(--zdos-hr-brand-soft, rgba(11, 79, 140, 0.08));
+}
+
+.zdos-hr-home .zdos-hr-day--today {
+  border-color: rgba(11, 79, 140, 0.55) !important;
+  box-shadow: inset 0 0 0 1px rgba(11, 79, 140, 0.12) !important;
+  background: #eef5fc !important;
+}
+
+.zdos-hr-home .zdos-hr-day--today .zdos-hr-day-num {
+  color: var(--zdos-hr-brand, #0b4f8c) !important;
+}
+
+.zdos-hr-home .zdos-hr-day--leave {
+  background: rgba(198, 40, 40, 0.06) !important;
+  border-color: rgba(198, 40, 40, 0.22) !important;
+}
+
+.zdos-hr-home .zdos-hr-day-num {
+  color: var(--zdos-hr-text, #0b1f33);
+  font-weight: 800;
+}
+
+.zdos-hr-home .zdos-hr-shift {
+  border-radius: var(--zdos-hr-radius-sm, 8px);
+  background: var(--zdos-hr-brand-soft, rgba(11, 79, 140, 0.08));
+  border: 1px solid rgba(11, 79, 140, 0.16);
+  color: var(--zdos-hr-brand, #0b4f8c);
+  font-weight: 800;
+}
+
+.zdos-hr-home .zdos-hr-shift--empty {
+  color: var(--zdos-hr-text-3, #8494a7);
+  background: #eef2f6;
+  border-color: #d0e1f9;
+}
+
+.zdos-hr-home .zdos-hr-leave {
+  color: var(--zdl-color-alert, #c62828);
+  font-weight: 800;
+}
+
+.zdos-hr-home .zdos-hr-day-names {
+  color: var(--zdos-hr-text-2, #5a6b7c);
+}
+
+.zdos-hr-home .zdos-emp-id-sep {
+  color: var(--zdos-hr-text-3, #8494a7);
+}
+
+.zdos-hr-home .text-cyan-300 {
+  color: var(--zdos-hr-brand, #0b4f8c) !important;
+}
+
+/* ============================================================
+ * Official Action Cards — Leave / Pre-leave
+ * ============================================================ */
+.zdos-hr-home .zdos-hr-primary-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--zdos-hr-space-2, 0.5rem);
+  grid-auto-rows: 1fr;
+}
+
+.zdos-hr-home .zdos-hr-action {
+  min-height: 5rem;
+  height: 100%;
+  padding: var(--zdos-hr-space-4, 1rem);
+  border-radius: var(--zdos-hr-radius-lg, 16px);
+  border: 1px solid #d0e1f9;
+  background-color: var(--g02-glass-bg, rgba(80, 170, 245, 0.2));
+  box-shadow: 0 2px 8px rgba(10, 37, 64, 0.05);
+  color: var(--zdos-hr-text, #0b1f33);
+  transition: background var(--zdos-hr-motion), border-color var(--zdos-hr-motion), transform 120ms ease;
+}
+
+.zdos-hr-home .zdos-hr-action:active {
+  transform: scale(0.99);
+  background: var(--zdos-hr-brand-soft, rgba(11, 79, 140, 0.08));
+}
+
+.zdos-hr-home .zdos-hr-action--leave {
+  border-left: 3px solid rgba(198, 40, 40, 0.55);
+}
+
+.zdos-hr-home .zdos-hr-action--advance {
+  border-left: 3px solid rgba(11, 79, 140, 0.55);
+}
+
+.zdos-hr-home .zdos-hr-action__title {
+  display: block;
+  font-size: var(--zdl-fs-callout, 0.9375rem);
+  font-weight: 800;
+  color: var(--zdos-hr-text, #0b1f33);
+  font-family: var(--zdl-font-display, inherit);
+}
+
+.zdos-hr-home .zdos-hr-action__meta {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: var(--zdl-fs-footnote, 0.75rem);
+  color: var(--zdos-hr-text-2, #5a6b7c);
+  font-weight: 600;
+}
+
+/* ============================================================
+ * Schedule Change Card
+ * ============================================================ */
+.zdos-hr-home .zdos-hr-change-card {
+  padding: var(--zdos-hr-space-4, 1rem);
+}
+
+.zdos-hr-home .zdos-hr-change-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--zdos-hr-space-2, 0.5rem);
+}
+
+@media (min-width: 640px) {
+  .zdos-hr-home .zdos-hr-change-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.zdos-hr-home .zdos-hr-change-card .zdos-nav-btn,
+.zdos-hr-home .zdos-hr-change-btn {
+  min-height: 3.25rem;
+  padding: 0.75rem;
+  border-radius: var(--zdos-hr-radius-md, 12px);
+  border: 1px solid #d0e1f9;
+  background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2));
+  color: var(--zdos-hr-text, #0b1f33);
+  text-align: left;
+  font-size: var(--zdl-fs-body, 0.875rem);
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(10, 37, 64, 0.04);
+  transition: background var(--zdos-hr-motion), border-color var(--zdos-hr-motion), transform 120ms ease;
+}
+
+.zdos-hr-home .zdos-hr-change-card .zdos-nav-btn:active,
+.zdos-hr-home .zdos-hr-change-btn:active {
+  transform: scale(0.99);
+  background: var(--zdos-hr-brand-soft, rgba(11, 79, 140, 0.08));
+  border-color: rgba(11, 79, 140, 0.28);
+}
+
+.zdos-hr-home .zdos-hr-change-btn--review {
+  border-color: rgba(166, 124, 0, 0.35);
+  color: var(--zdl-color-warn, #a67c00);
+  background: rgba(166, 124, 0, 0.08);
+}
+
+.zdos-hr-home .zdos-hr-pending-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--zdos-hr-radius-sm, 8px);
+  border: 1px solid rgba(166, 124, 0, 0.3);
+  background: rgba(166, 124, 0, 0.1);
+  color: var(--zdl-color-warn, #a67c00);
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 700;
+}
+
+.zdos-hr-home .zdos-hr-footer {
+  margin: 0;
+  padding-top: var(--zdos-hr-space-2, 0.5rem);
+  text-align: center;
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  color: var(--zdos-hr-text-3, #8494a7);
+  font-family: var(--zdl-font-sans, inherit);
+}
+
+/* Month section spacing */
+.zdos-hr-home .zdos-hr-month-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zdos-hr-space-4, 1rem);
+  min-width: 0;
+}
+
+.zdos-hr-home .zdos-workspace-card {
+  background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2));
+  border: 1px solid #d0e1f9;
+  border-radius: var(--zdos-hr-radius-lg, 16px);
+  color: var(--zdos-hr-text-2, #5a6b7c);
+  box-shadow: var(--zdos-hr-shadow);
+}
+
+/* Person info sheet stays usable on light page (panel itself may remain elevated) */
+.zdos-hr-home .zdos-sched-info-btn {
+  border-color: rgba(11, 79, 140, 0.28);
+  background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2));
+  color: var(--zdos-hr-brand, #0b4f8c);
+}
+
+@media (max-width: 430px) {
+  .zdos-hr-home .zdos-hr-hero,
+  .zdos-hr-home .zdos-hr-today--board,
+  .zdos-hr-home .zdos-hr-calendar-card,
+  .zdos-hr-home .zdos-hr-change-card {
+    padding: 0.75rem !important;
+  }
+
+  .zdos-hr-home .zdos-hr-day {
+    min-height: 3.6rem;
+  }
+}
+
+/* ============================================================
+ * UI-016C｜今日人力指揮中心（純版面）
+ * ============================================================ */
+.zdos-hr-home .zdos-hr-cmd {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.zdos-hr-home .zdos-hr-cmd-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.zdos-hr-home .zdos-hr-cmd-status {
+  margin: 0;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--zdos-hr-radius-sm, 8px);
+  border: 1px solid #d0e1f9;
+  background: #f5f9fd;
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 800;
+  white-space: nowrap;
+  color: var(--zdos-hr-brand, #0b4f8c);
+}
+
+.zdos-hr-home .zdos-hr-cmd-status.is-ok {
+  border-color: rgba(20, 122, 69, 0.28);
+  background: rgba(20, 122, 69, 0.08);
+  color: #147a45;
+}
+
+.zdos-hr-home .zdos-hr-cmd-status.is-risk {
+  border-color: rgba(198, 40, 40, 0.3);
+  background: rgba(198, 40, 40, 0.08);
+  color: #c62828;
+}
+
+.zdos-hr-home .zdos-hr-cmd-status.is-over {
+  border-color: rgba(166, 124, 0, 0.35);
+  background: rgba(166, 124, 0, 0.1);
+  color: #a67c00;
+}
+
+.zdos-hr-home .zdos-hr-cmd-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.zdos-hr-home .zdos-hr-cmd-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+  padding: 0.7rem 0.55rem;
+  border-radius: var(--zdos-hr-radius-md, 12px);
+  border: 1px solid #d0e1f9;
+  background: #f8fafc;
+  box-shadow: 0 2px 8px rgba(10, 37, 64, 0.04);
+}
+
+.zdos-hr-home .zdos-hr-cmd-stat--work {
+  border-color: rgba(20, 122, 69, 0.22);
+  background: rgba(20, 122, 69, 0.06);
+}
+
+.zdos-hr-home .zdos-hr-cmd-stat--vacation {
+  border-color: rgba(166, 124, 0, 0.28);
+  background: rgba(166, 124, 0, 0.08);
+}
+
+.zdos-hr-home .zdos-hr-cmd-stat--leave {
+  border-color: rgba(198, 40, 40, 0.22);
+  background: rgba(198, 40, 40, 0.06);
+}
+
+.zdos-hr-home .zdos-hr-cmd-dot {
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.zdos-hr-home .zdos-hr-cmd-label {
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 700;
+  color: var(--zdos-hr-text-2, #5a6b7c);
+}
+
+.zdos-hr-home .zdos-hr-cmd-value {
+  font-size: 1.05rem;
+  font-weight: 900;
+  line-height: 1.15;
+  color: var(--zdos-hr-text, #0b1f33);
+  font-variant-numeric: tabular-nums;
+}
+
+.zdos-hr-home .zdos-hr-leave-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  min-width: 0;
+}
+
+.zdos-hr-home .zdos-hr-leave-summary-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 0.75rem;
+  border-radius: var(--zdos-hr-radius-md, 12px);
+  border: 1px solid #d0e1f9;
+  background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2));
+  color: var(--zdos-hr-text, #0b1f33);
+  font-size: var(--zdl-fs-body, 0.875rem);
+  font-weight: 800;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(10, 37, 64, 0.04);
+}
+
+.zdos-hr-home .zdos-hr-leave-summary-toggle.is-open {
+  border-color: rgba(11, 79, 140, 0.35);
+  background: rgba(11, 79, 140, 0.06);
+}
+
+.zdos-hr-home .zdos-hr-leave-summary-chevron {
+  color: var(--zdos-hr-text-3, #8494a7);
+  font-size: 0.75rem;
+}
+
+.zdos-hr-home .zdos-hr-leave-summary-body {
+  padding: 0.35rem 0.15rem 0.15rem;
+  min-width: 0;
+}
+
+.zdos-hr-home .zdos-hr-leave-summary-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.zdos-hr-home .zdos-hr-leave-summary-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 40px;
+  padding: 0 0.65rem;
+  border-radius: var(--zdos-hr-radius-sm, 8px);
+  border: 1px solid #d0e1f9;
+  background: #f8fafc;
+}
+
+.zdos-hr-home .zdos-hr-leave-summary-name {
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--zdos-hr-text, #0b1f33);
+  white-space: nowrap;
+  overflow: visible;
+}
+
+.zdos-hr-home .zdos-hr-leave-summary-type {
+  flex: 0 0 auto;
+  font-size: var(--zdl-fs-caption, 0.6875rem);
+  font-weight: 700;
+  color: var(--zdos-hr-text-3, #8494a7);
+  white-space: nowrap;
+}
+
+.zdos-hr-home .zdos-hr-board-grid--roster {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.zdos-hr-home .zdos-hr-board-chip--roster {
+  width: 100%;
+  height: auto !important;
+  min-height: 44px !important;
+  overflow: visible;
+}
+
+.zdos-hr-home .zdos-hr-board-chip--roster .zdos-hr-board-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  word-break: keep-all !important;
+  writing-mode: horizontal-tb !important;
+  color: var(--zdos-hr-text, #0b1f33) !important;
+  font-size: 0.875rem;
+  font-weight: 800;
+}
+
+.zdos-hr-home .zdos-hr-board-current-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 1.15rem;
+  padding: 0 0.35rem;
+  border-radius: 6px;
+  border: 1px solid rgba(11, 79, 140, 0.28);
+  background: rgba(11, 79, 140, 0.08);
+  color: var(--zdos-hr-brand, #0b4f8c);
+  font-size: 0.55rem;
+  font-weight: 900;
+}
+
+.zdos-hr-home .zdos-hr-board-shift.is-collapsed .zdos-hr-board-shift-stats {
+  display: none;
+}
+
+.zdos-hr-home .zdos-hr-month-section--fold {
+  background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2)) !important;
+  border: 1px solid #d0e1f9 !important;
+  border-radius: var(--zdos-hr-radius-lg, 16px) !important;
+  box-shadow: 0 2px 8px rgba(10, 37, 64, 0.05) !important;
+  overflow: hidden;
+  gap: 0;
+}
+
+.zdos-hr-home .zdos-hr-month-fold-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+  border: 0;
+  background: transparent;
+  color: var(--zdos-hr-text, #0b1f33);
+  text-align: left;
+  cursor: pointer;
+}
+
+.zdos-hr-home .zdos-hr-month-fold-title {
+  font-size: var(--zdl-fs-body, 0.875rem);
+  font-weight: 800;
+  font-family: var(--zdl-font-display, inherit);
+}
+
+.zdos-hr-home .zdos-hr-month-fold-chevron {
+  color: var(--zdos-hr-text-3, #8494a7);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.zdos-hr-home .zdos-hr-month-fold-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zdos-hr-space-4, 1rem);
+  padding: 0 1rem 1rem;
+  border-top: 1px solid #d0e1f9;
+  min-width: 0;
+}
+
+.zdos-hr-home .zdos-hr-month-section--fold.is-collapsed .zdos-hr-month-fold-body {
+  display: none;
+}
+
+@media (max-width: 390px) {
+  .zdos-hr-home .zdos-hr-cmd-stats {
+    gap: 0.35rem;
+  }
+
+  .zdos-hr-home .zdos-hr-cmd-stat {
+    padding: 0.55rem 0.4rem;
+  }
+
+  .zdos-hr-home .zdos-hr-cmd-value {
+    font-size: 0.95rem;
+  }
+
+  .zdos-hr-home .zdos-hr-cmd-label {
+    font-size: 0.62rem;
+  }
+
+  .zdos-hr-home .zdos-hr-board-chip--roster .zdos-hr-board-name {
+    font-size: 0.8125rem;
+  }
+}
+
+/* ============================================================
+ * DS-001｜ZDOS Dark Technology — HR / Scheduling Home
+ * Visual-only override. Logic, registry, permissions and data untouched.
+ * ============================================================ */
+.zdos-workspace:has(.zdos-hr-home) {
+  --zdos-hr-border: rgba(0, 184, 255, 0.34);
+  --zdos-hr-surface: rgba(8, 28, 58, 0.72);
+  --zdos-hr-text: #f7fbff;
+  --zdos-hr-text-2: rgba(205, 228, 247, 0.82);
+  --zdos-hr-text-3: rgba(170, 204, 232, 0.66);
+  --zdos-hr-brand: #00b8ff;
+  --zdos-hr-brand-soft: rgba(0, 184, 255, 0.12);
+  --zdos-hr-sky: #6ed8ff;
+  --zdos-hr-shadow: 0 12px 30px rgba(0, 5, 15, 0.36), 0 0 18px rgba(0, 170, 255, 0.08);
+  color-scheme: dark;
+  color: var(--zdos-hr-text);
+  background-color: #00050f;
+  background-image:
+    radial-gradient(circle at 84% 4%, rgba(0, 128, 255, 0.19), transparent 32%),
+    linear-gradient(180deg, #00050f 0%, #020b20 48%, #000711 100%);
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-header.zdos-app-header {
+  /* UI-HDR-001｜玻璃／尺寸交由 zcx-shell */
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-title { color: #fff; }
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-back,
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-actions .zdos-nav-btn,
+.zdos-workspace:has(.zdos-hr-home) .zdos-hr-header-today {
+  border-color: rgba(0, 184, 255, 0.34);
+  background: rgba(8, 28, 58, 0.74);
+  color: #6ed8ff;
+  box-shadow: inset 0 0 16px rgba(0, 184, 255, 0.05);
+}
+
+.zdos-hr-home { color: var(--zdos-hr-text); }
+.zdos-hr-home .zdos-hr-hero,
+.zdos-hr-home .zdos-hr-today,
+.zdos-hr-home .zdos-hr-today--board,
+.zdos-hr-home .zdos-hr-calendar-card,
+.zdos-hr-home .zdos-hr-change-card,
+.zdos-hr-home .zdos-hr-info-card,
+.zdos-hr-home .zdos-hr-next-card,
+.zdos-hr-home .zdos-hr-exception-card,
+.zdos-hr-home .zdos-hr-month-section--fold {
+  color: var(--zdos-hr-text) !important;
+  border-color: rgba(0, 184, 255, 0.28) !important;
+  background: linear-gradient(145deg, rgba(8, 31, 65, 0.78), rgba(3, 16, 38, 0.86)) !important;
+  box-shadow: var(--zdos-hr-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(125%);
+  backdrop-filter: blur(16px) saturate(125%);
+}
+
+.zdos-hr-home .zdos-hr-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 35%, rgba(0, 184, 255, 0.08), transparent 68%);
+}
+
+.zdos-hr-home .zdos-hr-hero__eyebrow,
+.zdos-hr-home .zdos-hr-section-kicker,
+.zdos-hr-home .zdos-hr-today-toolbar .zdos-hr-section-kicker,
+.zdos-hr-home .text-cyan-300 { color: #6ed8ff !important; }
+.zdos-hr-home .zdos-hr-hero__title,
+.zdos-hr-home .zdos-hr-section-title,
+.zdos-hr-home .text-slate-100,
+.zdos-hr-home .text-white,
+.zdos-hr-home h2.text-sm { color: #fff !important; }
+.zdos-hr-home .zdos-hr-hero__desc,
+.zdos-hr-home .zdos-hr-section-meta,
+.zdos-hr-home .zdos-hr-section-desc,
+.zdos-hr-home .text-slate-300,
+.zdos-hr-home .text-slate-500,
+.zdos-hr-home .text-slate-600 { color: var(--zdos-hr-text-3) !important; }
+
+.zdos-hr-home .zdos-hr-now { border-top-color: rgba(0, 184, 255, 0.2); }
+.zdos-hr-home .zdos-hr-now-label,
+.zdos-hr-home .zdos-hr-next-label { color: #00b8ff; text-shadow: 0 0 16px rgba(0, 184, 255, 0.24); }
+.zdos-hr-home .zdos-hr-next-time,
+.zdos-hr-home .zdos-hr-next-count { color: #fff; }
+
+.zdos-hr-home .zdos-hr-today-action,
+.zdos-hr-home button,
+.zdos-hr-home select,
+.zdos-hr-home input,
+.zdos-hr-home textarea {
+  border-color: rgba(0, 184, 255, 0.26) !important;
+  background-color: rgba(3, 18, 40, 0.82) !important;
+  color: #f7fbff !important;
+}
+.zdos-hr-home input::placeholder,
+.zdos-hr-home textarea::placeholder { color: rgba(170, 204, 232, 0.52); }
+.zdos-hr-home .zdos-hr-today-action.is-active {
+  border-color: rgba(0, 184, 255, 0.62) !important;
+  background: rgba(0, 184, 255, 0.16) !important;
+  color: #8de3ff !important;
+  box-shadow: 0 0 18px rgba(0, 184, 255, 0.12);
+}
+
+.zdos-hr-home .zdos-hr-exception-list li {
+  border-color: rgba(0, 184, 255, 0.2);
+  background: rgba(2, 15, 35, 0.72);
+  color: #eaf7ff;
+}
+.zdos-hr-home .zdos-hr-exception-clear {
+  border-color: rgba(34, 211, 153, 0.36);
+  background: rgba(16, 185, 129, 0.11);
+  color: #72f5c5;
+}
+
+.zdos-hr-home .zdos-hr-footer { color: var(--zdos-hr-text-3); }
+
+@media (prefers-reduced-motion: reduce) {
+  .zdos-hr-home *, .zdos-hr-home *::before, .zdos-hr-home *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 430px) and (min-width: 391px) {
+  .zdos-hr-home .zdos-hr-cmd-value {
+    font-size: 1.05rem;
+  }
+}
+
+/* ============================================================
+ * UI-016D｜指揮中心 Final Polish
+ * ============================================================ */
+.zdos-hr-home .zdos-hr-hero--slim {
+  padding: 0.65rem 1rem !important;
+}
+
+.zdos-hr-home .zdos-hr-hero--slim .zdos-hr-hero__title {
+  margin-top: 0.15rem;
+  font-size: 1.0625rem;
+}
+
+.zdos-hr-home .zdos-hr-hero--slim .zdos-hr-hero__desc {
+  display: none;
+}
+
+.zdos-hr-home .zdos-hr-now {
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #d0e1f9;
+}
+
+.zdos-hr-home .zdos-hr-now-label {
+  margin: 0.25rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--zdos-hr-brand, #0b4f8c);
+  font-family: var(--zdl-font-display, inherit);
+}
+
+.zdos-hr-home .zdos-hr-roster {
+  margin-top: 0.75rem;
+  min-width: 0;
+}
+
+.zdos-hr-home .zdos-hr-roster-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 0.35rem;
+}
+
+.zdos-hr-home .zdos-hr-roster-head .zdos-hr-today-search {
+  margin-top: 0;
+}
+
+.zdos-hr-home .zdos-hr-info-card,
+.zdos-hr-home .zdos-hr-next-card,
+.zdos-hr-home .zdos-hr-exception-card {
+  background: var(--g02-glass-bg, rgba(80, 170, 245, 0.2)) !important;
+  border: 1px solid #d0e1f9 !important;
+  border-radius: var(--zdos-hr-radius-lg, 16px) !important;
+  box-shadow: 0 2px 8px rgba(10, 37, 64, 0.05) !important;
+  padding: 1rem !important;
+  color: var(--zdos-hr-text, #0b1f33);
+  min-width: 0;
+}
+
+.zdos-hr-home .zdos-hr-next-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr 0.7fr;
+  gap: 0.5rem;
+  margin-top: 0.55rem;
+  align-items: end;
+}
+
+.zdos-hr-home .zdos-hr-next-label {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 900;
+  color: var(--zdos-hr-brand, #0b4f8c);
+  line-height: 1.2;
+}
+
+.zdos-hr-home .zdos-hr-next-time {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--zdos-hr-text, #0b1f33);
+  font-variant-numeric: tabular-nums;
+}
+
+.zdos-hr-home .zdos-hr-next-count {
+  margin: 0;
+  text-align: right;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--zdos-hr-text, #0b1f33);
+  font-variant-numeric: tabular-nums;
+}
+
+.zdos-hr-home .zdos-hr-exception-list {
+  list-style: none;
+  margin: 0.55rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 0.65rem;
+}
+
+.zdos-hr-home .zdos-hr-exception-list li {
+  min-height: 2rem;
+  display: flex;
+  align-items: center;
+  padding: 0.35rem 0.55rem;
+  border-radius: var(--zdos-hr-radius-sm, 8px);
+  border: 1px solid #d0e1f9;
+  background: #f8fafc;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--zdos-hr-text, #0b1f33);
+}
+
+.zdos-hr-home .zdos-hr-exception-clear {
+  margin: 0.55rem 0 0;
+  padding: 0.7rem 0.75rem;
+  border-radius: var(--zdos-hr-radius-md, 12px);
+  border: 1px solid rgba(20, 122, 69, 0.28);
+  background: rgba(20, 122, 69, 0.08);
+  color: #147a45;
+  font-size: 0.9375rem;
+  font-weight: 800;
+}
+
+@media (max-width: 390px) {
+  .zdos-hr-home .zdos-hr-next-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .zdos-hr-home .zdos-hr-next-count {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  .zdos-hr-home .zdos-hr-exception-list {
+    grid-template-columns: 1fr;
+  }
+
+  .zdos-hr-home .zdos-hr-hero--slim {
+    padding: 0.55rem 0.75rem !important;
+  }
+}
+
+/* DS-001 final cascade guard — must remain last in this file. */
+.zdos-hr-home .zdos-hr-hero,
+.zdos-hr-home .zdos-hr-today,
+.zdos-hr-home .zdos-hr-today--board,
+.zdos-hr-home .zdos-hr-calendar-card,
+.zdos-hr-home .zdos-hr-change-card,
+.zdos-hr-home .zdos-hr-info-card,
+.zdos-hr-home .zdos-hr-next-card,
+.zdos-hr-home .zdos-hr-exception-card,
+.zdos-hr-home .zdos-hr-month-section--fold {
+  color: var(--zdos-hr-text) !important;
+  border-color: rgba(0, 184, 255, 0.28) !important;
+  background: linear-gradient(145deg, rgba(8, 31, 65, 0.78), rgba(3, 16, 38, 0.86)) !important;
+  box-shadow: var(--zdos-hr-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+.zdos-hr-home .zdos-hr-now { border-top-color: rgba(0, 184, 255, 0.2); }
+.zdos-hr-home .zdos-hr-now-label,
+.zdos-hr-home .zdos-hr-next-label { color: #00b8ff; }
+.zdos-hr-home .zdos-hr-next-time,
+.zdos-hr-home .zdos-hr-next-count { color: #fff; }
+.zdos-hr-home .zdos-hr-exception-list li,
+.zdos-hr-home .zdos-hr-board-shift,
+.zdos-hr-home .zdos-hr-board-chip,
+.zdos-hr-home .zdos-hr-day {
+  border-color: rgba(0, 184, 255, 0.2) !important;
+  background: rgba(2, 15, 35, 0.72) !important;
+  color: #eaf7ff !important;
+}
+.zdos-hr-home .zdos-hr-board-shift.is-current,
+.zdos-hr-home .zdos-hr-day--today {
+  border-color: rgba(0, 184, 255, 0.6) !important;
+  background: rgba(0, 184, 255, 0.12) !important;
+  box-shadow: inset 0 0 0 1px rgba(0, 184, 255, 0.12), 0 0 18px rgba(0, 184, 255, 0.08) !important;
+}
+.zdos-hr-home .zdos-hr-day-num,
+.zdos-hr-home .zdos-hr-board-name { color: #f7fbff; }
+.zdos-hr-home .zdos-hr-shift {
+  border-color: rgba(0, 184, 255, 0.24);
+  background: rgba(0, 184, 255, 0.1);
+  color: #8de3ff;
+}
+.zdos-hr-home .zdos-hr-exception-clear {
+  border-color: rgba(34, 211, 153, 0.36);
+  background: rgba(16, 185, 129, 0.11);
+  color: #72f5c5;
+}
+/* ============================================================
+ * HR-030｜人力中心首頁固定卡片架構
+ * ============================================================ */
+.zdos-hr-home .zdos-hr-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zdos-hr-home .zdos-hr-dashboard > .zcx-card {
+  margin: 0 !important;
+  padding: 1rem !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(79, 169, 255, 0.22) !important;
+  overflow: hidden;
+}
+
+.zdos-hr-home .zdos-hr-date-main,
+.zdos-hr-home .zdos-hr-date-weekday,
+.zdos-hr-home .zdos-hr-card-title,
+.zdos-hr-home .zdos-hr-store-name,
+.zdos-hr-home .zdos-hr-store-count,
+.zdos-hr-home .zdos-hr-store-state,
+.zdos-hr-home .zdos-hr-roster-store-name,
+.zdos-hr-home .zdos-hr-shift-roster-head {
+  margin: 0;
+}
+
+.zdos-hr-home .zdos-hr-date-main {
+  margin-top: 0.4rem;
+  font-size: clamp(1.25rem, 5.6vw, 1.65rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+.zdos-hr-home .zdos-hr-date-weekday {
+  margin-top: 0.2rem;
+  color: var(--zdos-hr-text-2, #8da5bd);
+  font-size: 0.875rem;
+  font-weight: 800;
+}
+
+.zdos-hr-home .zdos-hr-shift-status-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 0.75rem;
+}
+
+.zdos-hr-home .zdos-hr-status-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+}
+
+.zdos-hr-home .zdos-hr-store-split,
+.zdos-hr-home .zdos-hr-shift-store-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.zdos-hr-home .zdos-hr-store-split { margin-top: 0.85rem; }
+
+.zdos-hr-home .zdos-hr-store-panel {
+  min-width: 0;
+  padding: 0.8rem 0.65rem;
+  border: 1px solid rgba(79, 169, 255, 0.2);
+  border-radius: 12px;
+  text-align: center;
+  background: rgba(9, 28, 50, 0.58);
+}
+
+.zdos-hr-home .zdos-hr-store-panel.is-risk { border-color: rgba(248, 113, 113, 0.45); }
+.zdos-hr-home .zdos-hr-store-panel.is-ok { border-color: rgba(52, 211, 153, 0.34); }
+.zdos-hr-home .zdos-hr-store-name { font-size: 0.78rem; font-weight: 850; }
+.zdos-hr-home .zdos-hr-store-count { margin-top: 0.25rem; font-size: 1.25rem; font-weight: 950; }
+.zdos-hr-home .zdos-hr-store-state { margin-top: 0.18rem; color: var(--zdos-hr-text-2, #8da5bd); font-size: 0.68rem; font-weight: 750; }
+
+.zdos-hr-home .zdos-hr-card-title {
+  margin-top: 0.2rem;
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+.zdos-hr-home .zdos-hr-summary-card .zdos-hr-cmd-stats { margin-top: 0.75rem; }
+.zdos-hr-home .zdos-hr-roster-note { margin: 0.3rem 0 0; color: var(--zdos-hr-text-2, #8da5bd); font-size: 0.7rem; line-height: 1.45; }
+.zdos-hr-home .zdos-hr-three-shifts { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.8rem; }
+
+.zdos-hr-home .zdos-hr-shift-roster {
+  padding: 0.75rem;
+  border: 1px solid rgba(79, 169, 255, 0.18);
+  border-radius: 13px;
+  background: rgba(7, 24, 44, 0.48);
+}
+
+.zdos-hr-home .zdos-hr-shift-roster.is-current { border-color: rgba(56, 189, 248, 0.55); }
+.zdos-hr-home .zdos-hr-shift-roster-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; font-size: 0.95rem; font-weight: 900; }
+.zdos-hr-home .zdos-hr-shift-store-grid { margin-top: 0.55rem; align-items: start; }
+.zdos-hr-home .zdos-hr-roster-store { min-width: 0; }
+.zdos-hr-home .zdos-hr-roster-store-name { margin-bottom: 0.35rem; color: #7dd3fc; font-size: 0.68rem; font-weight: 850; }
+.zdos-hr-home .zdos-hr-roster-store .zdos-hr-board-chip--roster { min-height: 36px !important; padding: 0.35rem 0.45rem; }
+.zdos-hr-home .zdos-hr-roster-store .zdos-hr-board-name { font-size: 0.76rem !important; }
+
+@media (max-width: 390px) {
+  .zdos-hr-home .zdos-hr-dashboard > .zcx-card { padding: 0.85rem !important; }
+  .zdos-hr-home .zdos-hr-store-split,
+  .zdos-hr-home .zdos-hr-shift-store-grid { gap: 0.4rem; }
+}
+
+/* ============================================================
+ * HR-030A｜Founder mobile polish
+ * Keep the workspace title visually centered between Back / Today,
+ * restore the official dark card system, and compact the date card.
+ * ============================================================ */
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-header-inner {
+  grid-template-columns: minmax(72px, 1fr) auto minmax(72px, 1fr) !important;
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-back { justify-self: start; }
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-title {
+  justify-self: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
+  min-width: 0;
+}
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-actions { justify-self: end; }
+
+.zdos-hr-home .zdos-hr-dashboard > .zdos-hr-date-card,
+.zdos-hr-home .zdos-hr-dashboard > .zdos-hr-shift-status-card,
+.zdos-hr-home .zdos-hr-dashboard > .zdos-hr-summary-card,
+.zdos-hr-home .zdos-hr-dashboard > .zdos-hr-three-shifts-card {
+  color: var(--zdos-hr-text) !important;
+  border-color: rgba(0, 184, 255, 0.28) !important;
+  background: linear-gradient(145deg, rgba(8, 31, 65, 0.78), rgba(3, 16, 38, 0.86)) !important;
+  box-shadow: var(--zdos-hr-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+.zdos-hr-home .zdos-hr-dashboard > .zdos-hr-date-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  column-gap: 0.65rem;
+  min-height: 0;
+  padding: 0.7rem 0.9rem !important;
+}
+
+.zdos-hr-home .zdos-hr-date-card .zdos-hr-section-kicker,
+.zdos-hr-home .zdos-hr-date-card .zdos-hr-date-main,
+.zdos-hr-home .zdos-hr-date-card .zdos-hr-date-weekday { margin: 0 !important; }
+.zdos-hr-home .zdos-hr-date-card .zdos-hr-date-main { font-size: clamp(1rem, 4.5vw, 1.25rem); line-height: 1.2; }
+.zdos-hr-home .zdos-hr-date-card .zdos-hr-date-weekday { color: #7dd3fc; white-space: nowrap; }
+.zdos-hr-home .zdos-hr-store-panel,
+.zdos-hr-home .zdos-hr-shift-roster { color: #eaf7ff; background: rgba(2, 15, 35, 0.72); }
+
+@media (max-width: 390px) {
+  .zdos-workspace:has(.zdos-hr-home) .zdos-workspace-header-inner {
+    grid-template-columns: minmax(68px, 1fr) auto minmax(68px, 1fr) !important;
+    gap: 0.35rem;
+  }
+  .zdos-hr-home .zdos-hr-dashboard > .zdos-hr-date-card { padding: 0.65rem 0.75rem !important; column-gap: 0.45rem; }
+}
+
+/* ============================================================
+ * UI-024C｜Workforce Command Center — Official Final Polish
+ * Visual-only. No engine / auth / permission changes.
+ * ============================================================ */
+.zdos-workspace:has(.zdos-wcc-home) {
+  --wcc-bg-0: #030d1c;
+  --wcc-bg-1: #0a1f3c;
+  --wcc-glass: linear-gradient(160deg, rgba(14, 48, 92, 0.78), rgba(5, 20, 44, 0.88));
+  --wcc-border: rgba(110, 190, 255, 0.30);
+  --wcc-glow: 0 10px 28px rgba(0, 40, 90, 0.28), 0 0 18px rgba(0, 150, 255, 0.12);
+  --wcc-radius: 18px;
+  --wcc-pad: 16px;
+  --wcc-gap: 20px;
+  --wcc-text: #eef7ff;
+  --wcc-muted: rgba(176, 206, 232, 0.74);
+  --wcc-green: #3ddc97;
+  --wcc-yellow: #f0c14a;
+  --wcc-red: #ff6b7a;
+  --wcc-blue: #5cb8ff;
+  --wcc-gray: #8aa0b8;
+  --wcc-fs-header: 1.05rem;
+  --wcc-fs-section: 0.875rem;
+  --wcc-fs-body: 0.75rem;
+  --wcc-fs-meta: 0.6875rem;
+  --wcc-motion: 180ms cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  color: var(--wcc-text);
+  background-color: var(--wcc-bg-0) !important;
+  background-image:
+    radial-gradient(110% 70% at 50% -8%, rgba(28, 100, 190, 0.32), transparent 58%),
+    linear-gradient(180deg, #0a1f3c, var(--wcc-bg-0)) !important;
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
+}
+
+.zdos-workspace:has(.zdos-wcc-home) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-wcc-home) .zdos-workspace-header.zdos-app-header {
+  /* UI-HDR-001｜尺寸／safe-area／圓角交由 zcx-shell（班表班務 SoT） */
+  position: relative !important;
+  top: auto !important;
+  margin-top: 0 !important;
+  /* background／border 可由 theme 上色，但不得改 height／pad／radius */
+}
+
+
+.zdos-workspace:has(.zdos-wcc-home) .zdos-wcc-header-inner {
+  /* size owned by zcx-shell；保留 3-col 置中 */
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto) !important;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.zdos-workspace:has(.zdos-wcc-home) .zdos-workspace-back {
+  background: rgba(10, 36, 68, 0.75) !important;
+  border: 1px solid var(--wcc-border) !important;
+  color: #cfe9ff !important;
+  box-shadow: none !important;
+  font-weight: 700;
+}
+
+.zdos-wcc-header-center {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  text-align: center;
+}
+
+.zdos-wcc-header-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.zdos-wcc-header-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.45));
+}
+
+
+.zdos-wcc-title {
+  margin: 0 !important;
+  font-size: var(--wcc-fs-header) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.02em;
+  color: #f2f9ff !important;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.zdos-wcc-subtitle {
+  margin: 0;
+  font-size: var(--wcc-fs-meta);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(125, 211, 252, 0.85);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.zdos-wcc-header-meta {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 0.75rem;
+  font-size: var(--wcc-fs-meta);
+  font-weight: 500;
+  color: var(--wcc-muted);
+}
+
+.zdos-wcc-header-actions .zdos-nav-btn,
+.zdos-wcc-header-actions [data-zdos-notify-bell] {
+  background: rgba(10, 36, 68, 0.75) !important;
+  border: 1px solid var(--wcc-border) !important;
+  color: #e7f5ff !important;
+}
+
+.zdos-wcc-home {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wcc-gap);
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.zdos-wcc-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wcc-gap);
+  min-width: 0;
+}
+
+.zdos-wcc-ai-card,
+.zdos-wcc-store-card,
+.zdos-wcc-anomaly-card,
+.zdos-wcc-next-card,
+.zdos-wcc-quick,
+.zdos-wcc-month {
+  border: 1px solid var(--wcc-border);
+  border-radius: var(--wcc-radius);
+  background: var(--wcc-glass);
+  box-shadow: var(--wcc-glow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--wcc-text);
+  transition: transform var(--wcc-motion), box-shadow var(--wcc-motion), border-color var(--wcc-motion);
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  height: auto;
+}
+
+.zdos-wcc-ai-card:hover,
+.zdos-wcc-store-card:hover,
+.zdos-wcc-anomaly-card:hover,
+.zdos-wcc-next-card:hover,
+.zdos-wcc-quick:hover {
+  border-color: rgba(140, 210, 255, 0.42);
+  box-shadow: 0 12px 32px rgba(0, 40, 90, 0.32), 0 0 22px rgba(0, 160, 255, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.zdos-wcc-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+.zdos-wcc-section-head h3 {
+  margin: 0;
+  font-size: var(--wcc-fs-section);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* AI — text left / character right */
+.zdos-wcc-ai-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(88px, 34%);
+  gap: 0.75rem;
+  padding: var(--wcc-pad);
+  align-items: stretch;
+  min-height: 148px;
+  overflow: hidden;
+}
+
+.zdos-wcc-ai-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1;
+}
+
+.zdos-wcc-ai-tag {
+  margin: 0 0 0.3rem;
+  font-size: var(--wcc-fs-meta);
+  font-weight: 600;
+  color: #7dd3fc;
+  letter-spacing: 0.05em;
+}
+.zdos-wcc-ai-status {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.zdos-wcc-ai-line {
+  margin: 0.28rem 0 0;
+  font-size: var(--wcc-fs-body);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--wcc-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.zdos-wcc-ai-health-row {
+  margin-top: 0.55rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.zdos-wcc-ai-health-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 26px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(96, 180, 255, 0.28);
+  background: rgba(4, 22, 46, 0.55);
+  font-size: var(--wcc-fs-meta);
+}
+.zdos-wcc-ai-health-item em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--wcc-muted);
+}
+.zdos-wcc-ai-health-item b {
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.zdos-wcc-ai-cta {
+  margin-top: 0.7rem;
+  align-self: flex-start;
+  min-height: 34px;
+  padding: 0.35rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(96, 180, 255, 0.55);
+  background: linear-gradient(180deg, rgba(40, 130, 230, 0.55), rgba(16, 70, 140, 0.75));
+  color: #fff;
+  font-size: var(--wcc-fs-body);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--wcc-motion), filter var(--wcc-motion);
+}
+.zdos-wcc-ai-cta:active,
+.zdos-wcc-link-btn:active,
+.zdos-wcc-quick-btn:active {
+  transform: scale(0.97);
+}
+
+.zdos-wcc-ai-char {
+  position: relative;
+  align-self: end;
+  height: 70%;
+  min-height: 104px;
+  max-height: 132px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  animation: zdos-wcc-ai-breath 5.6s ease-in-out infinite;
+  transform-origin: 50% 90%;
+}
+.zdos-wcc-ai-char img {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+}
+
+@keyframes zdos-wcc-ai-breath {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -3px, 0); }
+}
+
+/* Store cards */
+.zdos-wcc-stores {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.zdos-wcc-store-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 0;
+  height: auto;
+  padding: var(--wcc-pad) 14px;
+  overflow: hidden;
+}
+
+.zdos-wcc-store-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.45rem;
+  margin-bottom: 0.85rem;
+}
+
+.zdos-wcc-store-light {
+  width: 10px;
+  height: 10px;
+  margin-top: 0.35rem;
+  border-radius: 50%;
+  background: var(--wcc-green);
+  box-shadow: 0 0 10px rgba(61, 220, 151, 0.55);
+  flex: 0 0 auto;
+}
+.zdos-wcc-store-card.is-watch .zdos-wcc-store-light {
+  background: var(--wcc-yellow);
+  box-shadow: 0 0 10px rgba(240, 193, 74, 0.5);
+}
+.zdos-wcc-store-card.is-risk .zdos-wcc-store-light {
+  background: var(--wcc-red);
+  box-shadow: 0 0 10px rgba(255, 107, 122, 0.5);
+}
+
+.zdos-wcc-store-name {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.zdos-wcc-store-status {
+  margin: 0.2rem 0 0;
+  font-size: var(--wcc-fs-meta);
+  font-weight: 500;
+  color: var(--wcc-muted);
+}
+.zdos-wcc-store-card.is-ok .zdos-wcc-store-status { color: var(--wcc-green); }
+.zdos-wcc-store-card.is-watch .zdos-wcc-store-status { color: var(--wcc-yellow); }
+.zdos-wcc-store-card.is-risk .zdos-wcc-store-status { color: var(--wcc-red); }
+
+.zdos-wcc-store-health {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #dff2ff;
+  font-variant-numeric: tabular-nums;
+}
+
+.zdos-wcc-shift-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.85rem;
+}
+.zdos-wcc-shift-head,
+.zdos-wcc-shift-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 0.9fr));
+  gap: 0.25rem;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+.zdos-wcc-shift-head {
+  font-size: 0.58rem;
+  font-weight: 500;
+  color: rgba(160, 196, 224, 0.7);
+  padding: 0 0.2rem;
+}
+.zdos-wcc-shift-row {
+  font-size: var(--wcc-fs-body);
+  padding: 0.4rem 0.35rem;
+  border-radius: 10px;
+  background: rgba(2, 16, 34, 0.45);
+}
+.zdos-wcc-shift-label { font-weight: 600; }
+.zdos-wcc-shift-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05rem;
+  line-height: 1.15;
+}
+.zdos-wcc-shift-col em {
+  font-style: normal;
+  font-size: 0.55rem;
+  font-weight: 500;
+  color: var(--wcc-muted);
+}
+.zdos-wcc-shift-col b {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+.zdos-wcc-shift-flag {
+  text-align: center;
+  font-size: var(--wcc-fs-meta);
+  font-weight: 600;
+  color: var(--wcc-muted);
+}
+.zdos-wcc-shift-row.is-short .zdos-wcc-shift-flag { color: var(--wcc-red); }
+
+.zdos-wcc-mini-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem;
+  margin-bottom: 0.85rem;
+  min-width: 0;
+  max-width: 100%;
+}
+.zdos-wcc-mini-stat {
+  min-width: 0;
+  text-align: center;
+  padding: 0.4rem 0.15rem;
+  border-radius: 10px;
+  border: 1px solid rgba(96, 180, 255, 0.16);
+  background: rgba(3, 18, 38, 0.45);
+}
+.zdos-wcc-mini-stat span {
+  display: block;
+  font-size: 0.58rem;
+  font-weight: 500;
+  color: var(--wcc-muted);
+}
+.zdos-wcc-mini-stat b {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.zdos-wcc-duty {
+  flex: 1 1 auto;
+  min-height: 7.2rem;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid rgba(96, 180, 255, 0.16);
+  padding-top: 0.65rem;
+}
+.zdos-wcc-duty-kicker {
+  margin: 0 0 0.4rem;
+  font-size: var(--wcc-fs-meta);
+  font-weight: 600;
+  color: #7dd3fc;
+}
+.zdos-wcc-duty-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.zdos-wcc-duty-item {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  font-size: var(--wcc-fs-body);
+}
+.zdos-wcc-duty-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--wcc-gray);
+}
+.zdos-wcc-duty-dot.is-green { background: var(--wcc-green); box-shadow: 0 0 6px rgba(61, 220, 151, 0.45); }
+.zdos-wcc-duty-dot.is-yellow { background: var(--wcc-yellow); box-shadow: 0 0 6px rgba(240, 193, 74, 0.4); }
+.zdos-wcc-duty-dot.is-red { background: var(--wcc-red); box-shadow: 0 0 6px rgba(255, 107, 122, 0.4); }
+.zdos-wcc-duty-dot.is-blue { background: var(--wcc-blue); box-shadow: 0 0 6px rgba(92, 184, 255, 0.4); }
+.zdos-wcc-duty-name {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  color: #f2f8ff;
+  font-weight: 400;
+}
+.zdos-wcc-duty-status {
+  flex: 0 0 auto;
+  font-size: 0.62rem;
+  font-weight: 600;
+}
+.zdos-wcc-duty-status.is-green { color: var(--wcc-green); }
+.zdos-wcc-duty-status.is-yellow { color: var(--wcc-yellow); }
+.zdos-wcc-duty-status.is-red { color: var(--wcc-red); }
+.zdos-wcc-duty-status.is-blue { color: var(--wcc-blue); }
+.zdos-wcc-duty-status.is-gray,
+.zdos-wcc-duty-status.is-muted { color: var(--wcc-gray); }
+.zdos-wcc-duty-more {
+  font-size: var(--wcc-fs-meta);
+  font-weight: 600;
+  color: #9fd4ff;
+  padding-left: 1.05rem;
+}
+.zdos-wcc-duty-empty {
+  margin: 0;
+  font-size: var(--wcc-fs-body);
+  font-weight: 400;
+  color: var(--wcc-muted);
+}
+
+.zdos-wcc-other-shifts {
+  margin-top: 0.55rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed rgba(96, 180, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.zdos-wcc-other-title {
+  margin: 0 0 0.25rem;
+  font-size: var(--wcc-fs-meta);
+  font-weight: 600;
+  color: #9fd4ff;
+}
+
+.zdos-wcc-link-btn {
+  margin-top: 0.75rem;
+  width: 100%;
+  min-height: 34px;
+  border-radius: 12px;
+  border: 1px solid rgba(96, 180, 255, 0.35);
+  background: rgba(12, 48, 90, 0.45);
+  color: #ccebff;
+  font-size: var(--wcc-fs-body);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--wcc-motion), background var(--wcc-motion);
+}
+
+.zdos-wcc-anomaly-card,
+.zdos-wcc-next-card,
+.zdos-wcc-quick {
+  padding: var(--wcc-pad);
+}
+
+.zdos-wcc-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.zdos-wcc-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  min-height: 52px;
+  padding: 0.35rem 0.55rem;
+  border-radius: 12px;
+  border: 1px solid rgba(96, 180, 255, 0.28);
+  background: rgba(4, 22, 46, 0.55);
+}
+.zdos-wcc-badge em {
+  font-style: normal;
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: var(--wcc-muted);
+  line-height: 1.2;
+}
+.zdos-wcc-badge b {
+  margin-top: 0.15rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.zdos-wcc-anomaly-clear {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--wcc-green);
+}
+
+.zdos-wcc-next-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  min-width: 0;
+  max-width: 100%;
+}
+.zdos-wcc-next-store {
+  min-width: 0;
+  padding: 0.7rem 0.7rem;
+  border-radius: 14px;
+  border: 1px solid rgba(96, 180, 255, 0.2);
+  background: rgba(2, 16, 34, 0.42);
+}
+.zdos-wcc-next-store-name {
+  margin: 0;
+  font-size: var(--wcc-fs-body);
+  font-weight: 700;
+}
+.zdos-wcc-next-shift {
+  margin: 0.35rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #eaf6ff;
+}
+.zdos-wcc-next-time {
+  margin: 0.15rem 0 0;
+  font-size: var(--wcc-fs-meta);
+  font-weight: 500;
+  color: var(--wcc-muted);
+}
+.zdos-wcc-next-metrics {
+  margin-top: 0.55rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.55rem;
+  font-size: var(--wcc-fs-meta);
+  font-weight: 500;
+  color: var(--wcc-muted);
+}
+.zdos-wcc-next-metrics b {
+  color: #fff;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.zdos-wcc-next-status {
+  margin-left: auto;
+  font-weight: 600;
+}
+.zdos-wcc-next-store.is-ok .zdos-wcc-next-status { color: var(--wcc-green); }
+.zdos-wcc-next-store.is-short .zdos-wcc-next-status { color: var(--wcc-red); }
+
+.zdos-wcc-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  min-width: 0;
+  max-width: 100%;
+}
+.zdos-wcc-quick-btn {
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 84px;
+  height: auto;
+  padding: 0.7rem 0.4rem 0.6rem;
+  box-sizing: border-box;
+  border-radius: 16px;
+  border: 1px solid rgba(96, 180, 255, 0.28);
+  background: var(--wcc-glass);
+  color: #eef7ff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: transform var(--wcc-motion), border-color var(--wcc-motion), box-shadow var(--wcc-motion);
+}
+.zdos-wcc-quick-btn:hover {
+  border-color: rgba(140, 210, 255, 0.45);
+  box-shadow: 0 0 16px rgba(0, 160, 255, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.zdos-wcc-quick-icon {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #9fd8ff;
+  filter: drop-shadow(0 0 8px rgba(80, 180, 255, 0.55));
+}
+.zdos-wcc-quick-icon .zdl-icon,
+.zdos-wcc-quick-icon svg {
+  width: 22px;
+  height: 22px;
+  background-color: currentColor;
+}
+.zdos-wcc-quick-label {
+  font-size: var(--wcc-fs-body);
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+}
+.zdos-wcc-quick-badge {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #e5485d;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.zdos-wcc-footer {
+  margin: 0.1rem 0 0.35rem;
+  text-align: center;
+  font-size: var(--wcc-fs-meta);
+  font-weight: 500;
+  color: rgba(148, 180, 210, 0.55);
+}
+
+.zdos-wcc-month {
+  padding: 0.25rem 0.65rem 0.75rem;
+}
+.zdos-wcc-month .zdos-hr-month-fold-head { color: #eaf6ff; }
+
+@media (max-width: 374px) {
+  .zdos-wcc-ai-card { grid-template-columns: minmax(0, 1fr) minmax(64px, 30%); min-height: 0; }
+  .zdos-wcc-ai-char { min-height: 84px; max-height: 110px; }
+  .zdos-wcc-stores { gap: 10px; grid-template-columns: minmax(0, 1fr); }
+  .zdos-wcc-store-card { padding: 14px 12px; }
+  .zdos-wcc-mini-stats { gap: 0.28rem; }
+  .zdos-wcc-quick-label { font-size: 0.7rem; }
+  .zdos-wcc-title { font-size: 0.95rem !important; }
+  .zdos-wcc-next-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 430px) {
+  .zdos-workspace:has(.zdos-wcc-home) {
+    padding-left: max(10px, env(safe-area-inset-left, 0px));
+    padding-right: max(10px, env(safe-area-inset-right, 0px));
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  .zdos-wcc-home,
+  .zdos-wcc-stack,
+  .zdos-wcc-stores,
+  .zdos-wcc-quick-grid,
+  .zdos-wcc-next-grid,
+  .zdos-wcc-mini-stats,
+  .zdos-wcc-shift-block { max-width: 100%; min-width: 0; }
+  .zdos-wcc-stores { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .zdos-wcc-quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* 4 cells → 2×2 inside dual store cards */
+  .zdos-wcc-shift-head,
+  .zdos-wcc-shift-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .zdos-wcc-section-head { flex-wrap: wrap; }
+  .zdos-wcc-badge-row { max-width: 100%; }
+  .zdos-wcc-badge { min-width: 0; flex: 1 1 40%; }
+}
+
+@media (max-width: 360px) {
+  .zdos-wcc-stores { grid-template-columns: minmax(0, 1fr); }
+  .zdos-wcc-ai-card { grid-template-columns: minmax(0, 1fr) minmax(56px, 28%); }
+}
+
+@media (min-width: 640px) {
+  .zdos-wcc-mini-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .zdos-wcc-quick-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zdos-wcc-ai-card,
+  .zdos-wcc-store-card,
+  .zdos-wcc-anomaly-card,
+  .zdos-wcc-next-card,
+  .zdos-wcc-quick,
+  .zdos-wcc-ai-cta,
+  .zdos-wcc-link-btn,
+  .zdos-wcc-quick-btn {
+    transition: none !important;
+  }
+  .zdos-wcc-ai-char { animation: none !important; }
+  .zdos-wcc-ai-cta:active,
+  .zdos-wcc-link-btn:active,
+  .zdos-wcc-quick-btn:active { transform: none !important; }
+}
+
+/* ============================================================
+ * P0｜WCC mobile overflow containment (RWD only)
+ * ============================================================ */
+.zdos-workspace:has(.zdos-wcc-home),
+.zdos-workspace:has(.zdos-wcc-home) *,
+.zdos-wcc-home,
+.zdos-wcc-home * {
+  box-sizing: border-box;
+}
+
+.zdos-workspace:has(.zdos-wcc-home) img,
+.zdos-workspace:has(.zdos-wcc-home) svg,
+.zdos-workspace:has(.zdos-wcc-home) canvas,
+.zdos-workspace:has(.zdos-wcc-home) iframe,
+.zdos-wcc-home img,
+.zdos-wcc-home svg,
+.zdos-wcc-home canvas,
+.zdos-wcc-home iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+.zdos-workspace:has(.zdos-wcc-home) .zdos-workspace-body,
+.zdos-workspace:has(.zdos-wcc-home) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-wcc-home) .zdos-workspace-header-inner,
+.zdos-workspace:has(.zdos-wcc-home) .zdos-wcc-header-center,
+.zdos-workspace:has(.zdos-wcc-home) .zdos-wcc-header-brand,
+.zdos-workspace:has(.zdos-wcc-home) .zdos-workspace-actions {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.zdos-workspace:has(.zdos-wcc-home) .zdos-workspace-actions {
+  min-width: 0 !important;
+  flex-wrap: wrap;
+}
+
+.zdos-workspace:has(.zdos-wcc-home) .zdos-workspace-back {
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.zdos-wcc-home .zdos-hr-cal-toggle,
+.zdos-wcc-home .zdos-hr-section-head,
+.zdos-wcc-month .zdos-hr-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.zdos-wcc-home .zdos-hr-calendar-grid,
+.zdos-wcc-month .zdos-hr-calendar-grid {
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.zdos-wcc-home .zdos-hr-day,
+.zdos-wcc-month .zdos-hr-day {
+  min-width: 0;
+  max-width: 100%;
+  height: auto !important;
+  overflow: hidden;
+}
+
+.zdos-wcc-home .zdos-hr-day-names,
+.zdos-wcc-month .zdos-hr-day-names {
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  text-overflow: clip !important;
+  max-width: 100%;
+}
+
+.zdos-wcc-shift-label,
+.zdos-wcc-shift-flag,
+.zdos-wcc-store-name,
+.zdos-wcc-store-status,
+.zdos-wcc-quick-label,
+.zdos-wcc-next-store-name,
+.zdos-wcc-ai-status,
+.zdos-wcc-ai-line {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.zdos-wcc-header-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.45));
+}
+
+
+/* Restore AI character aspect after global img height:auto containment */
+.zdos-wcc-ai-char img {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* ============================================================
+ * UI-MOBILE-PAGE｜人力中心手機全螢幕垂直分頁
+ * max-width: 767px only. Desktop / tablet unchanged.
+ * ============================================================ */
+.zdos-wcc-home--pager {
+  --mobile-header-height: 72px;
+  --mobile-bottom-nav-height: 0px;
+  --wcc-pager-chrome-h: 48px;
+  --wcc-page-viewport: calc(
+    100dvh
+    - var(--mobile-header-height)
+    - var(--mobile-bottom-nav-height)
+    - var(--wcc-pager-chrome-h)
+    - env(safe-area-inset-top, 0px)
+    - env(safe-area-inset-bottom, 0px)
+  );
+  position: relative;
+  gap: 0;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+@media (max-width: 767px) {
+  .zdos-workspace.zdos-wcc-workspace--pager {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
+    max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
+    padding-top: 0; /* BUG-0015d */
+    padding-bottom: max(0.25rem, env(safe-area-inset-bottom, 0px));
+    padding-left: max(8px, env(safe-area-inset-left, 0px));
+    padding-right: max(8px, env(safe-area-inset-right, 0px));
+    overflow: hidden;
+    box-sizing: border-box;
+    gap: 0.35rem;
+  }
+
+  /* G02-006｜人力中心 pager：外層零 gutter，背景滿版；safe-area 改掛 Header／內容／底欄 */
+  .zdos-workspace.zdos-wcc-workspace--pager:has(.zdos-hr-home) {
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    min-height: 100dvh;
+    height: 100dvh;
+    max-height: 100dvh;
+    padding-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+    gap: 0;
+  }
+
+  .zdos-workspace.zdos-wcc-workspace--pager .zdos-wcc-header {
+  /* UI-HDR-001｜尺寸／safe-area／圓角交由 zcx-shell（班表班務 SoT） */
+  position: relative !important;
+  top: auto !important;
+  margin-top: 0 !important;
+  /* background／border 可由 theme 上色，但不得改 height／pad／radius */
+}
+
+
+  .zdos-workspace.zdos-wcc-workspace--pager:has(.zdos-hr-home) .zdos-wcc-header,
+  .zdos-workspace.zdos-wcc-workspace--pager:has(.zdos-hr-home) .zdos-workspace-header {
+  /* UI-HDR-001｜尺寸／safe-area／圓角交由 zcx-shell（班表班務 SoT） */
+  position: relative !important;
+  top: auto !important;
+  margin-top: 0 !important;
+  /* background／border 可由 theme 上色，但不得改 height／pad／radius */
+}
+
+
+  .zdos-workspace.zdos-wcc-workspace--pager:has(.zdos-hr-home) .zdos-workspace-body {
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-bottom: 0;
+  }
+
+  .zdos-workspace.zdos-wcc-workspace--pager:has(.zdos-hr-home) .zdos-wcc-pager-chrome {
+    background-color: var(--g02-bg-deep, #020b1c);
+    background-image: none;
+    padding-left: max(0.35rem, env(safe-area-inset-left, 0px));
+    padding-right: max(0.35rem, env(safe-area-inset-right, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .zdos-workspace.zdos-wcc-workspace--pager .zdos-wcc-header-inner {
+  gap: 0.35rem;
+}
+
+
+  .zdos-workspace.zdos-wcc-workspace--pager .zdos-wcc-subtitle,
+  .zdos-workspace.zdos-wcc-workspace--pager .zdos-wcc-header-meta {
+    display: none;
+  }
+
+  .zdos-workspace.zdos-wcc-workspace--pager .zdos-workspace-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .zdos-wcc-home--pager {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Kill document rubber-band while pager is open (iOS native feel) */
+  html:has(.zdos-wcc-workspace--pager),
+  body:has(.zdos-wcc-workspace--pager) {
+    overflow: hidden;
+    overscroll-behavior: none;
+    height: 100%;
+    touch-action: manipulation;
+  }
+
+  .zdos-wcc-pager {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: var(--wcc-page-viewport);
+    max-height: var(--wcc-page-viewport);
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: auto;
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    outline: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .zdos-wcc-pager::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
+  .zdos-wcc-page {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    /* Exact pixel height injected by JS for crisp iOS snap */
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    flex: 0 0 auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0.25rem 0.1rem 0.35rem;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+
+  .zdos-wcc-page-title {
+    flex: 0 0 auto;
+    margin: 0 0 0.4rem;
+    padding: 0 0.15rem;
+    font-size: 0.92rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: #eaf6ff;
+  }
+
+  .zdos-wcc-page-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 0.2rem;
+    scrollbar-width: none;
+  }
+
+  .zdos-wcc-page-body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
+  /* Content fits → no nested scroll (all vertical gestures belong to pager) */
+  .zdos-wcc-page-body.is-fit {
+    overflow-y: hidden;
+  }
+
+  .zdos-wcc-pager-chrome {
+    flex: 0 0 auto;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: var(--wcc-pager-chrome-h);
+    padding: 0.2rem 0.15rem 0.15rem;
+    max-width: 100%;
+  }
+
+  .zdos-wcc-pager-btn {
+    min-height: 36px;
+    min-width: 64px;
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid rgba(96, 180, 255, 0.35);
+    background: rgba(10, 36, 68, 0.75);
+    color: #d9f0ff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .zdos-wcc-pager-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .zdos-wcc-pager-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  .zdos-wcc-pager-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  .zdos-wcc-pager-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 0;
+    padding: 0;
+    background: rgba(160, 196, 224, 0.35);
+    cursor: pointer;
+    transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  }
+
+  .zdos-wcc-pager-dot.is-active {
+    background: #5cb8ff;
+    box-shadow: 0 0 8px rgba(92, 184, 255, 0.55);
+    transform: scale(1.2);
+  }
+
+  .zdos-wcc-pager-btn:active {
+    transform: scale(0.97);
+  }
+
+  .zdos-wcc-pager-count {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: rgba(176, 206, 232, 0.74);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Page 1 — roster with names（HR-CENTER-V2-PHASE2 比例基底） */
+  .zdos-wcc-roster-store {
+    border: 1px solid var(--wcc-border);
+    border-radius: 16px;
+    background: var(--wcc-glass);
+    padding: 14px;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    height: auto;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .zdos-wcc-roster-store-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0;
+    flex: 0 0 auto;
+  }
+
+  .zdos-wcc-roster-store-name {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 800;
+  }
+
+  .zdos-wcc-roster-shift {
+    margin-top: 0;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(2, 16, 34, 0.45);
+    border: 1px solid rgba(96, 180, 255, 0.14);
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    height: auto;
+    min-height: 72px;
+    flex: 0 0 auto;
+  }
+
+  .zdos-wcc-roster-shift-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.35rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .zdos-wcc-name-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 6px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .zdos-wcc-name-chip {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
+    height: auto;
+    min-height: 28px;
+    padding: 0.28rem 0.55rem;
+    border-radius: 10px;
+    border: 1px solid rgba(96, 180, 255, 0.22);
+    background: rgba(4, 22, 46, 0.55);
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: #eaf6ff;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* Page 2 — calendar fits viewport */
+  .zdos-wcc-page--calendar .zdos-wcc-page-body {
+    gap: 0.4rem;
+  }
+
+  .zdos-wcc-page--calendar .zdos-hr-calendar-card,
+  .zdos-wcc-page--calendar .zdos-wcc-month {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0.55rem !important;
+    overflow: hidden;
+  }
+
+  .zdos-wcc-page--calendar .zdos-scheduling-calendar-head {
+    flex: 0 0 auto;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: rgba(3, 13, 28, 0.92);
+  }
+
+  .zdos-wcc-page--calendar .zdos-hr-calendar-grid {
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    grid-auto-rows: minmax(0, 1fr);
+    gap: 0.22rem;
+    overflow: hidden;
+  }
+
+  .zdos-wcc-page--calendar .zdos-hr-day {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 0.2rem 0.15rem !important;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.1rem;
+    overflow: hidden;
+  }
+
+  .zdos-wcc-page--calendar .zdos-hr-day-num {
+    font-size: 0.72rem;
+    font-weight: 800;
+  }
+
+  .zdos-wcc-page--calendar .zdos-hr-shift {
+    font-size: 0.62rem;
+    padding: 0.05rem 0.2rem;
+  }
+
+  .zdos-wcc-page--calendar .zdos-hr-day-names,
+  .zdos-wcc-page--calendar .zdos-hr-leave {
+    font-size: 0.58rem;
+    line-height: 1.15;
+    max-height: 2.2em;
+    overflow: hidden;
+  }
+
+  .zdos-wcc-cal-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  .zdos-wcc-cal-today-btn {
+    min-height: 34px;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(96, 180, 255, 0.4);
+    background: rgba(12, 48, 90, 0.55);
+    color: #ccebff;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  /* Page 3 — ops */
+  .zdos-wcc-ops-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+    min-width: 0;
+  }
+
+  .zdos-wcc-ops-btn {
+    min-width: 0;
+    min-height: 88px;
+    height: auto;
+    padding: 0.85rem 0.6rem;
+    border-radius: 16px;
+    border: 1px solid rgba(96, 180, 255, 0.28);
+    background: var(--wcc-glass);
+    color: #eef7ff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    font-size: 0.84rem;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+
+  .zdos-wcc-ops-btn span {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--wcc-muted);
+  }
+
+  .zdos-wcc-ops-btn--wide {
+    grid-column: 1 / -1;
+  }
+
+  /* Page 4 — applications */
+  .zdos-wcc-app-section {
+    border: 1px solid var(--wcc-border);
+    border-radius: 14px;
+    background: rgba(2, 16, 34, 0.42);
+    padding: 0.55rem 0.65rem;
+    min-width: 0;
+  }
+
+  .zdos-wcc-app-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .zdos-wcc-app-section-head h3 {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .zdos-wcc-app-link {
+    border: 0;
+    background: transparent;
+    color: #7dd3fc;
+    font-size: 0.68rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .zdos-wcc-app-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  .zdos-wcc-app-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.4rem;
+    padding: 0.45rem 0.5rem;
+    border-radius: 10px;
+    border: 1px solid rgba(96, 180, 255, 0.16);
+    background: rgba(4, 22, 46, 0.5);
+    font-size: 0.7rem;
+    min-width: 0;
+  }
+
+  .zdos-wcc-app-item p {
+    margin: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  html.zdos-leave-modal-open .zdos-wcc-pager,
+  body:has(.zdos-sched-info-sheet) .zdos-wcc-pager {
+    overflow: hidden;
+    touch-action: none;
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .zdos-wcc-pager {
+    scroll-behavior: auto;
+  }
+  .zdos-wcc-pager-dot.is-active {
+    transform: none;
+  }
+}
+
+/* Desktop / tablet: pager chrome hidden; pages stack normally if markup present */
+@media (min-width: 768px) {
+  .zdos-wcc-pager-chrome {
+    display: none !important;
+  }
+  .zdos-wcc-home--pager .zdos-wcc-pager {
+    overflow: visible;
+    height: auto;
+    max-height: none;
+    scroll-snap-type: none;
+  }
+  .zdos-wcc-home--pager .zdos-wcc-page {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    overflow: visible;
+    scroll-snap-align: none;
+  }
+  .zdos-wcc-home--pager .zdos-wcc-page-body {
+    overflow: visible;
+  }
+}
+
+/* ============================================================
+ * FIX-ALL-MOBILE-LAYOUT-RESTORE｜人力中心手機比例
+ * 寬度 ≤430 置中；卡片／月曆高度隨內容，禁止超寬超扁拉伸
+ * ============================================================ */
+@media (max-width: 767px) {
+  .zdos-workspace:has(.zdos-hr-home),
+  .zdos-workspace.zdos-wcc-workspace--pager:has(.zdos-hr-home),
+  .zdos-hr-home {
+    width: 100% !important;
+    max-width: 430px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .zdos-hr-home .zdos-hr-action,
+  .zdos-hr-home .zdos-workspace-card,
+  .zdos-hr-home .zdos-wcc-anomaly-card,
+  .zdos-hr-home .zdos-wcc-quick,
+  .zdos-hr-home .zdos-hr-month-section,
+  .zdos-hr-home .zdos-hr-calendar-card,
+  .zdos-hr-home .zdos-hr-hero,
+  .zdos-hr-home .zdos-hr-today,
+  .zdos-hr-home .zdos-wcc-roster-store {
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  /* 月曆：取消 viewport 填滿造成的扁格 */
+  .zdos-wcc-page--calendar .zdos-hr-calendar-card,
+  .zdos-wcc-page--calendar .zdos-wcc-month {
+    flex: 0 0 auto !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .zdos-wcc-page--calendar .zdos-hr-calendar-grid {
+    flex: 0 0 auto !important;
+    height: auto !important;
+    max-height: none !important;
+    grid-auto-rows: auto !important;
+    overflow: visible !important;
+  }
+
+  .zdos-wcc-page--calendar .zdos-hr-day,
+  .zdos-hr-home .zdos-hr-day {
+    min-height: 3.6rem !important;
+    height: auto !important;
+  }
+}
+
+/* ============================================================
+ * HR-CENTER-V2-PHASE2｜手機版 Dashboard 比例（iPhone 390 / 430）
+ * 僅視覺：店別卡／班別卡／人名 chip；不改結構與 JS
+ * ============================================================ */
+@media (max-width: 767px) {
+  /* 頁殼透明：玻璃留給店別卡／異常卡，避免整頁橫向撐滿成扁板 */
+  .zdos-hr-home .zdos-wcc-page,
+  .zdos-hr-home .zdos-wcc-page-body {
+    background: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .zdos-hr-home .zdos-wcc-page {
+    padding: 0.4rem 0 0.5rem !important;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .zdos-hr-home .zdos-wcc-page-body {
+    gap: 12px !important;
+    justify-content: flex-start !important;
+    align-items: stretch;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .zdos-hr-home .zdos-wcc-page-body > * {
+    flex: 0 0 auto !important;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* 店別卡：深藍玻璃、正常圓角、內容寬（左右 16px 內距由 body 負責） */
+  .zdos-hr-home .zdos-wcc-roster-store {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    flex: 0 0 auto !important;
+    padding: 14px !important;
+    border-radius: 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    overflow: hidden;
+    box-sizing: border-box !important;
+  }
+
+  .zdos-hr-home .zdos-wcc-roster-store-head {
+    flex: 0 0 auto;
+    margin-bottom: 0 !important;
+  }
+
+  /* 班別卡：加高、自然高度（CH M/A/N、DG M/A 由 JS 產生；此處不造空卡） */
+  .zdos-hr-home .zdos-wcc-roster-shift {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 0 !important;
+    height: auto !important;
+    min-height: 72px !important;
+    max-height: none !important;
+    flex: 0 0 auto !important;
+    padding: 12px !important;
+    border-radius: 12px !important;
+    box-sizing: border-box !important;
+    overflow: hidden;
+  }
+
+  .zdos-hr-home .zdos-wcc-roster-shift-head {
+    margin-bottom: 8px !important;
+    font-size: 0.8rem !important;
+  }
+
+  /* 人名 chip：可換行、不溢出、完整姓名 */
+  .zdos-hr-home .zdos-wcc-name-list {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .zdos-hr-home .zdos-wcc-name-chip {
+    display: inline-flex !important;
+    align-items: center !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 28px !important;
+    padding: 0.28rem 0.55rem !important;
+    border-radius: 10px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    line-height: 1.25 !important;
+    font-size: 0.72rem !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 異常提醒區：保留玻璃卡，高度隨內容 */
+  .zdos-hr-home .zdos-wcc-anomaly-card {
+    flex: 0 0 auto !important;
+    height: auto !important;
+    max-height: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 16px !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* iPhone 390 */
+@media (min-width: 390px) and (max-width: 429px) {
+  .zdos-hr-home .zdos-wcc-roster-store {
+    padding: 15px !important;
+    gap: 11px !important;
+  }
+
+  .zdos-hr-home .zdos-wcc-roster-shift {
+    min-height: 76px !important;
+    padding: 13px 12px !important;
+  }
+
+  .zdos-hr-home .zdos-wcc-name-chip {
+    font-size: 0.74rem !important;
+  }
+}
+
+/* iPhone 430 */
+@media (min-width: 430px) and (max-width: 767px) {
+  .zdos-hr-home .zdos-wcc-roster-store {
+    padding: 16px !important;
+    gap: 12px !important;
+    border-radius: 18px !important;
+  }
+
+  .zdos-hr-home .zdos-wcc-roster-shift {
+    min-height: 80px !important;
+    padding: 14px 13px !important;
+    border-radius: 14px !important;
+  }
+
+  .zdos-hr-home .zdos-wcc-roster-shift-head {
+    font-size: 0.84rem !important;
+  }
+
+  .zdos-hr-home .zdos-wcc-name-chip {
+    font-size: 0.76rem !important;
+    min-height: 30px !important;
+  }
+}
+
+/* ============================================================
+ * G2 HR FINAL｜Dashboard 封版 polish（Glass／390／430／Safe Area）
+ * Visual-only. No new surface architecture.
+ * ============================================================ */
+
+/* EMERGENCY WHITE-BORDER FIX｜移除 html/body ::before/::after 假色條；Safe Area 由宿主背景延伸 */
+
+.zdos-hr-home .zdos-hr-dashboard {
+  gap: var(--wcc-gap, 0.7rem);
+}
+
+/* Dashboard 卡統一 G02／WCC 玻璃（G2 Layout V1｜3 卡） */
+.zdos-hr-home .zdos-hr-dashboard > .zdos-wcc-dual,
+.zdos-hr-home .zdos-hr-dashboard > .zdos-wcc-anomaly-card,
+.zdos-hr-home .zdos-hr-dashboard > .zdos-wcc-quick {
+  border: 1px solid var(--g02-glass-border, var(--wcc-border, rgba(140, 220, 255, 0.42))) !important;
+  border-radius: var(--g02-radius, var(--wcc-radius, 18px)) !important;
+  background: var(--g02-glass-bg, var(--wcc-glass)) !important;
+  box-shadow: var(--g02-glass-shadow, var(--wcc-glow)) !important;
+  backdrop-filter: blur(16px) saturate(1.15);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  color: var(--g02-text, #fff) !important;
+  padding: var(--wcc-pad, 0.85rem) !important;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* G2 Layout V1｜店別切換（CH／DG／全部） */
+.zdos-hr-home .zdos-wcc-dual > .zdos-wcc-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.zdos-hr-home .zdos-hr-store-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  flex: 0 0 auto;
+}
+
+.zdos-hr-home .zdos-hr-store-switch-sep {
+  color: rgba(186, 220, 245, 0.55);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1;
+  user-select: none;
+}
+
+.zdos-hr-home .zdos-hr-store-switch-btn {
+  min-height: 28px;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(140, 220, 255, 0.35);
+  background: rgba(4, 22, 46, 0.45);
+  color: rgba(220, 240, 255, 0.88);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.zdos-hr-home .zdos-hr-store-switch-btn.is-active {
+  border-color: rgba(26, 208, 255, 0.72);
+  background: rgba(26, 208, 255, 0.18);
+  color: #fff;
+}
+
+.zdos-hr-home .zdos-wcc-dual-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.zdos-hr-home .zdos-hr-cmd-stats--duty {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 0.75rem;
+}
+
+.zdos-hr-home .zdos-hr-cmd-stats--four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 0.55rem;
+}
+
+.zdos-hr-home .zdos-hr-cmd-stat--anomaly {
+  border-color: rgba(255, 107, 122, 0.35);
+  background: rgba(255, 107, 122, 0.1);
+}
+
+.zdos-hr-home .zdos-wcc-quick-grid--five {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.zdos-hr-home .zdos-wcc-quick-grid--five .zdos-wcc-quick-btn {
+  min-height: 72px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* G2 Hotfix｜v1.5.0 快捷三入口平均排列（隱藏請假／跨店後） */
+.zdos-hr-home .zdos-wcc-quick-grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.zdos-hr-home .zdos-wcc-quick-grid--three .zdos-wcc-quick-btn {
+  min-height: 72px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.zdos-hr-home .zdos-wcc-roster-shift.is-short {
+  border-color: rgba(255, 107, 122, 0.45) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 107, 122, 0.18);
+}
+
+.zdos-hr-home .zdos-wcc-anomaly-clear {
+  margin: 0;
+  padding: 0.85rem 0.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #72f5c5;
+}
+
+.zdos-hr-home .zdos-wcc-link-btn {
+  min-height: 44px;
+  border-radius: var(--g02-radius, 18px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.zdos-hr-home .zdos-workspace-back,
+.zdos-hr-home .zdos-wcc-quick-btn,
+.zdos-hr-home .zdos-wcc-ops-btn {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 430px) {
+  .zdos-hr-home .zdos-wcc-quick-grid--five {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .zdos-hr-home .zdos-wcc-quick-grid--five .zdos-wcc-quick-btn {
+    min-height: 58px;
+    padding: 0.35rem 0.15rem;
+  }
+
+  .zdos-hr-home .zdos-wcc-quick-grid--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .zdos-hr-home .zdos-wcc-quick-grid--three .zdos-wcc-quick-btn {
+    min-height: 58px;
+    padding: 0.35rem 0.2rem;
+  }
+
+  .zdos-hr-home .zdos-hr-dashboard > .zdos-wcc-dual,
+  .zdos-hr-home .zdos-hr-dashboard > .zdos-wcc-anomaly-card,
+  .zdos-hr-home .zdos-hr-dashboard > .zdos-wcc-quick {
+    padding: 0.7rem !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .zdos-hr-home .zdos-wcc-quick-grid--five {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .zdos-hr-home .zdos-wcc-quick-grid--five .zdos-wcc-quick-btn {
+    min-height: 54px;
+  }
+
+  .zdos-hr-home .zdos-wcc-quick-grid--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .zdos-hr-home .zdos-wcc-quick-grid--three .zdos-wcc-quick-btn {
+    min-height: 54px;
+  }
+
+  .zdos-hr-home .zdos-wcc-quick-label {
+    font-size: 0.58rem;
+  }
+
+  .zdos-hr-home .zdos-wcc-quick-grid--three .zdos-wcc-quick-label {
+    font-size: 0.72rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .zdos-hr-home .zdos-wcc-dual-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+/* ============================================================
+ * G2 HR CENTER｜Founder Official Layout
+ * - 3 卡：今日人力總覽（主卡）／今日異常／快捷操作
+ * - 單店顯示（中華｜東港切換）；禁止雙店並排／「全部」
+ * - 單畫面無 Scroll；390／430；多餘高度留給主卡
+ * - 僅沿用 G02 Theme Token；不引用 G1 HOME Layout
+ * ============================================================ */
+html:has(.zdos-hr-home),
+body:has(.zdos-hr-home),
+#root:has(.zdos-hr-home) {
+  background: var(--g02-bg-deep, #020b1c) !important;
+  background-color: var(--g02-bg-deep, #020b1c) !important;
+  background-image: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100dvh !important;
+  height: 100svh !important;
+  max-height: 100dvh !important;
+  max-height: 100svh !important;
+  overflow: hidden !important;
+  overflow-y: hidden !important;
+  overscroll-behavior: none !important;
+}
+
+.zdos-workspace:has(.zdos-hr-home) {
+  height: 100dvh !important;
+  height: 100svh !important;
+  max-height: 100dvh !important;
+  max-height: 100svh !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-header {
+  flex: 0 0 auto !important;
+  position: relative !important;
+}
+
+.zdos-workspace:has(.zdos-hr-home) .zdos-workspace-body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px)) !important;
+}
+
+.zdos-hr-home[data-g2="G2-HR-OFFICIAL"],
+.zdos-hr-home.zdos-wcc-home {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  gap: 0.6rem !important;
+}
+
+/* 主卡吃剩餘高度；異常／快捷緊貼下方上移，避免底部大空白 */
+.zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] > .zdos-wcc-dual {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] > .zdos-wcc-anomaly-card,
+.zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] > .zdos-wcc-quick {
+  flex: 0 0 auto !important;
+}
+
+.zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] .zdos-wcc-dual-grid {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+.zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] .zdos-wcc-roster-store {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  padding: 0.7rem 0.75rem !important;
+  gap: 0.45rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] .zdos-wcc-roster-shift {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  padding: 0.5rem 0.55rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] .zdos-wcc-roster-shift-head {
+  margin-bottom: 0.3rem !important;
+  font-size: 0.8rem !important;
+  flex: 0 0 auto !important;
+}
+
+.zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] .zdos-wcc-name-list {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: hidden !important;
+  gap: 6px !important;
+  align-content: flex-start !important;
+}
+
+.zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] .zdos-wcc-name-chip {
+  min-height: 26px !important;
+  padding: 0.2rem 0.5rem !important;
+  font-size: 0.72rem !important;
+}
+
+.zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] .zdos-wcc-anomaly-clear {
+  padding: 0.55rem 0.4rem !important;
+  font-size: 0.95rem !important;
+}
+
+.zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] .zdos-wcc-quick-grid--five .zdos-wcc-quick-btn,
+.zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] .zdos-wcc-quick-grid--three .zdos-wcc-quick-btn {
+  min-height: 60px !important;
+}
+
+.zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] .zdos-wcc-quick-label {
+  font-size: 0.68rem !important;
+}
+
+@media (max-width: 390px) {
+  .zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] {
+    gap: 0.5rem !important;
+  }
+
+  .zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] > .zdos-wcc-dual,
+  .zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] > .zdos-wcc-anomaly-card,
+  .zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] > .zdos-wcc-quick {
+    padding: 0.65rem !important;
+  }
+
+  .zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] .zdos-wcc-name-chip {
+    min-height: 24px !important;
+    font-size: 0.7rem !important;
+  }
+
+  .zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] .zdos-wcc-quick-grid--five .zdos-wcc-quick-btn,
+  .zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] .zdos-wcc-quick-grid--three .zdos-wcc-quick-btn {
+    min-height: 56px !important;
+  }
+}
+
+/* Official｜單店主卡：桌面亦不恢復雙店並排 */
+@media (min-width: 768px) {
+  .zdos-hr-home .zdos-hr-dashboard[data-g2="G2-HR-OFFICIAL"] .zdos-wcc-dual-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: none !important;
+  }
+}

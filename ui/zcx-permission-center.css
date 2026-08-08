@@ -1,0 +1,75 @@
+/**
+ * PERMISSION-CENTER-001／002｜權限中心 tokens＋拒絕標記
+ * 不改首頁；僅標記／空狀態樣式。
+ */
+
+:root {
+  --zdos-perm-owner: #fbbf24;
+  --zdos-perm-manager: #38bdf8;
+  --zdos-perm-leader: #a78bfa;
+  --zdos-perm-staff: #94a3b8;
+  --zdos-perm-allow: #6ee7b7;
+  --zdos-perm-deny: #f87171;
+}
+
+.zdos-perm-role {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0.1rem 0.45rem;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.55);
+  color: #cbd5e1;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.zdos-perm-role--owner {
+  border-color: rgba(251, 191, 36, 0.45);
+  color: var(--zdos-perm-owner);
+  background: rgba(120, 53, 15, 0.35);
+}
+
+.zdos-perm-role--manager {
+  border-color: rgba(56, 189, 248, 0.45);
+  color: var(--zdos-perm-manager);
+  background: rgba(12, 74, 110, 0.4);
+}
+
+.zdos-perm-role--leader {
+  border-color: rgba(167, 139, 250, 0.45);
+  color: var(--zdos-perm-leader);
+  background: rgba(76, 29, 149, 0.35);
+}
+
+.zdos-perm-role--staff {
+  border-color: rgba(148, 163, 184, 0.35);
+  color: var(--zdos-perm-staff);
+}
+
+.zdos-perm-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.zdos-perm-flag--allow { color: var(--zdos-perm-allow); }
+.zdos-perm-flag--deny { color: var(--zdos-perm-deny); }
+
+.zdos-perm-denied {
+  border: 1px solid rgba(248, 113, 113, 0.28);
+  background: rgba(127, 29, 29, 0.18);
+}
+
+.zdos-perm-denied__msg {
+  color: rgba(254, 202, 202, 0.92) !important;
+}
+
+[data-perm-scope="own-store"] {
+  opacity: 0.95;
+}

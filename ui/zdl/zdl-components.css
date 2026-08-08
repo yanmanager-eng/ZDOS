@@ -1,0 +1,585 @@
+/**
+ * ZDL-001｜ZDOS Design Language — Primitive Components
+ *
+ * Opt-in classes only (.zdl-*). Does not rewrite center markup.
+ * Covers: Header · Hero · Card · Button · Progress · Badge · Bottom Nav · Animation
+ */
+
+/* ============================================================
+ * 6. Header
+ * ============================================================ */
+.zdl-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--zdl-space-2);
+  min-height: var(--zdl-header-height);
+  padding: var(--zdl-space-2) var(--zdl-space-4);
+  background: linear-gradient(180deg, #ffffff 0%, #f5f8fc 55%, #eef3f8 100%);
+  border-bottom: 1px solid var(--zdl-color-border-soft);
+  box-shadow: var(--zdl-elevation-header);
+  font-family: var(--zdl-font-sans);
+}
+
+.zdl-header--workspace {
+  background: transparent;
+  border-bottom: 0;
+  box-shadow: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.zdl-header__back,
+.zdl-header__action {
+  appearance: none;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  min-width: 2.75rem;
+  padding: 0.375rem 0.65rem;
+  border-radius: var(--zdl-radius-sm);
+  border: 1px solid var(--zdl-color-border);
+  background: var(--zdl-color-surface);
+  color: var(--zdl-color-brand-primary);
+  font-size: var(--zdl-fs-caption);
+  font-weight: var(--zdl-fw-bold);
+  cursor: pointer;
+  box-shadow: var(--zdl-elevation-1);
+  transition: background var(--zdl-motion), transform var(--zdl-motion);
+}
+
+.zdl-header__back:active,
+.zdl-header__action:active {
+  background: var(--zdl-color-brand-primary-soft);
+  transform: scale(0.98);
+}
+
+.zdl-header__block {
+  min-width: 0;
+  text-align: center;
+}
+
+.zdl-header__brandline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--zdl-space-2);
+  max-width: 100%;
+}
+
+.zdl-header__mark {
+  flex: 0 0 auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--zdl-radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--zdl-color-brand-primary);
+  background: var(--zdl-color-brand-primary-soft);
+  border: 1px solid rgba(11, 79, 140, 0.18);
+}
+
+.zdl-header__mark svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  display: block;
+}
+
+.zdl-header__title {
+  margin: 0;
+  font-family: var(--zdl-font-display);
+  font-size: var(--zdl-fs-title);
+  font-weight: var(--zdl-fw-heavy);
+  letter-spacing: var(--zdl-tracking-brand);
+  line-height: var(--zdl-lh-tight);
+  color: var(--zdl-color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zdl-header--workspace .zdl-header__title {
+  color: var(--zdl-color-ws-title);
+}
+
+.zdl-header__subtitle {
+  margin: 0.15rem 0 0;
+  font-size: var(--zdl-fs-caption);
+  font-weight: var(--zdl-fw-bold);
+  letter-spacing: var(--zdl-tracking-label);
+  text-transform: uppercase;
+  color: var(--zdl-color-brand-sky);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zdl-header__chip {
+  flex: 0 0 auto;
+  font-size: var(--zdl-fs-caption);
+  font-weight: var(--zdl-fw-heavy);
+  color: var(--zdl-color-brand-sky);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  background: rgba(14, 165, 233, 0.12);
+  border-radius: var(--zdl-radius-full);
+  padding: 0.28rem 0.55rem;
+  white-space: nowrap;
+}
+
+/* ============================================================
+ * 7. Hero
+ * ============================================================ */
+.zdl-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--zdl-radius-2xl);
+  min-height: 176px;
+  display: flex;
+  background: var(--zdl-color-brand-gradient);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  box-shadow: var(--zdl-elevation-2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  color: var(--zdl-color-text-on-brand);
+}
+
+.zdl-hero__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--zdl-space-2);
+  width: 100%;
+  padding: var(--zdl-space-4) var(--zdl-space-4) 0;
+}
+
+.zdl-hero__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: var(--zdl-space-2);
+}
+
+.zdl-hero__eyebrow {
+  margin: 0;
+  font-size: var(--zdl-fs-caption);
+  font-weight: var(--zdl-fw-heavy);
+  letter-spacing: var(--zdl-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--zdl-color-brand-sky-soft);
+}
+
+.zdl-hero__title {
+  margin: 0;
+  font-family: var(--zdl-font-display);
+  font-size: var(--zdl-fs-title-lg);
+  font-weight: var(--zdl-fw-heavy);
+  line-height: var(--zdl-lh-tight);
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
+.zdl-hero__body {
+  margin: var(--zdl-space-1) 0 0;
+  font-size: var(--zdl-fs-footnote);
+  line-height: var(--zdl-lh-normal);
+  color: rgba(207, 224, 245, 0.92);
+}
+
+.zdl-hero__compact {
+  min-height: 0;
+  border-radius: var(--zdl-radius-lg);
+  background: linear-gradient(
+    135deg,
+    rgba(14, 165, 233, 0.12) 0%,
+    rgba(15, 23, 42, 0.55) 70%
+  );
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  box-shadow: var(--zdl-elevation-3);
+  padding: var(--zdl-space-4);
+  color: var(--zdl-color-ws-text);
+}
+
+.zdl-hero__compact .zdl-hero__title {
+  font-size: var(--zdl-fs-title);
+  text-shadow: none;
+  color: var(--zdl-color-ws-title);
+}
+
+/* ============================================================
+ * 8. Card
+ * ============================================================ */
+.zdl-card {
+  min-width: 0;
+  border-radius: var(--zdl-radius-lg);
+  border: 1px solid var(--zdl-color-border-soft);
+  background: var(--zdl-color-surface);
+  box-shadow: var(--zdl-elevation-1);
+  padding: var(--zdl-space-4);
+  color: var(--zdl-color-text-primary);
+  font-family: var(--zdl-font-sans);
+}
+
+.zdl-card--workspace {
+  border-color: var(--zdl-color-ws-border);
+  background: var(--zdl-color-ws-card-bg);
+  box-shadow: var(--zdl-elevation-ws);
+  color: var(--zdl-color-ws-text);
+}
+
+.zdl-card--interactive {
+  cursor: pointer;
+  transition: border-color var(--zdl-motion), transform var(--zdl-motion),
+    box-shadow var(--zdl-motion);
+}
+
+.zdl-card--interactive:active {
+  transform: scale(0.99);
+}
+
+.zdl-card__eyebrow {
+  margin: 0;
+  font-size: var(--zdl-fs-caption);
+  font-weight: var(--zdl-fw-bold);
+  letter-spacing: var(--zdl-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--zdl-color-text-muted);
+}
+
+.zdl-card--workspace .zdl-card__eyebrow {
+  color: rgb(100, 116, 139);
+}
+
+.zdl-card__title {
+  margin: 0.3rem 0 0;
+  font-size: var(--zdl-fs-body);
+  font-weight: var(--zdl-fw-heavy);
+  line-height: var(--zdl-lh-snug);
+  color: var(--zdl-color-text-primary);
+}
+
+.zdl-card--workspace .zdl-card__title {
+  color: var(--zdl-color-ws-title);
+}
+
+.zdl-card__desc {
+  margin: 0.35rem 0 0;
+  font-size: var(--zdl-fs-footnote);
+  line-height: var(--zdl-lh-normal);
+  color: var(--zdl-color-text-secondary);
+}
+
+.zdl-card--workspace .zdl-card__desc {
+  color: var(--zdl-color-ws-muted);
+}
+
+.zdl-card__row {
+  display: flex;
+  align-items: center;
+  gap: var(--zdl-space-3);
+  min-width: 0;
+}
+
+/* ============================================================
+ * 9. Button
+ * ============================================================ */
+.zdl-btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--zdl-space-2);
+  min-height: 2.25rem;
+  padding: 0.55rem 1rem;
+  border-radius: var(--zdl-btn-radius);
+  border: 1px solid transparent;
+  font-family: var(--zdl-font-sans);
+  font-size: var(--zdl-fs-footnote);
+  font-weight: var(--zdl-fw-heavy);
+  line-height: 1;
+  cursor: pointer;
+  transition: transform var(--zdl-motion), opacity var(--zdl-motion),
+    filter var(--zdl-motion);
+}
+
+.zdl-btn:active {
+  transform: scale(0.98);
+}
+
+.zdl-btn:disabled,
+.zdl-btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.zdl-btn--primary {
+  background: var(--zdl-btn-primary-bg);
+  color: var(--zdl-btn-primary-text);
+  border-color: rgba(11, 79, 140, 0.35);
+  box-shadow: var(--zdl-elevation-1);
+}
+
+.zdl-btn--accent {
+  background: var(--zdl-btn-accent-bg);
+  color: var(--zdl-btn-accent-text);
+  border: 0;
+  border-radius: var(--zdl-radius-full);
+  box-shadow: 0 6px 16px rgba(56, 189, 248, 0.32);
+}
+
+.zdl-btn--secondary {
+  background: var(--zdl-color-surface);
+  color: var(--zdl-color-brand-primary);
+  border-color: var(--zdl-color-border);
+  box-shadow: var(--zdl-elevation-1);
+}
+
+.zdl-btn--ghost {
+  background: transparent;
+  color: var(--zdl-color-ws-accent);
+  border-color: rgba(56, 189, 248, 0.28);
+}
+
+.zdl-btn--sm {
+  min-height: 1.85rem;
+  padding: 0.4rem 0.75rem;
+  font-size: var(--zdl-fs-caption);
+}
+
+.zdl-btn--block {
+  width: 100%;
+}
+
+/* ============================================================
+ * 10. Progress
+ * ============================================================ */
+.zdl-progress {
+  width: 100%;
+  height: var(--zdl-progress-height);
+  border-radius: var(--zdl-radius-full);
+  background: var(--zdl-progress-track);
+  border: 1px solid rgba(11, 79, 140, 0.08);
+  overflow: hidden;
+}
+
+.zdl-progress--workspace {
+  background: rgba(15, 23, 42, 0.55);
+  border-color: rgba(125, 211, 252, 0.12);
+}
+
+.zdl-progress__bar {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--zdl-progress-fill);
+  min-width: 0;
+  transition: width var(--zdl-motion-slow) var(--zdl-ease-standard);
+}
+
+.zdl-progress--workspace .zdl-progress__bar {
+  background: var(--zdl-progress-fill-ws);
+}
+
+.zdl-progress-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--zdl-space-2);
+}
+
+.zdl-progress-stat__label {
+  display: block;
+  font-size: var(--zdl-fs-caption);
+  font-weight: var(--zdl-fw-bold);
+  letter-spacing: 0.06em;
+  color: var(--zdl-color-text-muted);
+}
+
+.zdl-progress-stat__value {
+  display: block;
+  margin-top: 0.12rem;
+  font-size: 0.9rem;
+  font-weight: var(--zdl-fw-heavy);
+  color: var(--zdl-color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zdl-theme-workspace .zdl-progress-stat__value,
+.zdl-card--workspace .zdl-progress-stat__value {
+  color: var(--zdl-color-ws-title);
+}
+
+/* ============================================================
+ * 11. Badge
+ * ============================================================ */
+.zdl-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: var(--zdl-fs-caption);
+  font-weight: var(--zdl-fw-heavy);
+  letter-spacing: 0.04em;
+  border-radius: var(--zdl-badge-radius);
+  padding: 0.25rem 0.55rem;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  line-height: 1.2;
+}
+
+.zdl-badge--ok {
+  color: var(--zdl-color-ok);
+  background: var(--zdl-color-ok-bg);
+  border-color: rgba(20, 122, 69, 0.28);
+}
+
+.zdl-badge--warn {
+  color: var(--zdl-color-warn);
+  background: var(--zdl-color-warn-bg);
+  border-color: rgba(166, 124, 0, 0.3);
+}
+
+.zdl-badge--alert {
+  color: var(--zdl-color-alert);
+  background: var(--zdl-color-alert-bg);
+  border-color: rgba(198, 40, 40, 0.28);
+}
+
+.zdl-badge--info {
+  color: var(--zdl-color-info);
+  background: var(--zdl-color-info-bg);
+  border-color: rgba(3, 105, 161, 0.28);
+}
+
+.zdl-badge--sky {
+  color: var(--zdl-color-brand-sky);
+  background: rgba(14, 165, 233, 0.12);
+  border-color: rgba(56, 189, 248, 0.28);
+}
+
+.zdl-badge--ws-ok {
+  color: var(--zdl-color-ws-ok);
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(110, 231, 183, 0.28);
+}
+
+.zdl-badge--ws-warn {
+  color: var(--zdl-color-ws-warn);
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+/* ============================================================
+ * 12. Bottom Navigation
+ * ============================================================ */
+.zdl-bottom-nav {
+  position: sticky;
+  bottom: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--zdl-space-1);
+  min-height: calc(var(--zdl-bottom-nav-height) + var(--zdl-safe-bottom));
+  padding: var(--zdl-space-2) var(--zdl-space-2) calc(var(--zdl-space-2) + var(--zdl-safe-bottom));
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px) saturate(1.05);
+  -webkit-backdrop-filter: blur(12px) saturate(1.05);
+  border-top: 1px solid var(--zdl-color-border-soft);
+  box-shadow: 0 -2px 12px rgba(11, 31, 51, 0.04);
+}
+
+.zdl-bottom-nav__item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 2.75rem;
+  padding: 0.25rem;
+  border-radius: var(--zdl-radius-md);
+  color: var(--zdl-color-text-muted);
+  font-size: var(--zdl-fs-caption);
+  font-weight: var(--zdl-fw-semibold);
+  cursor: pointer;
+  transition: color var(--zdl-motion), background var(--zdl-motion);
+}
+
+.zdl-bottom-nav__item svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  display: block;
+}
+
+.zdl-bottom-nav__item.is-active,
+.zdl-bottom-nav__item[aria-current="page"] {
+  color: var(--zdl-color-brand-primary);
+  background: var(--zdl-color-brand-primary-soft);
+  font-weight: var(--zdl-fw-bold);
+}
+
+.zdl-bottom-nav__item:active {
+  background: var(--zdl-color-surface-focus);
+}
+
+/* ============================================================
+ * 13. Animation utilities
+ * ============================================================ */
+.zdl-anim-fade-in {
+  animation: zdl-fade-in var(--zdl-motion-slow) var(--zdl-ease-standard) both;
+}
+
+.zdl-anim-rise {
+  animation: zdl-rise var(--zdl-motion-slow) var(--zdl-ease-emphasized) both;
+}
+
+.zdl-anim-press:active {
+  transform: scale(0.98);
+}
+
+@keyframes zdl-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zdl-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zdl-anim-fade-in,
+  .zdl-anim-rise {
+    animation: none;
+  }
+
+  .zdl-btn:active,
+  .zdl-card--interactive:active,
+  .zdl-header__back:active,
+  .zdl-anim-press:active {
+    transform: none;
+  }
+}
+
+/* Icon size helper for SVG in marks / nav */
+.zdl-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.zdl-icon svg {
+  width: 1rem;
+  height: 1rem;
+  display: block;
+}

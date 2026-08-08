@@ -1,480 +1,815 @@
 /**
- * UI-001A-25 | ZDOS Mobile Homepage — Corporate Theme Refinement
- * ZhongDong Group enterprise tech blue-gray.
- * Positioning: 企業營運管理中心 — 專業、穩定、科技、高級感.
- * Scoped under .zdos-mh so desktop classic dashboard is unaffected.
- * Visual-only — no layout / DOM / behavior / Logo changes.
+ * UI-023｜Official Home Clone
+ * Source of Truth: ui/G02.png（Founder 指定唯一官方首頁設計稿）
+ * Visual-only — no Auth / Logic / API / Handler changes.
+ * Scoped under .zdos-mh
  */
 
 .zdos-mh {
-  /* UI-001A-25 corporate tokens (scoped; do not leak to desktop dashboard) */
-  --zdos-bg: #E6EDF4;
-  --zdos-bg-glow: #D5E0EB;
-  --zdos-surface: #FFFFFF;
-  --zdos-surface-muted: #E8EEF4;
-  --zdos-surface-focus: #E2EAF2;
-  /* UI-020A：品牌/狀態色改引用全站單一來源（tokens.css 的 --zds-*）；fallback 維持原值 */
-  --zdos-primary: var(--zds-brand-primary, #0B4F8C);
-  --zdos-primary-soft: var(--zds-brand-primary-soft, rgba(11, 79, 140, 0.08));
-  --zdos-text-primary: #0B1F33;
-  --zdos-text-secondary: #5A6B7C;
-  --zdos-border: #C9D6E4;
-  --zdos-success: var(--zds-ok, #147A45);
-  --zdos-warning: var(--zds-warn, #A67C00);
-  --zdos-danger: var(--zds-alert, #C62828);
-
-  --zdos-space-1: 0.25rem;
-  --zdos-space-2: 0.5rem;
-  --zdos-space-3: 0.75rem;
-  --zdos-space-4: 1rem;
-  --zdos-space-5: 1.25rem;
-
-  --zdos-radius-sm: 8px;
-  --zdos-radius-md: 12px;
-  --zdos-radius-card: 16px;
-
-  /* Corporate: minimal elevation */
-  --zdos-shadow-card: 0 1px 2px rgba(11, 31, 51, 0.04);
-  --zdos-shadow-kpi: 0 1px 1px rgba(11, 31, 51, 0.03);
-
-  --zdos-mh-header-h: 56px;
-  --zdos-mh-bottom-h: 56px;
+  /* Tech Blue tokens — 全頁科技藍＋半透明玻璃（共用） */
+  --g02-bg: #041428;
+  --g02-bg-deep: #020b1c;
+  --g02-bg-mid: #0a2f5c;
+  --g02-bg-top: #124a86;
+  --g02-navy: #0a2748;
+  --g02-panel: rgba(70, 160, 235, 0.22);
+  --g02-panel-2: rgba(90, 180, 245, 0.28);
+  --g02-border: rgba(130, 215, 255, 0.45);
+  --g02-border-soft: rgba(110, 200, 255, 0.34);
+  --g02-cyan: #1ad0ff;
+  --g02-cyan-soft: #8ae4ff;
+  --g02-glow: rgba(0, 200, 255, 0.5);
+  --g02-text: #ffffff;
+  --g02-muted: rgba(186, 220, 245, 0.86);
+  --g02-ok: #7dffb2;
+  --g02-warn: #ffb020;
+  --g02-danger: #ff3b4a;
+  --g02-radius: 18px;
+  --g02-radius-sm: 12px;
+  --g02-space: 12px;
+  --g02-glass-bg: rgba(80, 170, 245, 0.2);
+  --g02-glass-bg-strong: rgba(60, 140, 220, 0.28);
+  --g02-glass-border: rgba(140, 220, 255, 0.42);
+  --g02-glass-shadow:
+    0 0 24px rgba(0, 170, 255, 0.22),
+    0 10px 22px rgba(0, 20, 50, 0.22),
+    inset 0 1px 0 rgba(190, 235, 255, 0.22);
+  --g02-btn: #00c8ff;
+  --g02-btn-strong: #33d6ff;
+  --g02-btn-text: #031425;
+  /* HOME-NAV-001c｜Bottom Nav 58px；bottom 只留 safe-area（禁止再加 8px／bar 內禁疊 safe） */
+  --zdos-mh-bottom-h: 58px;
+  --zdos-mh-bottom-offset: 0px;
+  --zdos-mh-bottom-gap: 10px;
   --zdos-mh-safe-bottom: env(safe-area-inset-bottom, 0px);
   --zdos-mh-safe-top: env(safe-area-inset-top, 0px);
+  --zdos-touch-min: 44px;
+  --zdos-motion: 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* 玻璃卡片統一收窄：相對視窗置中，避免根層負 margin 造成左右不對稱 */
+  /* BUG-0001｜用 100% 取代 100vw，避免 iPhone 首次載入因 vw 溢出被系統縮小 */
+  --mh-gutter: 16px;
+  --mh-content-max: 440px;
+  --mh-frame-width: min(calc(100% - 32px), var(--mh-content-max));
+  /* BRAND-UI-001｜Hero 與今日重點同一 content width／gutter（左右 edge 對齊） */
+  --mh-hero-frame: var(--mh-frame-width);
+  --mh-brand-display: "Avenir Next", "SF Pro Display", "Segoe UI", "PingFang TC", "Noto Sans TC", sans-serif;
+  --mh-brand-text: "SF Pro Text", "Avenir Next", "Segoe UI", "PingFang TC", "Noto Sans TC", sans-serif;
 
   box-sizing: border-box;
-  margin: -0.5rem;
-  width: calc(100% + 1rem);
-  max-width: 100vw;
+  /* HOME-EDGE-BORDER-FIX-004｜真正滿版畫布（禁負 margin／禁外框） */
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
   min-height: 100dvh;
-  /* 1. Corporate tech blue-gray page background */
-  background:
-    radial-gradient(110% 70% at 50% -8%, rgba(176, 198, 220, 0.35) 0%, transparent 58%),
-    linear-gradient(180deg, var(--zdos-bg-glow) 0%, var(--zdos-bg) 38%, #F1F5F9 100%);
-  color: var(--zdos-text-primary);
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  color: var(--g02-text);
   font-family: "SF Pro Text", "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
-  overflow-x: clip;
+  overflow-x: hidden;
   overflow-y: visible;
   position: relative;
+  background-color: var(--g02-bg-deep, #020b1c);
+  background-image:
+    radial-gradient(120% 70% at 50% -8%, rgba(50, 150, 255, 0.42) 0%, transparent 58%),
+    linear-gradient(180deg, var(--g02-bg-top) 0%, var(--g02-bg-mid) 38%, var(--g02-bg) 72%, var(--g02-bg-deep) 100%),
+    url("assets/home/g02-city-band.png");
+  background-size: auto, auto, 100% auto;
+  background-position: center top, center top, center 8%;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
 }
 
 .zdos-mh *,
 .zdos-mh *::before,
-.zdos-mh *::after {
-  box-sizing: border-box;
+.zdos-mh *::after { box-sizing: border-box; }
+
+/* 隔離 zcx-page 淺色企業底；背景與 .zdos-mh 同為科技藍滿版 */
+.zdos-mh.zcx-page {
+  padding: 0;
+  color: var(--g02-text);
+  background-color: var(--g02-bg-deep);
+  background-image:
+    radial-gradient(120% 70% at 50% -8%, rgba(50, 150, 255, 0.42) 0%, transparent 58%),
+    linear-gradient(180deg, var(--g02-bg-top) 0%, var(--g02-bg-mid) 38%, var(--g02-bg) 72%, var(--g02-bg-deep) 100%),
+    url("assets/home/g02-city-band.png");
+  background-size: auto, auto, 100% auto;
+  background-position: center top, center top, center 8%;
+  background-repeat: no-repeat;
 }
 
-/* 2. Header — clean white → soft corporate blue gradient */
-.zdos-mh__header {
+/* HOME-EDGE-BORDER-FIX-004｜宿主全程深藍（含回彈）；對消 #root p-2 白邊 */
+html:has(.zdos-mh),
+body:has(.zdos-mh),
+body.bg-slate-950:has(.zdos-mh),
+body.premium-grid:has(.zdos-mh),
+#root:has(.zdos-mh) {
+  background: var(--g02-bg-deep, #020b1c) !important;
+  background-color: var(--g02-bg-deep, #020b1c) !important;
+  background-image: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  min-height: 100% !important;
+  overflow-x: hidden !important;
+}
+
+body:has(.zdos-mh) {
+  overscroll-behavior-y: auto;
+}
+
+/* ============================================================
+ * Top: 每日一句跑馬燈 + 通知／登出
+ * ============================================================ */
+.zdos-mh__topbar {
   position: sticky;
   top: 0;
   z-index: 40;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--zdos-space-2);
-  min-height: var(--zdos-mh-header-h);
-  /* UI-035-01：左右留白對齊主內容（1rem），與 Hero／各區塊邊界一致 */
-  padding: calc(var(--zdos-mh-safe-top) + var(--zdos-space-2))
-    max(var(--zdos-space-4), env(safe-area-inset-right, 0px))
-    var(--zdos-space-2)
-    max(var(--zdos-space-4), env(safe-area-inset-left, 0px));
-  background: linear-gradient(
-    180deg,
-    #FFFFFF 0%,
-    #F5F8FC 55%,
-    #EEF3F8 100%
-  );
-  backdrop-filter: blur(12px) saturate(1.05);
-  -webkit-backdrop-filter: blur(12px) saturate(1.05);
-  border-bottom: 1px solid rgba(201, 214, 228, 0.9);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
-  overflow: visible;
+  gap: 8px;
+  width: var(--mh-frame-width);
+  max-width: var(--mh-content-max);
+  margin-inline: auto;
+  box-sizing: border-box;
+  padding:
+    calc(var(--zdos-mh-safe-top) + 6px)
+    0
+    6px
+    0;
+  background: linear-gradient(180deg, rgba(8, 40, 82, 0.88) 0%, rgba(8, 40, 82, 0.28) 70%, transparent 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-.zdos-mh__brand {
+.zdos-mh__quote {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 28px;
+  min-height: 28px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  min-width: 0;
-  flex: 1 1 auto;
-  /* Reserve notify + profile (~40+40+gap) so actions never get squeezed */
-  max-width: calc(100% - 96px);
-}
-
-/* UI-001A-24B｜保留六角形 Z Logo（zdos-z-logo.svg）；不替換資產 */
-.zdos-mh__logo {
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-  display: block;
-  object-fit: contain;
-  object-position: center;
-  background: transparent;
-}
-
-.zdos-mh__titles {
-  min-width: 0;
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0;
-}
-
-/* UI-001A-24B｜ZDOS — 與六角 Z 搭配的產品品牌層級 */
-.zdos-mh__product {
-  font-size: 1.0625rem; /* 17px */
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  line-height: 1.12;
-  color: #0B1F33;
-  font-family: "SF Pro Display", "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
-  white-space: nowrap;
+  gap: 6px;
+  padding: 0 10px;
+  border-radius: 9999px;
+  background: var(--g02-glass-bg);
+  border: 1px solid var(--g02-glass-border);
+  box-shadow: var(--g02-glass-shadow);
+  backdrop-filter: blur(14px) saturate(1.15);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* UI-001A-24B｜Operation Center — 副標降權 */
-.zdos-mh__subtitle {
-  margin-top: 2px;
-  font-size: 0.5625rem; /* 9px */
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  color: #8494A7;
-  line-height: 1.2;
+.zdos-mh__quote-label {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--g02-cyan);
   white-space: nowrap;
+}
+
+.zdos-mh__quote-label::before {
+  content: "✦";
+  font-size: 0.625rem;
+  color: var(--g02-cyan-soft);
+}
+
+.zdos-mh__quote-track {
+  flex: 1 1 auto;
+  min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
-  text-transform: none;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.zdos-mh__quote-track .marquee-content {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding-left: 12px;
+  animation-duration: 22s;
+}
+
+/* 首屏可見：避免跑馬燈起點在畫面外 */
+.zdos-mh__quote-track .marquee-content {
+  animation-name: g02-marquee;
+}
+
+@keyframes g02-marquee {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-100%, 0, 0); }
 }
 
 .zdos-mh__actions {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
   flex: 0 0 auto;
-  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
 }
 
 .zdos-mh__icon-btn {
   position: relative;
-  width: 40px;
-  height: 40px;
-  border: none;
+  width: 36px;
+  height: 36px;
   border-radius: 9999px;
-  background: transparent;
-  color: var(--zdos-text-primary);
+  border: 1px solid var(--g02-glass-border);
+  background: var(--g02-glass-bg-strong);
+  color: #fff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   padding: 0;
-  flex-shrink: 0;
+  box-shadow: 0 0 14px rgba(0, 190, 255, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-.zdos-mh__icon-btn--profile {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(201, 214, 228, 0.95);
-  box-shadow: 0 1px 1px rgba(11, 31, 51, 0.03);
+.zdos-mh__icon-btn .zdl-icon {
+  width: 18px;
+  height: 18px;
+  background-color: currentColor;
 }
 
-.zdos-mh__icon-btn:active {
-  background: var(--zdos-primary-soft);
+.zdos-mh__icon-btn--logout {
+  flex-direction: column;
+  width: 40px;
+  height: auto;
+  min-height: 36px;
+  padding: 7px 0 2px;
+  border-radius: 9999px;
+  border-color: rgba(255, 80, 100, 0.65);
+  box-shadow: 0 0 12px rgba(255, 60, 80, 0.28);
+  color: var(--g02-danger);
+  gap: 1px;
 }
 
-.zdos-mh__icon-btn--profile:active {
-  background: var(--zdos-primary-soft);
+.zdos-mh__icon-btn--logout .zdl-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--g02-danger);
+  background-color: currentColor;
 }
 
-.zdos-mh__icon-btn svg {
-  width: 20px;
-  height: 20px;
+.zdos-mh__logout-label {
+  font-size: 0.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--g02-danger);
 }
 
 .zdos-mh__badge {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: -3px;
+  right: -3px;
   min-width: 16px;
   height: 16px;
   padding: 0 4px;
   border-radius: 9999px;
-  background: var(--zdos-danger);
+  background: #ff2d3a;
   color: #fff;
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 16px;
   text-align: center;
-  border: 2px solid var(--zdos-bg);
+  border: 1.5px solid #0a1528;
 }
 
-.zdos-mh__badge--dot {
-  min-width: 8px;
-  width: 8px;
-  height: 8px;
-  padding: 0;
-  top: 9px;
-  right: 9px;
-  border-width: 1.5px;
-}
-
-.zdos-mh__avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 9999px;
-  background: rgba(11, 79, 140, 0.1);
-  color: #0B4F8C;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(11, 79, 140, 0.22);
-  line-height: 1;
-}
-
+/* ============================================================
+ * Main
+ * ============================================================ */
 .zdos-mh__main {
-  padding: var(--zdos-space-4) var(--zdos-space-4) calc(var(--zdos-mh-bottom-h) + var(--zdos-mh-safe-bottom) + var(--zdos-space-5));
-  display: flex;
-  flex-direction: column;
-  gap: var(--zdos-space-3);
-  max-width: 430px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.zdos-mh__beta {
-  margin: 0;
-}
-
-.zdos-mh .zdos-beta-banner {
-  border-color: rgba(245, 158, 11, 0.35);
-  background: linear-gradient(135deg, rgba(255, 247, 237, 0.98), rgba(254, 243, 199, 0.9));
-  box-shadow: none;
-  padding: 0.55rem 0.75rem;
-}
-
-.zdos-mh .zdos-beta-banner-title {
-  color: #92400E;
-  letter-spacing: 0.08em;
-  font-size: 0.6875rem;
-}
-
-.zdos-mh .zdos-beta-banner-desc {
-  color: #A16207;
-  font-weight: 500;
-  font-size: 0.625rem;
-}
-
-/* 3. AI 絲絲 card — corporate soft blue（無霓虹／遊戲化光暈） */
-.zdos-mh__ai {
-  display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
-  gap: var(--zdos-space-2);
-  align-items: stretch;
-  min-height: 145px;
-  max-height: 168px;
-  padding: var(--zdos-space-3);
-  position: relative;
-  isolation: isolate;
-  background: linear-gradient(145deg, #E8F0F7 0%, #F4F8FB 52%, #EAF1F7 100%);
-  border: 1px solid rgba(176, 196, 216, 0.65);
-  border-radius: var(--zdos-radius-card);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.65) inset,
-    var(--zdos-shadow-card);
-  overflow: hidden;
-}
-
-.zdos-mh__ai::before {
-  content: none;
-}
-
-.zdos-mh__ai-figure,
-.zdos-mh__ai-body {
-  position: relative;
-  z-index: 1;
-}
-
-.zdos-mh__ai-figure {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  min-width: 0;
-  overflow: hidden;
-  background: transparent;
-}
-
-.zdos-mh__ai-figure img {
-  width: 100%;
-  height: 136px;
-  object-fit: contain;
-  object-position: center bottom;
-  pointer-events: none;
-  user-select: none;
-  background: transparent;
-  mix-blend-mode: normal;
-  filter: none;
-}
-
-.zdos-mh__ai-body {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 2px 0;
-}
-
-.zdos-mh__ai-label {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  color: var(--zdos-text-secondary);
-  letter-spacing: 0.02em;
-}
-
-.zdos-mh__ai-mode {
-  display: inline-block;
-  margin-left: 0.35rem;
-  font-size: 0.5625rem;
-  font-weight: 600;
-  color: #0B4F8C;
-  background: rgba(11, 79, 140, 0.08);
-  border-radius: 9999px;
-  padding: 0.05rem 0.35rem;
-  vertical-align: middle;
-}
-
-.zdos-mh__ai-title {
-  margin: 0.2rem 0 0;
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.25;
-  color: var(--zdos-text-primary);
-}
-
-.zdos-mh__ai-text {
-  margin: 0.3rem 0 0;
-  font-size: 0.75rem;
-  line-height: 1.4;
-  color: var(--zdos-text-secondary);
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-}
-
-.zdos-mh__ai-action {
-  margin-top: 0.45rem;
-  align-self: flex-start;
-  border: none;
-  background: transparent;
-  color: var(--zdos-primary);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0;
-  cursor: pointer;
-}
-
-.zdos-mh__ai--attention .zdos-mh__ai-title { color: var(--zdos-warning); }
-.zdos-mh__ai--critical .zdos-mh__ai-title { color: var(--zdos-danger); }
-.zdos-mh__ai--completed .zdos-mh__ai-title { color: var(--zdos-success); }
-
-/* 4. KPI — white cards, reduced shadow */
-.zdos-mh__kpi {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  /* UI-035-01：兩列等高，四卡完全一致 */
-  grid-auto-rows: 1fr;
-  gap: var(--zdos-space-2);
-  align-items: stretch;
-}
-
-/* 4. KPI — white info cards, minimal shadow */
-.zdos-mh__kpi-card {
-  min-width: 0;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  text-align: left;
-  padding: var(--zdos-space-3);
-  background: var(--zdos-surface);
-  border: 1px solid rgba(201, 214, 228, 0.95);
-  border-radius: var(--zdos-radius-md);
-  box-shadow: var(--zdos-shadow-kpi);
-  cursor: pointer;
-  /* UI-035-01：統一最小高度，涵蓋標題＋數值＋備註最壞情況，確保四卡完全等高 */
-  min-height: 84px;
-  justify-content: center;
+  gap: 10px;
+  width: var(--mh-frame-width);
+  max-width: var(--mh-content-max);
+  margin-inline: auto;
+  min-width: 0;
+  box-sizing: border-box;
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+  /* 不吃剩餘高度，內容自然靠上 */
+  flex: 0 0 auto;
+  flex-grow: 0;
+  /* Bottom Nav 實際高度 + 偏移 + 16～24px 間距 + safe-area */
+  padding: 2px 0 calc(
+    var(--zdos-mh-bottom-h)
+    + var(--zdos-mh-bottom-offset)
+    + var(--zdos-mh-bottom-gap)
+    + var(--zdos-mh-safe-bottom)
+  );
 }
 
-.zdos-mh__kpi-card:active {
-  background: var(--zdos-primary-soft);
+.zdos-mh__section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
 }
 
-.zdos-mh__kpi-label {
-  display: block;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  color: var(--zdos-text-secondary);
+.zdos-mh__section-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
-
-.zdos-mh__kpi-value {
-  display: block;
-  margin-top: 0.25rem;
-  min-height: 1.375rem;
-  line-height: 1.375rem;
-  font-size: 1.125rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--zdos-text-primary);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.zdos-mh__kpi-value--empty {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--zdos-text-secondary);
-}
-
-.zdos-mh__kpi-meta {
-  display: block;
-  margin-top: 0.15rem;
-  min-height: 1rem;
-  line-height: 1rem;
-  font-size: 0.6875rem;
-  color: var(--zdos-text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.zdos-mh__kpi-meta--ok { color: var(--zdos-success); }
-.zdos-mh__kpi-meta--warn { color: var(--zdos-warning); }
-.zdos-mh__kpi-meta--danger { color: var(--zdos-danger); }
 
 .zdos-mh__section-title {
-  margin: 0 0 var(--zdos-space-2);
-  font-size: 0.875rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--zdos-text-primary);
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.01em;
 }
 
-/* 5. Today's focus — soft gray-blue separation */
+.zdos-mh__section-title .zdl-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--g02-cyan);
+  background-color: currentColor;
+  filter: drop-shadow(0 0 6px var(--g02-glow));
+}
+
+.zdos-mh__section-desc {
+  margin: 0;
+  padding-left: 26px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--g02-cyan-soft);
+}
+
+.zdos-mh__section-more {
+  border: none;
+  background: transparent;
+  color: var(--g02-cyan-soft);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  white-space: nowrap;
+}
+
+/* ============================================================
+ * Hero — G02 glass card
+ * ============================================================ */
+.zdos-mh .zdos-hero.zcx-hero,
+.zdos-mh .zdos-hero,
+.zdos-mh .zdos-hero--premium,
+.zdos-mh .zdos-hero--final {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 22px;
+  margin: 0 0 4px;
+  width: 100%;
+  min-height: 196px;
+  display: flex;
+  padding: 0;
+  color: #fff;
+  background: var(--g02-glass-bg);
+  border: 1px solid var(--g02-glass-border);
+  box-shadow: var(--g02-glass-shadow), 0 0 28px rgba(0, 180, 255, 0.28);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+}
+
+/* G02 底部倒影 */
+.zdos-mh .zdos-hero::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -14px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0, 170, 255, 0.35) 0%, transparent 70%);
+  filter: blur(2px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.zdos-mh .zdos-hero__plane {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(20, 70, 130, 0.32) 0%, rgba(12, 50, 100, 0.12) 48%, rgba(8, 36, 72, 0.38) 100%),
+    url("assets/home/g02-city-band.png") center 62% / cover no-repeat,
+    radial-gradient(90% 70% at 78% 40%, rgba(0, 180, 255, 0.28) 0%, transparent 55%);
+}
+
+.zdos-mh .zdos-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(rgba(0, 180, 255, 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 180, 255, 0.22) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 70% 70% at 70% 45%, #000 10%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 70% 45%, #000 10%, transparent 70%);
+}
+
+.zdos-mh .zdos-hero__bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.zdos-mh .zdos-hero__bg svg {
+  position: absolute;
+  right: 8px;
+  top: 18px;
+  width: 168px;
+  height: 168px;
+  opacity: 0.42;
+  filter: drop-shadow(0 0 16px rgba(0, 170, 255, 0.35));
+}
+
+.zdos-mh .zdos-hero__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: stretch;
+  gap: 0.2rem;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px 0 12px;
+}
+
+.zdos-mh .zdos-hero__left {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: calc(100% - 112px);
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 2;
+}
+
+.zdos-mh .zdos-hero__brandline {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.4rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.zdos-mh .zdos-hero__zlogo {
+  /* BUG-0002｜官方 Logo：中心點縮放，禁止左上偏移 */
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  overflow: visible;
+  border-radius: 10px;
+  filter: drop-shadow(0 0 10px rgba(0, 200, 255, 0.55));
+  transform-origin: center center;
+  transform: none;
+}
+
+.zdos-mh .zdos-hero__zlogo svg,
+.zdos-mh .zdos-hero__zlogo-img,
+.zdos-mh .zdos-hero__zlogo img {
+  width: 40px;
+  height: 40px;
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: center center;
+  aspect-ratio: 1 / 1;
+  transform-origin: center center;
+  transform: none;
+  margin: 0;
+}
+
+.zdos-mh .zdos-hero__brand-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.14rem;
+  min-width: 0;
+  flex: 1 1 auto;
+  padding-top: 1px;
+}
+
+.zdos-mh .zdos-hero__brandtext {
+  margin: 0;
+  font-family: var(--mh-brand-display);
+  font-size: clamp(1.55rem, 6.4vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #fff;
+  line-height: 1;
+  text-shadow: 0 0 18px rgba(0, 180, 255, 0.45);
+  white-space: nowrap;
+}
+
+.zdos-mh .zdos-hero__brandsub {
+  margin: 0;
+  font-family: var(--mh-brand-text);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: var(--g02-muted);
+  line-height: 1.2;
+  white-space: nowrap;
+  text-transform: none;
+}
+
+.zdos-mh .zdos-hero__greet {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.25;
+}
+
+.zdos-mh .zdos-hero__meta {
+  margin: 0.18rem 0 0;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--g02-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zdos-mh .zdos-hero__summary,
+.zdos-mh .zdos-hero__chip { display: none !important; }
+
+.zdos-mh .zdos-hero__ai {
+  margin-top: 0.45rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.28rem;
+  width: 100%;
+  max-width: 17rem;
+}
+
+.zdos-mh .zdos-hero__ai-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.16rem;
+  width: 100%;
+}
+
+.zdos-mh .zdos-hero__ai-tag {
+  align-self: flex-start;
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  color: var(--g02-cyan-soft);
+  background: rgba(0, 100, 200, 0.35);
+  border: 1px solid rgba(0, 180, 255, 0.45);
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  box-shadow: 0 0 10px rgba(0, 160, 255, 0.25);
+}
+
+.zdos-mh .zdos-hero__ai-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--g02-warn);
+  line-height: 1.35;
+  text-shadow: 0 0 10px rgba(255, 180, 40, 0.25);
+}
+
+.zdos-mh .zdos-hero--completed .zdos-hero__ai-title { color: #7dffb2; }
+.zdos-mh .zdos-hero--critical .zdos-hero__ai-title { color: #ff8a8a; }
+
+.zdos-mh .zdos-hero__ai-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 36px;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--g02-btn-text);
+  background: linear-gradient(180deg, var(--g02-btn-strong) 0%, var(--g02-btn) 100%);
+  border: 1px solid rgba(180, 240, 255, 0.85);
+  border-radius: 999px;
+  padding: 0.35rem 1rem;
+  cursor: pointer;
+  box-shadow: 0 0 22px rgba(0, 210, 255, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.zdos-mh .zdos-hero__ai-btn::before {
+  content: "✦";
+  font-size: 0.7rem;
+  color: #fff;
+}
+
+.zdos-mh .zdos-hero__right {
+  position: relative;
+  flex: 0 0 auto;
+  align-self: flex-end;
+  width: 112px;
+  max-width: 38%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.zdos-mh .zdos-hero__right::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 10%;
+  width: 96px;
+  height: 96px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 180, 255, 0.35) 0%, transparent 70%);
+  filter: blur(10px);
+  z-index: 0;
+}
+
+/* UI-023B｜AI 絲絲待機：呼吸／擺動／眨眼／耳微動／說話嘴型（低頻自然） */
+.zdos-mh .zdos-hero__char-stage {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transform-origin: 50% 88%;
+  animation: zdos-sisi-idle 5.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.zdos-mh .zdos-hero__char-rig {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transform-origin: 50% 16%;
+  animation: zdos-sisi-ear-micro 7.4s ease-in-out infinite;
+  will-change: transform;
+}
+
+.zdos-mh .zdos-hero__char {
+  position: relative;
+  z-index: 1;
+  width: 112px;
+  max-width: 100%;
+  max-height: 148px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.45));
+}
+
+.zdos-mh .zdos-hero__char-blink {
+  position: absolute;
+  z-index: 2;
+  left: 28%;
+  top: 34%;
+  width: 44%;
+  height: 7.5%;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 42% 100% at 28% 50%, rgba(42, 24, 16, 0.92) 0 70%, transparent 72%),
+    radial-gradient(ellipse 42% 100% at 72% 50%, rgba(42, 24, 16, 0.92) 0 70%, transparent 72%);
+  opacity: 0;
+  pointer-events: none;
+  transform: scaleY(0.15);
+  transform-origin: center;
+  animation: zdos-sisi-blink 5.6s ease-in-out infinite;
+}
+
+.zdos-mh .zdos-hero__char-ear {
+  position: absolute;
+  z-index: 2;
+  top: 12%;
+  width: 18%;
+  height: 14%;
+  border-radius: 50% 50% 45% 45%;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px transparent;
+  pointer-events: none;
+  transform-origin: 50% 85%;
+}
+
+.zdos-mh .zdos-hero__char-ear--l {
+  left: 10%;
+  animation: zdos-sisi-ear-l 7.2s ease-in-out infinite;
+}
+
+.zdos-mh .zdos-hero__char-ear--r {
+  right: 8%;
+  animation: zdos-sisi-ear-r 7.8s ease-in-out infinite;
+}
+
+/* 耳微動：輕推整圖局部感 — 以 stage 上層極淡遮罩旋轉暗示，避免卡通誇張 */
+.zdos-mh .zdos-hero__char-ear--l,
+.zdos-mh .zdos-hero__char-ear--r {
+  background: radial-gradient(ellipse at 50% 40%, rgba(210, 170, 130, 0.08), transparent 70%);
+}
+
+.zdos-mh .zdos-hero__char-mouth {
+  position: absolute;
+  z-index: 2;
+  left: 42%;
+  top: 48.5%;
+  width: 16%;
+  height: 5.5%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 40%, rgba(90, 28, 36, 0.55), rgba(90, 28, 36, 0.15) 70%, transparent 75%);
+  opacity: 0;
+  pointer-events: none;
+  transform: scaleY(0.35);
+  transform-origin: 50% 20%;
+}
+
+.zdos-mh .zdos-hero__char-stage.is-speaking .zdos-hero__char-mouth {
+  animation: zdos-sisi-mouth 1.85s ease-in-out infinite;
+}
+
+/* 呼吸微浮 + 身體輕微左右擺動（合併單一 transform） */
+@keyframes zdos-sisi-idle {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.65deg); }
+  25% { transform: translate3d(0, -2px, 0) rotate(-0.2deg); }
+  50% { transform: translate3d(0, -3px, 0) rotate(0.65deg); }
+  75% { transform: translate3d(0, -1.5px, 0) rotate(0.15deg); }
+}
+
+/* 耳／頭頂微動：origin 靠上，幅度極小 */
+@keyframes zdos-sisi-ear-micro {
+  0%, 100% { transform: rotate(0deg); }
+  35% { transform: rotate(-0.9deg); }
+  70% { transform: rotate(0.8deg); }
+}
+
+@keyframes zdos-sisi-blink {
+  0%, 44%, 48%, 92%, 96%, 100% { opacity: 0; transform: scaleY(0.12); }
+  46%, 94% { opacity: 0.95; transform: scaleY(1); }
+}
+
+@keyframes zdos-sisi-ear-l {
+  0%, 100% { transform: rotate(0deg); }
+  40% { transform: rotate(-2.2deg); }
+  55% { transform: rotate(1.2deg); }
+}
+
+@keyframes zdos-sisi-ear-r {
+  0%, 100% { transform: rotate(0deg); }
+  35% { transform: rotate(2deg); }
+  60% { transform: rotate(-1.4deg); }
+}
+
+@keyframes zdos-sisi-mouth {
+  0%, 100% { opacity: 0; transform: scaleY(0.3); }
+  18% { opacity: 0.55; transform: scaleY(0.85); }
+  36% { opacity: 0.2; transform: scaleY(0.4); }
+  54% { opacity: 0.5; transform: scaleY(0.75); }
+  72% { opacity: 0.12; transform: scaleY(0.35); }
+}
+
+/* ============================================================
+ * 今日重點
+ * ============================================================ */
 .zdos-mh__focus {
-  background: linear-gradient(180deg, var(--zdos-surface-focus) 0%, #E8EFF5 100%);
-  border: 1px solid rgba(176, 196, 216, 0.55);
-  border-radius: var(--zdos-radius-card);
-  box-shadow: none;
-  padding: var(--zdos-space-3);
+  background: var(--g02-glass-bg);
+  border: 1px solid var(--g02-glass-border);
+  border-radius: var(--g02-radius);
+  padding: 10px 12px;
+  box-shadow: var(--g02-glass-shadow);
+  backdrop-filter: blur(16px) saturate(1.15);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
 }
 
 .zdos-mh__focus-list {
@@ -483,211 +818,329 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
 }
 
 .zdos-mh__focus-item {
   display: flex;
   align-items: center;
-  gap: var(--zdos-space-2);
+  gap: 8px;
   width: 100%;
-  border: none;
-  background: transparent;
+  min-height: 44px;
+  border: 1px solid var(--g02-border-soft);
+  background: var(--g02-glass-bg-strong);
   text-align: left;
-  padding: 0.5rem 0.25rem;
-  border-radius: var(--zdos-radius-sm);
+  padding: 0.45rem 0.6rem;
+  border-radius: var(--g02-radius-sm);
   cursor: pointer;
-  color: var(--zdos-text-primary);
-  font-size: 0.8125rem;
-  line-height: 1.3;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: inset 0 1px 0 rgba(190, 235, 255, 0.16);
 }
 
-.zdos-mh__focus-item:active {
-  background: rgba(11, 79, 140, 0.06);
-}
+.zdos-mh__focus-item:active { background: rgba(0, 100, 200, 0.22); }
 
-.zdos-mh__focus-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 9999px;
-  border: 1.5px solid #7A93A8;
+.zdos-mh__focus-icon {
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 9px;
+  border: 1px solid rgba(0, 180, 255, 0.4);
+  background: rgba(0, 80, 160, 0.35);
+  color: var(--g02-cyan);
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 12px rgba(0, 170, 255, 0.4);
+}
+
+.zdos-mh__focus-icon svg,
+.zdos-mh__focus-icon .zdl-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  display: block;
+  background-color: currentColor;
+}
+
+.zdos-mh__focus-copy {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
 }
 
 .zdos-mh__focus-text {
   min-width: 0;
-  flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.zdos-mh__focus-hint {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--g02-cyan-soft);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zdos-mh__focus-status {
+  flex: 0 0 auto;
+  font-size: 0.625rem;
+  font-weight: 800;
+  color: var(--g02-warn);
+  border-radius: 9999px;
+  border: 0.5px solid rgba(255, 176, 32, 0.7);
+  background: rgba(80, 50, 0, 0.28);
+  padding: 0.2rem 0.5rem;
+}
+
+.zdos-mh__focus-chevron {
+  flex: 0 0 auto;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.85rem;
+  line-height: 1;
 }
 
 .zdos-mh__focus-empty {
   margin: 0;
   font-size: 0.8125rem;
-  color: var(--zdos-text-secondary);
-  padding: 0.35rem 0;
+  color: var(--g02-muted);
+  padding: 0.2rem 0.15rem;
 }
 
-/* 6. Daily quote — brand spirit zone（保留，企業穩重） */
-.zdos-mh__quote {
-  min-height: 74px;
-  max-height: 86px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: var(--zdos-space-4) var(--zdos-space-4);
-  background: linear-gradient(180deg, #F7FAFC 0%, #EEF3F8 100%);
-  border: 1px solid rgba(176, 196, 216, 0.5);
-  border-left: 3px solid rgba(11, 79, 140, 0.45);
-  border-radius: var(--zdos-radius-md);
+/* ============================================================
+ * 營運摘要 — G02：兩卡橫排
+ * ============================================================ */
+.zdos-mh__kpi-section {
+  background: var(--g02-glass-bg);
+  border: 1px solid var(--g02-glass-border);
+  border-radius: var(--g02-radius);
+  padding: 10px 12px;
+  box-shadow: var(--g02-glass-shadow);
+  backdrop-filter: blur(16px) saturate(1.15);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
 }
 
-.zdos-mh__quote p {
-  margin: 0;
-  font-size: 0.8125rem;
-  line-height: 1.45;
-  color: var(--zdos-text-secondary);
-  white-space: pre-line;
-}
-
-.zdos-mh__quick {
+.zdos-mh__kpi {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--zdos-space-2);
-}
-
-.zdos-mh__quick-btn {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  min-height: 78px;
-  padding: var(--zdos-space-3) var(--zdos-space-1);
-  background: var(--zdos-surface);
-  border: 1px solid rgba(201, 214, 228, 0.95);
-  border-radius: var(--zdos-radius-md);
-  box-shadow: var(--zdos-shadow-kpi);
-  cursor: pointer;
-  color: var(--zdos-text-primary);
-}
-
-.zdos-mh__quick-btn:active {
-  background: var(--zdos-primary-soft);
-}
-
-.zdos-mh__quick-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--zdos-radius-sm);
-  background: var(--zdos-primary-soft);
-  color: var(--zdos-primary);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.zdos-mh__quick-icon svg {
-  width: 16px;
-  height: 16px;
-  display: block;
-}
-
-.zdos-mh__quick-label {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  line-height: 1.2;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   max-width: 100%;
 }
 
-.zdos-mh__coming {
+.zdos-mh__kpi-card {
+  min-width: 0;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--zdos-space-2);
-}
-
-.zdos-mh__coming-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--zdos-space-2);
-}
-
-.zdos-mh__coming-card {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas:
-    "icon title"
-    "icon status"
-    "icon blurb";
-  column-gap: var(--zdos-space-3);
-  row-gap: 0.15rem;
-  align-items: start;
+  justify-content: center;
   text-align: left;
-  padding: var(--zdos-space-3) var(--zdos-space-4);
-  background: var(--zdos-surface);
-  border: 1px solid rgba(213, 226, 238, 0.95);
-  border-radius: var(--zdos-radius-card);
-  box-shadow: var(--zdos-shadow-kpi);
+  gap: 0.06rem;
+  padding: 0.55rem 0.7rem 0.55rem 0.75rem;
+  background: var(--g02-glass-bg-strong);
+  border: 1px solid var(--g02-border-soft);
+  border-left: 2.5px solid var(--g02-cyan);
+  border-radius: 14px;
+  box-shadow: 0 0 16px rgba(0, 180, 255, 0.2), inset 0 1px 0 rgba(190, 235, 255, 0.18);
   cursor: pointer;
-  color: var(--zdos-text-primary);
+  min-height: 74px;
+  color: #fff;
+  position: relative;
+  box-sizing: border-box;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-.zdos-mh__coming-card:active {
-  background: var(--zdos-primary-soft);
+.zdos-mh__kpi-card--kind-attendance {
+  border-left-color: rgba(0, 180, 255, 0.35);
 }
 
-.zdos-mh__coming-icon {
-  grid-area: icon;
-  font-size: 1.5rem;
-  line-height: 1;
-  margin-top: 0.1rem;
+.zdos-mh__kpi-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  color: var(--g02-cyan);
+  filter: drop-shadow(0 0 8px var(--g02-glow));
 }
 
-.zdos-mh__coming-title {
-  grid-area: title;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  line-height: 1.3;
+.zdos-mh__kpi-icon .zdl-icon {
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
 }
 
-.zdos-mh__coming-status {
-  grid-area: status;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: var(--zdos-warning);
-}
-
-.zdos-mh__coming-blurb {
-  grid-area: blurb;
+.zdos-mh__kpi-label {
   font-size: 0.75rem;
-  color: var(--zdos-text-secondary);
-  line-height: 1.35;
+  font-weight: 600;
+  color: var(--g02-muted);
 }
 
-/* Bottom nav — clean corporate chrome */
-.zdos-mh__bottom {
+.zdos-mh__kpi-value {
+  margin-top: 0.04rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.01em;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  min-width: 0;
+}
+
+.zdos-mh__kpi-value--empty { font-size: 1.05rem; }
+
+.zdos-mh__kpi-meta {
+  margin-top: 0.06rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--g02-muted);
+}
+
+/* UI-004A-03｜KPI 低權重導向文字（不得壓過數據） */
+.zdos-mh__kpi-link {
+  margin-top: 0.2rem;
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(138, 228, 255, 0.72);
+  line-height: 1.2;
+}
+
+.zdos-mh__kpi-card:disabled,
+.zdos-mh__kpi-card[aria-disabled="true"] {
+  opacity: 0.72;
+  cursor: default;
+}
+
+.zdos-mh__kpi-meta--warn { color: var(--g02-warn); }
+.zdos-mh__kpi-meta--ok { color: var(--g02-ok); }
+.zdos-mh__kpi-meta--danger { color: #ff8a8a; }
+
+/* ============================================================
+ * 功能入口 — 七入口等距單列
+ * ============================================================ */
+.zdos-mh__launcher {
+  background: var(--g02-glass-bg);
+  border: 1px solid var(--g02-glass-border);
+  border-radius: var(--g02-radius);
+  padding: 10px 8px 8px;
+  box-shadow: var(--g02-glass-shadow);
+  backdrop-filter: blur(16px) saturate(1.15);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  /* HOME-FILL-GAP-002｜正常 flow，不 margin-bottom:auto／不撐高 */
+  flex: 0 0 auto;
+  margin-bottom: 0;
+}
+
+.zdos-mh__launcher .zdos-mh__section-desc { padding-left: 26px; }
+
+/* UI-023B｜快捷入口等距置中、依可見數自動補位（無空位） */
+.zdos-mh__quick {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  gap: 0;
+  width: 100%;
+}
+
+.zdos-mh__quick-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: calc(100% / var(--zdos-mh-launcher-n, 5));
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 3px;
+  min-height: 0;
+  padding: 2px 2px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+  color: #fff;
+}
+
+.zdos-mh__quick-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 30%, rgba(40, 120, 220, 0.55), rgba(0, 40, 90, 0.75));
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 190, 255, 0.5);
+  box-shadow: 0 0 14px rgba(0, 170, 255, 0.45);
+}
+
+.zdos-mh__quick-icon .zdl-icon,
+.zdos-mh__quick-icon svg {
+  width: 20px;
+  height: 20px;
+  background-color: currentColor;
+}
+
+.zdos-mh__quick-label {
+  font-size: 0.5625rem;
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: center;
+  white-space: normal;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  max-width: 100%;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* ============================================================
+ * Bottom Nav — 五欄 + 中央 Z
+ * ============================================================ */
+.zdos-mh__bottom,
+.zdos-mh__bottom.zdl-bottom-nav,
+.zdos-mh__bottom.zcx-bottom-nav {
   position: fixed;
+  /* UI-001A-26｜與卡片同寬：左右 16px、max 440px、置中 */
   left: 0;
   right: 0;
-  bottom: 0;
+  /* HOME-NAV-001c｜貼近底部；只保留 safe-area，不再加 8px 上推 */
+  bottom: var(--zdos-mh-safe-bottom);
   z-index: 50;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  height: calc(var(--zdos-mh-bottom-h) + var(--zdos-mh-safe-bottom));
-  padding-bottom: var(--zdos-mh-safe-bottom);
-  background: rgba(255, 255, 255, 0.88);
-  border-top: 1px solid rgba(201, 214, 228, 0.85);
-  backdrop-filter: blur(16px) saturate(1.05);
-  -webkit-backdrop-filter: blur(16px) saturate(1.05);
-  box-shadow: 0 -4px 16px rgba(11, 31, 51, 0.04);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: end;
+  gap: 0;
+  width: calc(100% - 32px);
+  max-width: 440px;
+  margin: 0 auto;
+  margin-bottom: 0;
+  transform: none;
+  box-sizing: border-box;
+  /* 鎖定 58px；覆蓋 zcx/zdl 把 safe-area 塞進 height/padding 的重複累加 */
+  min-height: 58px;
+  height: 58px;
+  max-height: 58px;
+  padding: 6px 8px 8px;
+  padding-bottom: 8px;
+  background: var(--g02-glass-bg-strong);
+  border: 1px solid var(--g02-glass-border);
+  border-radius: 9999px;
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  box-shadow: var(--g02-glass-shadow), 0 8px 20px rgba(0, 20, 50, 0.28);
 }
 
 .zdos-mh__nav-item {
@@ -697,165 +1150,764 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  color: #64748B;
-  font-size: 0.625rem;
+  gap: 2px;
+  min-height: 44px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.5625rem;
   font-weight: 600;
   cursor: pointer;
   padding: 0;
   min-width: 0;
 }
 
-.zdos-mh__nav-item svg {
+.zdos-mh__nav-item .zdl-icon {
   width: 20px;
   height: 20px;
+  background-color: currentColor;
 }
 
-.zdos-mh__nav-item--active {
-  color: var(--zdos-primary);
-  background: rgba(11, 79, 140, 0.08);
-  border-radius: 12px;
-  margin: 4px 6px;
+.zdos-mh__nav-item--active,
+.zdos-mh__nav-item.is-active {
+  color: var(--g02-cyan);
+  font-weight: 700;
 }
 
-.zdos-mh__footnote {
-  margin: 0;
-  text-align: center;
-  font-size: 0.625rem;
-  color: var(--zdos-text-secondary);
-  opacity: 0.75;
+.zdos-mh__nav-item--active .zdl-icon,
+.zdos-mh__nav-item.is-active .zdl-icon {
+  filter: drop-shadow(0 0 8px var(--g02-glow));
 }
 
-/* UI-001A-24B｜Header responsive — 320 / 375 / 390 / 430 */
-@media (max-width: 320px) {
-  .zdos-mh__logo {
-    width: 28px;
-    height: 28px;
-  }
+.zdos-mh__nav-item--center {
+  position: relative;
+  top: -14px;
+  color: #fff;
+}
 
-  .zdos-mh__brand {
-    max-width: calc(100% - 92px);
-    gap: 0.35rem;
-  }
+.zdos-mh__nav-z {
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 40% 35%, rgba(40, 140, 255, 0.55), rgba(4, 30, 70, 0.95));
+  border: 1.5px solid rgba(80, 210, 255, 0.75);
+  box-shadow: 0 0 22px rgba(0, 180, 255, 0.65), 0 6px 14px rgba(0, 0, 0, 0.35);
+}
 
-  .zdos-mh__product {
-    font-size: 0.9375rem; /* 15px */
-    letter-spacing: 0.04em;
-  }
+.zdos-mh__nav-z img,
+.zdos-mh__nav-z svg,
+.zdos-mh__nav-z .zdos-hero__zlogo-img {
+  width: 26px;
+  height: 26px;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(0, 200, 255, 0.7));
+}
 
-  .zdos-mh__subtitle {
-    font-size: 0.5rem; /* 8px */
-    letter-spacing: 0.05em;
-  }
+.zdos-mh__nav-item--center span:last-child { display: none; }
 
-  .zdos-mh__icon-btn {
+/* Legacy unused in G02 */
+.zdos-mh__header,
+.zdos-mh__brand,
+.zdos-mh__logo,
+.zdos-mh__titles,
+.zdos-mh__product,
+.zdos-mh__subtitle,
+.zdos-mh__meta,
+.zdos-mh__avatar,
+.zdos-mh__ai,
+.zdos-mh__coming,
+.zdos-mh__notify { display: none; }
+
+/* RWD 390 / 430 — scale only, keep proportions */
+@media (max-width: 374px) {
+  .zdos-mh__main { padding-left: 0; padding-right: 0; gap: 8px; }
+  .zdos-mh .zdos-hero { min-height: 184px; }
+  .zdos-mh .zdos-hero__right,
+  .zdos-mh .zdos-hero__char-stage,
+  .zdos-mh .zdos-hero__char { width: 100px; }
+  .zdos-mh .zdos-hero__char { max-height: 132px; }
+  .zdos-mh .zdos-hero__left { max-width: calc(100% - 96px); }
+  .zdos-mh .zdos-hero__brandtext { font-size: 1.45rem; letter-spacing: 0.12em; }
+  .zdos-mh .zdos-hero__brandsub { font-size: 0.5625rem; letter-spacing: 0.12em; }
+  .zdos-mh .zdos-hero__zlogo {
     width: 36px;
     height: 36px;
   }
-}
-
-@media (min-width: 321px) and (max-width: 374px) {
-  .zdos-mh__logo {
-    width: 30px;
-    height: 30px;
+  .zdos-mh .zdos-hero__zlogo svg,
+  .zdos-mh .zdos-hero__zlogo-img,
+  .zdos-mh .zdos-hero__zlogo img {
+    width: 36px;
+    height: 36px;
+    max-width: 36px;
+    max-height: 36px;
   }
-
-  .zdos-mh__brand {
-    max-width: calc(100% - 94px);
-    gap: 0.4rem;
-  }
-
-  .zdos-mh__product {
-    font-size: 1rem;
-    letter-spacing: 0.05em;
-  }
-
-  .zdos-mh__subtitle {
-    font-size: 0.53125rem;
-    letter-spacing: 0.06em;
-  }
-}
-
-@media (min-width: 375px) and (max-width: 389px) {
-  .zdos-mh__logo {
-    width: 32px;
-    height: 32px;
-  }
-
-  .zdos-mh__brand {
-    max-width: calc(100% - 96px);
-    gap: 0.5rem;
-  }
-
-  .zdos-mh__product {
-    font-size: 1.0625rem;
-    letter-spacing: 0.06em;
-  }
-
-  .zdos-mh__subtitle {
-    font-size: 0.5625rem;
-    letter-spacing: 0.08em;
-  }
+  .zdos-mh__quick-icon { width: 32px; height: 32px; }
+  .zdos-mh__quick-label { font-size: 0.5rem; }
 }
 
 @media (min-width: 390px) and (max-width: 429px) {
-  .zdos-mh__logo {
-    width: 32px;
-    height: 32px;
-  }
-
-  .zdos-mh__product {
-    font-size: 1.075rem;
-    letter-spacing: 0.065em;
-  }
-
-  .zdos-mh__subtitle {
-    font-size: 0.5625rem;
-  }
+  .zdos-mh .zdos-hero { min-height: 200px; }
+  .zdos-mh .zdos-hero__brandtext { font-size: 1.7rem; }
+  .zdos-mh .zdos-hero__right,
+  .zdos-mh .zdos-hero__char-stage,
+  .zdos-mh .zdos-hero__char { width: 118px; }
+  .zdos-mh .zdos-hero__char { max-height: 152px; }
 }
 
 @media (min-width: 430px) {
-  .zdos-mh__logo {
-    width: 34px;
-    height: 34px;
+  .zdos-mh .zdos-hero { min-height: 208px; }
+  .zdos-mh .zdos-hero__brandtext { font-size: 1.85rem; }
+  .zdos-mh .zdos-hero__zlogo {
+    width: 42px;
+    height: 42px;
   }
-
-  .zdos-mh__brand {
-    gap: 0.55rem;
+  .zdos-mh .zdos-hero__zlogo svg,
+  .zdos-mh .zdos-hero__zlogo-img,
+  .zdos-mh .zdos-hero__zlogo img {
+    width: 42px;
+    height: 42px;
+    max-width: 42px;
+    max-height: 42px;
   }
+  .zdos-mh .zdos-hero__right,
+  .zdos-mh .zdos-hero__char-stage,
+  .zdos-mh .zdos-hero__char { width: 124px; }
+  .zdos-mh .zdos-hero__char { max-height: 158px; }
+  .zdos-mh .zdos-hero__left { max-width: calc(100% - 118px); }
+  .zdos-mh__quick-icon { width: 36px; height: 36px; }
+}
 
-  .zdos-mh__product {
-    font-size: 1.125rem;
-    letter-spacing: 0.07em;
+@media (prefers-reduced-motion: reduce) {
+  .zdos-mh__quote-track .marquee-content { animation: none !important; }
+  .zdos-mh .zdos-hero__char-stage,
+  .zdos-mh .zdos-hero__char-rig,
+  .zdos-mh .zdos-hero__char-blink,
+  .zdos-mh .zdos-hero__char-ear,
+  .zdos-mh .zdos-hero__char-ear--l,
+  .zdos-mh .zdos-hero__char-ear--r,
+  .zdos-mh .zdos-hero__char-stage.is-speaking .zdos-hero__char-mouth {
+    animation: none !important;
   }
-
-  .zdos-mh__subtitle {
-    font-size: 0.625rem;
-    letter-spacing: 0.09em;
+  .zdos-mh .zdos-hero__char-blink,
+  .zdos-mh .zdos-hero__char-mouth {
+    opacity: 0 !important;
   }
 }
 
-@media (max-width: 360px) {
-  .zdos-mh__ai {
-    grid-template-columns: 76px minmax(0, 1fr);
-    min-height: 140px;
-  }
-
-  .zdos-mh__ai-figure img {
-    height: 120px;
-  }
-
-  .zdos-mh__kpi-value {
-    font-size: 1rem;
-  }
-
-  .zdos-mh__quick-label {
-    font-size: 0.625rem;
-  }
+/* ============================================================
+ * UI-001A-26｜Mobile Home Card Width & Viewport Fit (cascade)
+ * ============================================================ */
+.zdos-mh__main > section,
+.zdos-mh__main > .zdos-hero,
+.zdos-mh__focus,
+.zdos-mh__kpi-section,
+.zdos-mh__launcher,
+.zdos-mh__coming,
+.zdos-mh__academy-preview-banner,
+.zdos-mh .zdos-hero.zcx-hero,
+.zdos-mh .zdos-hero {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
-@media (min-width: 390px) {
-  .zdos-mh__main {
-    gap: var(--zdos-space-3);
-  }
+.zdos-mh__kpi-label,
+.zdos-mh__kpi-meta {
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.zdos-mh__focus-text {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.zdos-mh__focus-item {
+  min-height: 44px;
+}
+
+/* Bottom Nav：覆蓋 zcx/zdl 全寬，與內容框同寬 */
+.zdos-mh__bottom.zcx-bottom-nav,
+.zdos-mh__bottom.zdl-bottom-nav,
+.zdos-mh__bottom.zcx-bottom-nav.zdl-bottom-nav {
+  left: 0;
+  right: 0;
+  width: calc(100% - 32px);
+  max-width: 440px;
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+
+/* ============================================================
+ * Tech Blue + Glass Narrow｜共用覆寫（卡片等寬置中）
+ * ============================================================ */
+.zdos-mh__main {
+  width: var(--mh-frame-width);
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.zdos-mh__topbar {
+  width: var(--mh-frame-width);
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.zdos-mh__focus,
+.zdos-mh__kpi-section,
+.zdos-mh__launcher,
+.zdos-mh__academy-preview-banner {
+  width: 100%;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+/* BRAND-UI-001｜Hero＝今日重點：同吃 .zdos-mh__main 寬度（100%），左右 edge 對齊 */
+.zdos-mh__main > .zdos-hero,
+.zdos-mh__main > section.zdos-hero,
+.zdos-mh .zdos-hero.zcx-hero,
+.zdos-mh .zdos-hero {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box;
+}
+
+.zdos-mh .zdos-hero--completed .zdos-hero__ai-title { color: var(--g02-ok); }
+
+.zdos-mh .zdos-hero__ai-btn:active {
+  filter: brightness(1.08);
+  transform: scale(0.98);
+}
+
+.zdos-mh__nav-z {
+  background: radial-gradient(circle at 40% 35%, rgba(8, 28, 58, 0.95), #041428 85%);
+  border-color: rgba(160, 235, 255, 0.85);
+  box-shadow: 0 0 24px rgba(0, 210, 255, 0.7), 0 6px 14px rgba(0, 20, 50, 0.3);
+  overflow: hidden;
+}
+
+/* UI-001A-27｜全頁 frame fit：主要區塊不得超出視窗 */
+/* BUG-0001｜max-width 用 100%，避免 100vw 首次載入水平溢出觸發縮放 */
+.zdos-mh,
+.zdos-mh__main,
+.zdos-mh__topbar,
+.zdos-mh__bottom {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.zdos-mh__main,
+.zdos-mh__topbar {
+  width: var(--mh-frame-width);
+  max-width: min(var(--mh-content-max), calc(100% - 32px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.zdos-mh__bottom,
+.zdos-mh__bottom.zcx-bottom-nav,
+.zdos-mh__bottom.zdl-bottom-nav {
+  width: calc(100% - 32px);
+  max-width: min(440px, calc(100% - 32px));
+  margin-inline: auto;
+}
+
+/* ============================================================
+ * HOME-EDGE-BORDER-FIX-004｜外層白邊／白底／滿版（最終強化層）
+ * 根因：#root.p-2／sm:p-4 把 .zdos-mh 縮進內容盒，左右底露出宿主淺色
+ * UI-HOME-RETURN-FIX-001｜並壓過 zcx-shell-active 淺底（回首頁白邊）
+ * 只作用 :has(.zdos-mh)，不影響登入／其他中心
+ * ============================================================ */
+
+/* A. 宿主層全面深藍 + 清零 gutter */
+html:has(.zdos-mh),
+body:has(.zdos-mh),
+body.bg-slate-950:has(.zdos-mh),
+body.premium-grid:has(.zdos-mh),
+html.zdos-zcx-shell-active:has(.zdos-mh),
+html.zdos-zcx-shell-active:has(.zdos-mh) body,
+html.zdos-zcx-shell-active:has(.zdos-mh) body.bg-slate-950,
+html.zdos-zcx-shell-active:has(.zdos-mh) body.premium-grid,
+html.zdos-zcx-shell-active:has(.zdos-mh) #root,
+#root:has(.zdos-mh),
+#root.p-2:has(.zdos-mh),
+#root.relative:has(.zdos-mh) {
+  background: var(--g02-bg-deep, #020b1c) !important;
+  background-color: var(--g02-bg-deep, #020b1c) !important;
+  background-image: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 100dvh !important;
+  min-height: 100svh !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+/* EMERGENCY WHITE-BORDER FIX｜移除 html/body ::before 假底層；宿主背景由 html/body 本體負責 */
+
+#root:has(.zdos-mh) {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  min-height: 100dvh !important;
+  min-height: 100svh !important;
+}
+
+body:has(.zdos-mh) {
+  overscroll-behavior-y: auto !important;
+}
+
+/* B. 首頁本體真正滿版畫布（保留科技藍底紋理） */
+.zdos-mh,
+.zdos-mh.zcx-page {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  min-height: 100dvh !important;
+  min-height: 100svh !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+  flex: 1 0 auto !important;
+  background-color: var(--g02-bg-deep, #020b1c) !important;
+  background-image:
+    radial-gradient(120% 70% at 50% -8%, rgba(50, 150, 255, 0.42) 0%, transparent 58%),
+    linear-gradient(180deg, var(--g02-bg-top, #124a86) 0%, var(--g02-bg-mid, #0a2f5c) 38%, var(--g02-bg, #041428) 72%, var(--g02-bg-deep, #020b1c) 100%),
+    url("assets/home/g02-city-band.png") !important;
+  background-size: auto, auto, 100% auto !important;
+  background-position: center top, center top, center 8% !important;
+  background-repeat: no-repeat !important;
+  background-attachment: scroll !important;
+}
+
+/* C. 內容可收窄；畫布不縮 */
+.zdos-mh__main {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+  padding-bottom: calc(
+    var(--zdos-mh-bottom-h)
+    + var(--zdos-mh-bottom-offset)
+    + var(--zdos-mh-bottom-gap)
+    + var(--zdos-mh-safe-bottom)
+  ) !important;
+}
+
+.zdos-mh__topbar,
+.zdos-mh__launcher,
+.zdos-mh__focus,
+.zdos-mh__kpi-section {
+  flex-grow: 0 !important;
+}
+
+/* D. Bottom Nav 周邊深藍，禁漂在白紙上 */
+.zdos-mh__bottom,
+.zdos-mh__bottom.zdl-bottom-nav,
+.zdos-mh__bottom.zcx-bottom-nav {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  /* HOME-NAV-001c｜強制貼底；safe-area 只在 bottom，禁止再疊 */
+  bottom: var(--zdos-mh-safe-bottom) !important;
+  height: 58px !important;
+  min-height: 58px !important;
+  max-height: 58px !important;
+  padding: 6px 8px 8px !important;
+  padding-bottom: 8px !important;
+  margin: 0 auto !important;
+  margin-bottom: 0 !important;
+  transform: none !important;
+  background-color: rgba(8, 28, 56, 0.94) !important;
+  background-image: none !important;
+  border: 1px solid rgba(110, 200, 255, 0.34) !important;
+  border-bottom: 0 !important;
+  box-shadow:
+    0 0 24px rgba(0, 170, 255, 0.18),
+    0 8px 20px rgba(0, 20, 50, 0.35) !important;
+}
+
+/* EMERGENCY WHITE-BORDER FIX｜移除 .zdos-mh::after 假色條；home indicator 區由 html/body 深藍延伸 */
+
+/* ============================================================
+ * G1 Emergency Restore｜僅允許兩項（其餘保持 Restore 原版）
+ * ① 首頁不得 Scroll
+ * ② 每日一句不得被遮住
+ * ============================================================ */
+html:has(.zdos-mh),
+body:has(.zdos-mh),
+#root:has(.zdos-mh) {
+  background: var(--g02-bg-deep, #020b1c) !important;
+  background-color: var(--g02-bg-deep, #020b1c) !important;
+  background-image: none !important;
+  height: 100dvh !important;
+  height: 100svh !important;
+  max-height: 100dvh !important;
+  max-height: 100svh !important;
+  overflow: hidden !important;
+  overflow-y: hidden !important;
+  overscroll-behavior: none !important;
+}
+
+.zdos-mh,
+.zdos-mh.zcx-page {
+  height: 100dvh !important;
+  height: 100svh !important;
+  max-height: 100dvh !important;
+  max-height: 100svh !important;
+  overflow: hidden !important;
+  overflow-y: hidden !important;
+}
+
+.zdos-mh__main {
+  overflow: hidden !important;
+  min-height: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+.zdos-mh__topbar {
+  position: relative !important;
+  z-index: 80 !important;
+}
+
+.zdos-mh__quote {
+  position: relative !important;
+  z-index: 81 !important;
+}
+
+/* ============================================================
+ * G1 HOME｜Founder Layout Adjustment（不是縮小）
+ * - 恢復今日重點／營運摘要／功能入口原高度（撤銷微縮）
+ * - 底部留白改為區塊間垂直均分（space-between）
+ * - Hero／KPI／Launcher／Bottom Nav 結構與尺寸不變
+ * ============================================================ */
+
+.zdos-mh__main {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: stretch !important;
+  gap: 0 !important;
+  /* 僅保留 Bottom Nav 安全間距，不堆底部空白帶 */
+  padding-bottom: calc(
+    var(--zdos-mh-bottom-h)
+    + var(--zdos-mh-bottom-offset)
+    + var(--zdos-mh-bottom-gap)
+    + var(--zdos-mh-safe-bottom)
+  ) !important;
+}
+
+/* 區塊維持內容原高度；多餘高度只落在區塊之間 */
+.zdos-mh__main > .zdos-hero,
+.zdos-mh__main > section.zdos-hero,
+.zdos-mh__focus,
+.zdos-mh__kpi-section,
+.zdos-mh__launcher {
+  flex: 0 0 auto !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+}
+
+/* P1-002｜Hero／Bottom Nav 中央：官方 Product Logo，去除舊藍光／Mark 感 */
+.zdos-mh .zdos-hero__zlogo {
+  border-radius: 0 !important;
+  filter: none !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+.zdos-mh .zdos-hero__zlogo svg,
+.zdos-mh .zdos-hero__zlogo-img,
+.zdos-mh .zdos-hero__zlogo img {
+  filter: none !important;
+}
+.zdos-mh__nav-z {
+  background: rgba(4, 20, 40, 0.92) !important;
+  border: 1.5px solid rgba(160, 235, 255, 0.55) !important;
+  box-shadow: 0 0 16px rgba(0, 180, 255, 0.35), 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+}
+.zdos-mh__nav-z img,
+.zdos-mh__nav-z svg,
+.zdos-mh__nav-z .zdos-hero__zlogo-img {
+  filter: none !important;
+  width: 28px !important;
+  height: 28px !important;
+}
+
+/* ============================================================
+ * Founder Acceptance BUG FIX｜Round 1
+ * BUG-0001｜首頁首次載入版面縮放
+ * BUG-0002｜官方 Logo 中心縮放（僅 Hero Logo；不改 Header 其他元件）
+ * ============================================================ */
+html:has(.zdos-mh),
+body:has(.zdos-mh),
+#root:has(.zdos-mh) {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: clip !important;
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
+
+/* 首頁期間隱藏超出視窗的全域 glow，避免首次載入水平溢出被縮放 */
+html:has(.zdos-mh) #glow-1,
+html:has(.zdos-mh) #glow-2 {
+  display: none !important;
+}
+
+.zdos-mh,
+.zdos-mh.zcx-page {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: clip !important;
+  zoom: normal;
+  transform: none;
+}
+
+.zdos-mh .zdos-hero__zlogo {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto !important;
+  transform-origin: center center !important;
+  transform: none !important;
+  overflow: visible !important;
+}
+
+.zdos-mh .zdos-hero__zlogo svg,
+.zdos-mh .zdos-hero__zlogo-img,
+.zdos-mh .zdos-hero__zlogo img {
+  display: block !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  transform-origin: center center !important;
+  transform: none !important;
+  margin: 0 auto !important;
+}
+
+/* ============================================================
+ * HOME-NAV-001c｜Bottom Nav 整條下移（最終層）
+ * 原 bottom: safe+8 仍偏高；改為只留 safe-area。
+ * bar 鎖 58px；禁止 margin-bottom／translate／bar 內再疊 safe。
+ * 不增加首頁 scroll／padding-bottom；功能入口版型不動。
+ * ============================================================ */
+.zdos-mh__bottom,
+.zdos-mh__bottom.zcx-bottom-nav,
+.zdos-mh__bottom.zdl-bottom-nav,
+.zdos-mh__bottom.zcx-bottom-nav.zdl-bottom-nav {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: env(safe-area-inset-bottom, 0px) !important;
+  z-index: 50 !important;
+  width: calc(100% - 32px) !important;
+  max-width: min(440px, calc(100% - 32px)) !important;
+  margin: 0 auto !important;
+  margin-bottom: 0 !important;
+  transform: none !important;
+  height: 58px !important;
+  min-height: 58px !important;
+  max-height: 58px !important;
+  padding: 6px 8px 8px !important;
+  padding-bottom: 8px !important;
+  box-sizing: border-box !important;
+}
+
+/* HOME-NAV-001c｜內容 padding 維持原值（不增加／不改功能入口版型）；僅 Nav 下移 */
+.zdos-mh__main {
+  padding-bottom: calc(
+    58px
+    + 10px
+    + 8px
+    + env(safe-area-inset-bottom, 0px)
+  ) !important;
+}
+
+/* ============================================================
+ * HOME-NAV-002｜功能入口 ↔ Bottom Dock 分層（方案 3）
+ * - 只收斂功能入口卡片內部垂直空間（padding／gap／標題區）
+ * - 不改 Hero／今日重點／營運摘要／入口資料／Dock 功能
+ * - 禁止用 z-index 互蓋；以內容高度 + dock clearance 分層
+ * 原卡片約高：~112px（pad 10+8 / head~40 / quick~54）
+ * 新卡片約高：~94px（pad 6+6 / head~32 / quick~50；hitbox≥44）
+ * ============================================================ */
+.zdos-mh__launcher {
+  padding: 6px 8px 6px !important;
+}
+
+.zdos-mh__launcher .zdos-mh__section-head {
+  margin-bottom: 4px !important;
+  gap: 4px !important;
+}
+
+.zdos-mh__launcher .zdos-mh__section-titles {
+  gap: 0 !important;
+}
+
+.zdos-mh__launcher .zdos-mh__section-title {
+  font-size: 0.95rem !important;
+  line-height: 1.2 !important;
+}
+
+.zdos-mh__launcher .zdos-mh__section-desc {
+  font-size: 0.625rem !important;
+  line-height: 1.15 !important;
+  margin-top: 0 !important;
+}
+
+.zdos-mh__launcher .zdos-mh__quick {
+  margin-top: 0 !important;
+}
+
+.zdos-mh__launcher .zdos-mh__quick-btn {
+  gap: 2px !important;
+  padding: 1px 2px !important;
+  min-height: 44px !important; /* 手機可點擊 hitbox */
+  box-sizing: border-box !important;
+}
+
+.zdos-mh__launcher .zdos-mh__quick-icon {
+  width: 34px !important;
+  height: 34px !important;
+  flex: 0 0 auto !important;
+}
+
+.zdos-mh__launcher .zdos-mh__quick-label {
+  line-height: 1.1 !important;
+  max-height: 2.2em !important;
+}
+
+/* Dock：維持靠底 fixed；獨立層；中央 Z 突出保留 */
+.zdos-mh__bottom,
+.zdos-mh__bottom.zcx-bottom-nav,
+.zdos-mh__bottom.zdl-bottom-nav,
+.zdos-mh__bottom.zcx-bottom-nav.zdl-bottom-nav {
+  position: fixed !important;
+  bottom: env(safe-area-inset-bottom, 0px) !important;
+  z-index: 50 !important;
+  height: 58px !important;
+  min-height: 58px !important;
+  max-height: 58px !important;
+  margin-bottom: 0 !important;
+  transform: none !important;
+}
+
+/* 分層 clearance：Dock 高 + 中央 Z 突出(~14) 後的正常間距；禁巨大底部空白 */
+.zdos-mh__main {
+  padding-bottom: calc(
+    58px
+    + 14px
+    + 8px
+    + env(safe-area-inset-bottom, 0px)
+  ) !important;
+}
+
+/* ============================================================
+ * HOME-LOGO-002｜Dock 中央透明 LOGO1 50→75px（×1.5）
+ * Dock 橫桿仍 58px；logo 置中可自然超出上下；禁負 top／禁撐高 Dock
+ * BRAND-UI-002 透明 SoT／HOME-NAV-002 LOCKED
+ * ============================================================ */
+.zdos-mh__bottom,
+.zdos-mh__bottom.zcx-bottom-nav,
+.zdos-mh__bottom.zdl-bottom-nav,
+.zdos-mh__bottom.zcx-bottom-nav.zdl-bottom-nav {
+  /* 僅開放裁切：75px Logo 可超出 58px 橫桿；不改 bottom／height／safe-area */
+  overflow: visible !important;
+}
+
+.zdos-mh__nav-item--center {
+  top: 0 !important;
+  position: relative !important;
+  height: 58px !important;
+  min-height: 58px !important;
+  max-height: 58px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  align-self: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  overflow: visible !important;
+  /* hitbox 維持橫桿高度；視覺 Logo 可超出 */
+  z-index: 2 !important;
+}
+
+/* BRAND-UI-002｜透明 LOGO1；HOME-LOGO-002｜75px */
+.zdos-mh__nav-z {
+  width: 75px !important;
+  height: 75px !important;
+  flex: 0 0 75px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  transform: none !important;
+  position: relative !important;
+  top: 0 !important;
+  box-shadow: none !important;
+  pointer-events: none !important; /* 點擊仍由 center button hitbox 承接 */
+}
+
+.zdos-mh__nav-z img,
+.zdos-mh__nav-z svg,
+.zdos-mh__nav-z .zdos-mh__nav-z-img,
+.zdos-mh__nav-z .zdos-hero__zlogo-img {
+  width: 75px !important;
+  height: 75px !important;
+  max-width: 75px !important;
+  max-height: 75px !important;
+  object-fit: contain !important; /* 完整顯示透明 LOGO1，不裁切主體 */
+  object-position: center center !important;
+  aspect-ratio: 1 / 1 !important;
+  filter: none !important;
+  display: block !important;
+  margin: 0 !important;
+  transform: none !important;
+  pointer-events: none !important;
+}
+
+/* BRAND-UI-001｜最終確認：Hero／Focus 皆 100% of main frame（同 gutter／同寬） */
+.zdos-mh__main > .zdos-hero,
+.zdos-mh__main > section.zdos-hero,
+.zdos-mh .zdos-hero,
+.zdos-mh__focus {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box !important;
 }

@@ -1,0 +1,219 @@
+/**
+ * WORK-001｜工作中心首頁 Theme
+ * G1 同款科技深藍 + Glass（只修 Color／Contrast；2 欄 Layout 不變）
+ */
+
+.zdos-workspace:has(.zdos-work-home) {
+  --g02-bg: #041428;
+  --g02-bg-deep: #020b1c;
+  --g02-bg-mid: #0a2f5c;
+  --g02-bg-top: #124a86;
+  --g02-border: rgba(130, 215, 255, 0.45);
+  --g02-border-soft: rgba(110, 200, 255, 0.34);
+  --g02-cyan: #1ad0ff;
+  --g02-cyan-soft: #8ae4ff;
+  --g02-text: #ffffff;
+  --g02-muted: rgba(186, 220, 245, 0.86);
+  --g02-radius: 18px;
+  --g02-radius-sm: 12px;
+  --g02-glass-bg: rgba(80, 170, 245, 0.2);
+  --g02-glass-bg-strong: rgba(60, 140, 220, 0.28);
+  --g02-glass-border: rgba(140, 220, 255, 0.42);
+  --g02-glass-shadow:
+    0 0 24px rgba(0, 170, 255, 0.22),
+    0 10px 22px rgba(0, 20, 50, 0.22),
+    inset 0 1px 0 rgba(190, 235, 255, 0.22);
+
+  color: var(--g02-text) !important;
+  background-color: var(--g02-bg-deep) !important;
+  background-image:
+    radial-gradient(120% 70% at 50% -8%, rgba(50, 150, 255, 0.36) 0%, transparent 58%),
+    linear-gradient(180deg, var(--g02-bg-top) 0%, var(--g02-bg-mid) 38%, var(--g02-bg) 72%, var(--g02-bg-deep) 100%) !important;
+  height: 100dvh !important;
+  height: 100svh !important;
+  max-height: 100dvh !important;
+  overflow: hidden !important;
+  overflow-x: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding-left: max(10px, env(safe-area-inset-left, 0px)) !important;
+  padding-right: max(10px, env(safe-area-inset-right, 0px)) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+html:has(.zdos-work-home),
+body:has(.zdos-work-home),
+#root:has(.zdos-work-home) {
+  background: var(--g02-bg-deep, #020b1c) !important;
+  background-color: var(--g02-bg-deep, #020b1c) !important;
+  background-image: none !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  overflow: hidden !important;
+}
+
+/* BUG-0015d｜Header 尺寸交由 zcx-shell；此處不再自訂 height／padding／大背景 */
+.zdos-workspace:has(.zdos-work-home) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-work-home) .zdos-workspace-header.zdos-app-header {
+  flex: 0 0 auto;
+  /* UI-HDR-001｜玻璃／尺寸交由 zcx-shell */
+}
+
+.zdos-workspace:has(.zdos-work-home) .zdos-workspace-header-inner {
+  /* size owned by zcx-shell */
+}
+
+.zdos-workspace:has(.zdos-work-home) .zdos-workspace-back {
+  border: 1px solid var(--g02-border-soft) !important;
+  background: var(--g02-glass-bg) !important;
+  color: var(--g02-cyan-soft) !important;
+  box-shadow: none !important;
+}
+
+
+.zdos-workspace:has(.zdos-work-home) .zdos-workspace-title {
+  color: var(--g02-text) !important;
+  text-align: left;
+}
+
+.zdos-workspace:has(.zdos-work-home) .zdos-workspace-body,
+.zdos-workspace:has(.zdos-work-home) .zdos-view-body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0.55rem 0 max(0.55rem, env(safe-area-inset-bottom, 0px)) !important;
+  overflow: hidden !important;
+}
+
+.zdos-work-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.zdos-work-header-brand img {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.zdos-work-subtitle {
+  margin: 0.1rem 0 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--g02-muted);
+}
+
+/* 干掉 .zcx-page 淺色頁底（白／淺藍白容器感） */
+.zdos-work-home.zcx-page,
+.zdos-work-home {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  color: var(--g02-text) !important;
+  max-width: 430px;
+  width: 100%;
+  margin: 0 auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding:
+    0
+    0
+    0 !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.zdos-work-lead {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--g02-muted);
+  flex: 0 0 auto;
+}
+
+.zdos-work-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  background: transparent !important;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.zdos-work-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 4.6rem;
+  padding: 0.85rem 0.9rem;
+  border-radius: var(--g02-radius-sm);
+  border: 1px solid var(--g02-glass-border) !important;
+  background: var(--g02-glass-bg) !important;
+  background-color: rgba(8, 36, 72, 0.72) !important;
+  background-image:
+    linear-gradient(180deg, rgba(60, 140, 220, 0.28) 0%, rgba(8, 36, 72, 0.78) 100%) !important;
+  box-shadow: var(--g02-glass-shadow) !important;
+  backdrop-filter: blur(14px) saturate(1.15);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  color: var(--g02-text) !important;
+  text-align: left;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.zdos-work-card:active {
+  transform: scale(0.98);
+}
+
+.zdos-work-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  color: var(--g02-cyan) !important;
+}
+
+.zdos-work-card-icon .zdl-icon,
+.zdos-work-card-icon svg {
+  width: 1.35rem;
+  height: 1.35rem;
+  color: var(--g02-cyan) !important;
+}
+
+.zdos-work-card-label {
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #ffffff !important;
+}
+
+@media (max-width: 390px) {
+  .zdos-work-card {
+    min-height: 4.25rem;
+    padding: 0.75rem 0.8rem;
+  }
+  .zdos-work-card-label { font-size: 0.8125rem; }
+}

@@ -1,38 +1,34 @@
 /**
- * ZDOS Login Center — LOGIN-004 Brand Identity Alignment
- * Primary: ZDOS · Operation Center · hexagonal Z logo (aligned with UI-001A).
- * Visual-only — Auth / Session / Supabase / login handlers untouched.
+ * ZDOS Login — S01 Official Launch Visual
+ * Design Source of Truth: ui/assets/brand/login/S01.png
+ * Visual-only — Auth / Session / Supabase / handlers untouched.
  */
 
-/* —— Host zeroing（消除 #root padding／body 黑邊） ——
- * iOS Safari：不可對 html/body 鎖 overflow:hidden + 登入層 position:fixed，
- * 否則鍵盤彈出時 visualViewport 收縮會搶焦點／畫面跳動。
- */
 html.zdos-login-center-active,
 html.zdos-login-center-active body {
   width: 100%;
-  min-height: 100%;
-  min-height: -webkit-fill-available;
+  height: 100%;
+  height: 100dvh;
   margin: 0 !important;
   padding: 0 !important;
   overflow-x: hidden;
-  overflow-y: auto;
-  background: #E6EDF4 !important;
-  -webkit-overflow-scrolling: touch;
+  overflow-y: hidden;
+  background: #050d1f !important;
+  overscroll-behavior: none;
 }
 
 html.zdos-login-center-active #root {
   width: 100% !important;
   min-width: 0 !important;
   max-width: none !important;
-  min-height: 100% !important;
-  min-height: -webkit-fill-available !important;
+  height: 100% !important;
+  height: 100dvh !important;
   margin: 0 !important;
   padding: 0 !important;
   display: block !important;
   justify-content: stretch !important;
   box-sizing: border-box;
-  background: #E6EDF4 !important;
+  background: #050d1f !important;
   pointer-events: auto !important;
   visibility: visible !important;
 }
@@ -48,71 +44,55 @@ html.zdos-login-center-active #glow-2 {
   padding: 0 !important;
   justify-content: stretch !important;
   margin: 0 !important;
-  background: #E6EDF4 !important;
+  background: #050d1f !important;
 }
 
-/* —— Shared Login Center shell —— */
+/* —— Gate shell —— */
 .zdos-login-gate {
-  --lg-bg: #E6EDF4;
-  --lg-bg-2: #D5E0EB;
-  --lg-surface: #FFFFFF;
-  --lg-surface-muted: #E8EEF4;
-  --lg-card: #FFFFFF;
-  --lg-border: #C9D6E4;
-  --lg-input: #F4F8FB;
-  --lg-input-border: #C9D6E4;
-  --lg-blue: #0B4F8C;
-  --lg-blue-hot: #1363AD;
-  --lg-text: #0B1F33;
-  --lg-muted: #5A6B7C;
-  --lg-dim: #8494A7;
-  --lg-shadow-card: 0 8px 28px rgba(11, 31, 51, 0.08), 0 1px 2px rgba(11, 31, 51, 0.04);
+  --lg-navy: #050d1f;
+  --lg-navy-2: #0a1a38;
+  --lg-glass: rgba(6, 16, 40, 0.97);
+  --lg-glass-border: rgba(120, 180, 255, 0.38);
+  --lg-input: rgba(4, 14, 36, 0.78);
+  --lg-input-border: rgba(110, 170, 240, 0.42);
+  --lg-blue: #1a6fd4;
+  --lg-blue-hot: #2f8cff;
+  --lg-gold: #e4c46a;
+  --lg-gold-deep: #c9a227;
+  --lg-text: #f4f8ff;
+  --lg-muted: rgba(210, 224, 245, 0.72);
+  --lg-dim: rgba(170, 190, 220, 0.55);
   position: relative;
-  inset: auto;
   z-index: 20;
   width: 100%;
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
+  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  /* UI-021B｜Hero 整體下移 ~10px + Dynamic Island 安全距（Logo 上方 ≥24~28px） */
   padding:
-    max(1.1rem, env(safe-area-inset-top, 0px))
-    1.1rem
-    max(1.1rem, env(safe-area-inset-bottom, 0px));
+    max(10px, calc(env(safe-area-inset-top, 0px) + 4px))
+    0
+    max(4px, env(safe-area-inset-bottom, 0px));
   box-sizing: border-box;
   color: var(--lg-text);
   font-family: "SF Pro Text", "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
-  background:
-    radial-gradient(110% 70% at 50% -8%, rgba(176, 198, 220, 0.4) 0%, transparent 58%),
-    linear-gradient(180deg, var(--lg-bg-2) 0%, var(--lg-bg) 42%, #F1F5F9 100%);
-  overflow: visible;
+  background: radial-gradient(120% 70% at 50% -10%, #12305f 0%, var(--lg-navy) 55%, #02060f 100%);
+  overflow-x: hidden;
+  overflow-y: hidden;
+  overscroll-behavior: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Soft atmosphere only — no neon grid */
-.zdos-login-gate::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.55;
-  background:
-    radial-gradient(ellipse 55% 40% at 18% 88%, rgba(11, 79, 140, 0.06), transparent 70%),
-    radial-gradient(ellipse 50% 36% at 86% 18%, rgba(19, 99, 173, 0.07), transparent 68%);
-}
-
-/* —— View transitions（約 280ms；低階／減動偏好降級） —— */
 .zdos-login-gate[data-lc-enter="forward"] {
   animation: zdosLcSlideInRight 280ms ease both;
 }
-
 .zdos-login-gate[data-lc-enter="back"] {
   animation: zdosLcSlideInLeft 280ms ease both;
 }
-
 .zdos-login-gate[data-lc-enter="fade"] {
   animation: zdosLcFadeIn 260ms ease both;
 }
@@ -121,12 +101,10 @@ html.zdos-login-center-active #glow-2 {
   from { opacity: 0; transform: translate3d(20px, 0, 0); }
   to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
-
 @keyframes zdosLcSlideInLeft {
   from { opacity: 0; transform: translate3d(-20px, 0, 0); }
   to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
-
 @keyframes zdosLcFadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -140,145 +118,299 @@ html.zdos-login-center-active #glow-2 {
   }
 }
 
-.zdos-login-gate__shell {
+.zdos-login-gate__version {
+  display: none !important;
+}
+
+.zdos-login-gate__beta {
+  display: none !important;
+}
+
+/* —— S01 stage: Founder mockup as visual canvas —— */
+.zdos-login-gate__stage {
   position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 392px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
+  /* LOGIN-032: use height as the hard constraint. iOS Safari could reject the
+   * previous nested min()/max()/env() width expression and fall back to full
+   * width, which pushed the founder and SISI below the visible viewport. */
+  height: calc(100vh - 18px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  height: calc(100svh - 18px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  width: auto;
+  max-width: min(100%, 430px);
+  aspect-ratio: 853 / 1844;
+  overflow: hidden;
+  margin: 0 auto;
+  flex: 0 0 auto;
 }
 
-.zdos-login-gate__brand {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  margin-bottom: 0.85rem;
-  user-select: none;
-}
-
-.zdos-login-gate__logo {
+.zdos-login-gate__s01 {
   display: block;
-  width: min(72px, 22vw);
-  height: min(72px, 22vw);
-  object-fit: contain;
-  margin-bottom: 0.7rem;
-  filter: drop-shadow(0 4px 12px rgba(11, 31, 51, 0.12));
-}
-
-.zdos-login-gate__title {
-  margin: 0;
-  font-size: clamp(1.65rem, 5.8vw, 1.9rem);
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  color: #0B1F33;
-  line-height: 1.1;
-  font-family: "SF Pro Display", "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
-}
-
-.zdos-login-gate__subtitle {
-  margin: 0.35rem 0 0;
-  font-size: 0.6875rem;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  text-transform: none;
-  color: #8494A7;
-  font-family: "SF Pro Text", "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
-}
-
-/* LOGIN-003：登入卡 + 輔助角色包裝（維持品牌垂直層級為第一視覺焦點） */
-.zdos-login-gate__cardwrap {
-  position: relative;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-
-/* AI 絲絲 — 輔助迎賓角色（視覺權重低於品牌；不攔截點擊、不影響登入） */
-.zdos-login-gate__welcome {
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
   pointer-events: none;
-  user-select: none;
+  -webkit-user-drag: none;
 }
 
-.zdos-login-gate__welcome--aside {
+/* Soften fireworks / gold / city without killing launch energy */
+.zdos-login-gate__s01-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 28% at 50% 8%, rgba(5, 13, 31, 0.08) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(5, 13, 31, 0.04) 0%, transparent 16%, transparent 74%, rgba(5, 13, 31, 0.14) 100%);
+  opacity: 0.4;
+}
+
+/*
+ * BUG-021C｜Hero 文案只保留 S01 一組（勿再 HTML overlay）
+ * S01.png 已含：ZDOS／營運系統／正式版主標／更穩定・更強大・更智慧
+ * ::before／::after 不得輸出相同 Hero 文字
+ */
+
+/* LOGIN-033: keep the interactive card above the character zone.
+ * S01's founder begins around 68% of the artwork height; the panel must end
+ * before that point so neither character is painted behind the solid card. */
+.zdos-login-gate__form-layer {
+  position: absolute;
+  left: 7.8%;
+  top: 22.4%;
+  width: 84.4%;
+  height: 44.2%;
+  z-index: 2;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.3rem;
-  align-self: flex-end;
-  margin: 0.5rem 0.1rem 0;
-  opacity: 0.92;
+  flex-direction: column;
+  min-height: 0;
 }
 
-.zdos-login-gate__welcome-figure {
-  display: block;
-  width: 46px;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  object-fit: contain;
-  object-position: center bottom;
+/* Solid occluder so S01 baked form / bio never double-renders
+ * Bottom must NOT extend into S01 大人版小天（約 y≥1235） */
+.zdos-login-gate__form-layer::before {
+  content: "";
+  position: absolute;
+  inset: -1.2% -1% 0;
+  border-radius: 22px;
   background: transparent;
-}
-
-.zdos-login-gate__welcome-caption {
-  margin: 0;
-  font-size: 0.5625rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  color: var(--lg-dim);
+  z-index: 0;
+  pointer-events: none;
 }
 
 .zdos-login-gate__panel {
+  position: relative;
+  z-index: 1;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  padding: 1.15rem 1.1rem 1.2rem;
+  justify-content: space-between;
+  gap: 0.16rem;
+  padding: 0.5rem 0.72rem 0.52rem;
   border-radius: 18px;
-  background: var(--lg-card);
-  border: 1px solid var(--lg-border);
-  box-shadow: var(--lg-shadow-card);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* LOGIN-036 | S01 is the only visible login card.
+ * Keep the real HTML controls as aligned interaction layers; never paint a
+ * second heading/card/input/button over the artwork. Percentages are based on
+ * the official 853 x 1844 S01 master. */
+.zdos-login-gate__form-layer {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.zdos-login-gate__panel {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.zdos-login-gate__panel-kicker,
+.zdos-login-gate__panel-title,
+.zdos-login-gate__panel-sub,
+.zdos-login-gate__label,
+.zdos-login-gate__field-icon {
+  display: none !important;
+}
+
+.zdos-login-gate__field-block {
+  position: absolute;
+  left: 15.6%;
+  width: 68.8%;
+  height: 6.65%;
+  display: block;
+  pointer-events: auto;
+}
+
+.zdos-login-gate__field-block:nth-of-type(1) { top: 41.05%; }
+.zdos-login-gate__field-block:nth-of-type(2) { top: 48.82%; }
+
+.zdos-login-gate__field {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0 10.5% 0 11.5%;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.zdos-login-gate__field:focus-within {
+  border: 1px solid rgba(80, 170, 255, 0.8);
+  background: rgba(4, 14, 36, 0.12);
+  box-shadow: 0 0 0 2px rgba(47, 140, 255, 0.15);
+}
+
+.zdos-login-gate__input {
+  height: 100%;
+  color: #f5f8ff;
+  font-size: clamp(12px, 3.5vw, 16px);
+  font-weight: 600;
+}
+
+.zdos-login-gate__input::placeholder { color: transparent; }
+
+.zdos-login-gate__pass-toggle {
+  position: absolute;
+  right: 3%;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+}
+
+.zdos-login-gate__row {
+  position: absolute;
+  left: 15.6%;
+  top: 56.05%;
+  width: 68.8%;
+  height: 2.9%;
+  margin: 0;
+  pointer-events: auto;
+}
+
+.zdos-login-gate__remember,
+.zdos-login-gate__help-links {
+  width: 48%;
+  height: 100%;
+  opacity: 0;
+}
+
+.zdos-login-gate__submit {
+  position: absolute;
+  left: 15.6%;
+  top: 60.55%;
+  width: 68.8%;
+  height: 5.55%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  box-shadow: none;
+  opacity: 0.01;
+  pointer-events: auto;
+}
+
+.zdos-login-gate__submit:hover:not(:disabled),
+.zdos-login-gate__submit:active:not(:disabled) {
+  background: transparent;
+  box-shadow: none;
+  filter: none;
+}
+
+.zdos-login-gate__panel-kicker {
+  margin: 0;
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--lg-gold);
+  line-height: 1.3;
+}
+
+.zdos-login-gate__panel-title {
+  margin: 0;
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.zdos-login-gate__panel-sub {
+  margin: 0 0 0.15rem;
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--lg-muted);
+  line-height: 1.35;
+}
+
+.zdos-login-gate__field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.zdos-login-gate__label {
+  margin: 0;
+  padding-left: 0.15rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(220, 232, 255, 0.88);
 }
 
 .zdos-login-gate__field {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.55rem;
   width: 100%;
-  min-height: 52px;
-  padding: 0.85rem 1rem;
+  min-height: 44px;
+  padding: 0.55rem 0.75rem;
   border-radius: 12px;
   background: var(--lg-input);
   border: 1px solid var(--lg-input-border);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
   box-sizing: border-box;
 }
 
 .zdos-login-gate__field:focus-within {
-  border-color: rgba(11, 79, 140, 0.55);
-  background: #FFFFFF;
-  box-shadow: 0 0 0 3px rgba(11, 79, 140, 0.12);
+  border-color: rgba(80, 170, 255, 0.85);
+  background: rgba(6, 18, 42, 0.92);
+  box-shadow: 0 0 0 3px rgba(47, 140, 255, 0.22);
 }
 
 .zdos-login-gate__field-icon {
   flex-shrink: 0;
-  width: 1.15rem;
-  height: 1.15rem;
-  color: #8494A7;
+  width: 1.1rem;
+  height: 1.1rem;
+  color: rgba(150, 190, 240, 0.85);
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .zdos-login-gate__field-icon svg {
-  width: 1.15rem;
-  height: 1.15rem;
+  width: 1.1rem;
+  height: 1.1rem;
   margin: 0 !important;
 }
 
@@ -289,11 +421,10 @@ html.zdos-login-center-active #glow-2 {
   background: transparent;
   border: 0;
   outline: none;
-  color: #0B1F33;
-  /* ≥16px：避免 iOS Safari 自動縮放造成「畫面跳動」 */
+  color: #f5f8ff;
   font-size: 16px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   font-family: inherit;
   touch-action: manipulation;
   -webkit-user-select: text;
@@ -301,9 +432,9 @@ html.zdos-login-center-active #glow-2 {
 }
 
 .zdos-login-gate__input::placeholder {
-  color: rgba(90, 107, 124, 0.72);
+  color: rgba(160, 185, 220, 0.55);
   font-weight: 500;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 }
 
 .zdos-login-gate__pass-toggle {
@@ -318,59 +449,58 @@ html.zdos-login-center-active #glow-2 {
   border: 0;
   border-radius: 8px;
   background: transparent;
-  color: #8494A7;
+  color: rgba(160, 190, 230, 0.8);
   cursor: pointer;
 }
 
 .zdos-login-gate__pass-toggle:hover,
 .zdos-login-gate__pass-toggle:focus-visible {
-  color: #0B4F8C;
+  color: #7ec2ff;
   outline: none;
 }
 
 .zdos-login-gate__pass-toggle svg {
-  width: 1.15rem;
-  height: 1.15rem;
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
 .zdos-login-gate__row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  margin-top: 0.05rem;
-  margin-bottom: 0.05rem;
+  gap: 0.5rem;
+  margin: 0.05rem 0;
   flex-wrap: wrap;
 }
 
 .zdos-login-gate__remember {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  color: #5A6B7C;
-  font-size: 0.8125rem;
+  gap: 0.4rem;
+  color: var(--lg-muted);
+  font-size: 0.72rem;
   font-weight: 500;
   cursor: pointer;
   user-select: none;
 }
 
 .zdos-login-gate__remember input {
-  width: 1rem;
-  height: 1rem;
-  accent-color: var(--lg-blue);
+  width: 0.95rem;
+  height: 0.95rem;
+  accent-color: var(--lg-blue-hot);
   cursor: pointer;
 }
 
 .zdos-login-gate__help-links {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   flex-shrink: 0;
 }
 
 .zdos-login-gate__help-sep {
-  color: #C9D6E4;
-  font-size: 0.75rem;
+  color: rgba(140, 170, 210, 0.45);
+  font-size: 0.7rem;
   user-select: none;
 }
 
@@ -379,43 +509,43 @@ html.zdos-login-center-active #glow-2 {
   z-index: 2;
   border: 0;
   background: transparent;
-  color: #0B4F8C;
-  font-size: 0.8125rem;
+  color: #8ec4ff;
+  font-size: 0.72rem;
   font-weight: 600;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  padding: 0.2rem 0;
+  padding: 0.15rem 0;
   text-decoration: none;
   white-space: nowrap;
 }
 
 .zdos-login-gate__forgot:hover,
 .zdos-login-gate__forgot:focus-visible {
-  color: #1363AD;
+  color: #b7dbff;
   text-decoration: underline;
 }
 
 .zdos-login-gate__submit {
   width: 100%;
-  min-height: 52px;
-  margin-top: 0.25rem;
+  min-height: 46px;
+  margin-top: 0.1rem;
   border: 0;
   border-radius: 12px;
   background: linear-gradient(180deg, var(--lg-blue-hot) 0%, var(--lg-blue) 100%);
   color: #fff;
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-indent: 0.22em;
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-indent: 0.08em;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(11, 79, 140, 0.28);
+  box-shadow: 0 10px 24px rgba(20, 100, 220, 0.42);
   transition: transform 120ms ease, filter 120ms ease, opacity 120ms ease, box-shadow 120ms ease;
 }
 
 .zdos-login-gate__submit:hover:not(:disabled) {
-  filter: brightness(1.04);
-  box-shadow: 0 10px 24px rgba(11, 79, 140, 0.32);
+  filter: brightness(1.06);
+  box-shadow: 0 12px 28px rgba(20, 100, 220, 0.5);
 }
 
 .zdos-login-gate__submit:active:not(:disabled) {
@@ -431,13 +561,15 @@ html.zdos-login-center-active #glow-2 {
 .zdos-login-gate__divider {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.55rem;
   width: 100%;
-  margin: 0.35rem 0 0.05rem;
+  margin: 0.1rem 0 0;
   color: var(--lg-dim);
-  font-size: 0.75rem;
+  font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
+  justify-content: center;
+  text-align: center;
 }
 
 .zdos-login-gate__divider::before,
@@ -445,59 +577,60 @@ html.zdos-login-center-active #glow-2 {
   content: "";
   flex: 1;
   height: 1px;
-  background: #C9D6E4;
+  background: linear-gradient(90deg, transparent, rgba(140, 180, 230, 0.35), transparent);
 }
 
 .zdos-login-gate__bio {
   position: relative;
   width: 100%;
-  min-height: 50px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.55rem;
+  gap: 0.5rem;
   border-radius: 12px;
-  border: 1.5px solid rgba(11, 79, 140, 0.28);
-  background: rgba(232, 238, 244, 0.65);
-  color: #0B4F8C;
-  font-size: 0.9375rem;
+  border: 1.5px solid rgba(80, 160, 255, 0.45);
+  background: rgba(10, 28, 62, 0.55);
+  color: #9fd0ff;
+  font-size: 0.86rem;
   font-weight: 650;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   cursor: not-allowed;
-  opacity: 0.78;
+  opacity: 0.9;
 }
 
 .zdos-login-gate__bio-icon {
-  width: 1.15rem;
-  height: 1.15rem;
+  width: 1.2rem;
+  height: 1.2rem;
   flex-shrink: 0;
+  color: #4ea4ff;
 }
 
 .zdos-login-gate__soon {
   position: absolute;
-  top: -0.45rem;
-  right: 0.65rem;
-  padding: 0.12rem 0.45rem;
+  top: -0.4rem;
+  right: 0.55rem;
+  padding: 0.1rem 0.4rem;
   border-radius: 9999px;
-  background: #FFFFFF;
-  border: 1px solid #C9D6E4;
-  color: #8494A7;
-  font-size: 0.625rem;
+  background: rgba(12, 28, 58, 0.95);
+  border: 1px solid rgba(140, 180, 230, 0.35);
+  color: var(--lg-dim);
+  font-size: 0.58rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
 }
 
 .zdos-login-gate__picker-title {
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.3rem;
   text-align: center;
-  font-size: 0.8125rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
-  color: #0B1F33;
+  letter-spacing: 0.12em;
+  color: #fff;
 }
 
 .zdos-login-gate__picker-sub {
-  margin: 0 0 0.85rem;
+  margin: 0 0 0.7rem;
   text-align: center;
   font-size: 0.75rem;
   color: var(--lg-muted);
@@ -506,9 +639,11 @@ html.zdos-login-center-active #glow-2 {
 .zdos-login-gate__picker-list {
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
+  gap: 0.5rem;
   width: 100%;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
+  overflow: auto;
+  flex: 1;
 }
 
 .zdos-login-gate__back {
@@ -517,61 +652,108 @@ html.zdos-login-center-active #glow-2 {
   background: transparent;
   color: var(--lg-muted);
   font-size: 0.75rem;
-  padding: 0.55rem;
+  padding: 0.5rem;
   cursor: pointer;
 }
 
 .zdos-login-gate__back:hover {
-  color: #0B1F33;
+  color: #fff;
 }
 
-.zdos-login-gate__footer {
-  margin-top: 1.35rem;
-  text-align: center;
-  font-size: 0.625rem;
-  letter-spacing: 0.06em;
-  color: #8494A7;
-  user-select: none;
-  line-height: 1.5;
-}
-
-.zdos-login-gate__beta {
-  margin-bottom: 0.85rem;
+/* Secondary shells (recover / forgot) — same dark launch language */
+.zdos-login-gate__shell {
+  position: relative;
+  z-index: 1;
   width: 100%;
+  max-width: 392px;
+  margin: 0 auto;
+  padding: 1.25rem 1.1rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
 }
 
-/* Beta banner on light Login Center（對齊 UI-001A 首頁） */
-.zdos-login-gate .zdos-beta-banner {
-  margin: 0;
-  padding: 0.65rem 0.85rem;
-  border-radius: 12px;
-  border: 1px solid rgba(166, 124, 0, 0.28);
-  background: linear-gradient(135deg, rgba(255, 247, 237, 0.98), rgba(254, 243, 199, 0.9));
-  box-shadow: none;
+.zdos-login-gate__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 0.95rem;
+  user-select: none;
 }
 
-.zdos-login-gate .zdos-beta-banner-title {
+.zdos-login-gate__logo {
+  display: block;
+  width: min(92px, 26vw);
+  height: min(92px, 26vw);
+  object-fit: contain;
+  margin-bottom: 0.55rem;
+  filter: drop-shadow(0 0 18px rgba(60, 160, 255, 0.55));
+}
+
+.zdos-login-gate__title {
   margin: 0;
-  color: #92400E;
-  font-size: 0.75rem;
+  font-size: clamp(1.7rem, 6vw, 2rem);
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
+  color: #ffffff;
+  line-height: 1.1;
 }
 
-.zdos-login-gate .zdos-beta-banner-desc {
-  margin: 0.2rem 0 0;
-  color: #A67C00;
-  font-size: 0.6875rem;
-  line-height: 1.45;
+.zdos-login-gate__subtitle {
+  margin: 0.3rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: rgba(210, 225, 250, 0.78);
+}
+
+.zdos-login-gate__launch {
+  margin: 0.7rem 0 0;
+  font-size: clamp(1.05rem, 4.2vw, 1.25rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #fff;
+  line-height: 1.25;
+}
+
+.zdos-login-gate__launch-ver {
+  background: linear-gradient(180deg, #f3e0a0 0%, #d4af37 55%, #b8912a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  padding: 0 0.1em;
+}
+
+.zdos-login-gate__slogan {
+  margin: 0.4rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: rgba(230, 238, 255, 0.9);
+}
+
+.zdos-login-gate__slogan-sep {
+  color: var(--lg-gold);
+  padding: 0 0.25em;
+}
+
+.zdos-login-gate--secondary .zdos-login-gate__panel {
+  height: auto;
+  min-height: 0;
+  width: 100%;
 }
 
 .zdos-login-gate__section-title {
   margin: 0 0 0.45rem;
   text-align: center;
-  font-size: 0.9375rem;
+  font-size: 0.95rem;
   font-weight: 800;
   letter-spacing: 0.14em;
-  color: #0B1F33;
+  color: #fff;
 }
 
 .zdos-login-gate__hint {
@@ -588,7 +770,7 @@ html.zdos-login-center-active #glow-2 {
   text-align: center;
   font-size: 0.875rem;
   line-height: 1.7;
-  color: #5A6B7C;
+  color: var(--lg-muted);
   font-weight: 500;
 }
 
@@ -599,7 +781,7 @@ html.zdos-login-center-active #glow-2 {
   font-weight: 800;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   letter-spacing: 0.18em;
-  color: #0B4F8C;
+  color: var(--lg-gold);
 }
 
 .zdos-login-gate__alert {
@@ -607,9 +789,9 @@ html.zdos-login-center-active #glow-2 {
   margin: 0.15rem 0 0.35rem;
   padding: 0.75rem 0.85rem;
   border-radius: 12px;
-  border: 1px solid rgba(198, 40, 40, 0.35);
-  background: rgba(198, 40, 40, 0.06);
-  color: #C62828;
+  border: 1px solid rgba(255, 120, 120, 0.4);
+  background: rgba(180, 40, 40, 0.18);
+  color: #ffb4b4;
   font-size: 0.75rem;
   line-height: 1.55;
   text-align: center;
@@ -632,7 +814,7 @@ html.zdos-login-center-active #glow-2 {
 }
 
 .zdos-login-gate__back-link:hover:not(:disabled) {
-  color: #0B1F33;
+  color: #fff;
 }
 
 .zdos-login-gate__back-link:disabled {
@@ -644,81 +826,547 @@ html.zdos-login-center-active #glow-2 {
   opacity: 0.65;
 }
 
-.zdos-login-gate__version {
-  position: absolute;
-  top: max(0.75rem, env(safe-area-inset-top, 0px));
-  right: max(1rem, env(safe-area-inset-right, 0px));
-  z-index: 50;
+.zdos-login-gate__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  width: 100%;
+}
+
+.zdos-login-gate__footer {
+  margin-top: 1.1rem;
+  text-align: center;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--lg-dim);
   user-select: none;
+  line-height: 1.55;
 }
 
-.zdos-login-gate__version span {
-  display: inline-block;
-  padding: 0.15rem 0.55rem;
-  font-size: 9px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid #C9D6E4;
-  color: #8494A7;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-/* Compact phones */
+/* Compact phones — tighten form layer to keep S01 proportions */
 @media (max-width: 360px) {
-  .zdos-login-gate {
-    padding-left: 0.85rem;
-    padding-right: 0.85rem;
-  }
-
   .zdos-login-gate__panel {
-    padding: 1rem 0.9rem 1.05rem;
-    gap: 0.7rem;
+    padding: 0.62rem 0.7rem 0.68rem;
+    gap: 0.34rem;
   }
 
-  .zdos-login-gate__welcome-figure {
-    width: 40px;
+  .zdos-login-gate__panel-title {
+    font-size: 1.05rem;
   }
 
-  .zdos-login-gate__logo {
-    width: min(64px, 24vw);
-    height: min(64px, 24vw);
+  .zdos-login-gate__field {
+    min-height: 42px;
   }
 
-  .zdos-login-gate__row {
-    gap: 0.45rem;
+  .zdos-login-gate__submit {
+    min-height: 44px;
+    font-size: 0.92rem;
   }
 }
 
 @media (min-width: 768px) {
+  .zdos-login-gate__stage {
+    max-width: 430px;
+  }
+
   .zdos-login-gate__shell {
     max-width: 420px;
   }
+}
 
-  .zdos-login-gate__logo {
-    width: 80px;
-    height: 80px;
+/* Tall phones: keep the complete S01 centered in the fixed viewport. */
+@media (min-height: 780px) {
+  .zdos-login-gate {
+    justify-content: center;
   }
+}
 
-  /* 桌機：AI 絲絲小尺寸置於登入卡右側（輔助角色，不佔品牌軸線） */
-  .zdos-login-gate__welcome--aside {
-    position: absolute;
-    left: 100%;
-    bottom: 0;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    margin: 0 0 0.3rem 0.85rem;
-  }
+/* LOGIN-036 final cascade lock — the artwork is the sole visible card. */
+[data-login-ui="S01"] .zdos-login-gate__form-layer {
+  inset: 0; width: 100%; height: 100%; pointer-events: none;
+}
+[data-login-ui="S01"] .zdos-login-gate__panel {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  padding: 0 !important; overflow: visible; pointer-events: none;
+}
+[data-login-ui="S01"] .zdos-login-gate__panel-kicker,
+[data-login-ui="S01"] .zdos-login-gate__panel-title,
+[data-login-ui="S01"] .zdos-login-gate__panel-sub,
+[data-login-ui="S01"] .zdos-login-gate__label,
+[data-login-ui="S01"] .zdos-login-gate__field-icon { display: none !important; }
+[data-login-ui="S01"] .zdos-login-gate__field-block {
+  position: absolute; left: 15.6%; width: 68.8%; height: 6.65%;
+  display: block; gap: 0; pointer-events: auto;
+}
+[data-login-ui="S01"] .zdos-login-gate__field-block:nth-of-type(1) { top: 41.05%; }
+[data-login-ui="S01"] .zdos-login-gate__field-block:nth-of-type(2) { top: 48.82%; }
+[data-login-ui="S01"] .zdos-login-gate__field {
+  width: 100%; height: 100%; min-height: 0 !important;
+  padding: 0 10.5% 0 11.5%; border: 0; border-radius: 12px;
+  background: transparent; box-shadow: none;
+}
+[data-login-ui="S01"] .zdos-login-gate__field:focus-within {
+  border: 1px solid rgba(80,170,255,.8); background: rgba(4,14,36,.12);
+  box-shadow: 0 0 0 2px rgba(47,140,255,.15);
+}
+[data-login-ui="S01"] .zdos-login-gate__input { height: 100%; }
+[data-login-ui="S01"] .zdos-login-gate__input::placeholder { color: transparent; }
+[data-login-ui="S01"] .zdos-login-gate__pass-toggle {
+  position: absolute; right: 3%; top: 50%; transform: translateY(-50%); opacity: 0;
+}
+[data-login-ui="S01"] .zdos-login-gate__row {
+  position: absolute; left: 15.6%; top: 56.05%; width: 68.8%; height: 2.9%;
+  margin: 0; pointer-events: auto;
+}
+[data-login-ui="S01"] .zdos-login-gate__remember,
+[data-login-ui="S01"] .zdos-login-gate__help-links { width: 48%; height: 100%; opacity: 0; }
+[data-login-ui="S01"] .zdos-login-gate__submit {
+  position: absolute; left: 15.6%; top: 60.55%; width: 68.8%; height: 5.55%;
+  min-height: 0 !important; margin: 0; padding: 0; border: 0;
+  background: transparent !important; color: transparent; box-shadow: none !important;
+  opacity: .01; pointer-events: auto;
+}
 
-  .zdos-login-gate__welcome-figure {
-    width: 84px;
-  }
+/* LOGIN-037｜帳號協助與尚未開放狀態。
+ * S01 已內建「忘記密碼」與生物辨識按鈕外觀；HTML 只補上母圖缺少的
+ * 忘記工號文字及明確的停用標籤。 */
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__help-links {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 58%;
+  height: 100%;
+  opacity: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 3px;
+  pointer-events: auto;
+}
 
-  .zdos-login-gate__panel {
-    padding: 1.35rem 1.3rem 1.4rem;
-  }
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__help-links .zdos-login-gate__forgot:first-child {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 2px;
+  color: #52b6ff;
+  font-size: clamp(9px, 2.45vw, 12px);
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 0 8px rgba(35, 145, 255, .45);
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__help-sep,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__help-links .zdos-login-gate__forgot:last-child {
+  opacity: 1;
+  width: auto;
+  padding: 0 2px;
+  overflow: visible;
+  pointer-events: auto;
+  color: #52b6ff;
+  font-size: clamp(9px, 2.45vw, 12px);
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 0 8px rgba(35, 145, 255, .45);
+}
+
+.zdos-login-gate__bio-status {
+  position: absolute;
+  left: 66.5%;
+  top: 73.05%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  pointer-events: none;
+}
+
+.zdos-login-gate__bio-status span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 2px 7px;
+  border: 1px solid rgba(116, 177, 255, .45);
+  border-radius: 999px;
+  background: rgba(5, 17, 43, .9);
+  color: rgba(210, 229, 255, .92);
+  font-size: clamp(8px, 2.1vw, 10px);
+  font-weight: 700;
+  letter-spacing: .06em;
+  white-space: nowrap;
+  box-shadow: 0 0 10px rgba(32, 126, 255, .2);
+}
+
+/* LOGIN-037｜找回頁不得繼承 S01 隱形熱區的 absolute panel。 */
+.zdos-login-gate--secondary {
+  min-height: 100svh;
+  height: auto;
+  overflow-y: auto;
+  justify-content: flex-start;
+  padding: max(24px, env(safe-area-inset-top, 0px)) 16px max(24px, env(safe-area-inset-bottom, 0px));
+}
+
+.zdos-login-gate--secondary .zdos-login-gate__shell {
+  min-height: calc(100svh - 48px);
+  justify-content: center;
+  padding: 0;
+}
+
+.zdos-login-gate--secondary .zdos-login-gate__brand {
+  margin-bottom: 1.25rem;
+}
+
+.zdos-login-gate--secondary .zdos-login-gate__logo {
+  width: 76px;
+  height: 76px;
+  margin-bottom: .45rem;
+}
+
+.zdos-login-gate--secondary .zdos-login-gate__panel {
+  position: relative !important;
+  inset: auto !important;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto !important;
+  min-height: 0;
+  padding: 1.25rem 1.1rem !important;
+  gap: .35rem;
+  overflow: visible;
+  pointer-events: auto;
+  border: 1px solid rgba(80, 145, 230, .3);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(13, 35, 73, .94), rgba(5, 17, 42, .96));
+  box-shadow: 0 16px 38px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .05);
+}
+
+.zdos-login-gate--secondary .zdos-login-gate__section-title,
+.zdos-login-gate--secondary .zdos-login-gate__help-copy,
+.zdos-login-gate--secondary .zdos-login-gate__back-link {
+  position: static;
+}
+
+.zdos-login-gate--secondary .zdos-login-gate__footer {
+  margin-top: 1.3rem;
+}
+
+@media (max-height: 700px) {
+  .zdos-login-gate--secondary .zdos-login-gate__shell { justify-content: flex-start; }
+  .zdos-login-gate--secondary .zdos-login-gate__brand { margin-bottom: .75rem; }
+  .zdos-login-gate--secondary .zdos-login-gate__logo { width: 58px; height: 58px; }
+}
+
+/* LOGIN-039｜輸入內容與 S01 原生欄位融為同一層。
+ * iOS Safari／Password AutoFill 會替已填入的 input 強制加亮色底，
+ * 以 inset fill 鎖回與封面欄位一致的深藍，避免「白色貼紙」感。 */
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__input,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__input:focus,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__input:not(:placeholder-shown),
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__input:-webkit-autofill,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__input:-webkit-autofill:hover,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__input:-webkit-autofill:focus,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__input:-webkit-autofill:active {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #eef6ff !important;
+  caret-color: #69bfff;
+  -webkit-text-fill-color: #eef6ff !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(5, 19, 45, .82) inset !important;
+  box-shadow: 0 0 0 1000px rgba(5, 19, 45, .82) inset !important;
+  transition: background-color 9999s ease-out 0s;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__field,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__field:focus-within {
+  overflow: hidden;
+  background: rgba(5, 19, 45, .82) !important;
+}
+
+/* LOGIN-040｜消除入口畫布周圍的亮縫，並修復找回工號欄位框線。
+ * 找回頁雖沿用 data-login-ui="S01"，不得套用首頁隱形熱區的 border:0。 */
+html.zdos-login-center-active,
+html.zdos-login-center-active body,
+html.zdos-login-center-active #root,
+.zdos-login-gate {
+  background-color: #050d1f !important;
+}
+
+.zdos-login-gate--secondary .zdos-login-gate__field {
+  position: relative !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 50px !important;
+  padding: 0 .9rem !important;
+  border: 1px solid rgba(103, 171, 255, .52) !important;
+  border-radius: 13px !important;
+  background: rgba(4, 17, 43, .86) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035), 0 0 0 1px rgba(25, 99, 190, .08) !important;
+  overflow: hidden;
+}
+
+.zdos-login-gate--secondary .zdos-login-gate__field:focus-within {
+  border-color: rgba(83, 179, 255, .95) !important;
+  background: rgba(5, 22, 53, .96) !important;
+  box-shadow: 0 0 0 3px rgba(47, 140, 255, .16), 0 0 18px rgba(28, 125, 255, .16) !important;
+}
+
+.zdos-login-gate--secondary .zdos-login-gate__field-icon {
+  display: inline-flex !important;
+  flex: 0 0 auto;
+  color: rgba(105, 190, 255, .9);
+}
+
+.zdos-login-gate--secondary .zdos-login-gate__input,
+.zdos-login-gate--secondary .zdos-login-gate__input:focus,
+.zdos-login-gate--secondary .zdos-login-gate__input:not(:placeholder-shown),
+.zdos-login-gate--secondary .zdos-login-gate__input:-webkit-autofill {
+  height: 48px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(4, 17, 43, .96) inset !important;
+  box-shadow: 0 0 0 1000px rgba(4, 17, 43, .96) inset !important;
+}
+
+.zdos-login-gate--secondary .zdos-login-gate__input::placeholder {
+  color: rgba(185, 207, 238, .62) !important;
+}
+
+/* LOGIN-041｜官方深藍延伸、入口提示字與找回工號文字可視性。 */
+html.zdos-login-center-active,
+html.zdos-login-center-active body,
+html.zdos-login-center-active #root,
+.zdos-login-gate,
+.zdos-login-gate::before,
+.zdos-login-gate::after {
+  background-color: #03102a !important;
+}
+
+html.zdos-login-center-active body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-top: env(safe-area-inset-top, 0px) !important;
+  padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] #emp-id-input::placeholder {
+  color: rgba(143, 169, 204, .82) !important;
+  -webkit-text-fill-color: rgba(143, 169, 204, .82) !important;
+  opacity: 1 !important;
+  font-size: clamp(10px, 2.75vw, 12.5px) !important;
+  font-weight: 500 !important;
+  letter-spacing: .005em;
+}
+
+.zdos-login-gate--secondary #recover-name-input,
+.zdos-login-gate--secondary #recover-phone-input,
+.zdos-login-gate--secondary #recover-name-input:focus,
+.zdos-login-gate--secondary #recover-phone-input:focus,
+.zdos-login-gate--secondary #recover-name-input:-webkit-autofill,
+.zdos-login-gate--secondary #recover-phone-input:-webkit-autofill {
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: #eef6ff !important;
+  -webkit-text-fill-color: #eef6ff !important;
+  caret-color: #69bfff !important;
+  font-size: 15px !important;
+}
+
+.zdos-login-gate--secondary #recover-name-input::placeholder,
+.zdos-login-gate--secondary #recover-phone-input::placeholder {
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: rgba(171, 197, 231, .78) !important;
+  -webkit-text-fill-color: rgba(171, 197, 231, .78) !important;
+  font-size: 14px !important;
+}
+
+/* LOGIN-042｜iPhone 實機：固定滿版舞台、密碼文字與登入觸控修正。 */
+html.zdos-login-center-active,
+html.zdos-login-center-active body {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100svh !important;
+  min-height: 100svh !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: #03102a !important;
+}
+
+html.zdos-login-center-active #root,
+[data-zdos-login-gate].zdos-login-gate {
+  width: 100vw !important;
+  height: 100svh !important;
+  min-height: 100svh !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  background: #03102a !important;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__stage {
+  width: 100vw !important;
+  max-width: none !important;
+  height: 100svh !important;
+  margin: 0 !important;
+  aspect-ratio: auto !important;
+  flex: 0 0 100svh !important;
+  transform: none !important;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__s01 {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: fill !important;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] #pass-input,
+[data-zdos-login-gate][data-login-ui="S01"] #pass-input:focus,
+[data-zdos-login-gate][data-login-ui="S01"] #pass-input:not(:placeholder-shown),
+[data-zdos-login-gate][data-login-ui="S01"] #pass-input:-webkit-autofill {
+  color: #a9bdd8 !important;
+  -webkit-text-fill-color: #a9bdd8 !important;
+  font-size: clamp(12px, 3.15vw, 14px) !important;
+  font-weight: 500 !important;
+  letter-spacing: .08em !important;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] #pass-input::placeholder {
+  color: rgba(143, 169, 204, .72) !important;
+  -webkit-text-fill-color: rgba(143, 169, 204, .72) !important;
+  opacity: 1 !important;
+  font-size: clamp(10px, 2.75vw, 12.5px) !important;
+  letter-spacing: 0 !important;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__submit {
+  z-index: 30 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__s01-veil,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__field-block,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__row,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__bio-status {
+  z-index: 4;
+}
+
+/* LOGIN-043｜移除重影與暗玻璃。 */
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__s01-veil {
+  display: none !important;
+  opacity: 0 !important;
+  background: none !important;
+}
+
+/* S01 母圖已有帳號協助文字；HTML 只保留點擊熱區。 */
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__help-links {
+  opacity: 0 !important;
+  text-shadow: none !important;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__help-links .zdos-login-gate__forgot,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__help-sep {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: none !important;
+}
+
+/* 輸入層只顯示文字，不再以深色玻璃覆蓋母圖欄位。 */
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__field,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__field:focus-within {
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__input,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__input:focus,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__input:not(:placeholder-shown),
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__input:-webkit-autofill,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__input:-webkit-autofill:hover,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__input:-webkit-autofill:focus,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__input:-webkit-autofill:active {
+  background: transparent !important;
+  background-color: transparent !important;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__submit {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* LOGIN-044｜最小回歸修正：只恢復缺少的忘記工號，並避免母圖提示字重疊。
+ * S01 已包含帳號／密碼提示及忘記密碼；HTML 只補母圖沒有的忘記工號。 */
+[data-zdos-login-gate][data-login-ui="S01"] #emp-id-input::placeholder,
+[data-zdos-login-gate][data-login-ui="S01"] #pass-input::placeholder {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  opacity: 0 !important;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__help-links {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__help-links .zdos-login-gate__forgot:first-child {
+  position: absolute;
+  right: 51%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex !important;
+  width: auto !important;
+  min-height: 30px;
+  padding: 0 3px !important;
+  opacity: 1 !important;
+  color: #52b6ff !important;
+  -webkit-text-fill-color: #52b6ff !important;
+  font-size: clamp(9px, 2.45vw, 12px) !important;
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 0 8px rgba(35, 145, 255, .45) !important;
+  pointer-events: auto !important;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__help-sep,
+[data-zdos-login-gate][data-login-ui="S01"] .zdos-login-gate__help-links .zdos-login-gate__forgot:last-child {
+  opacity: 0 !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: none !important;
+}
+
+/* LOGIN-045｜只修帳密輸入狀態：空白時保留 S01 原提示；輸入後蓋掉母圖提示。 */
+[data-zdos-login-gate][data-login-ui="S01"] #emp-id-input,
+[data-zdos-login-gate][data-login-ui="S01"] #pass-input {
+  color: #9fb5d2 !important;
+  -webkit-text-fill-color: #9fb5d2 !important;
+  caret-color: #69bfff !important;
+  font-size: clamp(12px, 3.15vw, 14px) !important;
+  font-weight: 500 !important;
+  text-shadow: none !important;
+}
+
+[data-zdos-login-gate][data-login-ui="S01"] #emp-id-input:not(:placeholder-shown),
+[data-zdos-login-gate][data-login-ui="S01"] #pass-input:not(:placeholder-shown),
+[data-zdos-login-gate][data-login-ui="S01"] #emp-id-input:-webkit-autofill,
+[data-zdos-login-gate][data-login-ui="S01"] #pass-input:-webkit-autofill {
+  background: #071a3a !important;
+  background-color: #071a3a !important;
+  -webkit-box-shadow: 0 0 0 1000px #071a3a inset !important;
+  box-shadow: 0 0 0 1000px #071a3a inset !important;
+  border-radius: 12px !important;
 }

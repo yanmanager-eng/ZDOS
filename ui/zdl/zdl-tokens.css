@@ -1,0 +1,252 @@
+/**
+ * ZDL-001｜ZDOS Design Language Foundation — Official Tokens
+ *
+ * Namespace: --zdl-*
+ * Purpose: single shared design source for all centers (Home / OC / Founder / ZDP / Academy…).
+ *
+ * Rules:
+ * - Visual foundation only — no business logic.
+ * - Centers may adopt via var(--zdl-*).
+ * - Existing --zds-* / --zcx-* / --oc-* remain until staged migration.
+ *
+ * Load order: before center-specific CSS.
+ */
+
+:root {
+  /* ============================================================
+   * 1. Color Tokens
+   * ============================================================ */
+
+  /* Brand — 企業科技藍（對齊首頁 Hero / UI-020A） */
+  --zdl-color-brand-primary: #0b4f8c;
+  --zdl-color-brand-primary-strong: #093f70;
+  --zdl-color-brand-primary-soft: rgba(11, 79, 140, 0.08);
+  --zdl-color-brand-sky: #38bdf8;
+  --zdl-color-brand-sky-soft: #7dd3fc;
+  --zdl-color-brand-navy-900: #081127;
+  --zdl-color-brand-navy-800: #0d1f3d;
+  --zdl-color-brand-navy-700: #15386b;
+  --zdl-color-brand-gradient: radial-gradient(
+    130% 150% at 100% 0,
+    #15386b 0%,
+    #0d1f3d 46%,
+    #081127 100%
+  );
+  --zdl-color-brand-z: #38bdf8;
+
+  /* Status */
+  --zdl-color-ok: #147a45;
+  --zdl-color-ok-bg: rgba(20, 122, 69, 0.1);
+  --zdl-color-warn: #a67c00;
+  --zdl-color-warn-bg: rgba(166, 124, 0, 0.12);
+  --zdl-color-alert: #c62828;
+  --zdl-color-alert-bg: rgba(198, 40, 40, 0.1);
+  --zdl-color-info: #0369a1;
+  --zdl-color-info-bg: rgba(3, 105, 161, 0.1);
+
+  /* Light surface（企業淺底 — Mobile Home / Corporate） */
+  --zdl-color-bg: #e6edf4;
+  --zdl-color-bg-glow: #d5e0eb;
+  --zdl-color-bg-end: #f1f5f9;
+  --zdl-color-page-bg:
+    radial-gradient(110% 70% at 50% -8%, rgba(176, 198, 220, 0.35) 0%, transparent 58%),
+    linear-gradient(180deg, var(--zdl-color-bg-glow) 0%, var(--zdl-color-bg) 38%, var(--zdl-color-bg-end) 100%);
+  --zdl-color-surface: #ffffff;
+  --zdl-color-surface-muted: #e8eef4;
+  --zdl-color-surface-focus: #e2eaf2;
+  --zdl-color-border: #c9d6e4;
+  --zdl-color-border-soft: rgba(201, 214, 228, 0.9);
+  --zdl-color-border-strong: rgba(11, 31, 51, 0.16);
+  --zdl-color-text-primary: #0b1f33;
+  --zdl-color-text-secondary: #5a6b7c;
+  --zdl-color-text-muted: #8494a7;
+  --zdl-color-text-on-brand: #ffffff;
+  --zdl-color-text-on-accent: #082f49;
+
+  /* Workspace dark surface（功能中心深色卡片語彙） */
+  --zdl-color-ws-bg: #0b1220;
+  --zdl-color-ws-surface: rgba(15, 23, 42, 0.55);
+  --zdl-color-ws-surface-elevated: rgba(30, 41, 59, 0.72);
+  --zdl-color-ws-card-bg: linear-gradient(
+    160deg,
+    rgba(30, 41, 59, 0.72) 0%,
+    rgba(15, 23, 42, 0.55) 55%,
+    rgba(8, 47, 73, 0.28) 100%
+  );
+  --zdl-color-ws-border: rgba(125, 211, 252, 0.16);
+  --zdl-color-ws-border-strong: rgba(56, 189, 248, 0.28);
+  --zdl-color-ws-text: rgb(226, 232, 240);
+  --zdl-color-ws-title: rgb(248, 250, 252);
+  --zdl-color-ws-muted: rgb(148, 163, 184);
+  --zdl-color-ws-accent: rgb(125, 211, 252);
+  --zdl-color-ws-ok: rgb(110, 231, 183);
+  --zdl-color-ws-warn: rgb(251, 191, 36);
+
+  /* Focus */
+  --zdl-focus-ring: 0 0 0 3px rgba(11, 79, 140, 0.35);
+
+  /* ============================================================
+   * 2. Typography
+   * ============================================================ */
+  --zdl-font-sans: "SF Pro Text", "PingFang TC", "Noto Sans TC", "Segoe UI",
+    -apple-system, BlinkMacSystemFont, sans-serif;
+  --zdl-font-display: "SF Pro Display", "PingFang TC", "Noto Sans TC", "Segoe UI",
+    -apple-system, BlinkMacSystemFont, sans-serif;
+  --zdl-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --zdl-fs-caption: 0.6875rem;   /* 11 */
+  --zdl-fs-footnote: 0.75rem;    /* 12 */
+  --zdl-fs-body: 0.875rem;       /* 14 */
+  --zdl-fs-callout: 0.9375rem;   /* 15 */
+  --zdl-fs-title: 1.0625rem;     /* 17 */
+  --zdl-fs-title-lg: 1.25rem;    /* 20 */
+  --zdl-fs-hero: 1.5rem;         /* 24 */
+  --zdl-fs-display: 1.75rem;     /* 28 */
+
+  --zdl-fw-regular: 400;
+  --zdl-fw-medium: 500;
+  --zdl-fw-semibold: 600;
+  --zdl-fw-bold: 700;
+  --zdl-fw-heavy: 800;
+
+  --zdl-lh-tight: 1.2;
+  --zdl-lh-snug: 1.3;
+  --zdl-lh-normal: 1.45;
+  --zdl-lh-relaxed: 1.6;
+
+  --zdl-tracking-tight: -0.02em;
+  --zdl-tracking-normal: 0;
+  --zdl-tracking-brand: 0.06em;
+  --zdl-tracking-label: 0.12em;
+  --zdl-tracking-eyebrow: 0.18em;
+
+  /* ============================================================
+   * 3. Spacing（4px base）
+   * ============================================================ */
+  --zdl-space-0: 0;
+  --zdl-space-1: 0.25rem;   /* 4 */
+  --zdl-space-2: 0.5rem;    /* 8 */
+  --zdl-space-3: 0.75rem;   /* 12 */
+  --zdl-space-4: 1rem;      /* 16 */
+  --zdl-space-5: 1.25rem;   /* 20 */
+  --zdl-space-6: 1.5rem;    /* 24 */
+  --zdl-space-8: 2rem;      /* 32 */
+  --zdl-space-10: 2.5rem;   /* 40 */
+  --zdl-space-12: 3rem;     /* 48 */
+
+  --zdl-gap-xs: var(--zdl-space-2);
+  --zdl-gap-sm: var(--zdl-space-3);
+  --zdl-gap-md: 0.85rem;
+  --zdl-gap-lg: var(--zdl-space-5);
+
+  /* ============================================================
+   * 4. Elevation
+   * ============================================================ */
+  --zdl-elevation-0: none;
+  --zdl-elevation-1: 0 1px 2px rgba(11, 31, 51, 0.04);
+  --zdl-elevation-2: 0 2px 8px rgba(11, 31, 51, 0.06);
+  --zdl-elevation-3: 0 4px 14px rgba(2, 12, 27, 0.16);
+  --zdl-elevation-4: 0 6px 18px rgba(2, 12, 27, 0.22);
+  --zdl-elevation-header: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  --zdl-elevation-ws: 0 6px 18px rgba(2, 12, 27, 0.22);
+
+  /* ============================================================
+   * 5. Radius
+   * ============================================================ */
+  --zdl-radius-xs: 6px;
+  --zdl-radius-sm: 8px;
+  --zdl-radius-md: 12px;
+  --zdl-radius-lg: 16px;
+  --zdl-radius-xl: 18px;
+  --zdl-radius-2xl: 20px;
+  --zdl-radius-full: 9999px;
+
+  /* ============================================================
+   * Layout / Safe Area
+   * ============================================================ */
+  --zdl-header-height: 56px;
+  --zdl-bottom-nav-height: 56px;
+  --zdl-content-max: 430px;
+  --zdl-content-max-desktop: 960px;
+  --zdl-workspace-max: 64rem; /* ~max-w-5xl */
+
+  --zdl-safe-top: env(safe-area-inset-top, 0px);
+  --zdl-safe-right: env(safe-area-inset-right, 0px);
+  --zdl-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --zdl-safe-left: env(safe-area-inset-left, 0px);
+
+  /* ============================================================
+   * 13. Animation
+   * ============================================================ */
+  --zdl-motion-fast: 120ms;
+  --zdl-motion-base: 200ms;
+  --zdl-motion-slow: 200ms;
+  --zdl-ease-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --zdl-ease-emphasized: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --zdl-motion: var(--zdl-motion-base) var(--zdl-ease-standard);
+
+  /* Component recipe tokens */
+  --zdl-btn-radius: var(--zdl-radius-md);
+  --zdl-btn-primary-bg: linear-gradient(180deg, #1567b3 0%, var(--zdl-color-brand-primary) 100%);
+  --zdl-btn-primary-text: var(--zdl-color-text-on-brand);
+  --zdl-btn-accent-bg: linear-gradient(180deg, var(--zdl-color-brand-sky-soft), var(--zdl-color-brand-sky));
+  --zdl-btn-accent-text: var(--zdl-color-text-on-accent);
+  --zdl-badge-radius: var(--zdl-radius-full);
+  --zdl-progress-height: 6px;
+  --zdl-progress-track: rgba(15, 23, 42, 0.12);
+  --zdl-progress-fill: linear-gradient(
+    90deg,
+    rgba(56, 189, 248, 0.9),
+    rgba(20, 122, 69, 0.75)
+  );
+  --zdl-progress-fill-ws: linear-gradient(
+    90deg,
+    rgba(56, 189, 248, 0.85),
+    rgba(110, 231, 183, 0.85)
+  );
+
+  /* Compatibility aliases → existing UI-020A brand layer (additive; OC may still redefine) */
+  --zds-brand-primary: var(--zdl-color-brand-primary);
+  --zds-brand-primary-strong: var(--zdl-color-brand-primary-strong);
+  --zds-brand-primary-soft: var(--zdl-color-brand-primary-soft);
+  --zds-brand-sky: var(--zdl-color-brand-sky);
+  --zds-brand-sky-soft: var(--zdl-color-brand-sky-soft);
+  --zds-brand-navy-900: var(--zdl-color-brand-navy-900);
+  --zds-brand-navy-800: var(--zdl-color-brand-navy-800);
+  --zds-brand-navy-700: var(--zdl-color-brand-navy-700);
+  --zds-brand-gradient: var(--zdl-color-brand-gradient);
+  --zds-brand-z: var(--zdl-color-brand-z);
+  --zds-focus-ring: var(--zdl-focus-ring);
+  --zds-ok: var(--zdl-color-ok);
+  --zds-ok-bg: var(--zdl-color-ok-bg);
+  --zds-warn: var(--zdl-color-warn);
+  --zds-warn-bg: var(--zdl-color-warn-bg);
+  --zds-alert: var(--zdl-color-alert);
+  --zds-alert-bg: var(--zdl-color-alert-bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --zdl-motion-fast: 0ms;
+    --zdl-motion-base: 0ms;
+    --zdl-motion-slow: 0ms;
+    --zdl-motion: 0ms linear;
+  }
+}
+
+/* Theme scopes (opt-in) */
+.zdl-theme-light {
+  color: var(--zdl-color-text-primary);
+  background: var(--zdl-color-page-bg);
+  font-family: var(--zdl-font-sans);
+}
+
+.zdl-theme-workspace {
+  color: var(--zdl-color-ws-text);
+  font-family: var(--zdl-font-sans);
+  --zdl-local-surface: var(--zdl-color-ws-card-bg);
+  --zdl-local-border: var(--zdl-color-ws-border);
+  --zdl-local-title: var(--zdl-color-ws-title);
+  --zdl-local-muted: var(--zdl-color-ws-muted);
+  --zdl-local-accent: var(--zdl-color-ws-accent);
+}

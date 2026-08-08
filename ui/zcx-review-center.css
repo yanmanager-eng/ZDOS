@@ -1,0 +1,115 @@
+/**
+ * RC-001A｜Sales Reconciliation（業績核對中心）Corporate Experience
+ * Scoped root: .zdos-workspace:has(.zdos-review-shell) / .zdos-review-shell
+ * Visual-only. No Auth / Permission / API changes.
+ */
+
+.zdos-workspace:has(.zdos-review-shell) {
+  --zdos-rv-brand: #0b4f8c;
+  --zdos-rv-border: #d0e1f9;
+  --zdos-rv-text: #0b1f33;
+  --zdos-rv-muted: #5a6b7c;
+  --zdos-rv-page: #e6edf4;
+  color: var(--zdos-rv-text);
+  background: var(--zdos-rv-page) !important;
+  background-image: none !important;
+  min-height: 100dvh;
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+  font-family: "SF Pro Text", "PingFang TC", "Noto Sans TC", sans-serif;
+}
+
+.zdos-workspace:has(.zdos-review-shell) .zdos-workspace-header,
+.zdos-workspace:has(.zdos-review-shell) .zdos-workspace-header.zdos-app-header {
+  /* UI-HDR-001｜玻璃／尺寸交由 zcx-shell */
+  color: var(--zdos-rv-text);
+}
+
+.zdos-workspace:has(.zdos-review-shell) .zdos-workspace-btn {
+  min-height: 44px;
+  border: 1px solid var(--zdos-rv-border) !important;
+  background: #ffffff !important;
+  color: var(--zdos-rv-brand) !important;
+}
+
+.zdos-review-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-width: 0;
+  color: var(--zdos-rv-text);
+}
+
+.zdos-review-shell > p,
+.zdos-review-shell .text-slate-400,
+.zdos-review-shell .text-slate-500,
+.zdos-review-shell .text-slate-300,
+.zdos-review-shell .text-slate-100,
+.zdos-review-shell .text-slate-600 {
+  color: var(--zdos-rv-muted) !important;
+}
+
+.zdos-review-shell h2,
+.zdos-review-shell .font-bold.text-slate-100,
+.zdos-review-shell p.font-bold {
+  color: var(--zdos-rv-text) !important;
+}
+
+.zdos-review-shell .zdos-workspace-card {
+  background: #ffffff !important;
+  border: 1px solid var(--zdos-rv-border) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 8px rgba(10, 37, 64, 0.05) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: var(--zdos-rv-text);
+}
+
+.zdos-review-shell .zdos-review-empty {
+  padding: 2rem 1.25rem;
+  text-align: center;
+}
+
+.zdos-review-shell .zdos-review-empty__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--zdos-rv-text);
+}
+
+.zdos-review-shell .zdos-review-empty__desc {
+  margin: 0.5rem 0 0;
+  font-size: 0.75rem;
+  color: var(--zdos-rv-muted);
+}
+
+.zdos-review-shell button {
+  min-height: 44px;
+}
+
+.zdos-review-shell .bg-emerald-600\/20,
+.zdos-review-shell button.bg-emerald-600\/20 {
+  background: rgba(20, 122, 69, 0.1) !important;
+  border-color: rgba(20, 122, 69, 0.28) !important;
+  color: #147a45 !important;
+}
+
+.zdos-review-shell .bg-rose-600\/20,
+.zdos-review-shell button.bg-rose-600\/20 {
+  background: rgba(185, 28, 28, 0.08) !important;
+  border-color: rgba(185, 28, 28, 0.28) !important;
+  color: #b91c1c !important;
+}
+
+.zdos-review-shell .text-emerald-400,
+.zdos-review-shell .text-emerald-300 {
+  color: #147a45 !important;
+}
+
+.zdos-review-shell .text-rose-300 {
+  color: #b91c1c !important;
+}
+
+.zdos-review-shell footer {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+  color: var(--zdos-rv-muted) !important;
+}

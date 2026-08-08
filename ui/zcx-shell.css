@@ -1,0 +1,353 @@
+/**
+ * RC-001A / RC-002B｜Global corporate shell host
+ *
+ * UI-HDR-001｜全站 Function Header 單一規格
+ * SoT = 班表班務主頁（G3 Official）實測量取：
+ *   - safe-area spacer：env(safe-area-inset-top)
+ *   - glass pad：8px 16px（上下／左右）
+ *   - inner min-height：56px
+ *   - margin-bottom → 內容：24px
+ *   - 背景：rgba(8,28,56,.88) + blur(16) + border-bottom
+ *   - 圓角：0（滿寬玻璃條）
+ *   - 返回：min 44×44、radius 8px、11px/700
+ *   - Action：min-height 36px（與班表班務實測一致）
+ *   - 標題：1.05rem / 800
+ *   - z-index：40；position：relative（禁止 sticky 蓋住第一列）
+ * 系統主頁（.zdos-mh）不套用。
+ */
+
+html.zdos-zcx-shell-active,
+html.zdos-zcx-shell-active body {
+  background: #020b1c !important;
+  background-color: #020b1c !important;
+  background-image: none !important;
+  color: #ffffff;
+}
+
+html.zdos-zcx-shell-active #root {
+  background: #020b1c !important;
+  background-color: #020b1c !important;
+  min-height: 100%;
+  min-height: 100dvh;
+}
+
+html:not(.zdos-boot-splash-active) #root {
+  pointer-events: auto !important;
+  visibility: visible !important;
+}
+
+html.zdos-zcx-shell-active #glow-1,
+html.zdos-zcx-shell-active #glow-2 {
+  display: none !important;
+}
+
+html.zdos-zcx-shell-active body.bg-slate-950,
+html.zdos-zcx-shell-active body.premium-grid {
+  background-color: #020b1c !important;
+  background-image: none !important;
+}
+
+/* ============================================================
+ * UI-HDR-001｜Shared Function Header Contract（班表班務 SoT）
+ * ============================================================ */
+#root .zdos-workspace.zdos-fn-shell,
+#root .zdos-workspace:not(:has(.zdos-mh)) {
+  /* Measured from 班表班務主頁 */
+  --zdos-fn-safe-top: env(safe-area-inset-top, 0px);
+  --zdos-fn-header-pad-y: 8px;
+  --zdos-fn-header-pad-x: 16px;
+  --zdos-fn-header-inner-min: 56px;
+  --zdos-fn-header-content-gap: 24px;
+  --zdos-fn-header-radius: 0px;
+  --zdos-fn-header-bg: rgba(8, 28, 56, 0.88);
+  --zdos-fn-header-border: rgba(110, 200, 255, 0.34);
+  --zdos-fn-header-shadow: 0 8px 24px rgba(0, 20, 50, 0.28);
+  --zdos-fn-header-blur: 16px;
+  --zdos-fn-back-min: 44px;
+  --zdos-fn-action-min: 36px;
+  --zdos-fn-btn-radius: 8px;
+  --zdos-fn-title-size: 1.05rem;
+  --zdos-fn-header-z: 40;
+  /* 兼容舊 token（禁止各中心再 +nudge／猜 40/44） */
+  --zdos-fn-header-pad-top: var(--zdos-fn-safe-top);
+  --zdos-fn-header-bar-h: var(--zdos-fn-header-inner-min);
+  --zdos-fn-header-bar-min: var(--zdos-fn-header-inner-min);
+  --zdos-fn-header-hit: var(--zdos-fn-back-min);
+  --zdos-fn-header-inner-nudge: 0px;
+  --zdos-fn-header-side: 0px;
+  --zdos-fn-header-gap: 0px;
+}
+
+#root .zdos-workspace.zdos-fn-shell {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  padding-top: 0 !important;
+  box-sizing: border-box;
+}
+
+/* Outer Header shell｜班表班務滿寬玻璃條 */
+#root .zdos-workspace.zdos-fn-shell > .zdos-workspace-header.zdos-app-header,
+#root .zdos-workspace:not(:has(.zdos-mh)) > .zdos-workspace-header.zdos-app-header,
+#root .zdos-workspace.zdos-fn-shell > .zda-header,
+#root .zdos-workspace:not(:has(.zdos-mh)) > .zda-header {
+  position: relative !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  z-index: var(--zdos-fn-header-z) !important;
+  flex: 0 0 auto !important;
+  align-self: stretch !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 0 var(--zdos-fn-header-content-gap) 0 !important;
+  box-sizing: border-box !important;
+  /* safe 由 spacer；玻璃條自身上下 8、左右 16 */
+  padding: 0 var(--zdos-fn-header-pad-x) var(--zdos-fn-header-pad-y) !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--zdos-fn-header-border) !important;
+  border-radius: var(--zdos-fn-header-radius) !important;
+  pointer-events: auto !important;
+  background: var(--zdos-fn-header-bg) !important;
+  background-image: none !important;
+  backdrop-filter: blur(var(--zdos-fn-header-blur));
+  -webkit-backdrop-filter: blur(var(--zdos-fn-header-blur));
+  box-shadow: var(--zdos-fn-header-shadow) !important;
+  overflow: visible !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  grid-template-columns: unset !important;
+  gap: 0 !important;
+}
+
+/* Safe-area：只佔 status bar，不攔截 */
+#root .zdos-workspace-header-safe,
+#root .zda-header > .zdos-workspace-header-safe {
+  display: block !important;
+  flex: 0 0 auto !important;
+  width: calc(100% + 2 * var(--zdos-fn-header-pad-x)) !important;
+  margin-left: calc(-1 * var(--zdos-fn-header-pad-x)) !important;
+  margin-right: calc(-1 * var(--zdos-fn-header-pad-x)) !important;
+  height: var(--zdos-fn-safe-top) !important;
+  min-height: var(--zdos-fn-safe-top) !important;
+  max-height: var(--zdos-fn-safe-top) !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+
+/* 無 spacer：padding-top = safe + 8px */
+#root .zdos-workspace > .zdos-workspace-header.zdos-app-header:not(:has(> .zdos-workspace-header-safe)),
+#root .zdos-workspace > .zda-header:not(:has(> .zdos-workspace-header-safe)) {
+  padding-top: calc(var(--zdos-fn-safe-top) + var(--zdos-fn-header-pad-y)) !important;
+}
+
+#root .zdos-workspace.zdos-fn-shell > .zdos-workspace-header::before,
+#root .zdos-workspace.zdos-fn-shell > .zdos-workspace-header::after,
+#root .zdos-workspace > .zdos-workspace-header::before,
+#root .zdos-workspace > .zdos-workspace-header::after,
+#root .zda-header::before,
+#root .zda-header::after {
+  content: none !important;
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* 有 spacer 時，玻璃條上方再留 8px（對齊實測 pad-y） */
+#root .zdos-workspace > .zdos-workspace-header.zdos-app-header:has(> .zdos-workspace-header-safe),
+#root .zdos-workspace > .zda-header:has(> .zdos-workspace-header-safe) {
+  padding-top: 0 !important;
+}
+
+#root .zdos-workspace > .zdos-workspace-header.zdos-app-header:has(> .zdos-workspace-header-safe) > .zdos-workspace-header-inner,
+#root .zdos-workspace > .zda-header:has(> .zdos-workspace-header-safe) > .zdos-workspace-header-inner {
+  margin-top: var(--zdos-fn-header-pad-y) !important;
+}
+
+/* Inner｜56px SoT */
+#root .zdos-workspace.zdos-fn-shell > .zdos-workspace-header .zdos-workspace-header-inner,
+#root .zdos-workspace:not(:has(.zdos-mh)) > .zdos-workspace-header .zdos-workspace-header-inner,
+#root .zdos-workspace.zdos-fn-shell > .zda-header .zdos-workspace-header-inner,
+#root .zda-header .zdos-workspace-header-inner,
+#root .zdos-workspace .zdos-wcc-header-inner {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 2 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto) !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  box-sizing: border-box !important;
+  min-height: var(--zdos-fn-header-inner-min) !important;
+  height: auto !important;
+  max-height: none !important;
+  padding: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+#root .zdos-workspace-header .zdos-workspace-title,
+#root .zdos-workspace-header .zdos-wcc-title,
+#root .zda-header .zdos-workspace-title,
+#root .zda-header .zda-header-title {
+  margin: 0 !important;
+  min-width: 0;
+  max-width: 100%;
+  text-align: center !important;
+  font-size: var(--zdos-fn-title-size) !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0.02em;
+  color: #f2f9ff !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none !important;
+  position: relative;
+  z-index: 1;
+}
+
+#root .zdos-workspace-header .zdos-wcc-subtitle {
+  margin: 0 !important;
+  font-size: 0.6875rem !important;
+  font-weight: 500 !important;
+  color: rgba(176, 206, 232, 0.74) !important;
+  pointer-events: none !important;
+}
+
+#root .zdos-workspace-header .zdos-workspace-back,
+#root .zdos-workspace-header .zdos-workspace-actions,
+#root .zdos-workspace-header .zdos-workspace-actions > *,
+#root .zda-header .zdos-workspace-back,
+#root .zda-header .zda-header-back,
+#root .zda-header .zdos-workspace-actions,
+#root .zda-header .zdos-workspace-actions > * {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+#root .zdos-workspace-header .zdos-workspace-back .zdl-icon,
+#root .zdos-workspace-header .zdos-workspace-actions .zdl-icon,
+#root .zdos-workspace-header svg {
+  pointer-events: none !important;
+}
+
+#root .zdos-workspace-header .zdos-workspace-back,
+#root .zda-header .zdos-workspace-back,
+#root .zda-header .zda-header-back {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  justify-self: start !important;
+  box-sizing: border-box !important;
+  min-height: var(--zdos-fn-back-min) !important;
+  height: var(--zdos-fn-back-min) !important;
+  max-height: var(--zdos-fn-back-min) !important;
+  min-width: var(--zdos-fn-back-min) !important;
+  margin: 0 !important;
+  padding: 0 8px !important;
+  border-radius: var(--zdos-fn-btn-radius) !important;
+  border: 1px solid var(--zdos-fn-header-border) !important;
+  background: rgba(80, 170, 245, 0.2) !important;
+  color: #8ae4ff !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root .zdos-workspace-header .zdos-workspace-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  justify-self: end !important;
+  gap: 0.375rem !important;
+  min-height: var(--zdos-fn-action-min) !important;
+  margin: 0 !important;
+}
+
+#root .zdos-workspace-header .zdos-workspace-actions > .zdos-workspace-btn,
+#root .zdos-workspace-header .zdos-workspace-actions > .zdos-nav-btn,
+#root .zdos-workspace-header .zdos-workspace-actions > button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  min-height: var(--zdos-fn-action-min) !important;
+  height: auto !important;
+  max-height: none !important;
+  padding: 0.4rem 0.75rem !important;
+  margin: 0 !important;
+  border-radius: var(--zdos-fn-btn-radius) !important;
+  border: 1px solid var(--zdos-fn-header-border) !important;
+  background: rgba(80, 170, 245, 0.2) !important;
+  color: #8ae4ff !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  touch-action: manipulation;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+#root .zdos-workspace-header .zdos-workspace-actions > span.zdos-workspace-chip,
+#root .zda-header .zda-header-chip,
+#root .zdos-workspace-header .zda-header-chip {
+  pointer-events: none !important;
+  cursor: default !important;
+  min-height: var(--zdos-fn-action-min) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0.4rem 0.75rem !important;
+  border-radius: var(--zdos-fn-btn-radius) !important;
+  border: 1px solid var(--zdos-fn-header-border) !important;
+  background: rgba(80, 170, 245, 0.2) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  box-sizing: border-box !important;
+}
+
+/* Content：緊接 Header（間距由 header margin-bottom 24px 承擔） */
+#root .zdos-workspace.zdos-fn-shell > .zdos-workspace-body.zdos-view-body,
+#root .zdos-workspace:not(:has(.zdos-mh)) > .zdos-workspace-body.zdos-view-body {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+  pointer-events: auto !important;
+}
+
+/* 系統主頁排除 */
+#root .zdos-mh,
+#root .zdos-mh * {
+  /* no-op marker：Function Header contract 不作用於首頁 */
+}
+
+@media (max-width: 767px) {
+  #root .zdos-workspace.zdos-fn-shell > .zdos-workspace-header.zdos-app-header,
+  #root .zdos-workspace:not(:has(.zdos-mh)) > .zdos-workspace-header.zdos-app-header,
+  #root .zda-header {
+    position: relative !important;
+    top: auto !important;
+  }
+}
