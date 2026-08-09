@@ -83,7 +83,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <meta name="zdos-build" content="INVENTORY-PERM-002A-20260809">
+    <meta name="zdos-build" content="SALES-REPORT-PERM-002B-20260810">
     <script src="ui/zdos-web-push.js?v=bug0014d-20260807"></script>
     <script src="ui/zdos-first-run-wizard.js?v=frw-20260807b"></script>
     <style>
@@ -3550,6 +3550,13 @@
         const ACCOUNTING_CENTER_INDIVIDUAL_GRANT_EMP_IDS = new Set([
             // 例：'CH011901'
         ]);
+        /* SALES-REPORT-PERM-002｜TEMPORARY SALES REPORT GRANT
+         * 僅「業績回報／算單」個別授權；不得把 staff／senior_staff 整角色升成幹部。
+         * 正式 SoT 後續改 Cloud user_feature_grants；此處硬編碼 empId 僅為 TEMPORARY。
+         * 必須使用穩定 employee／personnel ID；不得用姓名判斷。 */
+        const SALES_REPORT_INDIVIDUAL_GRANT_EMP_IDS = new Set([
+            'CH012603' // SALES-REPORT-PERM-002A｜TEMPORARY：郭家豪業績回報權（僅 empId，不用姓名）
+        ]);
         const normalizeAccountRole = role => {
             const r = String(role || '').trim();
             if (!r) return '一般員工';
@@ -6244,6 +6251,41 @@
                 if (state.cloudProfile) return false;
             }
             return SALES_CENTER_ACCOUNT_ROLES.has(getSessionActor().role);
+        };
+
+        /* SALES-REPORT-PERM-002｜業績管理權＝原幹部 ACL（不得因個別授權而擴大） */
+        const canManageSalesCenter = () => hasSalesCenterPrivilegeForSession();
+
+        const hasSalesReportIndividualGrant = (empId) => {
+            /* SALES-REPORT-PERM-002B｜Set 成員與 runtime empId 皆 normalize 後比對（避免 CH012603 vs ch012603 miss） */
+            const key = normalizeEmpId(empId);
+            if (!key) return false;
+            for (const granted of SALES_REPORT_INDIVIDUAL_GRANT_EMP_IDS) {
+                if (normalizeEmpId(granted) === key) return true;
+            }
+            // 預留：Cloud user_feature_grants／profiles 欄位（尚無 migration，勿假造 DB）
+            // if (state.cloudProfile?.sales_report_submit_grant === true) return true;
+            const acc = state.accounts.find(a => normalizeEmpId(a.empId) === key);
+            if (acc && acc.salesReportSubmitGrant === true) return true;
+            return false;
+        };
+
+        /* 幹部 ∪ TEMP 指定回報人員；不得回寫進 hasSalesCenterPrivilegeForSession */
+        const canSubmitSalesReport = () => {
+            if (canManageSalesCenter()) return true;
+            const actor = typeof getSessionActor === 'function' ? getSessionActor() : null;
+            return hasSalesReportIndividualGrant(actor?.empId);
+        };
+
+        /** 首頁／Work Center 入口：幹部＝業績中心；指定人員＝業績回報 */
+        const getSalesLauncherEntry = () => {
+            if (canManageSalesCenter()) {
+                return { label: '業績中心', action: 'sales', mode: 'manage' };
+            }
+            if (canSubmitSalesReport()) {
+                return { label: '業績回報', action: 'salesReport', mode: 'submit' };
+            }
+            return null;
         };
 
         // ANN-001：公告管理中心 — 幹部以上（與 LEADERSHIP／CLOUD_SUPERVISOR 對齊）
@@ -14283,10 +14325,10 @@
                 zdosAfterViewNav();
                 return;
             }
-            if (tab === 'sales' && !hasSalesCenterPrivilegeForSession()) {
+            if (tab === 'sales' && !canSubmitSalesReport()) {
                 state.currentView = 'dashboard';
                 safeSetItem('zdos_current_view', 'dashboard');
-                showToast('業績中心僅限幹部使用。', 'error');
+                showToast('無業績回報權限', 'error');
                 renderApp();
                 return;
             }
@@ -14298,6 +14340,8 @@
             if (state.currentView === 'module' && (tab === 'sales' || tab === 'inventory')) {
                 if (state.activeAppTab === tab) return;
                 state.activeAppTab = tab;
+                /* SALES-REPORT-PERM-002｜指定回報人員僅能停在 report，不可保留 history／weekly／monthly */
+                if (tab === 'sales' && !canManageSalesCenter()) state.salesCenterPage = 'report';
                 safeSetItem('zdos_current_view', 'module');
                 renderApp();
                 if (typeof zdosScrollToTop === 'function') zdosScrollToTop();
@@ -14308,8 +14352,8 @@
             state.activeAppTab = tab;
             state.currentView = 'module';
             safeSetItem('zdos_current_view', 'module');
-            /* G6 Nav｜首次進入業績中心一律首頁（Tab 來回切換不走此路徑） */
-            if (tab === 'sales') state.salesCenterPage = 'home';
+            /* G6 Nav｜幹部進業績中心首頁；指定回報人員進 report（Tab 來回切換不走此路徑） */
+            if (tab === 'sales') state.salesCenterPage = canManageSalesCenter() ? 'home' : 'report';
             renderApp();
             zdosAfterViewNav();
             if (tab === 'sales') void enterSalesCloudContext().then(() => renderApp());
@@ -14319,9 +14363,15 @@
             if (tab === 'accounting') {
                 return openAccountingCenter();
             }
-            if (tab === 'sales' && !hasSalesCenterPrivilegeForSession()) {
-                showToast('業績中心僅限幹部使用。', 'error');
-                return;
+            if (tab === 'sales') {
+                if (canManageSalesCenter()) {
+                    /* 幹部：完整業績中心 */
+                } else if (canSubmitSalesReport()) {
+                    /* 指定回報人員：僅今日回報 */
+                } else {
+                    showToast('無業績回報權限', 'error');
+                    return;
+                }
             }
             if (tab === 'inventory' && !canUseInventoryBasic()) {
                 showToast('無庫存盤點權限', 'error');
@@ -14331,8 +14381,8 @@
             state.activeAppTab = tab;
             state.currentView = 'module';
             safeSetItem('zdos_current_view', 'module');
-            /* G6 Nav｜從首頁／Launcher 進入業績中心 → 首頁 */
-            if (tab === 'sales') state.salesCenterPage = 'home';
+            /* G6 Nav｜幹部 → 業績中心首頁；指定人員 → 今日回報 */
+            if (tab === 'sales') state.salesCenterPage = canManageSalesCenter() ? 'home' : 'report';
             renderApp();
             zdosAfterViewNav();
             if (tab === 'sales') {
@@ -14342,14 +14392,19 @@
             }
         };
 
-        /** G6 Official｜業績中心子頁導覽（不改 Route Guard／資料） */
+        /** G6 Official｜業績中心子頁導覽｜SALES-REPORT-PERM-002：report＝submit；其餘＝manage */
         window.openSalesCenterPage = function(page) {
-            if (!hasSalesCenterPrivilegeForSession()) {
-                showToast('業績中心僅限幹部使用。', 'error');
-                return;
-            }
             const next = String(page || 'home').trim().toLowerCase();
             if (!['home', 'report', 'history', 'weekly', 'monthly'].includes(next)) return;
+            if (next === 'report') {
+                if (!canSubmitSalesReport()) {
+                    showToast('無業績回報權限', 'error');
+                    return;
+                }
+            } else if (!canManageSalesCenter()) {
+                showToast('此功能僅限幹部使用。', 'error');
+                return;
+            }
             state.salesCenterPage = next;
             state.activeAppTab = 'sales';
             state.currentView = 'module';
@@ -14881,12 +14936,12 @@
             zdosRememberNavSource('notify-target');
 
             if (type === 'sales' || targetView === 'module') {
-                if (!hasSalesCenterPrivilegeForSession()) {
-                    return showToast('業績中心僅限幹部使用。', 'error');
+                if (!canSubmitSalesReport()) {
+                    return showToast('無業績回報權限', 'error');
                 }
                 state.currentView = 'module';
                 state.activeAppTab = 'sales';
-                state.salesCenterPage = 'home';
+                state.salesCenterPage = canManageSalesCenter() ? 'home' : 'report';
                 safeSetItem('zdos_current_view', 'module');
                 return renderApp();
             }
@@ -23076,6 +23131,9 @@
         window.handleDirectUploadRecord = async function(e) {
             e.preventDefault();
             if (state.isSubmitting || state.salesCloudSubmitting) return;
+            if (typeof canSubmitSalesReport === 'function' && !canSubmitSalesReport()) {
+                return showToast('無業績回報權限', 'error');
+            }
             const sales = safeFloat(state.newSalesAmount);
             const exp = safeFloat(state.newExpenseAmount);
             const over = safeFloat(state.newOverAmount);
@@ -24599,8 +24657,10 @@
                     meta: salesMeta,
                     metaTone: salesEmpty && !dash.todaySalesDone ? 'warn' : (salesEmpty ? '' : 'ok'),
                     empty: salesEmpty,
-                    action: hasSalesCenterPrivilegeForSession() ? 'sales' : 'none',
-                    linkHint: '查看業績詳情 →'
+                    action: canSubmitSalesReport()
+                        ? (canManageSalesCenter() ? 'sales' : 'salesReport')
+                        : 'none',
+                    linkHint: canManageSalesCenter() ? '查看業績詳情 →' : '前往業績回報 →'
                 },
                 {
                     id: 'attendance',
@@ -24635,11 +24695,11 @@
 
         const buildMobileHomeFocusItems = (dash) => {
             const items = [];
-            if (hasSalesCenterPrivilegeForSession() && !dash.todaySalesDone) {
+            if (canSubmitSalesReport() && !dash.todaySalesDone) {
                 items.push({
                     id: 'focus-sales',
                     text: '完成今日業績回報',
-                    action: 'sales',
+                    action: canManageSalesCenter() ? 'sales' : 'salesReport',
                     hint: '前往業績回報 →'
                 });
             }
@@ -24675,8 +24735,16 @@
                 { id: 'hrHome', label: '人力中心', icon: MOBILE_HOME_QUICK_ICONS.scheduling, action: 'hrHome' },
                 { id: 'scheduleCenter', label: '班表班務', icon: zdlIcon('schedule'), action: 'scheduleCenter' }
             ];
-            if (hasSalesCenterPrivilegeForSession()) {
-                actions.push({ id: 'sales', label: '業績中心', icon: MOBILE_HOME_QUICK_ICONS.sales, action: 'sales' });
+            {
+                const salesEntry = typeof getSalesLauncherEntry === 'function' ? getSalesLauncherEntry() : null;
+                if (salesEntry) {
+                    actions.push({
+                        id: salesEntry.mode === 'manage' ? 'sales' : 'salesReport',
+                        label: salesEntry.label,
+                        icon: MOBILE_HOME_QUICK_ICONS.sales,
+                        action: salesEntry.action
+                    });
+                }
             }
             if (hasAccountingCenterPrivilegeForSession()) {
                 actions.push({ id: 'accounting', label: '會計中心', icon: MOBILE_HOME_QUICK_ICONS.accounting, action: 'accounting' });
@@ -24835,14 +24903,14 @@
                         if (typeof hasReviewPrivilegeForSession === 'function' && hasReviewPrivilegeForSession()) {
                             return handleMobileHomeAction('review');
                         }
-                        if (typeof hasSalesCenterPrivilegeForSession === 'function' && hasSalesCenterPrivilegeForSession()) {
-                            return handleMobileHomeAction('sales');
+                        if (typeof canSubmitSalesReport === 'function' && canSubmitSalesReport()) {
+                            return handleMobileHomeAction(canManageSalesCenter() ? 'sales' : 'salesReport');
                         }
                         return handleMobileHomeAction('hrHome');
                     }
                     if (ai.status === 'completed') {
-                        if (typeof hasSalesCenterPrivilegeForSession === 'function' && hasSalesCenterPrivilegeForSession()) {
-                            return handleMobileHomeAction('sales');
+                        if (typeof canSubmitSalesReport === 'function' && canSubmitSalesReport()) {
+                            return handleMobileHomeAction(canManageSalesCenter() ? 'sales' : 'salesReport');
                         }
                     }
                     return handleMobileHomeAction('announcements');
@@ -25402,8 +25470,11 @@
                 { label: '公告中心', icon: zdlIcon('notification'), action: 'announcements' }
             ];
             /* NOTICE-001｜公告管理併入公告中心，不再獨立入口 */
-            if (typeof hasSalesCenterPrivilegeForSession === 'function' && hasSalesCenterPrivilegeForSession()) {
-                entries.push({ label: '業績中心', icon: zdlIcon('sales'), action: 'sales' });
+            {
+                const salesEntry = typeof getSalesLauncherEntry === 'function' ? getSalesLauncherEntry() : null;
+                if (salesEntry) {
+                    entries.push({ label: salesEntry.label, icon: zdlIcon('sales'), action: salesEntry.action });
+                }
             }
             if (typeof hasAccountingCenterPrivilegeForSession === 'function' && hasAccountingCenterPrivilegeForSession()) {
                 entries.push({ label: '會計中心', icon: zdlIcon('report'), action: 'accounting' });
@@ -25509,8 +25580,8 @@
                 zdosResetNavStack();
                 return openMyCenter();
             }
-            if (key === 'sales') {
-                if (!hasSalesCenterPrivilegeForSession()) return showToast('業績中心僅限幹部使用。', 'error');
+            if (key === 'sales' || key === 'salesReport') {
+                if (!canSubmitSalesReport()) return showToast('無業績回報權限', 'error');
                 return openZDOSModule('sales');
             }
             if (key === 'accounting') {
@@ -25619,8 +25690,11 @@
                 { label: '人力中心', icon: zdlIcon('people'), action: 'hrHome' },
                 { label: '班表班務', icon: zdlIcon('schedule'), action: 'scheduleCenter' }
             ];
-            if (typeof hasSalesCenterPrivilegeForSession === 'function' && hasSalesCenterPrivilegeForSession()) {
-                g02Launcher.push({ label: '業績中心', icon: zdlIcon('sales'), action: 'sales' });
+            {
+                const salesEntry = typeof getSalesLauncherEntry === 'function' ? getSalesLauncherEntry() : null;
+                if (salesEntry) {
+                    g02Launcher.push({ label: salesEntry.label, icon: zdlIcon('sales'), action: salesEntry.action });
+                }
             }
             if (typeof hasAccountingCenterPrivilegeForSession === 'function' && hasAccountingCenterPrivilegeForSession()) {
                 g02Launcher.push({ label: '會計中心', icon: zdlIcon('report'), action: 'accounting' });
@@ -25821,7 +25895,7 @@
                                 <span class="text-[10px] text-slate-500">${storeType}</span>
                             </div>
                             <div class="space-y-2.5">
-                                ${hasSalesCenterPrivilegeForSession() ? `<button onclick="openZDOSModule('sales')" class="zdos-nav-btn w-full flex items-center justify-between rounded-[12px] border ${todaySalesDone ? 'border-emerald-500/25 bg-emerald-500/[0.07]' : 'border-amber-500/25 bg-amber-500/[0.07]'} px-3.5 py-2.5 text-left">
+                                ${canSubmitSalesReport() ? `<button onclick="openZDOSModule('sales')" class="zdos-nav-btn w-full flex items-center justify-between rounded-[12px] border ${todaySalesDone ? 'border-emerald-500/25 bg-emerald-500/[0.07]' : 'border-amber-500/25 bg-amber-500/[0.07]'} px-3.5 py-2.5 text-left">
                                     <span class="flex items-center gap-3"><span class="shrink-0 ${todaySalesDone ? 'text-emerald-400' : 'text-slate-500'}">${todaySalesDone ? zdlIcon('check-circle') : zdlIcon('progress')}</span><span><strong class="block text-sm text-slate-100">業績回報</strong><small class="text-[10px] text-slate-500">完成當日門市營收申報</small></span></span>
                                     <span class="text-[10px] font-bold ${todaySalesDone ? 'text-emerald-400' : 'text-amber-400'}">${todaySalesDone ? '已完成' : '前往處理'}</span>
                                 </button>` : ''}
@@ -25866,10 +25940,13 @@
                                             <p class="zdos-home-ops-desc">本機預覽 · 重新整理即關閉</p>
                                         </button>`)
                                     : ''}
-                                ${hasSalesCenterPrivilegeForSession() ? `<button onclick="openZDOSModule('sales')" class="zdos-nav-btn group text-left zdos-home-card zdos-home-ops-card border-sky-500/25 bg-gradient-to-br from-sky-500/10 to-indigo-500/5 hover:border-sky-400/40 transition-all">
+                                ${canManageSalesCenter() ? `<button onclick="openZDOSModule('sales')" class="zdos-nav-btn group text-left zdos-home-card zdos-home-ops-card border-sky-500/25 bg-gradient-to-br from-sky-500/10 to-indigo-500/5 hover:border-sky-400/40 transition-all">
                                     <div class="zdos-home-ops-card-top"><span class="zdos-home-ops-icon">${zdlIcon('sales')}</span><span class="zdos-home-ops-arrow text-sky-400">${zdlIcon('chevron-right', 'sm')}</span></div>
                                     <h3 class="zdos-home-ops-title">營運中心</h3><p class="zdos-home-ops-desc">業績回報、歷史申報</p>
-                                </button>` : ''}
+                                </button>` : (canSubmitSalesReport() ? `<button onclick="openZDOSModule('sales')" class="zdos-nav-btn group text-left zdos-home-card zdos-home-ops-card border-sky-500/25 bg-gradient-to-br from-sky-500/10 to-indigo-500/5 hover:border-sky-400/40 transition-all">
+                                    <div class="zdos-home-ops-card-top"><span class="zdos-home-ops-icon">${zdlIcon('sales')}</span><span class="zdos-home-ops-arrow text-sky-400">${zdlIcon('chevron-right', 'sm')}</span></div>
+                                    <h3 class="zdos-home-ops-title">業績回報</h3><p class="zdos-home-ops-desc">今日算單／送出回報</p>
+                                </button>` : '')}
                                 ${hasInventoryPrivilege ? `
                                 <button onclick="openZDOSModule('inventory')" class="zdos-nav-btn group text-left zdos-home-card zdos-home-ops-card border-amber-500/25 bg-gradient-to-br from-amber-500/10 to-orange-500/5 hover:border-amber-400/40 transition-all">
                                     <div class="zdos-home-ops-card-top"><span class="zdos-home-ops-icon">${zdlIcon('report')}</span><span class="zdos-home-ops-arrow text-amber-400">${zdlIcon('chevron-right', 'sm')}</span></div>
@@ -57054,13 +57131,21 @@
             setLoginCenterHostActive(false);
             syncZcxShellHostForView();
 
-            // UI-012B AuthZ Guard：一般／資深員工不得以 localStorage、返回鍵或直接切 View 進入業績中心。
-            if (state.currentView === 'module' && state.activeAppTab === 'sales' && !hasSalesCenterPrivilegeForSession()) {
-                state.currentView = 'dashboard';
-                safeSetItem('zdos_current_view', 'dashboard');
-                showToast('業績中心僅限幹部使用。', 'error');
-                renderApp();
-                return;
+            // UI-012B／SALES-REPORT-PERM-002 AuthZ：無回報權不得進 sales；指定人員僅能停在 report。
+            if (state.currentView === 'module' && state.activeAppTab === 'sales') {
+                if (!canSubmitSalesReport()) {
+                    state.currentView = 'dashboard';
+                    safeSetItem('zdos_current_view', 'dashboard');
+                    showToast('無業績回報權限', 'error');
+                    renderApp();
+                    return;
+                }
+                if (!canManageSalesCenter()) {
+                    const page = String(state.salesCenterPage || '').trim().toLowerCase();
+                    if (page !== 'report') {
+                        state.salesCenterPage = 'report';
+                    }
+                }
             }
 
             // UI-014A AuthZ Guard：無會計權限者不得以 localStorage、openZDOSModule、switchAppTab 或返回鍵進入會計中心。
@@ -57580,7 +57665,10 @@
                     : state.salesCenterPage === 'weekly' ? '本週業績分析'
                     : state.salesCenterPage === 'monthly' ? '各店當月累積'
                     : '業績中心');
-            const moduleBack = (state.activeAppTab === 'sales' && state.salesCenterPage && state.salesCenterPage !== 'home')
+            const moduleBack = (state.activeAppTab === 'sales'
+                && state.salesCenterPage
+                && state.salesCenterPage !== 'home'
+                && canManageSalesCenter())
                 ? 'backToSalesCenterHome()'
                 : 'zdosNavigateBack()';
             const salesHomeNoChrome = state.activeAppTab === 'sales'
@@ -57603,15 +57691,19 @@
                     </div>
                     `}
                     ${state.activeAppTab === 'sales' ? (() => {
-                        const salesPage = ['home', 'report', 'history', 'weekly', 'monthly'].includes(String(state.salesCenterPage || ''))
+                        let salesPage = ['home', 'report', 'history', 'weekly', 'monthly'].includes(String(state.salesCenterPage || ''))
                             ? String(state.salesCenterPage)
                             : 'home';
+                        /* SALES-REPORT-PERM-002｜指定回報人員強制 report，避免 history／weekly／monthly 外洩 */
+                        if (!canManageSalesCenter()) salesPage = 'report';
                         const reportFormHtml = `
                             <div class="zdos-sales-card zcx-card p-5 zdos-sales-report-page">
                                 <div class="zdos-sales-card-title"><div><p class="zdos-sales-card-kicker">今日回報</p><h3 class="text-sm font-bold text-slate-100 mt-1 flex items-center gap-1.5">${state.editingSalesRecordId ? '修改業績回報' : '門市營運直接上報'}</h3></div><span class="text-[9px] text-slate-500 font-mono">${escapeHtmlText(state.storeType)}</span></div>
                                 <p class="text-[10px] text-slate-400 mb-4">${state.editingSalesRecordId
                                     ? `正在修改紀錄 · 送出後寫回雲端（不作新單）。<button type="button" onclick="cancelSalesRecordEdit()" class="ml-1 text-amber-300 underline">取消修改</button>`
-                                    : `⚡ 已鎖定【${escapeHtmlText(state.storeType)}】規格。打錯可至歷史業績明細修改。`}</p>
+                                    : (canManageSalesCenter()
+                                        ? `⚡ 已鎖定【${escapeHtmlText(state.storeType)}】規格。打錯可至歷史業績明細修改。`
+                                        : `⚡ 已鎖定【${escapeHtmlText(state.storeType)}】規格。請確認金額後送出。`)}</p>
                                 <form onsubmit="handleDirectUploadRecord(event)" class="zdos-sales-form space-y-3.5">
                                     <div class="zdos-sales-field"><label class="block text-[10px] text-slate-400 mb-1 font-bold">選擇日期 *</label><input type="date" id="form-date-val" value="${state.newDate}" onchange="updateDateOrShift('newDate', this.value)" class="zdos-sales-input" required /></div>
                                     <div class="zdos-sales-field">
@@ -57726,11 +57818,12 @@
                                     </div>
                                 </div>
                             </section>
-                            <nav class="zdos-sales-entry-grid zdos-sales-entry-grid--four" aria-label="業績功能入口">
+                            <nav class="zdos-sales-entry-grid ${canManageSalesCenter() ? 'zdos-sales-entry-grid--four' : 'zdos-sales-entry-grid--one'}" aria-label="業績功能入口">
                                 <button type="button" class="zdos-sales-entry-btn" onclick="openSalesCenterPage('report')">
                                     <span class="zdos-sales-entry-label">今日回報</span>
                                     <span class="zdos-sales-entry-meta">填寫／送出</span>
                                 </button>
+                                ${canManageSalesCenter() ? `
                                 <button type="button" class="zdos-sales-entry-btn" onclick="openSalesCenterPage('history')">
                                     <span class="zdos-sales-entry-label">歷史業績明細</span>
                                     <span class="zdos-sales-entry-meta">查詢／修改</span>
@@ -57742,7 +57835,7 @@
                                 <button type="button" class="zdos-sales-entry-btn" onclick="openSalesCenterPage('monthly')">
                                     <span class="zdos-sales-entry-label">各店當月累積</span>
                                     <span class="zdos-sales-entry-meta">中華／東港</span>
-                                </button>
+                                </button>` : ''}
                             </nav>`;
 
                         const pageBody = salesPage === 'report' ? reportFormHtml
