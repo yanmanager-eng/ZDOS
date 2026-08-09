@@ -1,7 +1,7 @@
 /* ZDOS PWA Service Worker｜Web Push + notificationclick deep link */
 /* eslint-disable no-restricted-globals */
 
-const SW_VERSION = 'zdos-sw-20260808-schedule-ui-001';
+const SW_VERSION = 'zdos-sw-20260809-inventory-perm-002';
 const PRODUCTION_ORIGIN = 'https://zdos.app';
 
 function resolveSwOrigin() {

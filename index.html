@@ -83,7 +83,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <meta name="zdos-build" content="SCHEDULE-UI-001-20260808">
+    <meta name="zdos-build" content="INVENTORY-PERM-002-20260809">
     <script src="ui/zdos-web-push.js?v=bug0014d-20260807"></script>
     <script src="ui/zdos-first-run-wizard.js?v=frw-20260807b"></script>
     <style>
@@ -6048,9 +6048,22 @@
         };
 
         window.switchCloudOperatingStore = function(storeCode) {
-            if (!state.supabaseSessionReady || !state.cloudAvailableStores?.length) return;
+            if (!state.supabaseSessionReady) return;
             const code = normalizeStoreIdCode(storeCode);
-            const entry = state.cloudAvailableStores.find(s => s.code === code);
+            let entry = (state.cloudAvailableStores || []).find(s => s.code === code);
+            /* INVENTORY-PERM-001｜Founder／owner 可切至任一 active 門市（不擴張一般幹部跨店） */
+            if (!entry && typeof isInventoryFounderActor === 'function' && isInventoryFounderActor()) {
+                const reg = typeof getStoreByCode === 'function' ? getStoreByCode(code) : null;
+                if (reg && isStoreActive(code)) {
+                    entry = {
+                        id: state.supabaseStoreUuidByCode?.[code] || null,
+                        code,
+                        name: reg.name,
+                        isPrimary: false,
+                        membershipActive: true
+                    };
+                }
+            }
             if (!entry) return showToast('所屬門市目前未啟用', 'error');
             state.cloudCurrentStore = entry;
             state.storeType = entry.name;
@@ -6090,7 +6103,17 @@
         };
 
         const renderCloudOperatingStoreSwitcher = () => {
-            const stores = state.cloudAvailableStores || [];
+            let stores = state.cloudAvailableStores || [];
+            /* INVENTORY-PERM-001｜Founder／owner 門市切換列出全部 active stores */
+            if (typeof isInventoryFounderActor === 'function' && isInventoryFounderActor()) {
+                stores = getActiveStores().map(s => ({
+                    id: state.supabaseStoreUuidByCode?.[s.code] || null,
+                    code: s.code,
+                    name: s.name,
+                    isPrimary: false,
+                    membershipActive: true
+                }));
+            }
             if (!state.supabaseSessionReady || stores.length < 2) return '';
             const activeCode = state.cloudCurrentStore?.code || normalizeStoreIdCode(state.storeType);
             return `<div class="flex flex-wrap gap-1.5 mb-2" aria-label="營運門市切換">${stores.map(s => {
@@ -6322,13 +6345,76 @@
             return map[priority] || map.normal;
         };
 
-        const hasInventoryPrivilegeForSession = () => {
-            const actor = getSessionActor();
-            if (actor.isCloud && state.cloudRole) {
-                return state.cloudRole === 'owner' || state.cloudRole === 'manager';
+        /* INVENTORY-PERM-002｜基本盤點 / 完整管理 兩層 ACL（不改 DB／Google Forms） */
+        const INVENTORY_MANAGE_CLOUD_ROLES = new Set(['owner', 'manager', 'supervisor', 'trainee_manager']);
+        const INVENTORY_MANAGE_LEGACY_ROLES = new Set([
+            '集團首腦', '首腦', '區經理', '店經理', '店長', '領班', '副領班', '實習幹部'
+        ]);
+        const INVENTORY_BASIC_CLOUD_ROLES = new Set([
+            'owner', 'manager', 'supervisor', 'trainee_manager', 'senior_staff', 'staff'
+        ]);
+        const INVENTORY_BASIC_LEGACY_ROLES = new Set([
+            '集團首腦', '首腦', '區經理', '店經理', '店長', '領班', '副領班', '實習幹部', '資深員工', '一般員工'
+        ]);
+        const isInventoryFounderActor = () => {
+            if (state.supabaseSessionReady) {
+                const cloudRole = typeof resolveCloudAuthRole === 'function'
+                    ? resolveCloudAuthRole()
+                    : String(state.cloudRole || state.cloudProfile?.role || '').trim();
+                if (cloudRole) return cloudRole === 'owner';
+                if (state.cloudProfile) return false;
             }
-            return actor.role === '店長' || actor.role === '集團首腦';
+            const role = String(getSessionActor()?.role || '').trim();
+            return role === '集團首腦' || role === '首腦';
         };
+        const canManageInventory = () => {
+            if (state.supabaseSessionReady) {
+                const cloudRole = typeof resolveCloudAuthRole === 'function'
+                    ? resolveCloudAuthRole()
+                    : String(state.cloudRole || state.cloudProfile?.role || '').trim();
+                if (cloudRole) return INVENTORY_MANAGE_CLOUD_ROLES.has(cloudRole);
+                if (state.cloudProfile) return false;
+            }
+            return INVENTORY_MANAGE_LEGACY_ROLES.has(String(getSessionActor()?.role || '').trim());
+        };
+        const canUseInventoryBasic = () => {
+            if (state.supabaseSessionReady) {
+                const cloudRole = typeof resolveCloudAuthRole === 'function'
+                    ? resolveCloudAuthRole()
+                    : String(state.cloudRole || state.cloudProfile?.role || '').trim();
+                if (cloudRole) return INVENTORY_BASIC_CLOUD_ROLES.has(cloudRole);
+                if (state.cloudProfile) return false;
+            }
+            return INVENTORY_BASIC_LEGACY_ROLES.has(String(getSessionActor()?.role || '').trim());
+        };
+        /** 入口相容：基本盤點權限 */
+        const hasInventoryPrivilegeForSession = () => canUseInventoryBasic();
+        /** 門市範圍：Founder＝全部 active；其餘＝membership／所屬門市 */
+        const canOperateInventoryForStore = (storeRef) => {
+            if (!canUseInventoryBasic()) return false;
+            const code = normalizeStoreIdCode(storeRef != null ? storeRef : state.storeType);
+            if (!code || !isStoreActive(code)) return false;
+            if (isInventoryFounderActor()) return true;
+            if (state.supabaseSessionReady && Array.isArray(state.cloudAvailableStores) && state.cloudAvailableStores.length) {
+                return state.cloudAvailableStores.some(s => normalizeStoreIdCode(s.code) === code);
+            }
+            return getUserSchedulingStoreCodes().includes(code);
+        };
+        const assertInventoryBasicAllowed = () => {
+            if (!canUseInventoryBasic() || !canOperateInventoryForStore(state.storeType)) {
+                showToast('無庫存盤點權限', 'error');
+                return false;
+            }
+            return true;
+        };
+        const assertInventoryManageAllowed = () => {
+            if (!canManageInventory() || !canOperateInventoryForStore(state.storeType)) {
+                showToast('無庫存盤點權限', 'error');
+                return false;
+            }
+            return true;
+        };
+
 
         const hasAccountingCenterIndividualGrant = (empId) => {
             const key = normalizeEmpId(empId);
@@ -14204,6 +14290,10 @@
                 renderApp();
                 return;
             }
+            if (tab === 'inventory' && !canUseInventoryBasic()) {
+                showToast('無庫存盤點權限', 'error');
+                return;
+            }
             /* PERF-UI-001｜同層 Tab：已在 module 時只切 panel，不 push stack、不重建入口、保留 salesCenterPage */
             if (state.currentView === 'module' && (tab === 'sales' || tab === 'inventory')) {
                 if (state.activeAppTab === tab) return;
@@ -14231,6 +14321,10 @@
             }
             if (tab === 'sales' && !hasSalesCenterPrivilegeForSession()) {
                 showToast('業績中心僅限幹部使用。', 'error');
+                return;
+            }
+            if (tab === 'inventory' && !canUseInventoryBasic()) {
+                showToast('無庫存盤點權限', 'error');
                 return;
             }
             zdosRememberNavSource('module');
@@ -23155,12 +23249,15 @@
         };
 
         window.handleAddInventoryLocal = function(e) {
-            e.preventDefault(); if (!state.invBarcode.trim()) { return showToast('請先輸入或掃描物料條碼名稱！', 'error'); }
+            e.preventDefault();
+            if (typeof assertInventoryBasicAllowed === 'function' && !assertInventoryBasicAllowed()) return;
+            if (!state.invBarcode.trim()) { return showToast('請先輸入或掃描物料條碼名稱！', 'error'); }
             state.inventoryRecords.unshift({ id: Date.now(), date: state.newDate, store: state.storeType, employeeId: state.employeeId, barcode: state.invBarcode.trim(), stockQty: safeFloat(state.invStockQty), orderQty: safeFloat(state.invOrderQty), mode: 'Local' });
             state.invBarcode = ''; state.invStockQty = ''; state.invOrderQty = ''; saveState(); showToast('📦 物料叫貨及庫存已暫存入本地快照！', 'success'); renderApp();
         };
 
         window.handleUploadInventoryToCloud = async function() {
+            if (typeof assertInventoryManageAllowed === 'function' && !assertInventoryManageAllowed()) return;
             const targets = state.inventoryRecords.filter(r => r && r.date === state.newDate && r.store === state.storeType && r.mode === 'Local');
             if (targets.length === 0) { return showToast(`今日庫存盤點皆已同步完畢或無新快照資料！`, 'error'); }
             state.isSubmitting = true; showToast("正在與庫存雲端網關建立對接連線...", "info"); renderApp();
@@ -23179,6 +23276,7 @@
         };
 
         window.toggleCameraScanner = async function() {
+            if (typeof assertInventoryBasicAllowed === 'function' && !assertInventoryBasicAllowed()) return;
             const vc = document.getElementById('scanner-video-container'); if (!vc) return;
             if (!vc.classList.contains('hidden')) { vc.classList.add('hidden'); const v = document.getElementById('scanner-video'); if (v && v.srcObject) { v.srcObject.getTracks().forEach(t => t.stop()); } return; }
             vc.className = 'block'; showToast("正在初始接通手機相機驅動模組...", "info");
@@ -23198,7 +23296,16 @@
             } catch (err) { showToast("相機遭系統受限，已解鎖右側「條碼模擬盤點面板供測試", "error"); document.getElementById('sandbox-barcode-simulator').classList.remove('hidden'); }
         };
 
-        window.simulateScanBarcode = function(code) { const input = document.getElementById('form-inv-barcode'); if (input) { input.value = code; state.invBarcode = code; showToast(`✓ 已模擬載入物料: ${code}`, "success"); calculateLiveInventory(); } };
+        window.simulateScanBarcode = function(code) {
+            if (typeof assertInventoryBasicAllowed === 'function' && !assertInventoryBasicAllowed()) return;
+            const input = document.getElementById('form-inv-barcode');
+            if (input) {
+                input.value = code;
+                state.invBarcode = code;
+                showToast(`✓ 已模擬載入物料: ${code}`, 'success');
+                calculateLiveInventory();
+            }
+        };
 
         window.handleDeleteLocalRecord = function(id) {
             const key = String(id ?? '').trim();
@@ -23219,7 +23326,14 @@
                 renderApp();
             }
         };
-        window.handleDeleteInventoryRecord = function(id) { if(confirm('確定要刪除這筆庫存暫存紀錄嗎？')) { state.inventoryRecords = state.inventoryRecords.filter(r => r.id !== id); saveState(); renderApp(); } };
+        window.handleDeleteInventoryRecord = function(id) {
+            if (typeof assertInventoryManageAllowed === 'function' && !assertInventoryManageAllowed()) return;
+            if (confirm('確定要刪除這筆庫存暫存紀錄嗎？')) {
+                state.inventoryRecords = state.inventoryRecords.filter(r => r.id !== id);
+                saveState();
+                renderApp();
+            }
+        };
 
         window.startEditAccount = function(empId, name, password, store, store2, role) { state.editingEmpId = empId; state.editEmpIdVal = empId; state.editName = name; state.editPassword = password || ''; state.editStore = store; state.editStore2 = store2; state.editRole = normalizeAccountRole(role); const m = document.getElementById('settings-modal'); if (m) updateModalContent(m); };
         window.cancelEdit = function() { state.editingEmpId = null; const m = document.getElementById('settings-modal'); if (m) updateModalContent(m); };
@@ -56892,7 +57006,8 @@
             const todaySalesReported = todaySalesRecords.length > 0;
 
 
-            const hasInventoryPrivilege = hasInventoryPrivilegeForSession();
+            const hasInventoryPrivilege = canUseInventoryBasic();
+            const canManageInv = canManageInventory();
             if (!hasInventoryPrivilege && state.activeAppTab === 'inventory') { state.activeAppTab = 'sales'; }
             const canReviewSales = hasReviewPrivilegeForSession();
             const pendingSalesRecords = sortPendingSalesRecords(state.salesRecords.filter(r => r && r.status === 'pending'));
@@ -57470,7 +57585,7 @@
                 renderFunctionPageHeader({
                     backOnclick: moduleBack,
                     title: moduleTitle,
-                    rightHtml: `${hasInventoryPrivilege ? `<button type="button" onclick="handleTryOpen()" class="zdos-workspace-btn zdos-nav-btn">設定</button>` : ''}<button type="button" onclick="handleLogoutSubmit()" class="zdos-workspace-btn zdos-nav-btn">登出</button>`
+                    rightHtml: `${canManageInv ? `<button type="button" onclick="handleTryOpen()" class="zdos-workspace-btn zdos-nav-btn">設定</button>` : ''}<button type="button" onclick="handleLogoutSubmit()" class="zdos-workspace-btn zdos-nav-btn">登出</button>`
                 }),
                 `
                     ${salesHomeNoChrome ? '' : `
@@ -57682,10 +57797,14 @@
                                     <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-amber-600 to-orange-500 text-white font-bold text-xs rounded-xl">💾 登記至本地盤點清單</button>
                                 </form>
 
+                                ${canManageInv ? `
                                 <div class="p-3 bg-slate-950 rounded-xl border border-amber-500/20 space-y-2">
                                     <div><h4 class="text-[11px] font-bold text-amber-400">☁ 庫存分頁雲端發送火箭</h4></div>
                                     <button onclick="handleUploadInventoryToCloud()" ${state.isSubmitting || currentStoreInvRecords.filter(r=>r.mode==='Local').length === 0 ? 'disabled' : ''} class="w-full py-2 bg-emerald-600 text-white font-bold text-xs rounded-lg disabled:opacity-40 flex items-center justify-center gap-1"><span>上傳盤點數據至 Google Sheets</span></button>
                                 </div>
+                                ` : `
+                                <p class="text-[10px] text-slate-500 px-1">本機盤點可暫存；正式上傳需幹部權限。</p>
+                                `}
                             </div>
 
                             <div class="lg:col-span-8 bg-slate-900/40 border border-white/[0.04] rounded-2xl p-5 flex flex-col justify-between shadow-xl">
