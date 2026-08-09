@@ -83,7 +83,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <meta name="zdos-build" content="INVENTORY-PERM-002-20260809">
+    <meta name="zdos-build" content="INVENTORY-PERM-002A-20260809">
     <script src="ui/zdos-web-push.js?v=bug0014d-20260807"></script>
     <script src="ui/zdos-first-run-wizard.js?v=frw-20260807b"></script>
     <style>
@@ -25624,6 +25624,10 @@
             }
             if (typeof hasAccountingCenterPrivilegeForSession === 'function' && hasAccountingCenterPrivilegeForSession()) {
                 g02Launcher.push({ label: '會計中心', icon: zdlIcon('report'), action: 'accounting' });
+            }
+            /* INVENTORY-PERM-002A｜手機首頁捷徑：與 Work Center／basic ACL 一致 */
+            if (typeof hasInventoryPrivilegeForSession === 'function' && hasInventoryPrivilegeForSession()) {
+                g02Launcher.push({ label: '庫存盤點', icon: zdlIcon('apps'), action: 'inventory' });
             }
             /* NOTICE-001｜單一入口：公告中心（管理權於中心內 Tab） */
             g02Launcher.push(
