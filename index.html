@@ -83,7 +83,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <meta name="zdos-build" content="SALES-REPORT-PERM-002B-20260810">
+    <meta name="zdos-build" content="FEATURE-GRANTS-MSS-V1-20260810">
     <script src="ui/zdos-web-push.js?v=bug0014d-20260807"></script>
     <script src="ui/zdos-first-run-wizard.js?v=frw-20260807b"></script>
     <style>
@@ -3550,13 +3550,14 @@
         const ACCOUNTING_CENTER_INDIVIDUAL_GRANT_EMP_IDS = new Set([
             // 例：'CH011901'
         ]);
-        /* SALES-REPORT-PERM-002｜TEMPORARY SALES REPORT GRANT
-         * 僅「業績回報／算單」個別授權；不得把 staff／senior_staff 整角色升成幹部。
-         * 正式 SoT 後續改 Cloud user_feature_grants；此處硬編碼 empId 僅為 TEMPORARY。
-         * 必須使用穩定 employee／personnel ID；不得用姓名判斷。 */
+        /* SALES-REPORT-PERM-002｜TEMPORARY SALES REPORT GRANT（DEPRECATED fallback）
+         * FEATURE-GRANTS-V1：正式 SoT = Cloud user_feature_grants.feature_key = sales_report_submit。
+         * 硬編碼僅在 Cloud grants 尚未就緒（migration 未套用）時 fallback；不得用姓名判斷。
+         * 不得因 grant 改變 profiles.role。 */
         const SALES_REPORT_INDIVIDUAL_GRANT_EMP_IDS = new Set([
-            'CH012603' // SALES-REPORT-PERM-002A｜TEMPORARY：郭家豪業績回報權（僅 empId，不用姓名）
+            'CH012603' // DEPRECATED fallback：郭家豪；V1 seed = CH012603 × stores.code DG
         ]);
+        const FEATURE_GRANT_SALES_REPORT_SUBMIT = 'sales_report_submit';
         const normalizeAccountRole = role => {
             const r = String(role || '').trim();
             if (!r) return '一般員工';
@@ -5771,6 +5772,13 @@
             state.cloudRole = null;
             state.supabaseSessionReady = false;
             state.cloudSalesReports = [];
+            state.featureGrants = [];
+            state.featureGrantsDirectory = [];
+            state.featureGrantsCloudReady = null;
+            state.featureGrantsLoading = false;
+            state.featureGrantsSaving = false;
+            state.featureGrantsError = '';
+            state.featureGrantsForm = { employeeNo: '', storeCode: 'DG', enabled: true };
             state.leaveRegistry = [];
             state.leaveCloudLoading = false;
             state.leaveCloudError = '';
@@ -5894,6 +5902,7 @@
             }
             renderApp();
             await enterSalesCloudContext();
+            try { await fetchOwnFeatureGrants(); } catch (_) { /* ignore grants bootstrap */ }
             try {
                 if (typeof ZdosNotificationService !== 'undefined') {
                     ZdosNotificationService.ensureLocalSystemVersionNotice();
@@ -6129,6 +6138,41 @@
             }).join('')}</div>`;
         };
 
+        /* MULTI-STORE-SWITCH-V1｜G02 首頁營運門市；選項僅 cloudAvailableStores；切換只呼叫 switchCloudOperatingStore */
+        const renderG02HeroStoreMeta = (dash, currentMatched) => {
+            const role = String(currentMatched?.role || '');
+            const date = String(dash?.todayLabel || '');
+            const fallbackStore = String(dash?.storeType || state.cloudCurrentStore?.name || state.storeType || '');
+            const stores = (state.supabaseSessionReady && Array.isArray(state.cloudAvailableStores))
+                ? state.cloudAvailableStores.filter((s) => {
+                    const code = normalizeStoreIdCode(s?.code);
+                    return !!code && (typeof isStoreActive !== 'function' || isStoreActive(code));
+                })
+                : [];
+            if (stores.length < 2) {
+                return `<p class="zdos-hero__meta">${escapeHtmlText(fallbackStore)} · ${escapeHtmlText(role)} · ${escapeHtmlText(date)}</p>`;
+            }
+            const activeCode = normalizeStoreIdCode(state.cloudCurrentStore?.code || state.storeType) || normalizeStoreIdCode(stores[0]?.code);
+            const activeName = stores.find((s) => normalizeStoreIdCode(s.code) === activeCode)?.name
+                || state.cloudCurrentStore?.name
+                || fallbackStore
+                || activeCode
+                || '';
+            const options = stores.map((s) => {
+                const code = normalizeStoreIdCode(s.code);
+                const selected = code === activeCode ? ' selected' : '';
+                return `<option value="${escapeHtmlText(code)}"${selected}>${escapeHtmlText(s.name || code)}</option>`;
+            }).join('');
+            return `<p class="zdos-hero__meta zdos-hero__meta--switch">
+                <label class="zdos-g02-store-switch">
+                    <span class="zdos-g02-store-label">目前門市：${escapeHtmlText(activeName)}</span>
+                    <span class="zdos-g02-store-caret" aria-hidden="true">▼</span>
+                    <select class="zdos-g02-store-select" aria-label="目前門市" onchange="switchCloudOperatingStore(this.value)">${options}</select>
+                </label>
+                <span class="zdos-g02-store-meta-tail"> · ${escapeHtmlText(role)} · ${escapeHtmlText(date)}</span>
+            </p>`;
+        };
+
         const getSessionActor = () => {
             if (isSalesCloudEnabled() && state.supabaseSessionReady && state.cloudProfile) {
                 return {
@@ -6256,25 +6300,201 @@
         /* SALES-REPORT-PERM-002｜業績管理權＝原幹部 ACL（不得因個別授權而擴大） */
         const canManageSalesCenter = () => hasSalesCenterPrivilegeForSession();
 
-        const hasSalesReportIndividualGrant = (empId) => {
-            /* SALES-REPORT-PERM-002B｜Set 成員與 runtime empId 皆 normalize 後比對（避免 CH012603 vs ch012603 miss） */
+        const isCloudOwnerActor = () => {
+            if (!state.supabaseSessionReady) return false;
+            const role = typeof resolveCloudAuthRole === 'function'
+                ? resolveCloudAuthRole()
+                : String(state.cloudRole || state.cloudProfile?.role || '').trim();
+            return role === 'owner';
+        };
+
+        /* FEATURE-GRANTS-V1｜僅 Cloud owner 可管理 grants；manager／supervisor／trainee_manager 不可 */
+        const canManageFeatureGrants = () => isCloudOwnerActor();
+
+        const hasSalesReportHardcodeGrant = (empId) => {
+            /* SALES-REPORT-PERM-002B｜DEPRECATED fallback：normalize 後比對 hardcode Set；門市仍須東港 DG */
             const key = normalizeEmpId(empId);
             if (!key) return false;
+            let matched = false;
             for (const granted of SALES_REPORT_INDIVIDUAL_GRANT_EMP_IDS) {
-                if (normalizeEmpId(granted) === key) return true;
+                if (normalizeEmpId(granted) === key) { matched = true; break; }
             }
-            // 預留：Cloud user_feature_grants／profiles 欄位（尚無 migration，勿假造 DB）
-            // if (state.cloudProfile?.sales_report_submit_grant === true) return true;
-            const acc = state.accounts.find(a => normalizeEmpId(a.empId) === key);
-            if (acc && acc.salesReportSubmitGrant === true) return true;
+            if (!matched) {
+                const acc = state.accounts.find(a => normalizeEmpId(a.empId) === key);
+                if (acc && acc.salesReportSubmitGrant === true) matched = true;
+            }
+            if (!matched) return false;
+            const storeCode = normalizeStoreIdCode(state.cloudCurrentStore?.code || state.storeType);
+            return storeCode === 'DG';
+        };
+
+        /* Cloud SoT：enabled sales_report_submit + current store id + active membership */
+        const hasCloudSalesReportSubmitGrantForCurrentStore = () => {
+            if (!state.supabaseSessionReady || !state.cloudProfile?.id) return false;
+            const store = state.cloudCurrentStore;
+            if (!store?.id) return false;
+            const hasMembership = (state.cloudAvailableStores || []).some(s => String(s.id) === String(store.id));
+            if (!hasMembership) return false;
+            const uid = String(state.cloudProfile.id);
+            return (state.featureGrants || []).some((g) => (
+                g
+                && g.enabled === true
+                && String(g.feature_key || '') === FEATURE_GRANT_SALES_REPORT_SUBMIT
+                && String(g.user_id || '') === uid
+                && String(g.store_id || '') === String(store.id)
+            ));
+        };
+
+        const hasSalesReportIndividualGrant = (empId) => {
+            if (state.supabaseSessionReady && state.featureGrantsCloudReady === true) {
+                return hasCloudSalesReportSubmitGrantForCurrentStore();
+            }
+            return hasSalesReportHardcodeGrant(empId);
+        };
+
+        /* 幹部 ∪ Cloud grant（現在門市）∪ DEPRECATED hardcode fallback */
+        const canSubmitSalesReport = () => {
+            if (canManageSalesCenter()) return true;
+            if (hasCloudSalesReportSubmitGrantForCurrentStore()) return true;
+            if (!state.supabaseSessionReady || state.featureGrantsCloudReady !== true) {
+                const actor = typeof getSessionActor === 'function' ? getSessionActor() : null;
+                return hasSalesReportHardcodeGrant(actor?.empId);
+            }
             return false;
         };
 
-        /* 幹部 ∪ TEMP 指定回報人員；不得回寫進 hasSalesCenterPrivilegeForSession */
-        const canSubmitSalesReport = () => {
-            if (canManageSalesCenter()) return true;
-            const actor = typeof getSessionActor === 'function' ? getSessionActor() : null;
-            return hasSalesReportIndividualGrant(actor?.empId);
+        const fetchOwnFeatureGrants = async () => {
+            if (!state.supabaseSessionReady) {
+                state.featureGrants = [];
+                state.featureGrantsCloudReady = null;
+                return { ok: false, message: '雲端未登入' };
+            }
+            const client = typeof getSupabaseClient === 'function' ? getSupabaseClient() : null;
+            if (!client) {
+                state.featureGrantsCloudReady = false;
+                return { ok: false, message: '雲端連線未就緒' };
+            }
+            try {
+                const { data, error } = await client
+                    .from('user_feature_grants')
+                    .select('id, user_id, feature_key, store_id, enabled, updated_at, created_by')
+                    .eq('feature_key', FEATURE_GRANT_SALES_REPORT_SUBMIT);
+                if (error) {
+                    console.warn('[FEATURE-GRANTS-V1] fetch grants failed', error);
+                    state.featureGrants = [];
+                    state.featureGrantsCloudReady = false;
+                    state.featureGrantsError = error.message || '載入授權失敗';
+                    return { ok: false, message: state.featureGrantsError };
+                }
+                state.featureGrants = Array.isArray(data) ? data : [];
+                state.featureGrantsCloudReady = true;
+                state.featureGrantsError = '';
+                return { ok: true, rows: state.featureGrants };
+            } catch (err) {
+                console.warn('[FEATURE-GRANTS-V1] fetch grants exception', err);
+                state.featureGrants = [];
+                state.featureGrantsCloudReady = false;
+                state.featureGrantsError = err?.message || '載入授權失敗';
+                return { ok: false, message: state.featureGrantsError };
+            }
+        };
+
+        const fetchFeatureGrantDirectory = async () => {
+            if (!canManageFeatureGrants()) {
+                state.featureGrantsDirectory = [];
+                return { ok: false, message: '僅創辦人可管理授權' };
+            }
+            const client = typeof getSupabaseClient === 'function' ? getSupabaseClient() : null;
+            if (!client) return { ok: false, message: '雲端連線未就緒' };
+            try {
+                const { data, error } = await client.rpc('list_feature_grant_directory');
+                if (error) throw error;
+                state.featureGrantsDirectory = Array.isArray(data) ? data : [];
+                return { ok: true, rows: state.featureGrantsDirectory };
+            } catch (err) {
+                console.warn('[FEATURE-GRANTS-V1] directory failed', err);
+                state.featureGrantsDirectory = [];
+                return { ok: false, message: err?.message || '載入員工清單失敗' };
+            }
+        };
+
+        window.openFeatureGrantsCenter = async function () {
+            if (!canManageFeatureGrants()) {
+                return showToast('僅創辦人可管理業績回報授權。', 'error');
+            }
+            zdosRememberNavSource('featureGrants');
+            state.currentView = 'featureGrants';
+            safeSetItem('zdos_current_view', 'featureGrants');
+            state.featureGrantsLoading = true;
+            renderApp();
+            const [grants, dir] = await Promise.all([fetchOwnFeatureGrants(), fetchFeatureGrantDirectory()]);
+            state.featureGrantsLoading = false;
+            if (!grants.ok && grants.message) state.featureGrantsError = grants.message;
+            if (!dir.ok && dir.message) state.featureGrantsError = dir.message;
+            renderApp();
+        };
+
+        window.setFeatureGrantFormField = function (field, value) {
+            if (!canManageFeatureGrants()) return;
+            const next = { ...(state.featureGrantsForm || { employeeNo: '', storeCode: 'DG', enabled: true }) };
+            if (field === 'employeeNo') {
+                next.employeeNo = String(value || '').trim().toUpperCase();
+                const row = (state.featureGrantsDirectory || []).find((r) =>
+                    String(r.employee_no || '').trim().toUpperCase() === next.employeeNo
+                );
+                const codes = Array.isArray(row?.store_codes)
+                    ? row.store_codes.map((c) => normalizeStoreIdCode(c)).filter(Boolean)
+                    : [];
+                if (codes.length && !codes.includes(normalizeStoreIdCode(next.storeCode))) {
+                    next.storeCode = codes[0];
+                }
+            } else if (field === 'storeCode') next.storeCode = normalizeStoreIdCode(value) || 'DG';
+            else if (field === 'enabled') next.enabled = value === true || value === 'true' || value === '1';
+            state.featureGrantsForm = next;
+            renderApp();
+        };
+
+        window.loadFeatureGrantForm = function (empNo, storeCode, enabled) {
+            if (!canManageFeatureGrants()) return;
+            state.featureGrantsForm = {
+                employeeNo: String(empNo || '').trim().toUpperCase(),
+                storeCode: normalizeStoreIdCode(storeCode) || 'DG',
+                enabled: enabled !== false && enabled !== 'false'
+            };
+            renderApp();
+        };
+
+        window.saveSalesReportSubmitGrant = async function () {
+            if (!canManageFeatureGrants()) {
+                return showToast('僅創辦人可管理業績回報授權。', 'error');
+            }
+            if (state.featureGrantsSaving) return;
+            const empNo = String(state.featureGrantsForm?.employeeNo || '').trim().toUpperCase();
+            const storeCode = normalizeStoreIdCode(state.featureGrantsForm?.storeCode) || '';
+            const enabled = state.featureGrantsForm?.enabled !== false;
+            if (!empNo) return showToast('請選擇員工。', 'error');
+            if (!storeCode) return showToast('請選擇門市。', 'error');
+            const client = typeof getSupabaseClient === 'function' ? getSupabaseClient() : null;
+            if (!client) return showToast('雲端連線未就緒', 'error');
+            state.featureGrantsSaving = true;
+            renderApp();
+            try {
+                const { data, error } = await client.rpc('upsert_sales_report_submit_grant', {
+                    p_employee_no: empNo,
+                    p_store_code: storeCode,
+                    p_enabled: enabled
+                });
+                if (error) throw error;
+                await fetchOwnFeatureGrants();
+                showToast(enabled ? '已開啟業績回報授權' : '已關閉業績回報授權', 'success');
+                void data;
+            } catch (err) {
+                console.warn('[FEATURE-GRANTS-V1] upsert failed', err);
+                showToast(err?.message || '儲存授權失敗', 'error');
+            } finally {
+                state.featureGrantsSaving = false;
+                renderApp();
+            }
         };
 
         /** 首頁／Work Center 入口：幹部＝業績中心；指定人員＝業績回報 */
@@ -9383,6 +9603,7 @@
             if (state.currentView === 'accounting') return '會計中心';
             if (state.currentView === 'reports') return '會計中心';
             if (state.currentView === 'managementCenter') return '管理中心';
+            if (state.currentView === 'featureGrants') return '業績回報授權';
             if (state.currentView === 'operationCenter') return '營運中心';
             if (state.currentView === 'operationReportCenter') return '營運報告中心';
             if (state.currentView === 'operationImprovementCenter') return '改善追蹤中心';
@@ -9707,6 +9928,14 @@
             supabaseStoreUuidByCode: {},
             supabaseStoreUuidByUuid: {},
             supabaseSessionReady: false,
+            /* FEATURE-GRANTS-V1｜sales_report_submit Cloud SoT */
+            featureGrants: [],
+            featureGrantsDirectory: [],
+            featureGrantsCloudReady: null,
+            featureGrantsLoading: false,
+            featureGrantsSaving: false,
+            featureGrantsError: '',
+            featureGrantsForm: { employeeNo: '', storeCode: 'DG', enabled: true },
             salesReportsRealtimeChannel: null,
             leaveRequestsRealtimeChannel: null,
             notificationsRealtimeChannel: null,
@@ -14483,6 +14712,7 @@
                 if (v === 'workCenter' && typeof openWorkCenter === 'function') return openWorkCenter();
                 if (v === 'myCenter' && typeof openMyCenter === 'function') return openMyCenter();
                 if (v === 'managementCenter' && typeof openManagementCenter === 'function') return openManagementCenter();
+                if (v === 'featureGrants' && typeof openFeatureGrantsCenter === 'function') return openFeatureGrantsCenter();
                 if (v === 'notifications' && typeof openNotificationCenter === 'function') return openNotificationCenter();
                 if (v === 'scheduleCenter' && typeof openScheduleBusinessCenter === 'function') {
                     return openScheduleBusinessCenter(0);
@@ -25765,7 +25995,7 @@
                                         </div>
                                     </div>
                                     <p class="zdos-hero__greet">${escapeHtmlText(greetLine)}</p>
-                                    <p class="zdos-hero__meta">${escapeHtmlText(dash.storeType || '')} · ${escapeHtmlText(currentMatched?.role || '')} · ${escapeHtmlText(dash.todayLabel || '')}</p>
+                                    ${typeof renderG02HeroStoreMeta === 'function' ? renderG02HeroStoreMeta(dash, currentMatched) : `<p class="zdos-hero__meta">${escapeHtmlText(dash.storeType || '')} · ${escapeHtmlText(currentMatched?.role || '')} · ${escapeHtmlText(dash.todayLabel || '')}</p>`}
                                     <div class="zdos-hero__ai">
                                         <div class="zdos-hero__ai-head">
                                             <span class="zdos-hero__ai-tag">AI 絲絲</span>
@@ -50134,6 +50364,120 @@
                         <h3 class="zdos-mgmt-center__card-title">系統治理中心</h3>
                         <p class="zdos-mgmt-center__card-desc">Feature · Change Log · Release · 依賴 · 健康</p>
                     </button>` : ''}
+                    ${typeof canManageFeatureGrants === 'function' && canManageFeatureGrants() ? `<button type="button" class="zdos-mgmt-center__card" onclick="openFeatureGrantsCenter()">
+                        <p class="zdos-mgmt-center__card-kicker">FEATURE-GRANTS-V1</p>
+                        <h3 class="zdos-mgmt-center__card-title">業績回報授權</h3>
+                        <p class="zdos-mgmt-center__card-desc">選擇員工 · 門市 · sales_report_submit · 不改角色</p>
+                    </button>` : ''}
+                </div>`;
+            root.innerHTML = wrapFunctionPage(header, body, 'max-w-xl');
+        }
+
+        function renderFeatureGrantsCenter(root) {
+            if (!canManageFeatureGrants()) {
+                showToast('僅創辦人可管理業績回報授權。', 'error');
+                state.currentView = 'managementCenter';
+                safeSetItem('zdos_current_view', 'managementCenter');
+                renderApp();
+                return;
+            }
+            const form = state.featureGrantsForm || { employeeNo: '', storeCode: 'DG', enabled: true };
+            const directory = Array.isArray(state.featureGrantsDirectory) ? state.featureGrantsDirectory : [];
+            const grants = (state.featureGrants || []).filter((g) =>
+                String(g.feature_key || '') === FEATURE_GRANT_SALES_REPORT_SUBMIT
+            );
+            const selectedEmp = String(form.employeeNo || '').trim().toUpperCase();
+            const selectedRow = directory.find((r) =>
+                String(r.employee_no || '').trim().toUpperCase() === selectedEmp
+            );
+            const membershipCodes = Array.isArray(selectedRow?.store_codes)
+                ? selectedRow.store_codes.map((c) => normalizeStoreIdCode(c)).filter(Boolean)
+                : [];
+            const storeOptions = getActiveStores().filter((s) =>
+                !selectedEmp || !membershipCodes.length || membershipCodes.includes(s.code)
+            );
+            const storeLabelForId = (storeId) => {
+                const code = state.supabaseStoreUuidByUuid?.[storeId] || '';
+                const reg = code ? getStoreByCode(code) : null;
+                return reg ? `${reg.name}（${reg.code}）` : (code || '未知門市');
+            };
+            const empLabelForId = (userId) => {
+                const row = directory.find((r) => String(r.user_id || '') === String(userId || ''));
+                if (!row) return String(userId || '').slice(0, 8);
+                return `${row.display_name || ''}（${row.employee_no || ''}）`.trim();
+            };
+            const header = renderFunctionPageHeader({
+                backOnclick: 'openManagementCenter()',
+                title: '業績回報授權',
+                rightHtml: `<button type="button" onclick="openFeatureGrantsCenter()" class="zdos-workspace-btn zdos-nav-btn">重新載入</button>`
+            });
+            const empOptions = directory
+                .filter((r) => r && r.is_active !== false)
+                .map((r) => {
+                    const empNo = String(r.employee_no || '').trim().toUpperCase();
+                    const selected = empNo === selectedEmp ? ' selected' : '';
+                    const stores = Array.isArray(r.store_codes) && r.store_codes.length
+                        ? ` · ${(r.store_codes || []).join('/')}`
+                        : '';
+                    return `<option value="${escapeHtmlText(empNo)}"${selected}>${escapeHtmlText(`${r.display_name || ''}（${empNo}）${stores}`)}</option>`;
+                })
+                .join('');
+            const storeOptionsHtml = storeOptions.map((s) =>
+                `<option value="${escapeHtmlText(s.code)}"${normalizeStoreIdCode(form.storeCode) === s.code ? ' selected' : ''}>${escapeHtmlText(`${s.name}（${s.code}）`)}</option>`
+            ).join('');
+            const grantRows = grants.length
+                ? grants.map((g) => {
+                    const code = state.supabaseStoreUuidByUuid?.[g.store_id] || '';
+                    const on = g.enabled === true;
+                    return `<button type="button" class="w-full text-left rounded-xl border ${on ? 'border-emerald-500/30 bg-emerald-500/10' : 'border-white/10 bg-slate-900/40'} px-3 py-2.5"
+                        onclick="loadFeatureGrantForm(${JSON.stringify(String((directory.find((r) => String(r.user_id) === String(g.user_id))?.employee_no) || ''))}, ${JSON.stringify(code)}, ${on ? 'true' : 'false'})">
+                        <p class="text-[11px] font-bold text-slate-100">${escapeHtmlText(empLabelForId(g.user_id))}</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">${escapeHtmlText(storeLabelForId(g.store_id))} · ${on ? '有效' : '已關閉'}</p>
+                    </button>`;
+                }).join('')
+                : `<p class="text-[11px] text-slate-400">尚無 sales_report_submit 授權列。郭家豪 seed：CH012603 × 東港 DG。</p>`;
+            const cloudNote = state.featureGrantsCloudReady === true
+                ? 'Cloud SoT 已載入'
+                : (state.featureGrantsCloudReady === false
+                    ? 'Cloud 表尚未就緒，runtime 暫用 hardcode fallback'
+                    : '尚未連線 Cloud grants');
+            const body = `
+                <div class="space-y-3" data-feature="FEATURE-GRANTS-V1">
+                    <section class="rounded-2xl border border-white/10 bg-slate-900/50 p-4 space-y-3">
+                        <p class="text-[10px] tracking-wider text-amber-300/90 font-bold">FEATURE-GRANTS-V1 · OWNER ONLY</p>
+                        <h2 class="text-base font-extrabold text-white">業績回報授權</h2>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">僅創辦人可新增／修改／取消。授權不改變 profiles.role。sales_report_submit 必須綁定門市；僅在目前門市 = grant.store_id 且該員對該店有有效 membership 時生效。</p>
+                        <p class="text-[10px] text-slate-500">${escapeHtmlText(cloudNote)}${state.featureGrantsError ? ` · ${escapeHtmlText(state.featureGrantsError)}` : ''}</p>
+                    </section>
+                    <section class="rounded-2xl border border-white/10 bg-slate-900/50 p-4 space-y-3">
+                        <label class="block text-[11px] text-slate-300 font-bold">員工
+                            <select class="mt-1 w-full rounded-xl bg-slate-950 border border-white/10 text-[12px] text-white px-3 py-2"
+                                onchange="setFeatureGrantFormField('employeeNo', this.value)">
+                                <option value="">請選擇員工</option>
+                                ${empOptions}
+                            </select>
+                        </label>
+                        <label class="block text-[11px] text-slate-300 font-bold">門市
+                            <select class="mt-1 w-full rounded-xl bg-slate-950 border border-white/10 text-[12px] text-white px-3 py-2"
+                                onchange="setFeatureGrantFormField('storeCode', this.value)">
+                                ${storeOptionsHtml}
+                            </select>
+                        </label>
+                        <label class="flex items-center gap-2 text-[12px] text-slate-200 font-bold">
+                            <input type="checkbox" ${form.enabled !== false ? 'checked' : ''}
+                                onchange="setFeatureGrantFormField('enabled', this.checked)">
+                            開啟 sales_report_submit
+                        </label>
+                        <button type="button" class="w-full rounded-xl bg-amber-500/20 border border-amber-400/40 text-amber-100 text-[12px] font-bold py-2.5 disabled:opacity-50"
+                            ${state.featureGrantsSaving || state.featureGrantsLoading ? 'disabled' : ''}
+                            onclick="saveSalesReportSubmitGrant()">
+                            ${state.featureGrantsSaving ? '儲存中…' : (state.featureGrantsLoading ? '載入中…' : '儲存授權')}
+                        </button>
+                    </section>
+                    <section class="rounded-2xl border border-white/10 bg-slate-900/50 p-4 space-y-2">
+                        <p class="text-[11px] font-bold text-slate-300">現有授權</p>
+                        <div class="space-y-2">${grantRows}</div>
+                    </section>
                 </div>`;
             root.innerHTML = wrapFunctionPage(header, body, 'max-w-xl');
         }
@@ -57232,6 +57576,10 @@
                 renderManagementCenter(root);
                 return;
             }
+            if (state.currentView === 'featureGrants') {
+                renderFeatureGrantsCenter(root);
+                return;
+            }
             if (state.currentView === 'operationCenter') {
                 renderOperationCenterToday(root);
                 return;
@@ -57650,7 +57998,7 @@
                 return;
             }
 
-            if (state.currentView !== 'module' && state.currentView !== 'announcements' && state.currentView !== 'announcement-detail' && state.currentView !== 'announcement-manager' && state.currentView !== 'notifications' && state.currentView !== 'coming-soon' && state.currentView !== 'scheduling' && state.currentView !== 'leaveCenter' && state.currentView !== 'hrHome' && state.currentView !== 'scheduleCenter' && state.currentView !== 'schedule-change' && state.currentView !== 'reports' && state.currentView !== 'workforce' && state.currentView !== 'employeeIntake' && state.currentView !== 'employeeConvert' && state.currentView !== 'operation-center' && state.currentView !== 'operationCenter' && state.currentView !== 'operationReportCenter' && state.currentView !== 'operationImprovementCenter' && state.currentView !== 'operationIssueCenter' && state.currentView !== 'operationStandardCenter' && state.currentView !== 'operationKnowledgeCenter' && state.currentView !== 'operationTrainingCenter' && state.currentView !== 'operationCompetencyCenter' && state.currentView !== 'operationTalentCenter' && state.currentView !== 'operationPerformanceCenter' && state.currentView !== 'operationRewardCenter' && state.currentView !== 'operationOrgAnalyticsCenter' && state.currentView !== 'operationStrategyCenter' && state.currentView !== 'operationRiskCenter' && state.currentView !== 'operationAuditCenter' && state.currentView !== 'operationQualityCenter' && state.currentView !== 'operationCustomerExperienceCenter' && state.currentView !== 'operationSupplyChainCenter' && state.currentView !== 'operationFinancialAnalyticsCenter' && state.currentView !== 'operationExecutionCenter' && state.currentView !== 'operationProjectCenter' && state.currentView !== 'operationDocumentCenter' && state.currentView !== 'operationMeetingCenter' && state.currentView !== 'operationInnovationCenter' && state.currentView !== 'operationBrandCenter' && state.currentView !== 'operationAcademyCenter' && state.currentView !== 'operationFounderCommandCenter' && state.currentView !== 'operationDecisionIntelligenceCenter' && state.currentView !== 'operationKnowledgeGraphCenter' && state.currentView !== 'operationSimulationCenter' && state.currentView !== 'operationBenchmarkCenter' && state.currentView !== 'operationEnterpriseOSCenter' && state.currentView !== 'operationGovernanceCenter' && state.currentView !== 'managementCenter' && state.currentView !== 'review' && state.currentView !== 'accounting' && state.currentView !== 'founder-console' && state.currentView !== 'dev-platform' && state.currentView !== 'zd-academy' && state.currentView !== 'workCenter' && state.currentView !== 'myCenter') {
+            if (state.currentView !== 'module' && state.currentView !== 'announcements' && state.currentView !== 'announcement-detail' && state.currentView !== 'announcement-manager' && state.currentView !== 'notifications' && state.currentView !== 'coming-soon' && state.currentView !== 'scheduling' && state.currentView !== 'leaveCenter' && state.currentView !== 'hrHome' && state.currentView !== 'scheduleCenter' && state.currentView !== 'schedule-change' && state.currentView !== 'reports' && state.currentView !== 'workforce' && state.currentView !== 'employeeIntake' && state.currentView !== 'employeeConvert' && state.currentView !== 'operation-center' && state.currentView !== 'operationCenter' && state.currentView !== 'operationReportCenter' && state.currentView !== 'operationImprovementCenter' && state.currentView !== 'operationIssueCenter' && state.currentView !== 'operationStandardCenter' && state.currentView !== 'operationKnowledgeCenter' && state.currentView !== 'operationTrainingCenter' && state.currentView !== 'operationCompetencyCenter' && state.currentView !== 'operationTalentCenter' && state.currentView !== 'operationPerformanceCenter' && state.currentView !== 'operationRewardCenter' && state.currentView !== 'operationOrgAnalyticsCenter' && state.currentView !== 'operationStrategyCenter' && state.currentView !== 'operationRiskCenter' && state.currentView !== 'operationAuditCenter' && state.currentView !== 'operationQualityCenter' && state.currentView !== 'operationCustomerExperienceCenter' && state.currentView !== 'operationSupplyChainCenter' && state.currentView !== 'operationFinancialAnalyticsCenter' && state.currentView !== 'operationExecutionCenter' && state.currentView !== 'operationProjectCenter' && state.currentView !== 'operationDocumentCenter' && state.currentView !== 'operationMeetingCenter' && state.currentView !== 'operationInnovationCenter' && state.currentView !== 'operationBrandCenter' && state.currentView !== 'operationAcademyCenter' && state.currentView !== 'operationFounderCommandCenter' && state.currentView !== 'operationDecisionIntelligenceCenter' && state.currentView !== 'operationKnowledgeGraphCenter' && state.currentView !== 'operationSimulationCenter' && state.currentView !== 'operationBenchmarkCenter' && state.currentView !== 'operationEnterpriseOSCenter' && state.currentView !== 'operationGovernanceCenter' && state.currentView !== 'managementCenter' && state.currentView !== 'featureGrants' && state.currentView !== 'review' && state.currentView !== 'accounting' && state.currentView !== 'founder-console' && state.currentView !== 'dev-platform' && state.currentView !== 'zd-academy' && state.currentView !== 'workCenter' && state.currentView !== 'myCenter') {
                 state.currentView = 'dashboard';
                 safeSetItem('zdos_current_view', 'dashboard');
                 renderApp();
