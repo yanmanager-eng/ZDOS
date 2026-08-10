@@ -83,7 +83,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <meta name="zdos-build" content="FEATURE-GRANTS-MSS-V1-20260810">
+    <meta name="zdos-build" content="ACCOUNTING-CUSTOM-RANGE-V1-20260811">
     <script src="ui/zdos-web-push.js?v=bug0014d-20260807"></script>
     <script src="ui/zdos-first-run-wizard.js?v=frw-20260807b"></script>
     <style>
@@ -6100,7 +6100,13 @@
                 if ((state.currentView === 'reports' || state.currentView === 'accounting') && typeof buildReportCenterSnapshot === 'function') {
                     const rc = ensureReportCenterState();
                     let snap = null;
-                    if (rc.tab === 'monthly' || (rc.preview && rc.preview.type === 'monthly')) {
+                    if (rc.tab === 'custom' || (rc.preview && rc.preview.type === 'custom')) {
+                        snap = buildReportCenterSnapshot({
+                            type: 'custom',
+                            startIso: rc.customStartIso,
+                            endIso: rc.customEndIso
+                        });
+                    } else if (rc.tab === 'monthly' || (rc.preview && rc.preview.type === 'monthly')) {
                         snap = buildReportCenterSnapshot({ type: 'monthly', year: rc.year, month: rc.month });
                     } else if (rc.weekStartIso && rc.weekEndIso) {
                         snap = buildReportCenterSnapshot({
@@ -9902,6 +9908,9 @@
                 month: null,
                 weekStartIso: null,
                 weekEndIso: null,
+                /* ACCOUNTING-REPORT-CUSTOM-RANGE-V1 */
+                customStartIso: null,
+                customEndIso: null,
                 preview: null,
                 history: []
             },
@@ -23137,9 +23146,16 @@
             return raw || '門市';
         }
 
-        function setAccountingXmlCell(doc, rowNumber, column, value, type) {
-            // A3～A33 為範本固定日期列：匯出路徑不得經由此函式覆寫 A 欄日期。
-            if (String(column || '').toUpperCase() === 'A' && Number(rowNumber) >= 3 && Number(rowNumber) <= 33) {
+        function setAccountingXmlCell(doc, rowNumber, column, value, type, options) {
+            // A3～A33 為範本固定日期列：預設禁止覆寫；僅 custom rewrite 可 allowDateColumnWrite。
+            const opts = options && typeof options === 'object' ? options : {};
+            const allowDateColumnWrite = opts.allowDateColumnWrite === true;
+            if (
+                String(column || '').toUpperCase() === 'A'
+                && Number(rowNumber) >= 3
+                && Number(rowNumber) <= 33
+                && !allowDateColumnWrite
+            ) {
                 console.warn('[ZDOS Accounting Export] blocked write to protected date column A' + rowNumber);
                 return;
             }
@@ -23164,6 +23180,40 @@
             const val = doc.createElementNS(ns, 'v');
             val.textContent = String(value);
             cell.appendChild(val);
+        }
+
+        /** ACCOUNTING-CUSTOM-RANGE-TEMPLATE-FIX-V1｜custom-only：A3 起寫入 serial，清空多餘列 */
+        function rewriteAccountingTemplateDatesForCustomRange(sheetDoc, startIso, endIso) {
+            const days = (typeof iterateReportCenterIsoDates === 'function')
+                ? iterateReportCenterIsoDates(startIso, endIso)
+                : [];
+            if (!days.length) {
+                return { ok: false, message: '請填寫開始日期與結束日期。', days: [] };
+            }
+            if (days.length > 31) {
+                return { ok: false, message: '自訂會計報表最多支援 31 天。', days };
+            }
+            const dateWriteOpts = { allowDateColumnWrite: true };
+            for (let i = 0; i < days.length; i += 1) {
+                const row = 3 + i;
+                const d = new Date(`${days[i]}T12:00:00`);
+                const serial = accountingExcelSerial(d);
+                setAccountingXmlCell(sheetDoc, row, 'A', serial, 'number', dateWriteOpts);
+                const readBack = readAccountingTemplateDateIso(sheetDoc, row);
+                if (readBack !== days[i]) {
+                    return {
+                        ok: false,
+                        message: '會計範本日期寫入驗證失敗，請稍後再試。',
+                        days,
+                        failedIso: days[i],
+                        readBack
+                    };
+                }
+            }
+            for (let row = 3 + days.length; row <= 33; row += 1) {
+                setAccountingXmlCell(sheetDoc, row, 'A', '', 'number', dateWriteOpts);
+            }
+            return { ok: true, days };
         }
 
         async function exportWeeklyAccountingReport(options = {}) {
@@ -23252,6 +23302,25 @@
                 for (let row = 3; row <= 33; row += 1) {
                     ACCOUNTING_DATA_COLS.forEach(column => setAccountingXmlCell(sheetDoc, row, column, '', 'number'));
                 }
+                const reportKind = String(options.reportKind || options.kind || '').toLowerCase();
+                const rewriteCustomDates = options.rewriteCustomTemplateDates === true || reportKind === 'custom';
+                if (rewriteCustomDates) {
+                    const rewritten = rewriteAccountingTemplateDatesForCustomRange(sheetDoc, outStartIso, outEndIso);
+                    if (!rewritten.ok) {
+                        showToast(rewritten.message || '自訂會計報表最多支援 31 天。', 'error');
+                        return;
+                    }
+                    const cover = typeof assertAccountingTemplateCoversRange === 'function'
+                        ? await assertAccountingTemplateCoversRange(outStartIso, outEndIso, {
+                            datesSet: new Set(rewritten.days),
+                            afterRewrite: true
+                        })
+                        : { ok: true };
+                    if (!cover.ok) {
+                        showToast(cover.message || '會計範本不支援此日期區間，請檢查範本日期。', 'error');
+                        return;
+                    }
+                }
                 const dateToRow = new Map();
                 for (let row = 3; row <= 33; row += 1) {
                     const iso = readAccountingTemplateDateIso(sheetDoc, row);
@@ -23295,6 +23364,8 @@
                     link.download = `ZDOS_會計週報_${storeTag}_${dateTag}.xlsx`;
                 } else if (kind === 'monthly') {
                     link.download = `ZDOS_會計月報_${storeTag}_${dateTag}.xlsx`;
+                } else if (kind === 'custom') {
+                    link.download = `ZDOS_會計自訂區間_${storeTag}_${dateTag}.xlsx`;
                 } else {
                     link.download = `ZDOS_${storeLabel}_歷史會計報表_${dateTag}.xlsx`;
                 }
@@ -27431,11 +27502,15 @@
                     month: null,
                     weekStartIso: null,
                     weekEndIso: null,
+                    customStartIso: null,
+                    customEndIso: null,
                     preview: null,
                     history: []
                 };
             }
             const rc = state.reportCenter;
+            if (!Object.prototype.hasOwnProperty.call(rc, 'customStartIso')) rc.customStartIso = null;
+            if (!Object.prototype.hasOwnProperty.call(rc, 'customEndIso')) rc.customEndIso = null;
             const weeks = getCompletedWeeklyReportRanges(new Date(), 16);
             const months = getCompletedMonthlyReportRanges(new Date(), 18);
             if (!weeks.some(w => w.startDate === rc.weekStartIso && w.endDate === rc.weekEndIso)) {
@@ -27459,7 +27534,7 @@
             if (!Array.isArray(rc.history)) rc.history = [];
             // 僅保留 COMPLETED 正式報表於歷史
             rc.history = rc.history.filter(item => item && item.status === 'COMPLETED' && item.key);
-            if (!['weekly', 'monthly', 'history'].includes(rc.tab)) rc.tab = 'weekly';
+            if (!['weekly', 'monthly', 'history', 'custom'].includes(rc.tab)) rc.tab = 'weekly';
             return rc;
         };
 
@@ -27575,6 +27650,136 @@
             });
         };
 
+
+        /** ACCOUNTING-REPORT-CUSTOM-RANGE-V1｜單一期間 SoT（preview／agg／export 共用） */
+        const isValidReportCenterIsoDate = (iso) => /^\d{4}-\d{2}-\d{2}$/.test(String(iso || '').slice(0, 10));
+
+        const getReportCenterTodayIso = () => {
+            if (typeof getDeviceTodayIso === 'function') {
+                const t = String(getDeviceTodayIso() || '').slice(0, 10);
+                if (isValidReportCenterIsoDate(t)) return t;
+            }
+            return formatReportCenterIsoDate(new Date());
+        };
+
+        const iterateReportCenterIsoDates = (startIso, endIso) => {
+            const start = String(startIso || '').slice(0, 10);
+            const end = String(endIso || '').slice(0, 10);
+            const out = [];
+            if (!isValidReportCenterIsoDate(start) || !isValidReportCenterIsoDate(end) || start > end) return out;
+            const cursor = new Date(`${start}T12:00:00`);
+            const last = new Date(`${end}T12:00:00`);
+            while (cursor.getTime() <= last.getTime()) {
+                out.push(formatReportCenterIsoDate(cursor));
+                cursor.setDate(cursor.getDate() + 1);
+            }
+            return out;
+        };
+
+        const validateReportCenterCustomRange = (startIso, endIso) => {
+            const start = String(startIso || '').slice(0, 10);
+            const end = String(endIso || '').slice(0, 10);
+            if (!isValidReportCenterIsoDate(start) || !isValidReportCenterIsoDate(end)) {
+                return { ok: false, message: '請填寫開始日期與結束日期。' };
+            }
+            if (start > end) {
+                return { ok: false, message: '開始日期不可晚於結束日期。' };
+            }
+            const today = getReportCenterTodayIso();
+            if (!(end < today)) {
+                return { ok: false, message: '結束日期必須早於今天（僅可輸出已結束區間）。' };
+            }
+            return { ok: true, startIso: start, endIso: end };
+        };
+
+        const resolveReportCenterDateRange = (options = {}) => {
+            const rc = ensureReportCenterState();
+            const type = String(options.type || rc.tab || 'weekly');
+            if (type === 'custom') {
+                const checked = validateReportCenterCustomRange(
+                    options.startIso != null ? options.startIso : rc.customStartIso,
+                    options.endIso != null ? options.endIso : rc.customEndIso
+                );
+                if (!checked.ok) return { ok: false, message: checked.message, type: 'custom', startIso: '', endIso: '' };
+                return { ok: true, type: 'custom', startIso: checked.startIso, endIso: checked.endIso };
+            }
+            if (type === 'monthly') {
+                const y = Number(options.year != null ? options.year : rc.year);
+                const m = Number(options.month != null ? options.month : rc.month);
+                const hit = getCompletedMonthlyReportRanges(new Date(), 36)
+                    .find(row => row.year === y && row.month === m);
+                if (!hit) return { ok: false, message: '此期間尚未結束，無法產生正式報表。', type: 'monthly', startIso: '', endIso: '' };
+                return { ok: true, type: 'monthly', startIso: hit.startDate, endIso: hit.endDate, year: y, month: m };
+            }
+            const weekStart = String(options.weekStartIso != null ? options.weekStartIso : rc.weekStartIso || '').slice(0, 10);
+            const weekEnd = String(options.weekEndIso != null ? options.weekEndIso : rc.weekEndIso || '').slice(0, 10);
+            const hit = getCompletedWeeklyReportRanges(new Date(), 52)
+                .find(w => w.startDate === weekStart && w.endDate === weekEnd);
+            if (!hit) return { ok: false, message: '此期間尚未結束，無法產生正式報表。', type: 'weekly', startIso: '', endIso: '' };
+            return { ok: true, type: 'weekly', startIso: hit.startDate, endIso: hit.endDate };
+        };
+
+        /** 會計範本 A3～A33 可寫入日期集合（async cache） */
+        const ensureAccountingTemplateDateIsoCache = async () => {
+            if (window.__zdosAccountingTemplateDateIsos instanceof Set && window.__zdosAccountingTemplateDateIsos.size) {
+                return { ok: true, dates: window.__zdosAccountingTemplateDateIsos };
+            }
+            if (typeof JSZip === 'undefined' || typeof decodeAccountingTemplateBase64 !== 'function') {
+                return { ok: false, dates: new Set(), message: '會計範本尚未就緒。' };
+            }
+            try {
+                const zip = await JSZip.loadAsync(decodeAccountingTemplateBase64(ZDOS_ACCOUNTING_TEMPLATE_B64));
+                const parser = new DOMParser();
+                const sheetXml = await zip.file('xl/worksheets/sheet1.xml').async('string');
+                const sheetDoc = parser.parseFromString(sheetXml, 'application/xml');
+                if (sheetDoc.getElementsByTagName('parsererror').length) {
+                    return { ok: false, dates: new Set(), message: '會計範本解析失敗。' };
+                }
+                const dates = new Set();
+                for (let row = 3; row <= 33; row += 1) {
+                    const iso = readAccountingTemplateDateIso(sheetDoc, row);
+                    if (iso) dates.add(iso);
+                }
+                window.__zdosAccountingTemplateDateIsos = dates;
+                return { ok: true, dates };
+            } catch (err) {
+                console.warn('[ACCOUNTING-REPORT-CUSTOM-RANGE-V1] template cache failed', err);
+                return { ok: false, dates: new Set(), message: '會計範本日期讀取失敗。' };
+            }
+        };
+
+        const assertAccountingTemplateCoversRange = async (startIso, endIso, options = {}) => {
+            const days = iterateReportCenterIsoDates(startIso, endIso);
+            if (!days.length) {
+                return { ok: false, message: '請填寫開始日期與結束日期。' };
+            }
+            if (days.length > 31) {
+                return { ok: false, message: '自訂會計報表最多支援 31 天。', days };
+            }
+            const opts = options && typeof options === 'object' ? options : {};
+            let dates = null;
+            if (opts.datesSet instanceof Set) {
+                dates = opts.datesSet;
+            } else if (opts.afterRewrite === true) {
+                return { ok: false, message: '會計範本日期寫入驗證失敗，請稍後再試。' };
+            } else {
+                const loaded = await ensureAccountingTemplateDateIsoCache();
+                if (!loaded.ok) {
+                    return { ok: false, message: loaded.message || '會計範本日期讀取失敗。' };
+                }
+                dates = loaded.dates;
+            }
+            const missing = days.filter((iso) => !dates.has(iso));
+            if (missing.length) {
+                return {
+                    ok: false,
+                    message: '會計範本不支援此日期區間，請檢查範本日期。',
+                    missing
+                };
+            }
+            return { ok: true, days };
+        };
+
         const buildReportCenterSnapshot = ({
             type,
             year = null,
@@ -27592,7 +27797,17 @@
             let key = '';
             let outYear = null;
             let outMonth = null;
-            if (type === 'weekly') {
+            if (type === 'custom') {
+                const checked = validateReportCenterCustomRange(startIsoArg, endIsoArg);
+                if (!checked.ok) return null;
+                startIso = checked.startIso;
+                endIso = checked.endIso;
+                periodLabel = formatReportPeriodLabel(startIso, endIso);
+                title = `自訂區間 ${periodLabel}`;
+                key = `custom:${startIso}_${endIso}`;
+                outYear = Number(startIso.slice(0, 4));
+                outMonth = Number(startIso.slice(5, 7));
+            } else if (type === 'weekly') {
                 startIso = String(weekStartIso || startIsoArg || '').slice(0, 10);
                 endIso = String(weekEndIso || endIsoArg || '').slice(0, 10);
                 if (!/^\d{4}-\d{2}-\d{2}$/.test(startIso) || !/^\d{4}-\d{2}-\d{2}$/.test(endIso)) return null;
@@ -27733,8 +27948,11 @@
                 ]);
                 const ws = XLSX.utils.aoa_to_sheet([...header, ...body]);
                 const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, snapshot.type === 'weekly' ? '週報' : '月報');
-                const fileTag = snapshot.type === 'weekly'
+                const sheetName = snapshot.type === 'custom'
+                    ? '自訂區間'
+                    : (snapshot.type === 'weekly' ? '週報' : '月報');
+                XLSX.utils.book_append_sheet(wb, ws, sheetName);
+                const fileTag = (snapshot.type === 'weekly' || snapshot.type === 'custom')
                     ? `${String(snapshot.startIso || '').replaceAll('-', '')}_${String(snapshot.endIso || '').replaceAll('-', '')}`
                     : `${snapshot.year}${String(snapshot.month).padStart(2, '0')}`;
                 const storeTag = String(snapshot.storeCode || snapshot.storeLabel || 'store')
@@ -27760,18 +27978,37 @@
                 showToast('會計範本匯出尚未就緒。', 'error');
                 return;
             }
+            const startIso = String(snapshot.startIso || '').slice(0, 10);
+            const endIso = String(snapshot.endIso || '').slice(0, 10);
+            const isCustom = snapshot.type === 'custom';
+            if (isCustom) {
+                const days = typeof iterateReportCenterIsoDates === 'function'
+                    ? iterateReportCenterIsoDates(startIso, endIso)
+                    : [];
+                if (!days.length) {
+                    showToast('請填寫開始日期與結束日期。', 'error');
+                    return;
+                }
+                if (days.length > 31) {
+                    showToast('自訂會計報表最多支援 31 天。', 'error');
+                    return;
+                }
+            }
             const scope = {
                 code: snapshot.storeCode || getReportCenterStoreScope().code,
                 label: snapshot.storeLabel || getReportCenterStoreScope().label,
                 raw: snapshot.storeLabel || getReportCenterStoreScope().label
             };
-            const records = filterReportCenterSalesByRange(snapshot.startIso, snapshot.endIso, scope);
+            const records = filterReportCenterSalesByRange(startIso, endIso, scope);
             await exportWeeklyAccountingReport({
-                startIso: snapshot.startIso,
-                endIso: snapshot.endIso,
+                startIso,
+                endIso,
                 storeCode: scope.code,
                 storeLabel: scope.label,
-                reportKind: snapshot.type === 'monthly' ? 'monthly' : 'weekly',
+                reportKind: snapshot.type === 'monthly'
+                    ? 'monthly'
+                    : (isCustom ? 'custom' : 'weekly'),
+                rewriteCustomTemplateDates: isCustom,
                 records
             });
         };
@@ -27839,8 +28076,81 @@
 
         window.setReportCenterTab = function(tab) {
             const rc = ensureReportCenterState();
-            rc.tab = ['weekly', 'monthly', 'history'].includes(tab) ? tab : 'weekly';
+            rc.tab = ['weekly', 'monthly', 'history', 'custom'].includes(tab) ? tab : 'weekly';
             renderApp();
+        };
+
+        window.setReportCenterCustomStart = function(value) {
+            const rc = ensureReportCenterState();
+            const iso = String(value || '').slice(0, 10);
+            rc.customStartIso = isValidReportCenterIsoDate(iso) ? iso : '';
+            rc.tab = 'custom';
+            renderApp();
+        };
+
+        window.setReportCenterCustomEnd = function(value) {
+            const rc = ensureReportCenterState();
+            const iso = String(value || '').slice(0, 10);
+            rc.customEndIso = isValidReportCenterIsoDate(iso) ? iso : '';
+            rc.tab = 'custom';
+            renderApp();
+        };
+
+        window.viewReportCenterCustom = function() {
+            const rc = ensureReportCenterState();
+            const checked = validateReportCenterCustomRange(rc.customStartIso, rc.customEndIso);
+            if (!checked.ok) {
+                showToast(checked.message || '自訂區間無效。', 'error');
+                return;
+            }
+            const snapshot = buildReportCenterSnapshot({
+                type: 'custom',
+                startIso: checked.startIso,
+                endIso: checked.endIso
+            });
+            if (!snapshot) {
+                showToast(checked.message || '自訂區間無效。', 'error');
+                return;
+            }
+            pushReportCenterHistory(snapshot);
+            renderApp();
+        };
+
+        const resolveReportCenterCustomSnapshot = () => {
+            const rc = ensureReportCenterState();
+            const checked = validateReportCenterCustomRange(rc.customStartIso, rc.customEndIso);
+            if (!checked.ok) return { ok: false, message: checked.message };
+            if (rc.preview && rc.preview.type === 'custom' &&
+                rc.preview.startIso === checked.startIso &&
+                rc.preview.endIso === checked.endIso &&
+                (!rc.preview.storeCode || rc.preview.storeCode === getReportCenterStoreScope().code)) {
+                return { ok: true, snapshot: rc.preview };
+            }
+            const snapshot = buildReportCenterSnapshot({
+                type: 'custom',
+                startIso: checked.startIso,
+                endIso: checked.endIso
+            });
+            if (!snapshot) return { ok: false, message: checked.message || '自訂區間無效。' };
+            return { ok: true, snapshot };
+        };
+
+        window.exportReportCenterCustomExcel = function() {
+            const resolved = resolveReportCenterCustomSnapshot();
+            if (!resolved.ok) {
+                showToast(resolved.message || '自訂區間無效。', 'error');
+                return;
+            }
+            exportReportCenterExcel(resolved.snapshot);
+        };
+
+        window.exportReportCenterCustomAccountingExcel = async function() {
+            const resolved = resolveReportCenterCustomSnapshot();
+            if (!resolved.ok) {
+                showToast(resolved.message || '自訂區間無效。', 'error');
+                return;
+            }
+            await window.exportReportCenterAccountingExcel(resolved.snapshot);
         };
 
         window.setReportCenterWeeklyRange = function(value) {
@@ -27987,13 +28297,18 @@
                 return;
             }
             rc.preview = hit;
-            rc.tab = hit.type === 'monthly' ? 'monthly' : 'weekly';
-            if (hit.type === 'weekly') {
-                rc.weekStartIso = hit.startIso || hit.weekStartIso;
-                rc.weekEndIso = hit.endIso || hit.weekEndIso;
-            } else {
+            if (hit.type === 'custom') {
+                rc.tab = 'custom';
+                rc.customStartIso = hit.startIso;
+                rc.customEndIso = hit.endIso;
+            } else if (hit.type === 'monthly') {
+                rc.tab = 'monthly';
                 rc.year = hit.year;
                 rc.month = hit.month;
+            } else {
+                rc.tab = 'weekly';
+                rc.weekStartIso = hit.startIso || hit.weekStartIso;
+                rc.weekEndIso = hit.endIso || hit.weekEndIso;
             }
             renderApp();
         };
@@ -28144,6 +28459,30 @@
                         </div>
                     </div>
                 `;
+            } else if (rc.tab === 'custom') {
+                const customStart = isValidReportCenterIsoDate(rc.customStartIso) ? String(rc.customStartIso).slice(0, 10) : '';
+                const customEnd = isValidReportCenterIsoDate(rc.customEndIso) ? String(rc.customEndIso).slice(0, 10) : '';
+                panelHtml = `
+                    <div class="zdos-workspace-card p-4 space-y-3 min-w-0" data-report="custom-range-v1">
+                        <div>
+                            <p class="text-sm font-black text-white">自訂區間</p>
+                            <p class="mt-1 text-[10px] text-slate-500">開始／結束 inclusive · 可跨週跨月 · 結束日須早於今天 · 門市：${escapeHtmlText(scope.label)}</p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 min-w-0">
+                            <label class="min-w-0 block text-[10px] font-bold text-slate-400">開始日期
+                                <input type="date" value="${escapeHtmlText(customStart)}" onchange="setReportCenterCustomStart(this.value)" class="mt-1 w-full max-w-full min-w-0 rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 box-border" />
+                            </label>
+                            <label class="min-w-0 block text-[10px] font-bold text-slate-400">結束日期
+                                <input type="date" value="${escapeHtmlText(customEnd)}" onchange="setReportCenterCustomEnd(this.value)" class="mt-1 w-full max-w-full min-w-0 rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 box-border" />
+                            </label>
+                        </div>
+                        <button type="button" onclick="viewReportCenterCustom()" class="zdos-nav-btn w-full py-3 rounded-xl border border-teal-500/30 bg-teal-600/20 text-teal-100 text-sm font-bold">查看</button>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <button type="button" onclick="exportReportCenterCustomExcel()" class="zdos-nav-btn py-3 rounded-xl border border-slate-500/30 bg-slate-800/40 text-slate-200 text-sm font-bold">匯出一般 Excel</button>
+                            <button type="button" onclick="exportReportCenterCustomAccountingExcel()" class="zdos-nav-btn py-3 rounded-xl border border-emerald-500/30 bg-emerald-600/15 text-emerald-100 text-sm font-bold">匯出會計 Excel</button>
+                        </div>
+                    </div>
+                `;
             } else if (rc.tab === 'monthly') {
                 panelHtml = `
                     <div class="zdos-workspace-card p-4 space-y-3 min-w-0">
@@ -28215,6 +28554,7 @@
                     <div class="bg-slate-950 p-1 rounded-xl border border-white/[0.05] shadow-inner flex flex-wrap gap-1 min-w-0">
                         ${tabBtn('weekly', '歷史週報')}
                         ${tabBtn('monthly', '歷史月報')}
+                        ${tabBtn('custom', '自訂區間')}
                         ${tabBtn('history', '歷史')}
                         <button type="button" disabled class="zdos-nav-btn flex-1 min-w-[7rem] px-3 py-2 rounded-lg text-[11px] font-bold text-slate-600 cursor-not-allowed opacity-60" title="預留">歷史年度報表（預留）</button>
                     </div>
