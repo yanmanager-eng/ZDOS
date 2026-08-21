@@ -1,7 +1,7 @@
 /* ZDOS PWA Service Worker｜Web Push + notificationclick deep link */
 /* eslint-disable no-restricted-globals */
 
-const SW_VERSION = 'zdos-sw-20260811-accounting-custom-range-v1';
+const SW_VERSION = 'zdos-sw-20260821-v1.5.1-closeout';
 const PRODUCTION_ORIGIN = 'https://zdos.app';
 
 function resolveSwOrigin() {

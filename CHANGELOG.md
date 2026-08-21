@@ -1,5 +1,32 @@
 # ZDOS 更新紀錄
 
+## v1.5.1 — 2026-08-21
+
+本版為 **v1.5.0 closeout patch**。
+Production canonical 基線：`b52efe6`（ACCOUNTING-CUSTOM-RANGE-V1）。
+
+### Added
+
+- LEAVE-V2 請假流程與主管代請假門市處理
+
+### Improved
+
+- 新增請假 Modal／日期選擇／行動版操作
+
+### Fixed
+
+- Weekly／Monthly Accounting Excel 跨月份資料空白
+- 多收未填時會計 Excel 顯示 0
+- 無支出時不再輸出假品項「無」
+
+### Notes
+
+- Accounting Custom Range（自訂區間 ≤31 天）保留
+- Build：`ZDOS-V1.5.1-CLOSEOUT-20260821`
+- SW：`zdos-sw-20260821-v1.5.1-closeout`
+
+---
+
 ## v1.5.0
 
 ### UI-018：能力學院（能力管理系統）✅

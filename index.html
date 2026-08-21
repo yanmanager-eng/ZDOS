@@ -83,7 +83,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <meta name="zdos-build" content="ACCOUNTING-CUSTOM-RANGE-V1-20260811">
+    <meta name="zdos-build" content="ZDOS-V1.5.1-CLOSEOUT-20260821">
     <script src="ui/zdos-web-push.js?v=bug0014d-20260807"></script>
     <script src="ui/zdos-first-run-wizard.js?v=frw-20260807b"></script>
     <style>
@@ -1062,14 +1062,17 @@
         @media (min-width: 640px) {
             .zdos-leave-create-shell { align-items: center; padding: 1rem; }
         }
+        /* LEAVE-V2-001｜Create Modal：header／body／footer 分層；body 可捲、footer 不遮欄位 */
         .zdos-leave-create-panel {
             width: 100%;
             max-width: 24rem;
             max-height: 90vh;
             max-height: 90dvh;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
             overscroll-behavior: contain;
-            -webkit-overflow-scrolling: touch;
             border-radius: 1.25rem 1.25rem 0 0;
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-bottom: 0;
@@ -1225,11 +1228,15 @@
             color: rgb(148 163 184);
             background: rgba(15,23,42,0.6);
         }
-        .zdos-leave-create-form { display: flex; flex-direction: column; min-height: min-content; }
+        .zdos-leave-create-form {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            flex: 1 1 auto;
+            max-height: 100%;
+        }
         .zdos-leave-create-header {
-            position: sticky;
-            top: 0;
-            z-index: 20;
+            flex: 0 0 auto;
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
@@ -1239,21 +1246,58 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
         .zdos-leave-create-body {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
-            padding: 0.75rem 1rem;
+            padding: 0.75rem 1rem 1rem;
         }
         .zdos-leave-create-footer {
-            position: sticky;
-            bottom: 0;
-            z-index: 20;
+            flex: 0 0 auto;
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
             padding: 0.75rem 1rem calc(16px + env(safe-area-inset-bottom, 0px));
             border-top: 1px solid rgba(255, 255, 255, 0.08);
             background: rgba(15, 23, 42, 0.98);
+        }
+        .zdos-leave-date-range,
+        .zdos-leave-date-range > div,
+        .zdos-leave-date-field {
+            min-width: 0;
+            max-width: 100%;
+        }
+        .zdos-leave-date-field {
+            position: relative;
+        }
+        .zdos-leave-date-range input[type="date"],
+        .zdos-leave-create-body select,
+        .zdos-leave-create-body textarea,
+        .zdos-leave-create-body input[type="date"] {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        /* LEAVE-V2-002a｜桌機整欄可點開原生 date picker（對齊排班日期欄） */
+        .zdos-leave-create-body input[type="date"].zdos-leave-date-input {
+            width: 100%;
+            cursor: pointer;
+            color-scheme: dark;
+            position: relative;
+        }
+        .zdos-leave-create-body input[type="date"].zdos-leave-date-input::-webkit-calendar-picker-indicator {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            opacity: 0;
+            cursor: pointer;
         }
         @media (min-width: 640px) {
             .zdos-leave-create-footer { flex-direction: row; }
@@ -2073,7 +2117,38 @@
         .zdos-leave-day-more { color:rgb(148 163 184); text-align:center; }
         .zdos-leave-day .zdos-leave-capacity-row { width:100%; max-width:100%; min-width:0; overflow:hidden; margin-top:.1rem; }
         .zdos-leave-day .zdos-leave-capacity-text { min-width:0; flex:1 1 auto; }
-        .zdos-leave-primary-add { display:inline-flex; align-items:center; justify-content:center; gap:.3rem; min-width:2.25rem; height:2.25rem; padding:0 .75rem; border-radius:12px; border:1px solid rgba(244,63,94,.38); background:linear-gradient(135deg,rgba(225,29,72,.26),rgba(124,58,237,.22)); color:rgb(255 228 230); font-size:11px; font-weight:900; }
+        /* LEAVE-V2-001b｜請假中心主畫面 CTA：桌機／手機皆可見，不依 breakpoint 隱藏 */
+        .zdos-leave-primary-add {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            gap: .3rem;
+            min-width: 2.25rem;
+            min-height: 2.25rem;
+            height: auto;
+            padding: .45rem .85rem;
+            border-radius: 12px;
+            border: 1px solid rgba(244,63,94,.38);
+            background: linear-gradient(135deg,rgba(225,29,72,.26),rgba(124,58,237,.22));
+            color: rgb(255 228 230);
+            font-size: 12px;
+            font-weight: 900;
+            white-space: nowrap;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        .zdos-leave-add-bar {
+            display: block !important;
+            margin-top: .65rem;
+        }
+        .zdos-leave-add-bar .zdos-leave-primary-add {
+            width: 100%;
+            min-height: 2.75rem;
+            font-size: 13px;
+        }
+        .zdos-lc17-actions .zdos-leave-primary-add {
+            display: inline-flex !important;
+        }
         .zdos-leave-bottom-sheet { position:fixed; inset:0; z-index:1001; display:flex; align-items:flex-end; justify-content:center; background:rgba(2,6,23,.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
         .zdos-leave-bottom-sheet-panel { width:100%; max-width:36rem; max-height:82dvh; overflow:auto; border-radius:24px 24px 0 0; border:1px solid rgba(255,255,255,.09); border-bottom:0; background:rgba(15,23,42,.98); box-shadow:0 -20px 60px rgba(0,0,0,.5); padding:1rem; }
         .zdos-leave-person-row { display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding:.7rem .75rem; border-radius:12px; border:1px solid rgba(255,255,255,.06); background:rgba(2,6,23,.45); }
@@ -5073,6 +5148,41 @@
             const role = String(user.role || '').trim();
             if (role === '集團首腦') return true;
             if (!STORE_SCHEDULE_EDIT_ROLES.has(role)) return false;
+            return canUserViewSchedulingStoreForUser(user, code);
+        };
+        /**
+         * LEAVE-V2-001｜代請假／請假寫入 ACL（僅 Leave write path；不改班表 view/edit）
+         * Founder／owner／集團首腦／首腦：全門市（依 ROLE，不依賴 store2）
+         * 區經理／店經理／店長／領班／副領班／實習幹部：所屬／管轄門市（session 用 cloudAvailableStores）
+         * 一般員工：不可代他人請假（由 savePreLeave 本人分支處理）
+         */
+        const LEAVE_MANAGE_STORE_ROLES = new Set([
+            '區經理', '店經理', '店長', '領班', '副領班', '實習幹部'
+        ]);
+        const isLeaveFounderActor = (user) => {
+            if (!user) return false;
+            const role = String(user.role || '').trim();
+            if (role === '集團首腦' || role === '首腦' || role === 'owner') return true;
+            if (typeof isSalesCloudEnabled === 'function' && isSalesCloudEnabled()
+                && state.supabaseSessionReady && state.cloudProfile) {
+                const logged = getLoggedInAccount();
+                const sameActor = logged
+                    && String(logged.empId || '').trim().toLowerCase() === String(user.empId || '').trim().toLowerCase();
+                if (sameActor && String(state.cloudProfile.role || '').trim() === 'owner') return true;
+            }
+            return false;
+        };
+        const canManageLeaveForStore = (user, storeId) => {
+            if (!user) return false;
+            const code = normalizeStoreIdCode(storeId);
+            if (!code || !isStoreActive(code)) return false;
+            if (isLeaveFounderActor(user)) return true;
+            const role = String(user.role || '').trim();
+            if (!LEAVE_MANAGE_STORE_ROLES.has(role)) return false;
+            const logged = getLoggedInAccount();
+            const sameActor = logged
+                && String(logged.empId || '').trim().toLowerCase() === String(user.empId || '').trim().toLowerCase();
+            if (sameActor) return getUserSchedulingStoreCodes().includes(code);
             return canUserViewSchedulingStoreForUser(user, code);
         };
         const canUserManageLeaveSelectionWindow = (user, storeId) =>
@@ -8542,8 +8652,8 @@
             return Array.isArray(existing) ? existing : [];
         };
 
-        // 與 CHANGELOG.md／docs/RELEASE_NOTES_v1.5.0.md 同步（發版時手動更新）
-        // ZDOS v1.5.0 — Release Fix Sprint（RC-003）統一版本號
+        // 與 CHANGELOG.md 同步（發版時手動更新）
+        // ZDOS v1.5.1 — v1.5.0 closeout patch
         const ZDOS_CANONICAL_ORIGIN = 'https://zdos.app';
         const ZDOS_PRODUCTION_HOSTS = ['zdos.app', 'www.zdos.app', 'adorable-pudding-0fad91.netlify.app'];
         const ZDOS_IS_BETA_SITE = (() => {
@@ -8554,17 +8664,15 @@
 
         const VERSION_INFO = {
             label: 'ZDOS',
-            version: 'v1.5.0',
-            updatedAt: '2026/07/30',
+            version: 'v1.5.1',
+            updatedAt: '2026/08/21',
             changes: [
-                'ZDOS v1.5.0 正式版：班表班務班別看板（UI-016）',
-                '排假中心 UX 重構（UI-017：月曆／風險燈／Bottom Sheet／批次）',
-                '維護頁 UI-999R（MAINTENANCE_MODE 閘道）',
-                '品牌統一：AI 絲絲',
-                '開場動畫 MP4＋Skip／fallback',
-                '開場與 Supabase Auth 並行載入',
-                '代班／換班審核清單 failed 別名修正',
-                '詳見 docs/RELEASE_NOTES_v1.5.0.md'
+                'LEAVE-V2 請假流程完善',
+                '新增請假 Modal／日期操作／門市代請假流程',
+                'Weekly／Monthly 會計 Excel 日期範圍修正',
+                '會計匯出：多收未填改為 0',
+                '無支出時不再產生「無」假品項',
+                '保留會計自訂區間（最多 31 天）'
             ]
         };
 
@@ -12644,6 +12752,46 @@
             return t === LEAVE_TYPE_VACATION || t === LEAVE_TYPE_VACATION_GENERAL;
         };
 
+        /** LEAVE-V2-001／002｜入口 intent 優先；假別語意僅作非 leave-request 入口後備 */
+        const LEAVE_REQUEST_TYPE_IDS = new Set(['personal', 'official', 'sick', 'marriage', 'funeral']);
+        const isLeaveRequestType = leaveType => {
+            const def = getLeaveTypeDefinition(leaveType);
+            if (def?.id && LEAVE_REQUEST_TYPE_IDS.has(def.id)) return true;
+            const t = String(leaveType || '').trim();
+            return /^(事假|病假|公假|婚假|喪假)$/.test(t);
+        };
+        const isLeaveRequestIntent = () =>
+            String(state.leaveModal?.intent || '') === 'leave-request';
+        const getLeaveCreateModalTitle = leaveType => {
+            if (isLeaveRequestIntent()) return '新增請假';
+            return isLeaveRequestType(leaveType) ? '新增請假' : '新增排假';
+        };
+        const getLeaveCreateSubmitLabel = leaveType => {
+            if (isLeaveRequestIntent()) return '送出請假';
+            return isLeaveRequestType(leaveType) ? '送出請假' : '送出排假';
+        };
+        const getLeaveCreateSuccessMessage = (leaveType, leaveScope, count = 1) => {
+            if (String(leaveScope || '') === 'future') return '預排假設定完成';
+            const asLeave = isLeaveRequestIntent() || isLeaveRequestType(leaveType);
+            if (count > 1) {
+                return asLeave ? `已完成 ${count} 筆請假申請` : `已完成 ${count} 筆排假設定`;
+            }
+            return asLeave ? '請假申請成功' : '新增排假成功。';
+        };
+        /** LEAVE-V2-002｜Founder 可管完整門市清單（active stores；不依 store/store2） */
+        const getLeaveModalManageableStores = (user) => {
+            if (isLeaveFounderActor(user)) return getActiveStores().slice();
+            const codes = getUserSchedulingStoreCodes();
+            return getActiveStores().filter(s => codes.includes(s.code));
+        };
+        const resolveLeaveFormTargetStoreId = () => {
+            const fromSelect = normalizeStoreIdCode(document.getElementById('leave-form-store')?.value);
+            if (fromSelect && isStoreActive(fromSelect)) return fromSelect;
+            const fromModal = normalizeStoreIdCode(state.leaveModal?.targetStoreId);
+            if (fromModal && isStoreActive(fromModal)) return fromModal;
+            return getSchedulingViewStoreId();
+        };
+
         const getLeaveFormTypeDefinitions = () =>
             [...LEAVE_TYPE_DEFINITIONS].sort((a, b) => (a.formOrder || 99) - (b.formOrder || 99));
 
@@ -13443,18 +13591,20 @@
             const scope = String(item.scope || 'future').trim() === 'current' ? 'current' : 'future';
             const user = getLoggedInAccount();
             if (!storeId) return { ok: false, message: '門市無效或尚未開放。' };
-            if (!canUserViewSchedulingStoreForUser(user, storeId)) {
-                return { ok: false, message: '無權限操作此門市' };
-            }
-            const isManager = canUserEditStoreSchedule(user, storeId);
-            const self = getCurrentUserPersonnel();
-            const selfId = self ? normalizeLeaveEmployeeId(self.id) : '';
-            if (!isManager && (!selfId || selfId !== employeeId)) {
-                return { ok: false, message: '無權限操作此員工' };
-            }
             if (!employeeId) return { ok: false, message: '請選擇員工。' };
             if (!date) return { ok: false, message: '請選擇日期。' };
             if (!leaveType) return { ok: false, message: '請選擇假別。' };
+            /* LEAVE-V2-001｜Leave write ACL：本人／代請假分流；Founder 不以 view(store2) 為必要前置 */
+            const self = getCurrentUserPersonnel();
+            const selfId = self ? normalizeLeaveEmployeeId(self.id) : '';
+            const isSelf = !!(selfId && selfId === employeeId);
+            if (isSelf) {
+                const canSelfStore = getUserSchedulingStoreCodes().includes(storeId)
+                    || canUserViewSchedulingStoreForUser(user, storeId);
+                if (!canSelfStore) return { ok: false, message: '無權限操作此門市' };
+            } else if (!canManageLeaveForStore(user, storeId)) {
+                return { ok: false, message: '無權限操作此門市' };
+            }
             const viewYear = Number(item.viewYear) || Number(state.schedule?.year) || new Date().getFullYear();
             const viewMonth = Number(item.viewMonth) || Number(state.schedule?.month) || (new Date().getMonth() + 1);
             const scopeCheck = validateLeaveFormScope(scope, [date], viewYear, viewMonth);
@@ -19006,7 +19156,8 @@
             if (!state.activeSchedulingEmployeeId) {
                 state.activeSchedulingEmployeeId = getCurrentUserPersonnel()?.id || getSchedulableEmployeesForStore(viewStoreId)[0]?.id || null;
             }
-            return openLeaveCenterCreate(target);
+            /* LEAVE-V2-002｜請假中心 CTA 明確傳入 leave-request intent */
+            return openLeaveCenterCreate(target, { intent: 'leave-request' });
         };
 
         window.closeLeaveDayOverview = function() {
@@ -19055,22 +19206,67 @@
                     <button type="button" onclick="closeLeaveDayOverview()" class="px-2 py-1 text-slate-400" aria-label="關閉">✕</button>
                 </div>
                 <div>${groupsHtml}</div>
-                <button type="button" onclick="closeLeaveDayOverview(); openLeaveCenterCreate('${escapeHtmlText(day)}')" class="zdos-nav-btn w-full mt-4 py-3 rounded-xl border border-rose-500/35 bg-rose-600/20 text-rose-200 text-sm font-black">＋新增排假</button>
+                <button type="button" onclick="closeLeaveDayOverview(); openLeaveCenterCreate('${escapeHtmlText(day)}', { intent: 'leave-request' })" class="zdos-nav-btn w-full mt-4 py-3 rounded-xl border border-rose-500/35 bg-rose-600/20 text-rose-200 text-sm font-black">＋新增請假</button>
             </div>`;
             sheet.addEventListener('click', e => { if (e.target === sheet) closeLeaveDayOverview(); });
             document.body.appendChild(sheet);
         };
 
-        window.openLeaveCenterCreate = function(dateStr) {
+        window.openLeaveCenterCreate = function(dateStr, options = {}) {
+            const opts = options && typeof options === 'object' ? options : {};
             const viewStoreId = getSchedulingViewStoreId();
-            if (!viewStoreId) return showToast('無法判斷目前門市，請重新登入。', 'error');
+            const actor = getLoggedInAccount();
+            const founderStores = isLeaveFounderActor(actor) ? getActiveStores() : [];
+            if (!viewStoreId && !founderStores.length) {
+                return showToast('無法判斷目前門市，請重新登入。', 'error');
+            }
             if (!isLeaveCloudReady()) {
                 return showToast('請假／排假需雲端登入後才能使用（資料存於雲端）。', 'error');
             }
             const day = String(dateStr || (typeof getDeviceTodayIso === 'function' ? getDeviceTodayIso() : new Date().toISOString().slice(0, 10))).slice(0, 10);
-            state.leaveModal = { date: day, mode: 'create', preferredScope: 'current', compactUi: true };
+            const intent = String(opts.intent || '').trim() || null;
+            const targetStoreId = normalizeStoreIdCode(opts.storeId)
+                || normalizeStoreIdCode(viewStoreId)
+                || normalizeStoreIdCode(founderStores[0]?.code);
+            /* LEAVE-V2-002｜intent + targetStoreId 明確寫入 leaveModal（禁止靠假別猜入口） */
+            state.leaveModal = {
+                date: day,
+                mode: 'create',
+                preferredScope: 'current',
+                compactUi: opts.compactUi !== false,
+                intent,
+                targetStoreId
+            };
             state.schedulingModal = null;
             renderLeaveModalOverlay();
+        };
+
+        /** LEAVE-V2-002｜Founder 切換代請假門市 → 重刷員工清單 */
+        window.setLeaveModalTargetStore = function(storeCode) {
+            if (!state.leaveModal || state.leaveModal.leaveId) return;
+            const actor = getLoggedInAccount();
+            if (!isLeaveFounderActor(actor)) return;
+            const code = normalizeStoreIdCode(storeCode);
+            if (!code || !isStoreActive(code)) return;
+            state.leaveModal.targetStoreId = code;
+            state.activeSchedulingEmployeeId = null;
+            const empSelect = document.getElementById('leave-form-employee');
+            const optionsHtml = buildLeaveFormEmployeeOptions(code, '', false);
+            if (empSelect) {
+                empSelect.innerHTML = optionsHtml || '<option value="">無可排班員工</option>';
+                empSelect.value = '';
+                empSelect.disabled = !optionsHtml;
+            }
+            const storeLabel = document.getElementById('leave-modal-store-label');
+            if (storeLabel) storeLabel.textContent = getStoreByCode(code)?.name || code;
+            const typeSelect = document.getElementById('leave-form-type');
+            if (typeSelect) {
+                const curType = typeSelect.value || (isLeaveRequestIntent() ? '事假' : LEAVE_TYPE_VACATION);
+                typeSelect.innerHTML = renderLeaveFormTypeOptionsHtml(curType, '', code, null);
+            }
+            const submitBtn = document.getElementById('leave-create-submit-btn');
+            if (submitBtn) submitBtn.disabled = !optionsHtml;
+            if (typeof refreshLeaveFormInsights === 'function') refreshLeaveFormInsights();
         };
 
         window.openActiveEmployeeScheduleModal = function(dateStr) {
@@ -19180,8 +19376,10 @@
             event.preventDefault();
             if (!state.leaveModal) return;
             if (state.leaveFormSubmitting) return;
-            const viewStoreId = getSchedulingViewStoreId();
+            /* LEAVE-V2-002｜submit 使用 leaveModal.targetStoreId／門市 selector，禁止偷偷改回 view store */
+            const viewStoreId = resolveLeaveFormTargetStoreId();
             if (!viewStoreId) return showSystemToast('無法判斷目前排班門市，請重新登入。', 'error');
+            if (state.leaveModal) state.leaveModal.targetStoreId = viewStoreId;
             const isEditSubmit = !!state.leaveModal.leaveId;
             const date = document.getElementById('leave-form-date')?.value
                 || document.getElementById('leave-edit-date')?.value
@@ -20798,9 +20996,10 @@
             const batch = state.hrPreLeaveBatch;
             if (!batch?.open || batch.submitting) return;
             if (field === 'storeCode') {
+                /* LEAVE-V2-001｜field change 只更新／忽略；權限錯誤改由 submit／savePreLeave 單次出口 */
                 const code = normalizeStoreIdCode(value);
                 if (!code || code === 'HJ' || !canUserEditStoreSchedule(getLoggedInAccount(), code)) {
-                    return showSystemToast('無權限操作此門市', 'error');
+                    return;
                 }
                 batch.storeCode = code;
                 batch.selectedKeys = {};
@@ -23295,9 +23494,8 @@
                 const title = `${rangeStart.getFullYear()}.${String(rangeStart.getMonth() + 1).padStart(2, '0')}.${String(rangeStart.getDate()).padStart(2, '0')}-${String(rangeEnd.getMonth() + 1).padStart(2, '0')}.${String(rangeEnd.getDate()).padStart(2, '0')}大埔${storeLabel}收入支出明細表`;
                 setAccountingXmlCell(sheetDoc, 1, 'A', title, 'string');
 
-                // A 欄日期為會計範本固定結構，禁止依資料筆數重排。
-                // 匯出僅可修改 B～H：保留 A → 建「日期→列號」對照 → 對應寫入；無資料則留白。
-                // 禁止：清空／覆寫 A 欄日期、新增／刪除日期列、row = startRow + index。
+                // A 欄：Report Center 週／月／自訂匯出時依 startIso～endIso rewrite（≤31 天）；否則沿用範本內建日期。
+                // 匯出僅可修改 B～H：rewrite 後建「日期→列號」對照 → 對應寫入；無資料則留白。
                 const ACCOUNTING_DATA_COLS = ['B', 'C', 'D', 'E', 'F', 'G', 'H'];
                 for (let row = 3; row <= 33; row += 1) {
                     ACCOUNTING_DATA_COLS.forEach(column => setAccountingXmlCell(sheetDoc, row, column, '', 'number'));
@@ -23307,7 +23505,7 @@
                 if (rewriteCustomDates) {
                     const rewritten = rewriteAccountingTemplateDatesForCustomRange(sheetDoc, outStartIso, outEndIso);
                     if (!rewritten.ok) {
-                        showToast(rewritten.message || '自訂會計報表最多支援 31 天。', 'error');
+                        showToast(rewritten.message || '會計報表最多支援 31 天。', 'error');
                         return;
                     }
                     const cover = typeof assertAccountingTemplateCoversRange === 'function'
@@ -23326,17 +23524,47 @@
                     const iso = readAccountingTemplateDateIso(sheetDoc, row);
                     if (iso) dateToRow.set(iso, row);
                 }
+                let accountingDataRowsWritten = 0;
+                // BUG-02：會計 Excel 輸出 normalization（僅 mapping 層）
+                // A) 多收(B)：blank/null/undefined／falsy 0 → 數值 0（不得留空白）
+                // B) 品項(D)：過濾「無／沒有／N/A／無支出*」假品項；無真實支出品項 → blank
+                const isAccountingPlaceholderExpenseNote = raw => {
+                    const s = String(raw || '').trim();
+                    if (!s) return true;
+                    if (s === '無' || s === '沒有' || s === '無支出項目' || s === '無支出備註') return true;
+                    if (/^n\/?a$/i.test(s)) return true;
+                    return false;
+                };
                 byDate.forEach((item, iso) => {
                     const row = dateToRow.get(iso);
                     if (!row || !item) return;
-                    setAccountingXmlCell(sheetDoc, row, 'B', item.over || '', 'number');
+                    accountingDataRowsWritten += 1;
+                    const overRaw = item.over;
+                    const overOut = (overRaw === null || overRaw === undefined || overRaw === '')
+                        ? 0
+                        : Number(overRaw);
+                    setAccountingXmlCell(
+                        sheetDoc,
+                        row,
+                        'B',
+                        Number.isFinite(overOut) ? overOut : 0,
+                        'number'
+                    );
                     setAccountingXmlCell(sheetDoc, row, 'C', item.revenue || '', 'number');
-                    setAccountingXmlCell(sheetDoc, row, 'D', item.notes.join('、'), 'string');
+                    const notesOut = (Array.isArray(item.notes) ? item.notes : [])
+                        .map(n => String(n || '').trim())
+                        .filter(n => !isAccountingPlaceholderExpenseNote(n))
+                        .join('、');
+                    setAccountingXmlCell(sheetDoc, row, 'D', notesOut, 'string');
                     setAccountingXmlCell(sheetDoc, row, 'E', item.expense || '', 'number');
                     setAccountingXmlCell(sheetDoc, row, 'F', item.linePay || '', 'number');
                     setAccountingXmlCell(sheetDoc, row, 'G', item.allPay || '', 'number');
                     setAccountingXmlCell(sheetDoc, row, 'H', item.applePay || '', 'number');
                 });
+                if (storeRecords.length > 0 && byDate.size > 0 && accountingDataRowsWritten === 0) {
+                    showToast('報表日期與會計範本無法對應，請重新產生報表', 'error');
+                    return;
+                }
                 zip.file(sheetPath, serializer.serializeToString(sheetDoc));
 
                 const workbookXml = await zip.file(workbookPath).async('string');
@@ -23408,7 +23636,12 @@
             state.accountingExportInFlight = true;
             if (state.currentView === 'accounting') renderApp();
             try {
-                await exportWeeklyAccountingReport({ startIso, endIso });
+                await exportWeeklyAccountingReport({
+                    startIso,
+                    endIso,
+                    reportKind: ac.mode === 'monthly' ? 'monthly' : 'weekly',
+                    rewriteCustomTemplateDates: true
+                });
             } finally {
                 state.accountingExportInFlight = false;
                 if (state.currentView === 'accounting') renderApp();
@@ -27187,27 +27420,40 @@
             document.getElementById('leave-modal')?.remove();
             const modalState = state.leaveModal;
             if (!modalState) return;
-            const viewStoreId = getSchedulingViewStoreId();
-            if (!viewStoreId) return;
+            const actor = getLoggedInAccount();
+            const isFounderActor = isLeaveFounderActor(actor);
+            const fallbackStore = getSchedulingViewStoreId() || getActiveStores()[0]?.code || null;
+            const targetStoreId = normalizeStoreIdCode(modalState.targetStoreId) || normalizeStoreIdCode(fallbackStore);
+            if (!targetStoreId) return;
+            modalState.targetStoreId = targetStoreId;
             const existingLeave = modalState.leaveId
                 ? getLeaveRegistry().find(row => row.id === modalState.leaveId)
                 : null;
             if (existingLeave) {
-                renderLeaveEditModalOverlay(existingLeave, viewStoreId);
+                renderLeaveEditModalOverlay(existingLeave, targetStoreId);
                 return;
             }
             const isEdit = false;
-            const schedulableEmployees = getSchedulableEmployeesForStore(viewStoreId);
+            const leaveRequestIntent = isLeaveRequestIntent();
+            const showStoreSelector = isFounderActor && !modalState.leaveId;
+            const manageableStores = showStoreSelector ? getLeaveModalManageableStores(actor) : [];
+            const schedulableEmployees = getSchedulableEmployeesForStore(targetStoreId);
             const defaultDate = modalState.date || new Date().toISOString().slice(0, 10);
-            const defaultEmployeeId = state.activeSchedulingEmployeeId || schedulableEmployees[0]?.id || '';
-            const defaultLeaveType = String(LEAVE_TYPE_VACATION).trim();
+            let defaultEmployeeId = state.activeSchedulingEmployeeId || '';
+            if (defaultEmployeeId && !schedulableEmployees.some(e => e.id === defaultEmployeeId)) {
+                defaultEmployeeId = '';
+            }
+            if (!defaultEmployeeId) defaultEmployeeId = schedulableEmployees[0]?.id || '';
+            /* LEAVE-V2-002｜leave-request 入口預設事假；排假入口維持休假 */
+            const defaultLeaveType = leaveRequestIntent ? '事假' : String(LEAVE_TYPE_VACATION).trim();
             const defaultPeriod = '全天';
             const defaultNote = '';
             const defaultScope = state.leaveModal?.preferredScope
                 || inferLeaveFormScope(defaultDate, state.schedule?.year, state.schedule?.month);
-            const title = '新增排假';
+            const title = getLeaveCreateModalTitle(defaultLeaveType);
+            const submitLabel = getLeaveCreateSubmitLabel(defaultLeaveType);
             const employeeOptions = buildLeaveFormEmployeeOptions(
-                viewStoreId,
+                targetStoreId,
                 defaultEmployeeId,
                 isEdit
             );
@@ -27215,16 +27461,31 @@
             const typeOptions = renderLeaveFormTypeOptionsHtml(
                 defaultLeaveType,
                 defaultEmployeeId,
-                viewStoreId,
+                targetStoreId,
                 null
             );
+            const storeOptionsHtml = manageableStores.map(s =>
+                `<option value="${escapeHtmlText(s.code)}" ${normalizeStoreIdCode(s.code) === targetStoreId ? 'selected' : ''}>${escapeHtmlText(s.name)}</option>`
+            ).join('');
             const leaveTypePreviewHtml = (() => {
                 const cls = getLeaveTypeColorClasses(defaultLeaveType);
                 const label = getLeaveTypeLabel(defaultLeaveType);
                 return `<span id="leave-form-type-preview" class="zdos-scheduling-leave-legend-chip zdos-leave-form-type-preview ${cls}"><span class="zdos-scheduling-leave-chip-type">${escapeHtmlText(label)}</span></span>`;
             })();
-            const selectionHint = getLeaveSelectionWindowHintForForm(defaultEmployeeId, viewStoreId);
+            const selectionHint = getLeaveSelectionWindowHintForForm(defaultEmployeeId, targetStoreId);
             const compactUi = !!modalState.compactUi;
+            const empStep = showStoreSelector ? '②' : '①';
+            const typeStep = showStoreSelector ? '③' : '②';
+            const dateStep = showStoreSelector ? '④' : '③';
+            const periodStep = showStoreSelector ? '⑤' : '④';
+            const noteStep = showStoreSelector ? '⑥' : '⑤';
+            const storeFieldHtml = showStoreSelector ? `
+                            <div>
+                                <label for="leave-form-store" class="block text-[10px] font-bold text-slate-400 mb-1">① 門市</label>
+                                <select id="leave-form-store" onchange="setLeaveModalTargetStore(this.value)" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50">
+                                    ${storeOptionsHtml || `<option value="${escapeHtmlText(targetStoreId)}">${escapeHtmlText(getStoreByCode(targetStoreId)?.name || targetStoreId)}</option>`}
+                                </select>
+                            </div>` : '';
             const modal = document.createElement('div');
             modal.id = 'leave-modal';
             modal.className = `zdos-leave-create-shell animate-fade-in${compactUi ? ' zdos-lc17-compact' : ''}`;
@@ -27233,18 +27494,27 @@
                     <form onsubmit="submitLeaveForm(event)" class="zdos-leave-create-form">
                         <div class="zdos-leave-create-header">
                             <div>
-                                <p class="text-[10px] uppercase tracking-[0.18em] text-rose-300/90">${compactUi ? 'Quick Leave' : 'Leave Registry'}</p>
-                                <h2 id="leave-modal-title" class="text-lg font-black text-white">${compactUi ? '新增排假' : title}</h2>
-                                <p class="mt-1 text-xs text-slate-400 font-mono">${escapeHtmlText(getStoreByCode(viewStoreId)?.name || viewStoreId)}</p>
+                                <p class="text-[10px] uppercase tracking-[0.18em] text-rose-300/90">${leaveRequestIntent ? 'Leave Request' : (compactUi ? 'Quick Leave' : 'Leave Registry')}</p>
+                                <h2 id="leave-modal-title" class="text-lg font-black text-white">${escapeHtmlText(title)}</h2>
+                                <p id="leave-modal-store-label" class="mt-1 text-xs text-slate-400 font-mono">${escapeHtmlText(getStoreByCode(targetStoreId)?.name || targetStoreId)}</p>
                             </div>
                             <button type="button" id="leave-create-close-btn" class="zdos-nav-btn px-2 py-1 rounded-lg text-slate-400 hover:text-white text-sm" aria-label="關閉">✕</button>
                         </div>
                         <div class="zdos-leave-create-body">
+                            ${storeFieldHtml}
                             <div>
-                                <label for="leave-form-employee" class="block text-[10px] font-bold text-slate-400 mb-1">${compactUi ? '① 員工' : '員工'}</label>
+                                <label for="leave-form-employee" class="block text-[10px] font-bold text-slate-400 mb-1">${empStep} 員工</label>
                                 <select id="leave-form-employee" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50" ${hasEmployeeOptions ? '' : 'disabled'}>
                                     ${employeeOptions || '<option value="">無可排班員工</option>'}
                                 </select>
+                            </div>
+                            <div>
+                                <label for="leave-form-type" class="block text-[10px] font-bold text-slate-400 mb-1">${typeStep} 假別</label>
+                                ${selectionHint}
+                                <select id="leave-form-type" onchange="updateLeaveFormTypePreview()" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50 mt-1">
+                                    ${typeOptions}
+                                </select>
+                                ${leaveTypePreviewHtml}
                             </div>
                             <div class="zdos-leave-form-section zdos-lc17-hide-advanced">
                                 <p class="block text-[10px] font-bold text-slate-400 mb-2">排假類型</p>
@@ -27254,40 +27524,38 @@
                                 </div>
                             </div>
                             <div class="zdos-leave-form-section">
-                                <p class="block text-[10px] font-bold text-slate-400 mb-2 zdos-lc17-hide-advanced">日期方式</p>
+                                <p class="block text-[10px] font-bold text-slate-400 mb-2">${dateStep} 日期</p>
                                 <div class="zdos-leave-segment mb-3 zdos-lc17-hide-advanced">
                                     <input id="leave-date-single" type="radio" name="leave-form-date-mode" value="single" checked onchange="toggleLeaveDateRange()"><label for="leave-date-single">單日</label>
                                     <input id="leave-date-range" type="radio" name="leave-form-date-mode" value="range" onchange="toggleLeaveDateRange()"><label for="leave-date-range">連續日期</label>
                                 </div>
                                 <div class="zdos-leave-date-range">
-                                    <div><label for="leave-form-date" class="block text-[10px] font-bold text-slate-500 mb-1">${compactUi ? '② 日期' : '開始日期'}</label><input id="leave-form-date" type="date" value="${escapeHtmlText(defaultDate)}" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50"></div>
-                                    <div id="leave-form-end-wrap" class="hidden"><label for="leave-form-end-date" class="block text-[10px] font-bold text-slate-500 mb-1">結束日期</label><input id="leave-form-end-date" type="date" value="${escapeHtmlText(defaultDate)}" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50"></div>
+                                    <div class="zdos-leave-date-field">
+                                        <label for="leave-form-date" class="block text-[10px] font-bold text-slate-500 mb-1">開始日期</label>
+                                        <input id="leave-form-date" type="date" value="${escapeHtmlText(defaultDate)}" class="zdos-leave-date-input w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50" autocomplete="off">
+                                    </div>
+                                    <div id="leave-form-end-wrap" class="zdos-leave-date-field hidden">
+                                        <label for="leave-form-end-date" class="block text-[10px] font-bold text-slate-500 mb-1">結束日期</label>
+                                        <input id="leave-form-end-date" type="date" value="${escapeHtmlText(defaultDate)}" class="zdos-leave-date-input w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50" autocomplete="off">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="zdos-leave-form-section zdos-lc17-hide-advanced">
-                                <p class="block text-[10px] font-bold text-slate-400 mb-2">休假時段</p>
+                            <div class="zdos-leave-form-section">
+                                <p class="block text-[10px] font-bold text-slate-400 mb-2">${periodStep} 時段</p>
                                 <div class="zdos-leave-segment zdos-leave-segment--three">
                                     ${['全天','上午','下午'].map(v => `<input id="leave-period-${v}" type="radio" name="leave-form-period" value="${v}" ${defaultPeriod===v?'checked':''}><label for="leave-period-${v}">${v}</label>`).join('')}
                                 </div>
                             </div>
-                            <div>
-                                <label for="leave-form-type" class="block text-[10px] font-bold text-slate-400 mb-1">${compactUi ? '③ 假別' : '假別'}</label>
-                                ${selectionHint}
-                                <select id="leave-form-type" onchange="updateLeaveFormTypePreview()" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50 mt-1">
-                                    ${typeOptions}
-                                </select>
-                                ${leaveTypePreviewHtml}
-                            </div>
                             <section class="zdos-leave-create-quota zdos-lc17-hide-advanced" aria-label="休假額度提示"><div id="leave-form-quota-content"></div></section>
                             <div id="leave-form-conflict" class="zdos-leave-conflict-card" role="alert"></div>
                             <div>
-                                <label for="leave-form-note" class="block text-[10px] font-bold text-slate-400 mb-1">${compactUi ? '④ 備註（選填）' : '備註（可空白）'}</label>
+                                <label for="leave-form-note" class="block text-[10px] font-bold text-slate-400 mb-1">${noteStep} 原因／備註</label>
                                 <textarea id="leave-form-note" rows="2" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50 resize-none" placeholder="選填">${escapeHtmlText(defaultNote)}</textarea>
                             </div>
                         </div>
                         <div class="zdos-leave-create-footer">
                             <button type="button" id="leave-create-cancel-btn" class="zdos-nav-btn py-3 px-4 rounded-xl border border-white/[0.08] bg-slate-900/50 text-slate-400 text-sm font-bold">取消</button>
-                            <button type="submit" class="zdos-nav-btn zdos-leave-create-submit py-3 rounded-xl border border-rose-500/35 bg-rose-600/20 text-rose-200 text-sm font-bold" ${hasEmployeeOptions ? '' : 'disabled'}>${compactUi ? '⑤ 完成' : '儲存休假'}</button>
+                            <button type="submit" id="leave-create-submit-btn" class="zdos-nav-btn zdos-leave-create-submit py-3 rounded-xl border border-rose-500/35 bg-rose-600/20 text-rose-200 text-sm font-bold" ${hasEmployeeOptions ? '' : 'disabled'}>${escapeHtmlText(submitLabel)}</button>
                         </div>
                     </form>
                 </div>`;
@@ -27296,9 +27564,51 @@
             setLeaveModalBodyScrollLock(true);
             document.getElementById('leave-create-close-btn')?.addEventListener('click', () => closeLeaveModal());
             document.getElementById('leave-create-cancel-btn')?.addEventListener('click', () => closeLeaveModal());
-            ['leave-form-employee','leave-form-date','leave-form-end-date','leave-form-type'].forEach(id => document.getElementById(id)?.addEventListener('change', refreshLeaveFormInsights));
+            ['leave-form-employee','leave-form-date','leave-form-end-date','leave-form-type','leave-form-store'].forEach(id => document.getElementById(id)?.addEventListener('change', refreshLeaveFormInsights));
             modal.querySelectorAll('input[name="leave-form-date-mode"],input[name="leave-form-period"],input[name="leave-form-scope"]').forEach(el => el.addEventListener('change', refreshLeaveFormInsights));
+            wireLeaveFormDatePickers(modal);
             refreshLeaveFormInsights();
+            updateLeaveFormTypePreview();
+        }
+
+        /* LEAVE-V2-002a｜安全開啟原生 date picker（桌機 Chrome/Safari + 手機） */
+        function openLeaveDatePicker(input) {
+            if (!input || input.tagName !== 'INPUT' || input.type !== 'date') return;
+            if (input.disabled || input.readOnly) return;
+            if (input.dataset.leavePickerOpening === '1') return;
+            input.dataset.leavePickerOpening = '1';
+            try {
+                try {
+                    input.focus({ preventScroll: true });
+                } catch (_) {
+                    try { input.focus(); } catch (__) { /* ignore */ }
+                }
+                if (typeof input.showPicker === 'function') {
+                    try {
+                        const ret = input.showPicker();
+                        if (ret && typeof ret.then === 'function') ret.catch(function () { /* NotAllowedError 等 */ });
+                    } catch (_) { /* showPicker 失敗不得阻斷原生 click/focus */ }
+                }
+            } finally {
+                window.setTimeout(function () {
+                    try { delete input.dataset.leavePickerOpening; } catch (_) { input.dataset.leavePickerOpening = ''; }
+                }, 300);
+            }
+        }
+        window.openLeaveDatePicker = openLeaveDatePicker;
+
+        function wireLeaveFormDatePickers(root) {
+            const scope = root && root.querySelectorAll ? root : document;
+            const inputs = scope.querySelectorAll
+                ? scope.querySelectorAll('#leave-form-date, #leave-form-end-date')
+                : [];
+            inputs.forEach(function (input) {
+                if (!input || input.type !== 'date' || input.dataset.leaveDatePickerBound === '1') return;
+                input.dataset.leaveDatePickerBound = '1';
+                input.addEventListener('click', function () {
+                    openLeaveDatePicker(input);
+                });
+            });
         }
 
         window.toggleLeaveDateRange = function() {
@@ -27308,17 +27618,25 @@
             const end = document.getElementById('leave-form-end-date');
             if (wrap) wrap.classList.toggle('hidden', mode !== 'range');
             if (end && start && !end.value) end.value = start.value;
+            wireLeaveFormDatePickers(document.getElementById('leave-modal'));
             refreshLeaveFormInsights();
         };
 
         window.updateLeaveFormTypePreview = function() {
             const select = document.getElementById('leave-form-type');
             const preview = document.getElementById('leave-form-type-preview');
-            if (!select || !preview) return;
+            if (!select) return;
             const value = select.value;
             if (!isLeaveTypeStorageAllowed(value)) return;
-            preview.className = `zdos-scheduling-leave-legend-chip zdos-leave-form-type-preview ${getLeaveTypeColorClasses(value)}`;
-            preview.innerHTML = `<span class="zdos-scheduling-leave-chip-type">${escapeHtmlText(getLeaveTypeLabel(value))}</span>`;
+            if (preview) {
+                preview.className = `zdos-scheduling-leave-legend-chip zdos-leave-form-type-preview ${getLeaveTypeColorClasses(value)}`;
+                preview.innerHTML = `<span class="zdos-scheduling-leave-chip-type">${escapeHtmlText(getLeaveTypeLabel(value))}</span>`;
+            }
+            /* LEAVE-V2-002｜leave-request intent 鎖定請假文案；其餘入口才依假別切換 */
+            const titleEl = document.getElementById('leave-modal-title');
+            if (titleEl) titleEl.textContent = getLeaveCreateModalTitle(value);
+            const submitBtn = document.getElementById('leave-create-submit-btn');
+            if (submitBtn && !submitBtn.disabled) submitBtn.textContent = getLeaveCreateSubmitLabel(value);
         };
 
         // ========================================================================
@@ -27981,18 +28299,16 @@
             const startIso = String(snapshot.startIso || '').slice(0, 10);
             const endIso = String(snapshot.endIso || '').slice(0, 10);
             const isCustom = snapshot.type === 'custom';
-            if (isCustom) {
-                const days = typeof iterateReportCenterIsoDates === 'function'
-                    ? iterateReportCenterIsoDates(startIso, endIso)
-                    : [];
-                if (!days.length) {
-                    showToast('請填寫開始日期與結束日期。', 'error');
-                    return;
-                }
-                if (days.length > 31) {
-                    showToast('自訂會計報表最多支援 31 天。', 'error');
-                    return;
-                }
+            const periodDays = typeof iterateReportCenterIsoDates === 'function'
+                ? iterateReportCenterIsoDates(startIso, endIso)
+                : [];
+            if (!periodDays.length) {
+                showToast(isCustom ? '請填寫開始日期與結束日期。' : '請選擇有效的報表期間。', 'error');
+                return;
+            }
+            if (periodDays.length > 31) {
+                showToast(isCustom ? '自訂會計報表最多支援 31 天。' : '會計報表最多支援 31 天。', 'error');
+                return;
             }
             const scope = {
                 code: snapshot.storeCode || getReportCenterStoreScope().code,
@@ -28008,7 +28324,7 @@
                 reportKind: snapshot.type === 'monthly'
                     ? 'monthly'
                     : (isCustom ? 'custom' : 'weekly'),
-                rewriteCustomTemplateDates: isCustom,
+                rewriteCustomTemplateDates: true,
                 records
             });
         };
@@ -29890,7 +30206,10 @@
             const mode=document.querySelector('input[name="leave-form-date-mode"]:checked')?.value || 'single';
             const leaveScope=document.querySelector('input[name="leave-form-scope"]:checked')?.value || 'current';
             const period=document.querySelector('input[name="leave-form-period"]:checked')?.value || '全天';
-            const storeId=getSchedulingViewStoreId();
+            /* LEAVE-V2-002｜insight／衝突檢查跟 leaveModal target store */
+            const storeId=typeof resolveLeaveFormTargetStoreId === 'function'
+                ? resolveLeaveFormTargetStoreId()
+                : getSchedulingViewStoreId();
             const quota=document.getElementById('leave-form-quota-content');
             const conflict=document.getElementById('leave-form-conflict');
             if (!employeeId || !storeId || !start) return;
@@ -57543,10 +57862,14 @@
             const batchBtn = isScheduleManager
                 ? `<button type="button" onclick="openPreLeaveBatch()" class="zdos-nav-btn zdos-lc17-btn zdos-lc17-btn--batch" ${viewStoreId ? '' : 'disabled'}>【批次】</button>`
                 : '';
+            /* LEAVE-V2-001b｜請假中心主畫面明確新增入口（桌機／手機皆顯示） */
+            const addLeaveCta = isLeavePage
+                ? `<button type="button" onclick="openLeaveOverviewAdd()" class="zdos-nav-btn zdos-leave-primary-add" ${viewStoreId ? '' : 'disabled'} aria-label="新增請假">＋ 新增請假</button>`
+                : '';
             const header = renderFunctionPageHeader({
                 backOnclick: isLeavePage ? "zdosNavigateBack('hrHome')" : 'zdosNavigateBack()',
                 title: `<span class="zdos-workspace-title--scheduling">班表班務</span>`,
-                rightHtml: `<div class="zdos-lc17-actions">${batchBtn}<button type="button" onclick="jumpLeaveCenterToToday()" class="zdos-nav-btn zdos-lc17-btn zdos-lc17-btn--today">今天</button></div>`
+                rightHtml: `<div class="zdos-lc17-actions">${batchBtn}${addLeaveCta}<button type="button" onclick="jumpLeaveCenterToToday()" class="zdos-nav-btn zdos-lc17-btn zdos-lc17-btn--today">今天</button></div>`
             });
             const monthStatsHtml = LEAVE_CENTER_STAT_ORDER.map(item => {
                 const count = Number(leaveSnap.monthStats?.[item.key] || 0);
@@ -57590,8 +57913,11 @@
                                 <p class="zdos-sch-kicker">今日班表</p>
                                 <p class="zdos-sch-meta">${escapeHtmlText(schedulingStoreName)} · ${year}/${String(month).padStart(2, '0')}${isScheduleManager ? ' · 全店' : ' · 我的'}</p>
                             </div>
-                            <button type="button" onclick="openLeaveCenterCreate()" class="zdos-nav-btn zdos-leave-primary-add" ${viewStoreId ? '' : 'disabled'}>＋新增</button>
+                            ${isLeavePage
+                                ? ''
+                                : `<button type="button" onclick="openLeaveCenterCreate()" class="zdos-nav-btn zdos-leave-primary-add" ${viewStoreId ? '' : 'disabled'}>＋新增</button>`}
                         </div>
+                        ${isLeavePage ? `<div class="zdos-leave-add-bar"><button type="button" onclick="openLeaveOverviewAdd()" class="zdos-nav-btn zdos-leave-primary-add" ${viewStoreId ? '' : 'disabled'} aria-label="新增請假">＋ 新增請假</button></div>` : ''}
                         ${storeSwitcherHtml}
                         <label class="sr-only" for="leave-center-search">搜尋姓名或工號</label>
                         <input id="leave-center-search" type="search" inputmode="search" autocomplete="off" placeholder="搜尋姓名／工號" value="${escapeHtmlText(searchQuery)}" oninput="setLeaveCenterSearchQuery(this.value)" class="zdos-lc17-search" />
