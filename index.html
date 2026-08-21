@@ -13062,7 +13062,9 @@
             [...LEAVE_TYPE_DEFINITIONS].sort((a, b) => (a.formOrder || 99) - (b.formOrder || 99));
 
         const renderLeaveFormTypeOptionsHtml = (selectedValue, employeeId, storeId, existingLeave) => {
-            return getLeaveFormTypeDefinitions().map(def => {
+            return getLeaveFormTypeDefinitions()
+                .filter(def => !(isLeaveRequestIntent() && def.id === 'vacation_choice'))
+                .map(def => {
                 const value = def.enabled === false
                     ? (def.formValue || LEAVE_TYPE_SPECIAL_ANNUAL_FORM_VALUE)
                     : (def.storageValues?.[0] || def.label);
@@ -13077,7 +13079,7 @@
                 const suffix = def.enabled === false ? '' : (blocked ? '（未開放）' : '');
                 const optionClass = getLeaveTypeOptionClasses(value);
                 return `<option value="${escapeHtmlText(value)}" class="${escapeHtmlText(optionClass)}"${selected}${disabled ? ' disabled' : ''}>${escapeHtmlText(def.label + suffix)}</option>`;
-            }).join('');
+                }).join('');
         };
 
         const saveLeaveRegistry = () => {
@@ -20285,6 +20287,7 @@
             event.preventDefault();
             if (!state.leaveModal) return;
             if (state.leaveFormSubmitting) return;
+            const returnToScheduleAfterSubmit = isLeaveRequestIntent();
             /* LEAVE-V2-002｜submit 使用 leaveModal.targetStoreId／門市 selector，禁止偷偷改回 view store */
             const viewStoreId = resolveLeaveFormTargetStoreId();
             if (!viewStoreId) return showSystemToast('無法判斷目前排班門市，請重新登入。', 'error');
@@ -20417,6 +20420,10 @@
                             closeLeaveModal();
                             const reloadPartial = await fetchLeaveRequestsForCurrentView();
                             if (!reloadPartial.ok) showSystemToast(reloadPartial.message || '部分已儲存，但重新載入雲端資料失敗。', 'error');
+                            if (returnToScheduleAfterSubmit) {
+                                state.currentView = 'scheduleCenter';
+                                safeSetItem('zdos_current_view', 'scheduleCenter');
+                            }
                             renderApp();
                             return;
                         }
@@ -20433,6 +20440,10 @@
                 closeLeaveModal();
                 const reload = await fetchLeaveRequestsForCurrentView();
                 if (!reload.ok) showSystemToast(reload.message || '已儲存，但重新載入雲端資料失敗。', 'error');
+                if (returnToScheduleAfterSubmit) {
+                    state.currentView = 'scheduleCenter';
+                    safeSetItem('zdos_current_view', 'scheduleCenter');
+                }
                 renderApp();
             } catch (err) {
                 console.error('[ZDOS leave] submitLeaveForm', err);
@@ -22870,7 +22881,7 @@
             root.innerHTML = wrapFunctionPage(header, body, 'max-w-3xl');
         }
 
-        /** UI-011 相容：請假頁（複用 UI-010A～G renderSchedulingCenter，不重建整份 View）。 */
+        /** 請假入口：直接開啟新增請假表單，背景維持班表班務。 */
         window.openLeaveCenter = async function() {
             const loginStoreId = getSchedulingStoreId();
             if (!loginStoreId) return showToast('無法判斷目前登入門市，請重新登入。', 'error');
@@ -22887,15 +22898,16 @@
             } else if (!current || !canEmployeeScheduleAtStore(current, viewStoreId)) {
                 state.activeSchedulingEmployeeId = schedulable[0]?.id || null;
             }
-            zdosRememberNavSource('leaveCenter');
-            state.currentView = 'leaveCenter';
-            safeSetItem('zdos_current_view', 'leaveCenter');
+            zdosRememberNavSource('scheduleCenter');
+            state.currentView = 'scheduleCenter';
+            safeSetItem('zdos_current_view', 'scheduleCenter');
             renderApp();
             zdosAfterViewNav();
             const load = await fetchLeaveRequestsForCurrentView();
             if (!load.ok) showToast(load.message || '載入雲端請假失敗。', 'error');
             else renderApp();
             subscribeLeaveRequestsRealtime();
+            return openLeaveCenterCreate(undefined, { intent: 'leave-request' });
         };
 
         window.openMyWorkforceDay = function(dateStr) {
@@ -28461,7 +28473,9 @@
                 const label = getLeaveTypeLabel(defaultLeaveType);
                 return `<span id="leave-form-type-preview" class="zdos-scheduling-leave-legend-chip zdos-leave-form-type-preview ${cls}"><span class="zdos-scheduling-leave-chip-type">${escapeHtmlText(label)}</span></span>`;
             })();
-            const selectionHint = preleaveIntent ? '' : getLeaveSelectionWindowHintForForm(defaultEmployeeId, targetStoreId);
+            const selectionHint = (preleaveIntent || leaveRequestIntent)
+                ? ''
+                : getLeaveSelectionWindowHintForForm(defaultEmployeeId, targetStoreId);
             const preleaveTm = normalizePreleaveTargetMonth(modalState.targetMonth)
                 || normalizePreleaveTargetMonth(state.preleaveEmployee?.targetMonth)
                 || getDefaultPreleaveTargetMonth();
@@ -28525,6 +28539,8 @@
                             ${preleaveIntent ? `
                             <input type="hidden" name="leave-form-scope" value="future">
                             <p class="text-[10px] text-slate-400">預先排假月份：${escapeHtmlText(formatPreleaveTargetMonthLabel(preleaveTm))}</p>
+                            ` : leaveRequestIntent ? `
+                            <input type="hidden" name="leave-form-scope" value="current">
                             ` : `
                             <div class="zdos-leave-form-section zdos-lc17-hide-advanced">
                                 <p class="block text-[10px] font-bold text-slate-400 mb-2">排假類型</p>
