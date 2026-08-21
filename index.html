@@ -2001,6 +2001,259 @@
             -webkit-backdrop-filter: blur(12px);
         }
 
+        /* PRELEAVE-CONSOLE-002A｜Mobile UI：深藍玻璃，禁止整層 parent opacity */
+        .zdos-preleave-console,
+        .zdos-preleave-employee {
+            color: #f8fafc;
+            gap: 0.75rem;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        .zdos-preleave-card {
+            border-radius: 14px;
+            border: 1px solid rgba(56, 189, 248, 0.16);
+            background: rgba(15, 23, 42, 0.78);
+            box-shadow: 0 8px 24px rgba(2, 8, 23, 0.35);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            padding: 0.875rem 0.95rem;
+            min-width: 0;
+        }
+        .zdos-preleave-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: #93c5fd;
+            margin-bottom: 0.35rem;
+        }
+        .zdos-preleave-meta {
+            font-size: 12px;
+            color: #cbd5e1;
+            line-height: 1.45;
+        }
+        .zdos-preleave-value {
+            font-size: 15px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.3;
+        }
+        .zdos-preleave-status {
+            font-size: 1.35rem;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            line-height: 1.2;
+        }
+        .zdos-preleave-status--open { color: #6ee7b7; }
+        .zdos-preleave-status--closed { color: #fda4af; }
+        .zdos-preleave-status--pending { color: #fcd34d; }
+        .zdos-preleave-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            min-width: 0;
+        }
+        .zdos-preleave-field + .zdos-preleave-field { margin-top: 0.65rem; }
+        .zdos-preleave-input {
+            width: 100%;
+            max-width: 100%;
+            min-height: 42px;
+            box-sizing: border-box;
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            background: rgba(2, 6, 23, 0.72);
+            color: #f1f5f9;
+            font-size: 14px;
+            padding: 0.55rem 0.75rem;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .zdos-preleave-input:disabled {
+            opacity: 1;
+            color: #e2e8f0;
+            -webkit-text-fill-color: #e2e8f0;
+            border-color: rgba(148, 163, 184, 0.2);
+            background: rgba(15, 23, 42, 0.88);
+        }
+        .zdos-preleave-console input[type="datetime-local"].zdos-preleave-input,
+        .zdos-preleave-console input[type="month"].zdos-preleave-input {
+            min-width: 0;
+        }
+        .zdos-preleave-mode-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            font-size: 13px;
+            color: #e2e8f0;
+        }
+        .zdos-preleave-mode-list label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .zdos-preleave-actions {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.45rem;
+        }
+        @media (max-width: 360px) {
+            .zdos-preleave-actions {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .zdos-preleave-actions > :last-child {
+                grid-column: 1 / -1;
+            }
+        }
+        .zdos-preleave-action-btn {
+            min-height: 40px;
+            padding: 0.45rem 0.35rem;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 800;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .zdos-preleave-action-btn--open {
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            background: rgba(6, 95, 70, 0.35);
+            color: #a7f3d0;
+        }
+        .zdos-preleave-action-btn--close {
+            border: 1px solid rgba(244, 63, 94, 0.4);
+            background: rgba(127, 29, 29, 0.32);
+            color: #fecdd3;
+        }
+        .zdos-preleave-action-btn--auto {
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            background: rgba(12, 74, 110, 0.35);
+            color: #bae6fd;
+        }
+        .zdos-preleave-progress-num {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 0.02em;
+        }
+        .zdos-preleave-progress-bar {
+            margin-top: 0.55rem;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.22);
+            overflow: hidden;
+        }
+        .zdos-preleave-progress-bar > span {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #34d399, #22d3ee);
+        }
+        .zdos-preleave-progress-stats {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.55rem;
+            font-size: 12px;
+        }
+        .zdos-preleave-progress-stats strong { font-weight: 800; }
+        .zdos-preleave-collapse {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.55rem 0;
+            border: 0;
+            background: transparent;
+            color: #e2e8f0;
+            font-size: 13px;
+            font-weight: 800;
+            text-align: left;
+            cursor: pointer;
+        }
+        .zdos-preleave-collapse__chev {
+            color: #93c5fd;
+            font-size: 12px;
+            transition: transform 150ms ease;
+        }
+        .zdos-preleave-collapse[aria-expanded="true"] .zdos-preleave-collapse__chev {
+            transform: rotate(90deg);
+        }
+        .zdos-preleave-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .zdos-preleave-list li {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) auto;
+            gap: 0.4rem;
+            align-items: center;
+            padding: 0.55rem 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+            font-size: 12px;
+        }
+        .zdos-preleave-list li:last-child { border-bottom: 0; }
+        .zdos-preleave-list__name { color: #fff; font-weight: 700; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .zdos-preleave-list__no { color: #bfdbfe; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+        .zdos-preleave-list__state { color: #fcd34d; font-weight: 700; white-space: nowrap; }
+        .zdos-preleave-list__state--done { color: #6ee7b7; }
+        .zdos-preleave-cta {
+            width: 100%;
+            min-height: 44px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 800;
+        }
+        .zdos-preleave-cta--primary {
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            background: rgba(6, 95, 70, 0.4);
+            color: #ecfdf5;
+        }
+        .zdos-preleave-cta--confirm {
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            background: rgba(12, 74, 110, 0.4);
+            color: #e0f2fe;
+        }
+        .zdos-preleave-hint {
+            font-size: 12px;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+        .zdos-preleave-leave-list {
+            list-style: none;
+            margin: 0.35rem 0 0;
+            padding: 0;
+        }
+        .zdos-preleave-leave-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+            font-size: 13px;
+            color: #f1f5f9;
+        }
+        .zdos-preleave-leave-list li:last-child { border-bottom: 0; }
+        .zdos-preleave-stack { display: flex; flex-direction: column; gap: 0.75rem; }
+        .zdos-preleave-row2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.65rem;
+        }
+        @media (max-width: 390px) {
+            .zdos-preleave-row2 { grid-template-columns: 1fr; }
+        }
+        .zdos-preleave-console .zdos-workspace-header-inner,
+        .zdos-preleave-employee .zdos-workspace-header-inner {
+            /* header 由共用元件控制；此處僅防水平溢出 */
+        }
+        .zdos-fn-shell:has(.zdos-preleave-console) .zdos-workspace-body,
+        .zdos-fn-shell:has(.zdos-preleave-employee) .zdos-workspace-body {
+            gap: 0.75rem;
+        }
+        .zdos-fn-shell:has(.zdos-preleave-console) .zdos-workspace-title,
+        .zdos-fn-shell:has(.zdos-preleave-employee) .zdos-workspace-title {
+            text-align: center;
+        }
+
         .zdos-workspace-card--interactive {
             cursor: pointer;
             text-align: left;
@@ -5185,10 +5438,6 @@
             if (sameActor) return getUserSchedulingStoreCodes().includes(code);
             return canUserViewSchedulingStoreForUser(user, code);
         };
-        const canUserManageLeaveSelectionWindow = (user, storeId) =>
-            canUserEditStoreSchedule(user, storeId);
-        const canCurrentUserManageLeaveSelectionWindow = storeId =>
-            canUserManageLeaveSelectionWindow(getLoggedInAccount(), storeId);
         /** 目前登入者是否具該門市排班／請假管理權（主管視角）；否則為一般員工（個人模式）。 */
         const canCurrentUserEditStoreSchedule = storeId =>
             canUserEditStoreSchedule(getLoggedInAccount(), storeId);
@@ -5280,6 +5529,7 @@
         const LEAVE_STORAGE_KEY = 'zdos_leave_registry_v1';
         const LEAVE_CACHE_KEY = LEAVE_STORAGE_KEY;
         const LEAVE_SELECTION_WINDOW_KEY = 'zdos_leave_selection_window_registry_v1';
+        const PRELEAVE_SUBMISSION_STORAGE_KEY = 'zdos_preleave_submission_registry_v1';
         const LEAVE_BASELINE_APPLIED_KEY = 'zdos_leave_baseline_202607_applied';
         const LEAVE_BASELINE_VERSION = '202607-leave-v1';
         const LEAVE_BASELINE_202607 = [
@@ -9757,6 +10007,8 @@
             if (state.currentView === 'scheduleCenter' || state.currentView === 'schedule-change') return '班表班務';
             if (state.currentView === 'storeCalendar') return '店務行事曆';
             if (state.currentView === 'leaveCenter') return '請假';
+            if (state.currentView === 'preleave') return '預先排假';
+            if (state.currentView === 'preleaveConsole') return '預先排假控制台';
             if (state.currentView === 'scheduling') return '請假';
             if (state.currentView === 'announcements' || state.currentView === 'announcement-detail') return '公告中心';
             if (state.currentView === 'notifications') return '推播中心';
@@ -10002,6 +10254,15 @@
             scheduleChangeFormType: null,
             leaveRegistry: loadLeaveRegistry(),
             leaveSelectionWindowRegistry: safeJsonParse(LEAVE_SELECTION_WINDOW_KEY, []),
+            preleaveSubmissionRegistry: safeJsonParse(PRELEAVE_SUBMISSION_STORAGE_KEY, []),
+            preleaveConsole: {
+                storeId: null,
+                targetMonth: null
+            },
+            preleaveEmployee: {
+                storeId: null,
+                targetMonth: null
+            },
             personnelOrlRegistry: loadPersonnelOrlRegistry(),
             abilityRegistry: loadAbilityRegistry(),
             academyTab: 'overview',
@@ -12762,6 +13023,11 @@
         };
         const isLeaveRequestIntent = () =>
             String(state.leaveModal?.intent || '') === 'leave-request';
+        /** PRELEAVE-CONSOLE-002｜預先排假 intent（與 LEAVE-V2 leave-request 隔離） */
+        const isPreleaveIntent = () =>
+            String(state.leaveModal?.intent || '') === 'preleave'
+            || String(state.hrPreLeaveBatch?.intent || '') === 'preleave';
+        const forcePreleaveLeaveType = () => LEAVE_TYPE_VACATION_CHOICE;
         const getLeaveCreateModalTitle = leaveType => {
             if (isLeaveRequestIntent()) return '新增請假';
             return isLeaveRequestType(leaveType) ? '新增請假' : '新增排假';
@@ -12969,6 +13235,27 @@
             return 'auto';
         };
 
+        const normalizePreleaveTargetMonth = value => {
+            const raw = String(value || '').trim();
+            if (/^\d{4}-\d{2}$/.test(raw)) return raw;
+            if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw.slice(0, 7);
+            return '';
+        };
+
+        const getDefaultPreleaveTargetMonth = (now = new Date()) => {
+            let y = now.getFullYear();
+            let m = now.getMonth() + 2; // next month
+            if (m > 12) { m = 1; y += 1; }
+            return `${y}-${String(m).padStart(2, '0')}`;
+        };
+
+        const formatPreleaveTargetMonthLabel = targetMonth => {
+            const tm = normalizePreleaveTargetMonth(targetMonth);
+            if (!tm) return '未指定月份';
+            const [y, m] = tm.split('-');
+            return `${Number(y)} 年 ${Number(m)} 月`;
+        };
+
         const formatDatetimeLocalInputValue = value => {
             const raw = String(value || '').trim();
             if (!raw) return '';
@@ -12986,51 +13273,152 @@
             return d.toISOString();
         };
 
-        const getLeaveSelectionWindowForStore = storeId => {
+        /** PRELEAVE-CONSOLE-002｜獨立控制台權限（不可 reuse canUserEditStoreSchedule） */
+        const getPreleaveConsoleCloudRole = (user = getLoggedInAccount()) => {
+            if (isSalesCloudEnabled() && state.supabaseSessionReady && state.cloudProfile) {
+                const logged = getLoggedInAccount();
+                const same = logged && user
+                    && String(logged.empId || '').trim().toLowerCase() === String(user.empId || '').trim().toLowerCase();
+                if (same) return String(state.cloudProfile.role || '').trim();
+            }
+            const actor = typeof getSessionActor === 'function' ? getSessionActor() : null;
+            if (actor?.cloudRole) return String(actor.cloudRole).trim();
+            const role = String(user?.role || '').trim();
+            if (role === '集團首腦' || role === '首腦' || role === 'owner') return 'owner';
+            if (role === '區經理' || role === '店經理' || role === '店長' || role === 'manager') return 'manager';
+            if (role === '領班' || role === '副領班' || role === 'supervisor') return 'supervisor';
+            if (role === '實習幹部' || role === 'trainee_manager') return 'trainee_manager';
+            if (role === '資深員工' || role === 'senior_staff') return 'senior_staff';
+            return 'staff';
+        };
+
+        const canEditPreleaveConsole = (storeId, user = getLoggedInAccount()) => {
+            if (!user) return false;
+            const code = normalizeStoreIdCode(storeId);
+            if (!code || !isStoreActive(code) || code === 'HJ') return false;
+            const cloudRole = getPreleaveConsoleCloudRole(user);
+            if (cloudRole === 'owner' || isLeaveFounderActor(user)) {
+                return true;
+            }
+            if (cloudRole !== 'manager') return false;
+            return canUserViewSchedulingStoreForUser(user, code)
+                || (typeof getUserSchedulingStoreCodes === 'function' && getUserSchedulingStoreCodes().includes(code));
+        };
+
+        const canViewPreleaveConsole = (storeId, user = getLoggedInAccount()) => {
+            if (!user) return false;
+            const code = normalizeStoreIdCode(storeId);
+            if (!code || !isStoreActive(code) || code === 'HJ') return false;
+            if (canEditPreleaveConsole(code, user)) return true;
+            const cloudRole = getPreleaveConsoleCloudRole(user);
+            if (cloudRole !== 'supervisor') return false;
+            return canUserViewSchedulingStoreForUser(user, code)
+                || (typeof getUserSchedulingStoreCodes === 'function' && getUserSchedulingStoreCodes().includes(code));
+        };
+
+        const canUserManageLeaveSelectionWindow = (user, storeId) =>
+            canEditPreleaveConsole(storeId, user);
+        const canCurrentUserManageLeaveSelectionWindow = storeId =>
+            canEditPreleaveConsole(storeId);
+
+        const canAccessAnyPreleaveConsole = (user = getLoggedInAccount()) => {
+            const stores = (typeof getActiveStores === 'function' ? getActiveStores() : [])
+                .map(s => normalizeStoreIdCode(s.code))
+                .filter(c => c && c !== 'HJ');
+            return stores.some(code => canViewPreleaveConsole(code, user));
+        };
+
+        const getLeaveSelectionWindowForStore = (storeId, targetMonth = null) => {
             const code = normalizeStoreIdCode(storeId);
             if (!code) return null;
+            const tm = normalizePreleaveTargetMonth(targetMonth) || normalizePreleaveTargetMonth(state.preleaveConsole?.targetMonth) || getDefaultPreleaveTargetMonth();
             const list = getLeaveSelectionWindowRegistry();
-            return list.find(row => normalizeStoreIdCode(row.storeId) === code) || null;
+            const exact = list.find(row =>
+                normalizeStoreIdCode(row.storeId) === code
+                && normalizePreleaveTargetMonth(row.targetMonth) === tm
+            );
+            if (exact) return exact;
+            // legacy row without targetMonth：僅當尚無該月列時作為讀取 fallback
+            const legacy = list.find(row =>
+                normalizeStoreIdCode(row.storeId) === code
+                && !normalizePreleaveTargetMonth(row.targetMonth)
+            );
+            if (!legacy) return null;
+            return { ...legacy, targetMonth: tm, _legacy: true };
         };
+
+        const getLeaveSelectionWindowConfig = (storeId, targetMonth) =>
+            getLeaveSelectionWindowForStore(storeId, targetMonth);
 
         const evaluateLeaveSelectionWindow = (config, now = new Date()) => {
             if (!config || config.enabled === false) {
-                return { open: false, phase: 'disabled', message: '預選休假（自選）尚未開放。' };
+                return { open: false, phase: 'disabled', message: '預選休假（自選）尚未開放。', userStatus: '未開放' };
             }
             const mode = normalizeLeaveSelectionMode(config.mode);
             if (mode === 'open') {
-                return { open: true, phase: 'forced_open', message: '強制開放中' };
+                return { open: true, phase: 'forced_open', message: '強制開放中', userStatus: '開放中' };
             }
             if (mode === 'closed') {
-                return { open: false, phase: 'forced_closed', message: '目前已關閉預選休假（自選）。' };
+                return { open: false, phase: 'forced_closed', message: '目前已關閉預選休假（自選）。', userStatus: '已截止' };
             }
             const startMs = config.startAt ? new Date(config.startAt).getTime() : NaN;
             const endMs = config.endAt ? new Date(config.endAt).getTime() : NaN;
             const t = now.getTime();
             if (!Number.isFinite(startMs) || !Number.isFinite(endMs)) {
-                return { open: false, phase: 'not_configured', message: '預選休假（自選）尚未開放。' };
+                return { open: false, phase: 'not_configured', message: '預選休假（自選）尚未開放。', userStatus: '未開放' };
             }
             if (t < startMs) {
-                return { open: false, phase: 'not_started', message: '預選休假尚未開始。' };
+                return { open: false, phase: 'not_started', message: '預選休假尚未開始。', userStatus: '未開放' };
             }
             if (t > endMs) {
-                return { open: false, phase: 'ended', message: '預選休假已截止。' };
+                return { open: false, phase: 'ended', message: '預選休假已截止。', userStatus: '已截止' };
             }
-            return { open: true, phase: 'auto_open', message: '開放中（自動時段）' };
+            return { open: true, phase: 'auto_open', message: '開放中（自動時段）', userStatus: '開放中' };
+        };
+
+        const mapLeaveSelectionUserStatus = status => {
+            if (!status) return '未開放';
+            if (status.userStatus) return status.userStatus;
+            if (status.open) return '開放中';
+            if (status.phase === 'ended' || status.phase === 'forced_closed') return '已截止';
+            return '未開放';
+        };
+
+        const validatePreleaveTargetMonth = (dates, targetMonth) => {
+            const tm = normalizePreleaveTargetMonth(targetMonth);
+            if (!tm) return { ok: false, message: '請先設定預先排假月份。' };
+            const list = Array.isArray(dates) ? dates : [];
+            if (!list.length) return { ok: false, message: '請選擇日期。' };
+            const [y, m] = tm.split('-');
+            const label = `${Number(y)} 年 ${Number(m)} 月`;
+            const bad = list.find(d => normalizePreleaveTargetMonth(d) !== tm);
+            if (bad) {
+                return { ok: false, message: `預先排假只能選擇 ${label}的日期` };
+            }
+            return { ok: true, targetMonth: tm };
         };
 
         const canManageLeaveSelectionWindowForStore = storeId =>
-            canCurrentUserManageLeaveSelectionWindow(storeId);
-
+            canEditPreleaveConsole(storeId);
         const isLeaveSelectionWindowManagerForStore = (storeId, user = getLoggedInAccount()) =>
-            canUserManageLeaveSelectionWindow(user, storeId);
+            canEditPreleaveConsole(storeId, user);
+        const resolvePreleaveTargetMonthForMutation = (storeId, leaveType, existingLeave = null) => {
+            const fromState = normalizePreleaveTargetMonth(state.preleaveEmployee?.targetMonth)
+                || normalizePreleaveTargetMonth(state.preleaveConsole?.targetMonth)
+                || normalizePreleaveTargetMonth(state.leaveModal?.targetMonth);
+            if (fromState) return fromState;
+            const fromLeave = normalizePreleaveTargetMonth(existingLeave?.date);
+            if (fromLeave) return fromLeave;
+            return getDefaultPreleaveTargetMonth();
+        };
 
         const assertLeaveSelectionWindowMutation = ({
             storeId,
             employeeId,
             leaveType,
             existingLeave = null,
-            user = getLoggedInAccount()
+            user = getLoggedInAccount(),
+            targetMonth = null
         }) => {
             const storeCode = normalizeStoreIdCode(storeId);
             if (!storeCode) return { ok: true };
@@ -13042,7 +13430,9 @@
             const touchesChoice = nextType === LEAVE_TYPE_VACATION_CHOICE
                 || prevType === LEAVE_TYPE_VACATION_CHOICE;
             if (!touchesChoice) return { ok: true };
-            const config = getLeaveSelectionWindowForStore(storeCode);
+            const tm = normalizePreleaveTargetMonth(targetMonth)
+                || resolvePreleaveTargetMonthForMutation(storeCode, leaveType, existingLeave);
+            const config = getLeaveSelectionWindowForStore(storeCode, tm);
             const status = evaluateLeaveSelectionWindow(config);
             if (status.open) return { ok: true };
             return { ok: false, message: status.message || '目前無法操作休假（自選）。' };
@@ -13053,14 +13443,22 @@
             const storeCode = normalizeStoreIdCode(leave.storeId);
             if (!storeCode) return { ok: true };
             if (isLeaveSelectionWindowManagerForStore(storeCode, user)) return { ok: true };
-            // 員工本人可取消自己的休假（含自選；取消≠新提交）
             const self = getCurrentUserPersonnel();
             const leaveEmpId = normalizeLeaveEmployeeId(leave.employeeId);
-            if (self && normalizeLeaveEmployeeId(self.id) === leaveEmpId) return { ok: true };
+            if (self && normalizeLeaveEmployeeId(self.id) === leaveEmpId) {
+                // 窗口 OPEN 時本人可刪；CLOSED 時仍允許取消？Founder：CLOSED 不得刪除自選
+                if (String(leave.leaveType || '').trim() !== LEAVE_TYPE_VACATION_CHOICE) return { ok: true };
+                const tm = normalizePreleaveTargetMonth(leave.date) || getDefaultPreleaveTargetMonth();
+                const config = getLeaveSelectionWindowForStore(storeCode, tm);
+                const status = evaluateLeaveSelectionWindow(config);
+                if (status.open) return { ok: true };
+                return { ok: false, message: status.message || '目前無法刪除休假（自選）。' };
+            }
             if (String(leave.leaveType || '').trim() !== LEAVE_TYPE_VACATION_CHOICE) return { ok: true };
             const emp = getEmployee(leave.employeeId);
             if (!isFullTimeEmployee(emp)) return { ok: true };
-            const config = getLeaveSelectionWindowForStore(storeCode);
+            const tm = normalizePreleaveTargetMonth(leave.date) || getDefaultPreleaveTargetMonth();
+            const config = getLeaveSelectionWindowForStore(storeCode, tm);
             const status = evaluateLeaveSelectionWindow(config);
             if (status.open) return { ok: true };
             return { ok: false, message: status.message || '目前無法刪除休假（自選）。' };
@@ -13074,24 +13472,32 @@
         const upsertLeaveSelectionWindowConfig = (storeId, data) => {
             const code = normalizeStoreIdCode(storeId);
             if (!code) return { ok: false, message: '門市無效。' };
-            if (!canUserManageLeaveSelectionWindow(getLoggedInAccount(), code)) {
-                return { ok: false, message: '無權管理此門市預選休假開放設定。' };
+            if (!canEditPreleaveConsole(code)) {
+                return { ok: false, message: '無權管理此門市預先排假設定。' };
             }
+            const targetMonth = normalizePreleaveTargetMonth(data?.targetMonth);
+            if (!targetMonth) return { ok: false, message: '請選擇排假月份。' };
             const mode = normalizeLeaveSelectionMode(data?.mode);
-            const startAt = parseDatetimeLocalInputValue(data?.startAt);
-            const endAt = parseDatetimeLocalInputValue(data?.endAt);
-            if (mode === 'auto' && startAt && endAt && new Date(startAt) > new Date(endAt)) {
+            const startIso = parseDatetimeLocalInputValue(data?.startAt)
+                || (data?.startAt && !Number.isNaN(new Date(data.startAt).getTime()) ? new Date(data.startAt).toISOString() : '');
+            const endIso = parseDatetimeLocalInputValue(data?.endAt)
+                || (data?.endAt && !Number.isNaN(new Date(data.endAt).getTime()) ? new Date(data.endAt).toISOString() : '');
+            if (startIso && endIso && new Date(startIso) >= new Date(endIso)) {
                 return { ok: false, message: '截止時間必須晚於開始時間。' };
             }
             const now = new Date().toISOString();
-            const list = getLeaveSelectionWindowRegistry();
-            const idx = list.findIndex(row => normalizeStoreIdCode(row.storeId) === code);
+            const list = getLeaveSelectionWindowRegistry().slice();
+            const idx = list.findIndex(row =>
+                normalizeStoreIdCode(row.storeId) === code
+                && normalizePreleaveTargetMonth(row.targetMonth) === targetMonth
+            );
             const record = {
-                id: idx >= 0 ? list[idx].id : `lsw-${Date.now()}`,
+                id: idx >= 0 ? list[idx].id : `lsw-${code}-${targetMonth}-${Date.now()}`,
                 storeId: code,
+                targetMonth,
                 mode,
-                startAt,
-                endAt,
+                startAt: startIso,
+                endAt: endIso,
                 enabled: data?.enabled !== false,
                 createdAt: idx >= 0 ? list[idx].createdAt : now,
                 updatedAt: now
@@ -13103,86 +13509,561 @@
             return { ok: true, config: record };
         };
 
-        const renderLeaveSelectionWindowAdminPanel = viewStoreId => {
-            if (!canManageLeaveSelectionWindowForStore(viewStoreId) || !viewStoreId) return '';
-            const config = getLeaveSelectionWindowForStore(viewStoreId) || {
+        const quickSetPreleaveConsoleMode = (storeId, targetMonth, mode) => {
+            const code = normalizeStoreIdCode(storeId);
+            const tm = normalizePreleaveTargetMonth(targetMonth);
+            if (!canEditPreleaveConsole(code)) {
+                return { ok: false, message: '無權修改預先排假設定。' };
+            }
+            const current = getLeaveSelectionWindowForStore(code, tm) || {
+                storeId: code,
+                targetMonth: tm,
                 mode: 'auto',
                 startAt: '',
                 endAt: '',
                 enabled: true
             };
+            return upsertLeaveSelectionWindowConfig(code, {
+                targetMonth: tm,
+                mode,
+                startAt: current.startAt ? formatDatetimeLocalInputValue(current.startAt) : '',
+                endAt: current.endAt ? formatDatetimeLocalInputValue(current.endAt) : '',
+                enabled: current.enabled !== false
+            });
+        };
+
+        /* ===== PRELEAVE submission registry ===== */
+        const getPreleaveSubmissionRegistry = () => (
+            Array.isArray(state.preleaveSubmissionRegistry) ? state.preleaveSubmissionRegistry : []
+        );
+        const savePreleaveSubmissionRegistry = () => {
+            state.preleaveSubmissionRegistry = getPreleaveSubmissionRegistry();
+            safeSetItem(PRELEAVE_SUBMISSION_STORAGE_KEY, JSON.stringify(state.preleaveSubmissionRegistry));
+        };
+        const findPreleaveSubmission = (storeId, targetMonth, employeeId) => {
+            const code = normalizeStoreIdCode(storeId);
+            const tm = normalizePreleaveTargetMonth(targetMonth);
+            const emp = normalizeLeaveEmployeeId(employeeId);
+            if (!code || !tm || !emp) return null;
+            return getPreleaveSubmissionRegistry().find(row =>
+                normalizeStoreIdCode(row.storeId) === code
+                && normalizePreleaveTargetMonth(row.targetMonth) === tm
+                && normalizeLeaveEmployeeId(row.employeeId) === emp
+            ) || null;
+        };
+        const markPreleaveSubmitted = ({ storeId, targetMonth, employeeId }) => {
+            const code = normalizeStoreIdCode(storeId);
+            const tm = normalizePreleaveTargetMonth(targetMonth);
+            const empId = normalizeLeaveEmployeeId(employeeId);
+            if (!code || !tm || !empId) return { ok: false, message: '無法完成預先排假。' };
+            const config = getLeaveSelectionWindowForStore(code, tm);
             const status = evaluateLeaveSelectionWindow(config);
-            const statusClass = status.open ? 'zdos-leave-selection-status--open' : 'zdos-leave-selection-status--closed';
-            const mode = normalizeLeaveSelectionMode(config.mode);
-            const startVal = formatDatetimeLocalInputValue(config.startAt);
-            const endVal = formatDatetimeLocalInputValue(config.endAt);
+            if (!status.open) return { ok: false, message: status.message || '本期預先排假尚未開放或已截止。' };
+            const emp = getEmployee(empId);
+            const employeeNo = String(emp?.employeeNo || empId || '').trim();
+            const now = new Date().toISOString();
+            const list = getPreleaveSubmissionRegistry().slice();
+            const idx = list.findIndex(row =>
+                normalizeStoreIdCode(row.storeId) === code
+                && normalizePreleaveTargetMonth(row.targetMonth) === tm
+                && normalizeLeaveEmployeeId(row.employeeId) === empId
+            );
+            const record = {
+                id: idx >= 0 ? list[idx].id : `pls-${code}-${tm}-${empId}`,
+                storeId: code,
+                targetMonth: tm,
+                employeeId: empId,
+                employeeNo,
+                completedAt: now,
+                updatedAt: now
+            };
+            if (idx >= 0) list[idx] = { ...list[idx], ...record };
+            else list.push(record);
+            state.preleaveSubmissionRegistry = list;
+            savePreleaveSubmissionRegistry();
+            return { ok: true, submission: record };
+        };
+
+        const getPreleaveExpectedEmployees = storeId => {
+            const code = normalizeStoreIdCode(storeId);
+            if (!code) return [];
+            return getSchedulableEmployeesForStore(code).filter(isFullTimeEmployee);
+        };
+
+        const getPreleaveProgress = (storeId, targetMonth) => {
+            const code = normalizeStoreIdCode(storeId);
+            const tm = normalizePreleaveTargetMonth(targetMonth);
+            const expected = getPreleaveExpectedEmployees(code);
+            const submittedIds = new Set(
+                getPreleaveSubmissionRegistry()
+                    .filter(row =>
+                        normalizeStoreIdCode(row.storeId) === code
+                        && normalizePreleaveTargetMonth(row.targetMonth) === tm
+                    )
+                    .map(row => normalizeLeaveEmployeeId(row.employeeId))
+            );
+            const submitted = expected.filter(e => submittedIds.has(normalizeLeaveEmployeeId(e.id)));
+            const pending = expected.filter(e => !submittedIds.has(normalizeLeaveEmployeeId(e.id)));
+            return {
+                expectedCount: expected.length,
+                submittedCount: submitted.length,
+                pendingCount: pending.length,
+                expected,
+                submitted,
+                pending
+            };
+        };
+
+        const listSelfPreleaveChoiceLeaves = (storeId, targetMonth, employeeId) => {
+            const code = normalizeStoreIdCode(storeId);
+            const tm = normalizePreleaveTargetMonth(targetMonth);
+            const empId = normalizeLeaveEmployeeId(employeeId);
+            return getLeaveRegistry().filter(row =>
+                normalizeStoreIdCode(row.storeId) === code
+                && normalizeLeaveEmployeeId(row.employeeId) === empId
+                && String(row.leaveType || '').trim() === LEAVE_TYPE_VACATION_CHOICE
+                && normalizePreleaveTargetMonth(row.date) === tm
+            ).sort((a, b) => String(a.date).localeCompare(String(b.date)));
+        };
+
+        const renderLeaveSelectionWindowAdminPanel = viewStoreId => {
+            // PRELEAVE-CONSOLE-002：嵌板改為導向獨立控制台（避免雙寫路徑）
+            if (!canViewPreleaveConsole(viewStoreId) || !viewStoreId) return '';
+            const tm = normalizePreleaveTargetMonth(state.preleaveConsole?.targetMonth) || getDefaultPreleaveTargetMonth();
+            const config = getLeaveSelectionWindowForStore(viewStoreId, tm);
+            const status = evaluateLeaveSelectionWindow(config);
+            const userStatus = mapLeaveSelectionUserStatus(status);
             const storeLabel = getStoreByCode(viewStoreId)?.name || viewStoreId;
             return `
                 <section class="zdos-leave-selection-admin" aria-labelledby="leave-selection-admin-title">
-                    <h3 id="leave-selection-admin-title" class="zdos-leave-selection-admin-title">員工預選休假開放管理 · ${escapeHtmlText(storeLabel)}</h3>
-                    <p class="mt-1 text-[10px] text-slate-500">僅限制正職員工自行提交「${escapeHtmlText(LEAVE_TYPE_VACATION_CHOICE)}」；主管代填不受限。</p>
-                    <p class="mt-1 text-[10px] ${statusClass} zdos-leave-selection-status">目前狀態：${escapeHtmlText(status.message)}</p>
-                    <form onsubmit="submitLeaveSelectionWindowForm(event)" class="mt-2 space-y-2">
-                        <input type="hidden" name="storeId" value="${escapeHtmlText(viewStoreId)}">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-400 mb-1" for="lsw-mode">模式</label>
-                                <select id="lsw-mode" name="mode" class="w-full rounded-lg bg-slate-950/70 border border-white/[0.08] px-2 py-1.5 text-xs text-slate-100">
-                                    <option value="auto"${mode === 'auto' ? ' selected' : ''}>自動（依開始／截止時間）</option>
-                                    <option value="open"${mode === 'open' ? ' selected' : ''}>強制開放</option>
-                                    <option value="closed"${mode === 'closed' ? ' selected' : ''}>強制關閉</option>
-                                </select>
-                            </div>
-                            <div class="flex items-end">
-                                <label class="inline-flex items-center gap-2 text-[10px] text-slate-300 pb-1.5">
-                                    <input type="checkbox" name="enabled" value="1"${config.enabled !== false ? ' checked' : ''} class="rounded border-white/20">
-                                    啟用設定
-                                </label>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-400 mb-1" for="lsw-start">開始時間</label>
-                                <input id="lsw-start" name="startAt" type="datetime-local" value="${escapeHtmlText(startVal)}" class="w-full rounded-lg bg-slate-950/70 border border-white/[0.08] px-2 py-1.5 text-xs text-slate-100">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-400 mb-1" for="lsw-end">截止時間</label>
-                                <input id="lsw-end" name="endAt" type="datetime-local" value="${escapeHtmlText(endVal)}" class="w-full rounded-lg bg-slate-950/70 border border-white/[0.08] px-2 py-1.5 text-xs text-slate-100">
-                            </div>
-                        </div>
-                        <button type="submit" class="zdos-nav-btn px-3 py-1.5 rounded-lg border border-indigo-500/35 bg-indigo-600/15 text-indigo-200 text-[11px] font-bold">儲存本店設定</button>
-                    </form>
+                    <h3 id="leave-selection-admin-title" class="zdos-leave-selection-admin-title">預先排假 · ${escapeHtmlText(storeLabel)}</h3>
+                    <p class="mt-1 text-[10px] text-slate-500">月份 ${escapeHtmlText(formatPreleaveTargetMonthLabel(tm))} · 狀態：${escapeHtmlText(userStatus)}</p>
+                    <button type="button" onclick="openPreleaveConsole('${escapeHtmlText(viewStoreId)}','${escapeHtmlText(tm)}')" class="zdos-nav-btn mt-2 px-3 py-1.5 rounded-lg border border-indigo-500/35 bg-indigo-600/15 text-indigo-200 text-[11px] font-bold">開啟預先排假控制台</button>
                 </section>`;
         };
 
         window.submitLeaveSelectionWindowForm = function(event) {
             event.preventDefault();
-            const form = event.target;
-            const storeId = form.querySelector('[name="storeId"]')?.value;
-            if (!canUserManageLeaveSelectionWindow(getLoggedInAccount(), storeId)) {
-                return showToast('無權管理此門市預選休假開放設定。', 'error');
-            }
-            const mode = form.querySelector('[name="mode"]')?.value;
-            const startAt = form.querySelector('[name="startAt"]')?.value;
-            const endAt = form.querySelector('[name="endAt"]')?.value;
-            const enabled = !!form.querySelector('[name="enabled"]')?.checked;
-            const result = upsertLeaveSelectionWindowConfig(storeId, { mode, startAt, endAt, enabled });
-            if (!result.ok) return showToast(result.message, 'error');
-            showToast('預選休假開放設定已儲存。', 'success');
-            renderApp();
+            showToast('請改用預先排假控制台儲存設定。', 'info');
+            openPreleaveConsole();
         };
 
         const getLeaveSelectionWindowHintForForm = (employeeId, storeId) => {
-            if (canManageLeaveSelectionWindowForStore(storeId)) return '';
+            if (canEditPreleaveConsole(storeId)) return '';
             const emp = getEmployee(employeeId);
             if (!isFullTimeEmployee(emp)) return '';
-            const config = getLeaveSelectionWindowForStore(storeId);
+            const tm = resolvePreleaveTargetMonthForMutation(storeId);
+            const config = getLeaveSelectionWindowForStore(storeId, tm);
             const status = evaluateLeaveSelectionWindow(config);
             if (status.open) {
                 return `<p class="text-[10px] text-emerald-300/90">${escapeHtmlText(status.message)} · 可提交「${escapeHtmlText(LEAVE_TYPE_VACATION_CHOICE)}」</p>`;
             }
             return `<p class="text-[10px] text-amber-300/90">${escapeHtmlText(status.message)}</p>`;
         };
+
+
+        /* ===== PRELEAVE-CONSOLE-002｜控制台／員工端 ===== */
+        window.openPreleaveConsole = function(storeId, targetMonth) {
+            if (!canAccessAnyPreleaveConsole()) {
+                return showToast('無權進入預先排假控制台。', 'error');
+            }
+            const stores = (typeof getActiveStores === 'function' ? getActiveStores() : [])
+                .map(s => normalizeStoreIdCode(s.code))
+                .filter(c => c && c !== 'HJ' && canViewPreleaveConsole(c));
+            const code = normalizeStoreIdCode(storeId) || stores[0] || null;
+            if (!code || !canViewPreleaveConsole(code)) {
+                return showToast('無權查看此門市預先排假控制台。', 'error');
+            }
+            const tm = normalizePreleaveTargetMonth(targetMonth)
+                || normalizePreleaveTargetMonth(state.preleaveConsole?.targetMonth)
+                || getDefaultPreleaveTargetMonth();
+            state.preleaveConsole = { storeId: code, targetMonth: tm };
+            state.currentView = 'preleaveConsole';
+            safeSetItem('zdos_current_view', 'preleaveConsole');
+            renderApp();
+        };
+
+        window.setPreleaveConsoleStore = function(storeId) {
+            const code = normalizeStoreIdCode(storeId);
+            if (!canViewPreleaveConsole(code)) return showToast('無權查看此門市。', 'error');
+            state.preleaveConsole = {
+                storeId: code,
+                targetMonth: normalizePreleaveTargetMonth(state.preleaveConsole?.targetMonth) || getDefaultPreleaveTargetMonth()
+            };
+            renderApp();
+        };
+
+        window.setPreleaveConsoleMonth = function(targetMonth) {
+            const tm = normalizePreleaveTargetMonth(targetMonth);
+            if (!tm) return showToast('請選擇有效月份。', 'error');
+            const code = normalizeStoreIdCode(state.preleaveConsole?.storeId);
+            if (!code || !canViewPreleaveConsole(code)) return;
+            state.preleaveConsole = { storeId: code, targetMonth: tm };
+            renderApp();
+        };
+
+        window.submitPreleaveConsoleForm = function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const storeId = form.querySelector('[name="storeId"]')?.value;
+            const targetMonth = form.querySelector('[name="targetMonth"]')?.value;
+            if (!canEditPreleaveConsole(storeId)) {
+                return showToast('無權修改預先排假設定。', 'error');
+            }
+            const mode = form.querySelector('[name="mode"]')?.value;
+            const startAt = form.querySelector('[name="startAt"]')?.value;
+            const endAt = form.querySelector('[name="endAt"]')?.value;
+            const result = upsertLeaveSelectionWindowConfig(storeId, {
+                targetMonth,
+                mode,
+                startAt,
+                endAt,
+                enabled: true
+            });
+            if (!result.ok) return showToast(result.message, 'error');
+            state.preleaveConsole = {
+                storeId: normalizeStoreIdCode(storeId),
+                targetMonth: normalizePreleaveTargetMonth(targetMonth)
+            };
+            showToast('預先排假設定已儲存。', 'success');
+            renderApp();
+        };
+
+        window.quickOpenPreleaveConsole = function() {
+            const code = normalizeStoreIdCode(state.preleaveConsole?.storeId);
+            const tm = normalizePreleaveTargetMonth(state.preleaveConsole?.targetMonth);
+            if (!canEditPreleaveConsole(code)) return showToast('無權修改預先排假設定。', 'error');
+            const result = quickSetPreleaveConsoleMode(code, tm, 'open');
+            if (!result.ok) return showToast(result.message, 'error');
+            showToast('已強制開放。', 'success');
+            renderApp();
+        };
+
+        window.quickClosePreleaveConsole = function() {
+            const code = normalizeStoreIdCode(state.preleaveConsole?.storeId);
+            const tm = normalizePreleaveTargetMonth(state.preleaveConsole?.targetMonth);
+            if (!canEditPreleaveConsole(code)) return showToast('無權修改預先排假設定。', 'error');
+            const result = quickSetPreleaveConsoleMode(code, tm, 'closed');
+            if (!result.ok) return showToast(result.message, 'error');
+            showToast('已強制關閉。', 'success');
+            renderApp();
+        };
+
+        window.quickRestorePreleaveConsoleAuto = function() {
+            const code = normalizeStoreIdCode(state.preleaveConsole?.storeId);
+            const tm = normalizePreleaveTargetMonth(state.preleaveConsole?.targetMonth);
+            if (!canEditPreleaveConsole(code)) return showToast('無權修改預先排假設定。', 'error');
+            const result = quickSetPreleaveConsoleMode(code, tm, 'auto');
+            if (!result.ok) return showToast(result.message, 'error');
+            showToast('已恢復自動模式。', 'success');
+            renderApp();
+        };
+
+        window.completePreleaveSubmission = function() {
+            const storeId = normalizeStoreIdCode(state.preleaveEmployee?.storeId) || getSchedulingViewStoreId();
+            const tm = normalizePreleaveTargetMonth(state.preleaveEmployee?.targetMonth) || getDefaultPreleaveTargetMonth();
+            const self = getCurrentUserPersonnel();
+            if (!self) return showToast('無法辨識目前登入員工。', 'error');
+            const config = getLeaveSelectionWindowForStore(storeId, tm);
+            const status = evaluateLeaveSelectionWindow(config);
+            if (!status.open) return showToast(status.message || '本期預先排假尚未開放或已截止。', 'error');
+            const leaves = listSelfPreleaveChoiceLeaves(storeId, tm, self.id);
+            const dayHint = leaves.length
+                ? `目前已選 ${leaves.length} 天休假`
+                : '本期尚未安排休假，仍可直接完成預排';
+            const ok = confirm(`${dayHint}\n\n確認完成 ${formatPreleaveTargetMonthLabel(tm)}預先排假？`);
+            if (!ok) return;
+            const result = markPreleaveSubmitted({
+                storeId,
+                targetMonth: tm,
+                employeeId: self.id
+            });
+            if (!result.ok) return showToast(result.message, 'error');
+            showToast('已完成預先排假。', 'success');
+            renderApp();
+        };
+
+        const formatPreleaveShortDateTime = (iso) => {
+            if (!iso) return '—';
+            const d = new Date(iso);
+            if (Number.isNaN(d.getTime())) return '—';
+            const pad = n => String(n).padStart(2, '0');
+            return `${pad(d.getMonth() + 1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        };
+
+        const getPreleaveModeLabel = mode => {
+            const m = normalizeLeaveSelectionMode(mode);
+            if (m === 'open') return '強制開放';
+            if (m === 'closed') return '強制關閉';
+            return '依設定時間自動';
+        };
+
+        window.togglePreleaveConsoleList = function(which) {
+            const cur = state.preleaveConsole || {};
+            if (which === 'pending') {
+                cur.pendingListOpen = !cur.pendingListOpen;
+            } else if (which === 'submitted') {
+                cur.submittedListOpen = !cur.submittedListOpen;
+            }
+            state.preleaveConsole = cur;
+            if (typeof renderApp === 'function') renderApp();
+        };
+
+        function renderPreleaveConsole(root) {
+            const stores = (typeof getActiveStores === 'function' ? getActiveStores() : [])
+                .map(s => ({ code: normalizeStoreIdCode(s.code), name: s.name || s.code }))
+                .filter(s => s.code && s.code !== 'HJ' && canViewPreleaveConsole(s.code));
+            if (!stores.length) {
+                showToast('無權進入預先排假控制台。', 'error');
+                state.currentView = 'scheduleCenter';
+                safeSetItem('zdos_current_view', 'scheduleCenter');
+                renderApp();
+                return;
+            }
+            let storeId = normalizeStoreIdCode(state.preleaveConsole?.storeId);
+            if (!storeId || !canViewPreleaveConsole(storeId)) storeId = stores[0].code;
+            let tm = normalizePreleaveTargetMonth(state.preleaveConsole?.targetMonth) || getDefaultPreleaveTargetMonth();
+            const pendingListOpen = !!state.preleaveConsole?.pendingListOpen;
+            const submittedListOpen = !!state.preleaveConsole?.submittedListOpen;
+            state.preleaveConsole = {
+                storeId,
+                targetMonth: tm,
+                pendingListOpen,
+                submittedListOpen
+            };
+            const canEdit = canEditPreleaveConsole(storeId);
+            const config = getLeaveSelectionWindowForStore(storeId, tm) || {
+                storeId, targetMonth: tm, mode: 'auto', startAt: '', endAt: '', enabled: true
+            };
+            const status = evaluateLeaveSelectionWindow(config);
+            const userStatus = mapLeaveSelectionUserStatus(status);
+            const mode = normalizeLeaveSelectionMode(config.mode);
+            const progress = getPreleaveProgress(storeId, tm);
+            const submittedMap = new Map(
+                getPreleaveSubmissionRegistry()
+                    .filter(row =>
+                        normalizeStoreIdCode(row.storeId) === storeId
+                        && normalizePreleaveTargetMonth(row.targetMonth) === tm
+                    )
+                    .map(row => [normalizeLeaveEmployeeId(row.employeeId), row])
+            );
+            const storeOptions = stores.map(s =>
+                `<option value="${escapeHtmlText(s.code)}" ${s.code === storeId ? 'selected' : ''}>${escapeHtmlText(s.name)}（${escapeHtmlText(s.code)}）</option>`
+            ).join('');
+            const storeName = getStoreByCode(storeId)?.name || storeId;
+            const statusClass = userStatus === '開放中'
+                ? 'zdos-preleave-status--open'
+                : (userStatus === '已截止' ? 'zdos-preleave-status--closed' : 'zdos-preleave-status--pending');
+            const pct = progress.expectedCount
+                ? Math.round((progress.submittedCount / progress.expectedCount) * 100)
+                : 0;
+            const pendingHtml = progress.pending.length
+                ? progress.pending.map(emp => `
+                    <li>
+                        <span class="zdos-preleave-list__name">${escapeHtmlText(emp.name || '')}</span>
+                        <span class="zdos-preleave-list__no">${escapeHtmlText(emp.employeeNo || emp.id || '')}</span>
+                        <span class="zdos-preleave-list__state">尚未提交</span>
+                    </li>`).join('')
+                : '<li><span class="zdos-preleave-list__name" style="grid-column:1/-1;color:#6ee7b7">全員已提交</span></li>';
+            const submittedHtml = progress.submitted.length
+                ? progress.submitted.map(emp => {
+                    const row = submittedMap.get(normalizeLeaveEmployeeId(emp.id));
+                    const label = formatPreleaveShortDateTime(row?.completedAt);
+                    return `<li>
+                        <span class="zdos-preleave-list__name">${escapeHtmlText(emp.name || '')}</span>
+                        <span class="zdos-preleave-list__no">${escapeHtmlText(emp.employeeNo || emp.id || '')}</span>
+                        <span class="zdos-preleave-list__state zdos-preleave-list__state--done">${escapeHtmlText(label)}</span>
+                    </li>`;
+                }).join('')
+                : '<li><span class="zdos-preleave-list__name" style="grid-column:1/-1;color:#94a3b8">尚無完成紀錄</span></li>';
+            const header = typeof renderFunctionPageHeader === 'function'
+                ? renderFunctionPageHeader({
+                    title: '預先排假控制台',
+                    backOnclick: "zdosNavigateBack('scheduleCenter')"
+                })
+                : `<div class="mb-3"><button type="button" onclick="zdosNavigateBack('scheduleCenter')" class="zdos-nav-btn">返回</button><h2 class="text-lg font-bold mt-2">預先排假控制台</h2></div>`;
+            const body = `
+                <div class="zdos-preleave-console zdos-preleave-stack" data-ui="PRELEAVE-CONSOLE-002A">
+                    <section class="zdos-preleave-card">
+                        <div class="zdos-preleave-field">
+                            <span class="zdos-preleave-label">門市</span>
+                            <p class="zdos-preleave-value">${escapeHtmlText(storeName)} ${escapeHtmlText(storeId)}</p>
+                            <select class="zdos-preleave-input" aria-label="門市" onchange="setPreleaveConsoleStore(this.value)">
+                                ${storeOptions}
+                            </select>
+                        </div>
+                        <div class="zdos-preleave-field">
+                            <span class="zdos-preleave-label">排假月份</span>
+                            <p class="zdos-preleave-value">${escapeHtmlText(formatPreleaveTargetMonthLabel(tm))}</p>
+                            <input name="targetMonthDisplay" type="month" value="${escapeHtmlText(tm)}" onchange="setPreleaveConsoleMonth(this.value)" class="zdos-preleave-input" aria-label="排假月份">
+                        </div>
+                    </section>
+
+                    <section class="zdos-preleave-card">
+                        <span class="zdos-preleave-label">目前狀態</span>
+                        <p class="zdos-preleave-status ${statusClass}">${escapeHtmlText(userStatus)}</p>
+                        <p class="zdos-preleave-meta" style="margin-top:0.45rem">模式：${escapeHtmlText(getPreleaveModeLabel(mode))}</p>
+                        <div class="zdos-preleave-row2" style="margin-top:0.55rem">
+                            <p class="zdos-preleave-meta">開放<br><strong style="color:#fff;font-weight:800">${escapeHtmlText(formatPreleaveShortDateTime(config.startAt))}</strong></p>
+                            <p class="zdos-preleave-meta">截止<br><strong style="color:#fff;font-weight:800">${escapeHtmlText(formatPreleaveShortDateTime(config.endAt))}</strong></p>
+                        </div>
+                    </section>
+
+                    <form onsubmit="submitPreleaveConsoleForm(event)" class="zdos-preleave-card">
+                        <input type="hidden" name="storeId" value="${escapeHtmlText(storeId)}">
+                        <input type="hidden" name="targetMonth" value="${escapeHtmlText(tm)}">
+                        <span class="zdos-preleave-label">開放設定</span>
+                        <div class="zdos-preleave-mode-list" style="margin:0.4rem 0 0.7rem">
+                            <label><input type="radio" name="mode" value="auto" ${mode === 'auto' ? 'checked' : ''} ${canEdit ? '' : 'disabled'}> 依設定時間自動</label>
+                            <label><input type="radio" name="mode" value="open" ${mode === 'open' ? 'checked' : ''} ${canEdit ? '' : 'disabled'}> 強制開放</label>
+                            <label><input type="radio" name="mode" value="closed" ${mode === 'closed' ? 'checked' : ''} ${canEdit ? '' : 'disabled'}> 強制關閉</label>
+                        </div>
+                        <div class="zdos-preleave-field">
+                            <span class="zdos-preleave-label">開始時間</span>
+                            <input name="startAt" type="datetime-local" value="${escapeHtmlText(formatDatetimeLocalInputValue(config.startAt))}" class="zdos-preleave-input" ${canEdit ? '' : 'disabled'}>
+                        </div>
+                        <div class="zdos-preleave-field">
+                            <span class="zdos-preleave-label">截止時間</span>
+                            <input name="endAt" type="datetime-local" value="${escapeHtmlText(formatDatetimeLocalInputValue(config.endAt))}" class="zdos-preleave-input" ${canEdit ? '' : 'disabled'}>
+                        </div>
+                        ${canEdit
+                            ? `<button type="submit" class="zdos-nav-btn zdos-preleave-cta zdos-preleave-cta--confirm" style="margin-top:0.75rem">儲存設定</button>`
+                            : `<p class="zdos-preleave-hint" style="margin-top:0.55rem">唯讀：可查看不可修改</p>`}
+                    </form>
+
+                    <section class="zdos-preleave-card">
+                        <span class="zdos-preleave-label">快捷操作</span>
+                        ${canEdit ? `
+                        <div class="zdos-preleave-actions" style="margin-top:0.45rem">
+                            <button type="button" onclick="quickOpenPreleaveConsole()" class="zdos-nav-btn zdos-preleave-action-btn zdos-preleave-action-btn--open">立即開放</button>
+                            <button type="button" onclick="quickClosePreleaveConsole()" class="zdos-nav-btn zdos-preleave-action-btn zdos-preleave-action-btn--close">立即關閉</button>
+                            <button type="button" onclick="quickRestorePreleaveConsoleAuto()" class="zdos-nav-btn zdos-preleave-action-btn zdos-preleave-action-btn--auto">恢復自動</button>
+                        </div>` : `<p class="zdos-preleave-hint" style="margin-top:0.35rem">唯讀角色無法執行快捷操作</p>`}
+                    </section>
+
+                    <section class="zdos-preleave-card">
+                        <span class="zdos-preleave-label">預排進度</span>
+                        <p class="zdos-preleave-progress-num">${progress.submittedCount} / ${progress.expectedCount}</p>
+                        <div class="zdos-preleave-progress-bar" aria-hidden="true"><span style="width:${pct}%"></span></div>
+                        <div class="zdos-preleave-progress-stats">
+                            <span>已完成 <strong style="color:#6ee7b7">${progress.submittedCount}</strong></span>
+                            <span>尚未提交 <strong style="color:#fcd34d">${progress.pendingCount}</strong></span>
+                        </div>
+                        <button type="button" class="zdos-preleave-collapse" aria-expanded="${pendingListOpen ? 'true' : 'false'}" onclick="togglePreleaveConsoleList('pending')">
+                            <span>尚未提交 ${progress.pendingCount} 人</span>
+                            <span class="zdos-preleave-collapse__chev" aria-hidden="true">›</span>
+                        </button>
+                        ${pendingListOpen ? `<ul class="zdos-preleave-list">${pendingHtml}</ul>` : ''}
+                        <button type="button" class="zdos-preleave-collapse" aria-expanded="${submittedListOpen ? 'true' : 'false'}" onclick="togglePreleaveConsoleList('submitted')">
+                            <span>已完成 ${progress.submittedCount} 人</span>
+                            <span class="zdos-preleave-collapse__chev" aria-hidden="true">›</span>
+                        </button>
+                        ${submittedListOpen ? `<ul class="zdos-preleave-list">${submittedHtml}</ul>` : ''}
+                    </section>
+                </div>`;
+            root.innerHTML = typeof wrapFunctionPage === 'function' ? wrapFunctionPage(header, body, 'max-w-3xl') : (header + body);
+        }
+
+        function renderPreleaveEmployeeView(root) {
+            const storeId = normalizeStoreIdCode(state.preleaveEmployee?.storeId)
+                || getSchedulingViewStoreId()
+                || normalizeStoreIdCode(getActiveStores()[0]?.code);
+            const tm = normalizePreleaveTargetMonth(state.preleaveEmployee?.targetMonth) || getDefaultPreleaveTargetMonth();
+            if (!storeId) {
+                showToast('無法判斷目前門市。', 'error');
+                state.currentView = 'scheduleCenter';
+                renderApp();
+                return;
+            }
+            state.preleaveEmployee = { storeId, targetMonth: tm };
+            const self = getCurrentUserPersonnel();
+            const config = getLeaveSelectionWindowForStore(storeId, tm);
+            const status = evaluateLeaveSelectionWindow(config);
+            const userStatus = mapLeaveSelectionUserStatus(status);
+            const open = !!status.open;
+            const leaves = self ? listSelfPreleaveChoiceLeaves(storeId, tm, self.id) : [];
+            const submission = self ? findPreleaveSubmission(storeId, tm, self.id) : null;
+            const statusClass = userStatus === '開放中'
+                ? 'zdos-preleave-status--open'
+                : (userStatus === '已截止' ? 'zdos-preleave-status--closed' : 'zdos-preleave-status--pending');
+            let statusMsg = '';
+            if (userStatus === '未開放') statusMsg = '本期預先排假尚未開放';
+            else if (userStatus === '已截止') statusMsg = '本期預先排假已截止';
+            else statusMsg = '本期預先排假開放中';
+            const leaveSummary = leaves.length
+                ? `已選 ${leaves.length} 天`
+                : '尚未安排休假';
+            const leaveListHtml = leaves.length
+                ? leaves.map(row => {
+                    const d = String(row.date || '').slice(5).replace('-', '/');
+                    return `<li><span>${escapeHtmlText(d)}</span></li>`;
+                }).join('')
+                : '';
+            const completedAtLabel = formatPreleaveShortDateTime(submission?.completedAt);
+            const consoleBtn = (typeof canViewPreleaveConsole === 'function' && canViewPreleaveConsole(storeId))
+                ? `<button type="button" onclick="openPreleaveConsole('${escapeHtmlText(storeId)}','${escapeHtmlText(tm)}')" class="zdos-nav-btn px-3 py-1.5 rounded-lg border border-sky-500/35 text-[11px] text-sky-100 font-bold">控制台</button>`
+                : '';
+            const header = typeof renderFunctionPageHeader === 'function'
+                ? renderFunctionPageHeader({
+                    title: `${formatPreleaveTargetMonthLabel(tm)}預先排假`,
+                    backOnclick: "zdosNavigateBack('scheduleCenter')",
+                    rightHtml: consoleBtn || '<span aria-hidden="true">&nbsp;</span>'
+                })
+                : `<div class="mb-3 flex justify-between"><button type="button" onclick="zdosNavigateBack('scheduleCenter')" class="zdos-nav-btn">返回</button>${consoleBtn}</div><h2 class="text-lg font-bold">${escapeHtmlText(formatPreleaveTargetMonthLabel(tm))}預先排假</h2>`;
+            const scheduleHint = (config?.startAt || config?.endAt)
+                ? `<div class="zdos-preleave-row2" style="margin-top:0.55rem">
+                        <p class="zdos-preleave-meta">開放時間<br><strong style="color:#fff;font-weight:800">${escapeHtmlText(formatPreleaveShortDateTime(config.startAt))}</strong></p>
+                        <p class="zdos-preleave-meta">截止<br><strong style="color:#fff;font-weight:800">${escapeHtmlText(formatPreleaveShortDateTime(config.endAt))}</strong></p>
+                   </div>`
+                : '';
+            let actionHtml = '';
+            if (open) {
+                actionHtml = `
+                    <section class="zdos-preleave-card">
+                        <button type="button" onclick="openPreleaveCreateModal()" class="zdos-nav-btn zdos-preleave-cta zdos-preleave-cta--primary">＋ 新增休假</button>
+                    </section>
+                    <section class="zdos-preleave-card">
+                        <span class="zdos-preleave-label">確認本期預排</span>
+                        ${submission
+                            ? `<p class="zdos-preleave-value" style="color:#6ee7b7;margin-top:0.25rem">✓ 已完成預先排假</p>
+                               <p class="zdos-preleave-meta" style="margin-top:0.25rem">${escapeHtmlText(completedAtLabel)}</p>`
+                            : `<p class="zdos-preleave-hint" style="margin-top:0.25rem">${leaves.length ? `目前${escapeHtmlText(leaveSummary)}。` : '本期尚未安排休假，仍可直接完成預排。'}</p>`}
+                        <button type="button" onclick="completePreleaveSubmission()" class="zdos-nav-btn zdos-preleave-cta zdos-preleave-cta--confirm" style="margin-top:0.7rem">${submission ? '更新完成狀態' : '完成預先排假'}</button>
+                    </section>`;
+            } else if (userStatus === '未開放') {
+                actionHtml = `
+                    <section class="zdos-preleave-card">
+                        <p class="zdos-preleave-hint">尚未開放，開放後即可新增預排假。</p>
+                    </section>`;
+            } else {
+                actionHtml = `
+                    <section class="zdos-preleave-card">
+                        <p class="zdos-preleave-hint">${escapeHtmlText(statusMsg)}</p>
+                        ${submission
+                            ? `<p class="zdos-preleave-value" style="color:#6ee7b7;margin-top:0.45rem">✓ 已完成預先排假</p>
+                               <p class="zdos-preleave-meta">${escapeHtmlText(completedAtLabel)}</p>`
+                            : ''}
+                    </section>`;
+            }
+            const body = `
+                <div class="zdos-preleave-employee zdos-preleave-stack" data-ui="PRELEAVE-CONSOLE-002A">
+                    <section class="zdos-preleave-card">
+                        <p class="zdos-preleave-value">${escapeHtmlText(formatPreleaveTargetMonthLabel(tm))}</p>
+                        <span class="zdos-preleave-label" style="margin-top:0.55rem">目前狀態</span>
+                        <p class="zdos-preleave-status ${statusClass}">${escapeHtmlText(userStatus)}</p>
+                        <p class="zdos-preleave-hint" style="margin-top:0.35rem">${escapeHtmlText(statusMsg)}</p>
+                        ${scheduleHint}
+                    </section>
+                    <section class="zdos-preleave-card">
+                        <span class="zdos-preleave-label">本期已選休假</span>
+                        <p class="zdos-preleave-value" style="font-size:1rem;margin-top:0.15rem">${escapeHtmlText(leaveSummary)}</p>
+                        ${leaveListHtml ? `<ul class="zdos-preleave-leave-list">${leaveListHtml}</ul>` : ''}
+                    </section>
+                    ${actionHtml}
+                </div>`;
+            root.innerHTML = typeof wrapFunctionPage === 'function' ? wrapFunctionPage(header, body, 'max-w-3xl') : (header + body);
+            if (state.leaveModal) renderLeaveModalOverlay();
+        }
 
         const isLeaveTypeVacationChoiceBlocked = (employeeId, storeId, leaveType, existingLeave) => {
             if (String(leaveType || '').trim() !== LEAVE_TYPE_VACATION_CHOICE
@@ -13484,12 +14365,22 @@
             const employeeId = normalizeLeaveEmployeeId(data?.employeeId);
             const storeCode = normalizeStoreIdCode(data?.storeId);
             const date = String(data?.date || '').trim();
-            const leaveType = String(data?.leaveType || '').trim();
+            const preleaveWrite = String(data?.intent || '') === 'preleave' || isPreleaveIntent();
+            let leaveType = String(data?.leaveType || '').trim();
+            if (preleaveWrite) leaveType = forcePreleaveLeaveType();
             const note = String(data?.note || '').trim();
+            if (preleaveWrite) {
+                const tm = normalizePreleaveTargetMonth(data?.targetMonth)
+                    || normalizePreleaveTargetMonth(state.leaveModal?.targetMonth)
+                    || normalizePreleaveTargetMonth(date);
+                const monthCheck = validatePreleaveTargetMonth([date], tm);
+                if (!monthCheck.ok) return monthCheck;
+            }
             const windowCheck = assertLeaveSelectionWindowMutation({
                 storeId: storeCode,
                 employeeId,
-                leaveType
+                leaveType,
+                targetMonth: data?.targetMonth || null
             });
             if (!windowCheck.ok) return windowCheck;
             if (!isLeaveTypeStorageAllowed(leaveType)) {
@@ -13586,7 +14477,9 @@
             const storeId = normalizeStoreIdCode(item.storeId);
             const employeeId = normalizeLeaveEmployeeId(item.employeeId);
             const date = String(item.date || '').trim();
-            const leaveType = String(item.leaveType || '').trim();
+            const preleave = String(item.intent || '') === 'preleave' || isPreleaveIntent();
+            let leaveType = String(item.leaveType || '').trim();
+            if (preleave) leaveType = forcePreleaveLeaveType();
             const note = String(item.note || '').trim();
             const scope = String(item.scope || 'future').trim() === 'current' ? 'current' : 'future';
             const user = getLoggedInAccount();
@@ -13594,6 +14487,14 @@
             if (!employeeId) return { ok: false, message: '請選擇員工。' };
             if (!date) return { ok: false, message: '請選擇日期。' };
             if (!leaveType) return { ok: false, message: '請選擇假別。' };
+            if (preleave) {
+                const tm = normalizePreleaveTargetMonth(item.targetMonth)
+                    || normalizePreleaveTargetMonth(state.leaveModal?.targetMonth)
+                    || normalizePreleaveTargetMonth(state.preleaveEmployee?.targetMonth)
+                    || normalizePreleaveTargetMonth(date);
+                const monthCheck = validatePreleaveTargetMonth([date], tm);
+                if (!monthCheck.ok) return monthCheck;
+            }
             /* LEAVE-V2-001｜Leave write ACL：本人／代請假分流；Founder 不以 view(store2) 為必要前置 */
             const self = getCurrentUserPersonnel();
             const selfId = self ? normalizeLeaveEmployeeId(self.id) : '';
@@ -13607,9 +14508,11 @@
             }
             const viewYear = Number(item.viewYear) || Number(state.schedule?.year) || new Date().getFullYear();
             const viewMonth = Number(item.viewMonth) || Number(state.schedule?.month) || (new Date().getMonth() + 1);
-            const scopeCheck = validateLeaveFormScope(scope, [date], viewYear, viewMonth);
-            if (!scopeCheck.ok) {
-                return { ok: false, message: scopeCheck.message || '超過可排假範圍' };
+            if (!preleave) {
+                const scopeCheck = validateLeaveFormScope(scope, [date], viewYear, viewMonth);
+                if (!scopeCheck.ok) {
+                    return { ok: false, message: scopeCheck.message || '超過可排假範圍' };
+                }
             }
             if (findDetailedLeaveConflict({ employeeId, storeId, date, period: item.period || '全天' })) {
                 return { ok: false, message: '該日期已設定' };
@@ -13621,7 +14524,13 @@
                 storeId,
                 date,
                 leaveType,
-                note: composedNote
+                note: composedNote,
+                intent: preleave ? 'preleave' : undefined,
+                targetMonth: preleave
+                    ? (normalizePreleaveTargetMonth(item.targetMonth)
+                        || normalizePreleaveTargetMonth(state.leaveModal?.targetMonth)
+                        || normalizePreleaveTargetMonth(date))
+                    : null
             });
             if (!result.ok) {
                 const raw = String(result.message || '');
@@ -19388,16 +20297,20 @@
             const dateMode = isEditSubmit
                 ? 'single'
                 : (document.querySelector('input[name="leave-form-date-mode"]:checked')?.value || 'single');
-            const leaveScope = isEditSubmit
-                ? inferLeaveFormScope(date, state.schedule?.year, state.schedule?.month)
-                : (document.querySelector('input[name="leave-form-scope"]:checked')?.value || 'current');
+            const preleaveSubmit = isPreleaveIntent();
+            const leaveScope = preleaveSubmit
+                ? 'future'
+                : (isEditSubmit
+                    ? inferLeaveFormScope(date, state.schedule?.year, state.schedule?.month)
+                    : (document.querySelector('input[name="leave-form-scope"]:checked')?.value || 'current'));
             const period = document.querySelector('input[name="leave-form-period"]:checked')?.value || '全天';
             const employeeId = document.getElementById('leave-form-employee')?.value
                 || document.getElementById('leave-edit-employee')?.value
                 || '';
-            const leaveType = document.getElementById('leave-form-type')?.value
+            let leaveType = document.getElementById('leave-form-type')?.value
                 || document.getElementById('leave-edit-type')?.value
                 || '';
+            if (preleaveSubmit) leaveType = forcePreleaveLeaveType();
             const rawNote = document.getElementById('leave-form-note')?.value || '';
             const note = `${period !== '全天' ? `【${period}】` : ''}${rawNote}`.trim();
             if (!employeeId || !leaveType || !date) {
@@ -19409,12 +20322,20 @@
             }
             const viewYear = state.schedule?.year;
             const viewMonth = state.schedule?.month;
-            const scopeProbeDates = dateMode === 'range' ? [date, endDate] : [date];
-            const scopeCheck = validateLeaveFormScope(leaveScope, scopeProbeDates, viewYear, viewMonth);
-            if (!scopeCheck.ok) return showSystemToast(scopeCheck.message, 'error');
             const rangeResolved = resolveLeaveFormDateList(date, endDate, dateMode);
             if (!rangeResolved.ok) return showSystemToast(rangeResolved.message, 'error');
             const targetDates = rangeResolved.dates;
+            const preleaveTargetMonth = normalizePreleaveTargetMonth(state.leaveModal?.targetMonth)
+                || normalizePreleaveTargetMonth(state.preleaveEmployee?.targetMonth)
+                || getDefaultPreleaveTargetMonth();
+            if (preleaveSubmit) {
+                const monthCheck = validatePreleaveTargetMonth(targetDates, preleaveTargetMonth);
+                if (!monthCheck.ok) return showSystemToast(monthCheck.message, 'error');
+            } else {
+                const scopeProbeDates = dateMode === 'range' ? [date, endDate] : [date];
+                const scopeCheck = validateLeaveFormScope(leaveScope, scopeProbeDates, viewYear, viewMonth);
+                if (!scopeCheck.ok) return showSystemToast(scopeCheck.message, 'error');
+            }
             const existingLeave = state.leaveModal.leaveId
                 ? getLeaveRegistry().find(row => row.id === state.leaveModal.leaveId)
                 : null;
@@ -19422,7 +20343,8 @@
                 storeId: viewStoreId,
                 employeeId,
                 leaveType,
-                existingLeave
+                existingLeave,
+                targetMonth: preleaveSubmit ? preleaveTargetMonth : null
             });
             if (!windowCheck.ok) return showSystemToast(windowCheck.message, 'error');
             if (!isLeaveTypeStorageAllowed(leaveType)) {
@@ -19473,7 +20395,9 @@
                             period,
                             scope: leaveScope,
                             viewYear,
-                            viewMonth
+                            viewMonth,
+                            intent: preleaveSubmit ? 'preleave' : undefined,
+                            targetMonth: preleaveSubmit ? preleaveTargetMonth : undefined
                         });
                         if (!one.ok) {
                             result = one;
@@ -20777,25 +21701,52 @@
             if (state.currentView === 'storeCalendar') renderApp();
         };
 
-        /** UI-010 v1.5：排假 → 既有 Leave Modal「預排假」 */
+        /** UI-010 v1.5／PRELEAVE-CONSOLE-002：排假 → 員工預先排假頁 */
         window.openPreLeavePlanning = function() {
-            const viewStoreId = getSchedulingViewStoreId();
-            if (!viewStoreId) return showToast('無法判斷目前門市，請重新登入。', 'error');
+            return openPreleaveEmployeeView();
+        };
+
+        window.openPreleaveEmployeeView = function(storeId, targetMonth) {
             if (!isLeaveCloudReady()) {
                 return showToast('請假／排假需雲端登入後才能使用（資料存於雲端）。', 'error');
             }
-            if (!state.activeSchedulingEmployeeId) {
-                state.activeSchedulingEmployeeId = getCurrentUserPersonnel()?.id
-                    || getSchedulableEmployeesForStore(viewStoreId)[0]?.id
-                    || null;
+            const viewStoreId = normalizeStoreIdCode(storeId)
+                || getSchedulingViewStoreId()
+                || normalizeStoreIdCode(getActiveStores()[0]?.code);
+            if (!viewStoreId) return showToast('無法判斷目前門市，請重新登入。', 'error');
+            const tm = normalizePreleaveTargetMonth(targetMonth)
+                || normalizePreleaveTargetMonth(getLeaveSelectionWindowForStore(viewStoreId)?.targetMonth)
+                || getDefaultPreleaveTargetMonth();
+            state.preleaveEmployee = { storeId: viewStoreId, targetMonth: tm };
+            state.currentView = 'preleave';
+            safeSetItem('zdos_current_view', 'preleave');
+            renderApp();
+        };
+
+        window.openPreleaveCreateModal = function() {
+            const storeId = normalizeStoreIdCode(state.preleaveEmployee?.storeId) || getSchedulingViewStoreId();
+            const tm = normalizePreleaveTargetMonth(state.preleaveEmployee?.targetMonth) || getDefaultPreleaveTargetMonth();
+            if (!storeId) return showToast('無法判斷目前門市，請重新登入。', 'error');
+            if (!isLeaveCloudReady()) {
+                return showToast('請假／排假需雲端登入後才能使用（資料存於雲端）。', 'error');
             }
-            const sy = Number(state.schedule?.year) || new Date().getFullYear();
-            const sm = Number(state.schedule?.month) || (new Date().getMonth() + 1);
-            let ny = sy;
-            let nm = sm + 1;
-            if (nm > 12) { nm = 1; ny += 1; }
-            const date = `${ny}-${String(nm).padStart(2, '0')}-01`;
-            state.leaveModal = { date, mode: 'create', preferredScope: 'future' };
+            const config = getLeaveSelectionWindowForStore(storeId, tm);
+            const status = evaluateLeaveSelectionWindow(config);
+            if (!status.open) {
+                return showToast(status.message || '本期預先排假尚未開放或已截止。', 'error');
+            }
+            const self = getCurrentUserPersonnel();
+            if (self) state.activeSchedulingEmployeeId = self.id;
+            const date = `${tm}-01`;
+            state.leaveModal = {
+                date,
+                mode: 'create',
+                preferredScope: 'future',
+                intent: 'preleave',
+                targetStoreId: storeId,
+                targetMonth: tm,
+                compactUi: false
+            };
             state.schedulingModal = null;
             renderLeaveModalOverlay();
         };
@@ -20807,7 +21758,8 @@
             storeCode: 'CH',
             year: new Date().getFullYear(),
             month: new Date().getMonth() + 1,
-            leaveType: LEAVE_TYPE_VACATION,
+            leaveType: LEAVE_TYPE_VACATION_CHOICE,
+            intent: 'preleave',
             selectedKeys: {},
             submitting: false,
             previewItems: [],
@@ -20893,10 +21845,14 @@
             Object.keys(batch?.selectedKeys || {}).filter(k => batch.selectedKeys[k]).length;
 
         const buildHrPreLeaveBatchItemsFromSelection = (batch) => {
-            const leaveType = String(batch?.leaveType || LEAVE_TYPE_VACATION).trim();
+            const isPreleaveBatch = String(batch?.intent || '') === 'preleave';
+            const leaveType = isPreleaveBatch
+                ? forcePreleaveLeaveType()
+                : String(batch?.leaveType || LEAVE_TYPE_VACATION).trim();
             const storeCode = normalizeStoreIdCode(batch?.storeCode);
             const viewYear = Number(batch?.year);
             const viewMonth = Number(batch?.month);
+            const targetMonth = `${viewYear}-${String(viewMonth).padStart(2, '0')}`;
             const items = [];
             Object.keys(batch?.selectedKeys || {}).forEach(key => {
                 if (!batch.selectedKeys[key]) return;
@@ -20911,7 +21867,9 @@
                     note: '',
                     scope: 'future',
                     viewYear,
-                    viewMonth
+                    viewMonth,
+                    intent: isPreleaveBatch ? 'preleave' : undefined,
+                    targetMonth: isPreleaveBatch ? targetMonth : undefined
                 });
             });
             items.sort((a, b) =>
@@ -20960,7 +21918,8 @@
                 storeCode: viewStoreId === 'ZH' ? 'CH' : viewStoreId,
                 year,
                 month,
-                leaveType: LEAVE_TYPE_VACATION,
+                leaveType: LEAVE_TYPE_VACATION_CHOICE,
+                intent: 'preleave',
                 selectedKeys: {}
             };
             state.leaveModal = null;
@@ -21116,6 +22075,19 @@
             if (!items.length) {
                 return showSystemToast('請至少選擇一位員工與一個日期', 'error');
             }
+            if (String(batch.intent || '') === 'preleave') {
+                batch.leaveType = forcePreleaveLeaveType();
+                items.forEach(it => {
+                    it.leaveType = forcePreleaveLeaveType();
+                    it.intent = 'preleave';
+                    it.targetMonth = `${Number(batch.year)}-${String(Number(batch.month)).padStart(2, '0')}`;
+                });
+                const monthCheck = validatePreleaveTargetMonth(
+                    items.map(it => it.date),
+                    items[0].targetMonth
+                );
+                if (!monthCheck.ok) return showSystemToast(monthCheck.message, 'error');
+            }
             batch.submitting = true;
             renderHrPreLeaveBatchOverlay();
             try {
@@ -21227,11 +22199,17 @@
                                 ${buildHrPreLeaveBatchMonthOptions(batch.year, batch.month)}
                             </select>
                         </label>
+                        ${String(batch.intent || '') === 'preleave' ? `
+                        <div class="block text-[10px] font-bold text-slate-400">假別
+                            <p class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-emerald-200 font-bold">休假（自選）</p>
+                        </div>
+                        ` : `
                         <label class="block text-[10px] font-bold text-slate-400">假別
                             <select class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100" onchange="setHrPreLeaveBatchField('leaveType', this.value)" ${submitting ? 'disabled' : ''}>
                                 ${getHrPreLeaveBatchLeaveTypeOptions(batch.leaveType)}
                             </select>
                         </label>
+                        `}
                     </div>
                     <div class="flex items-center justify-between gap-2 flex-wrap">
                         <p class="text-[11px] text-slate-400">已選 <strong id="batch-leave-selected-count" class="text-emerald-300">${selectedCount}</strong> 筆 · 點格子選取</p>
@@ -27444,26 +28422,37 @@
                 defaultEmployeeId = '';
             }
             if (!defaultEmployeeId) defaultEmployeeId = schedulableEmployees[0]?.id || '';
-            /* LEAVE-V2-002｜leave-request 入口預設事假；排假入口維持休假 */
-            const defaultLeaveType = leaveRequestIntent ? '事假' : String(LEAVE_TYPE_VACATION).trim();
+            /* LEAVE-V2-002｜leave-request 入口預設事假；排假入口維持休假；preleave 固定自選 */
+            const preleaveIntent = isPreleaveIntent();
+            const defaultLeaveType = leaveRequestIntent
+                ? '事假'
+                : (preleaveIntent ? LEAVE_TYPE_VACATION_CHOICE : String(LEAVE_TYPE_VACATION).trim());
             const defaultPeriod = '全天';
             const defaultNote = '';
-            const defaultScope = state.leaveModal?.preferredScope
-                || inferLeaveFormScope(defaultDate, state.schedule?.year, state.schedule?.month);
-            const title = getLeaveCreateModalTitle(defaultLeaveType);
-            const submitLabel = getLeaveCreateSubmitLabel(defaultLeaveType);
+            const defaultScope = preleaveIntent
+                ? 'future'
+                : (state.leaveModal?.preferredScope
+                    || inferLeaveFormScope(defaultDate, state.schedule?.year, state.schedule?.month));
+            const title = preleaveIntent
+                ? '新增休假（自選）'
+                : getLeaveCreateModalTitle(defaultLeaveType);
+            const submitLabel = preleaveIntent
+                ? '送出預先排假'
+                : getLeaveCreateSubmitLabel(defaultLeaveType);
             const employeeOptions = buildLeaveFormEmployeeOptions(
                 targetStoreId,
                 defaultEmployeeId,
                 isEdit
             );
             const hasEmployeeOptions = !!employeeOptions;
-            const typeOptions = renderLeaveFormTypeOptionsHtml(
-                defaultLeaveType,
-                defaultEmployeeId,
-                targetStoreId,
-                null
-            );
+            const typeOptions = preleaveIntent
+                ? ''
+                : renderLeaveFormTypeOptionsHtml(
+                    defaultLeaveType,
+                    defaultEmployeeId,
+                    targetStoreId,
+                    null
+                );
             const storeOptionsHtml = manageableStores.map(s =>
                 `<option value="${escapeHtmlText(s.code)}" ${normalizeStoreIdCode(s.code) === targetStoreId ? 'selected' : ''}>${escapeHtmlText(s.name)}</option>`
             ).join('');
@@ -27472,7 +28461,18 @@
                 const label = getLeaveTypeLabel(defaultLeaveType);
                 return `<span id="leave-form-type-preview" class="zdos-scheduling-leave-legend-chip zdos-leave-form-type-preview ${cls}"><span class="zdos-scheduling-leave-chip-type">${escapeHtmlText(label)}</span></span>`;
             })();
-            const selectionHint = getLeaveSelectionWindowHintForForm(defaultEmployeeId, targetStoreId);
+            const selectionHint = preleaveIntent ? '' : getLeaveSelectionWindowHintForForm(defaultEmployeeId, targetStoreId);
+            const preleaveTm = normalizePreleaveTargetMonth(modalState.targetMonth)
+                || normalizePreleaveTargetMonth(state.preleaveEmployee?.targetMonth)
+                || getDefaultPreleaveTargetMonth();
+            const preleaveMonthBounds = (() => {
+                const [y, m] = preleaveTm.split('-').map(Number);
+                const last = new Date(y, m, 0).getDate();
+                return {
+                    min: `${preleaveTm}-01`,
+                    max: `${preleaveTm}-${String(last).padStart(2, '0')}`
+                };
+            })();
             const compactUi = !!modalState.compactUi;
             const empStep = showStoreSelector ? '②' : '①';
             const typeStep = showStoreSelector ? '③' : '②';
@@ -27509,13 +28509,23 @@
                                 </select>
                             </div>
                             <div>
+                                ${preleaveIntent ? `
+                                <p class="block text-[10px] font-bold text-slate-400 mb-1">${typeStep} 假別</p>
+                                <p class="text-sm font-bold text-emerald-200">休假（自選）</p>
+                                <input type="hidden" id="leave-form-type" value="${escapeHtmlText(LEAVE_TYPE_VACATION_CHOICE)}">
+                                ` : `
                                 <label for="leave-form-type" class="block text-[10px] font-bold text-slate-400 mb-1">${typeStep} 假別</label>
                                 ${selectionHint}
                                 <select id="leave-form-type" onchange="updateLeaveFormTypePreview()" class="w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50 mt-1">
                                     ${typeOptions}
                                 </select>
                                 ${leaveTypePreviewHtml}
+                                `}
                             </div>
+                            ${preleaveIntent ? `
+                            <input type="hidden" name="leave-form-scope" value="future">
+                            <p class="text-[10px] text-slate-400">預先排假月份：${escapeHtmlText(formatPreleaveTargetMonthLabel(preleaveTm))}</p>
+                            ` : `
                             <div class="zdos-leave-form-section zdos-lc17-hide-advanced">
                                 <p class="block text-[10px] font-bold text-slate-400 mb-2">排假類型</p>
                                 <div class="zdos-leave-segment">
@@ -27523,6 +28533,7 @@
                                     <input id="leave-scope-future" type="radio" name="leave-form-scope" value="future" ${defaultScope === 'future' ? 'checked' : ''}><label for="leave-scope-future">預排假</label>
                                 </div>
                             </div>
+                            `}
                             <div class="zdos-leave-form-section">
                                 <p class="block text-[10px] font-bold text-slate-400 mb-2">${dateStep} 日期</p>
                                 <div class="zdos-leave-segment mb-3 zdos-lc17-hide-advanced">
@@ -27532,11 +28543,11 @@
                                 <div class="zdos-leave-date-range">
                                     <div class="zdos-leave-date-field">
                                         <label for="leave-form-date" class="block text-[10px] font-bold text-slate-500 mb-1">開始日期</label>
-                                        <input id="leave-form-date" type="date" value="${escapeHtmlText(defaultDate)}" class="zdos-leave-date-input w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50" autocomplete="off">
+                                        <input id="leave-form-date" type="date" value="${escapeHtmlText(preleaveIntent ? (defaultDate.slice(0, 7) === preleaveTm ? defaultDate : preleaveMonthBounds.min) : defaultDate)}" ${preleaveIntent ? `min="${escapeHtmlText(preleaveMonthBounds.min)}" max="${escapeHtmlText(preleaveMonthBounds.max)}"` : ''} class="zdos-leave-date-input w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50" autocomplete="off">
                                     </div>
                                     <div id="leave-form-end-wrap" class="zdos-leave-date-field hidden">
                                         <label for="leave-form-end-date" class="block text-[10px] font-bold text-slate-500 mb-1">結束日期</label>
-                                        <input id="leave-form-end-date" type="date" value="${escapeHtmlText(defaultDate)}" class="zdos-leave-date-input w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50" autocomplete="off">
+                                        <input id="leave-form-end-date" type="date" value="${escapeHtmlText(preleaveIntent ? (defaultDate.slice(0, 7) === preleaveTm ? defaultDate : preleaveMonthBounds.min) : defaultDate)}" ${preleaveIntent ? `min="${escapeHtmlText(preleaveMonthBounds.min)}" max="${escapeHtmlText(preleaveMonthBounds.max)}"` : ''} class="zdos-leave-date-input w-full rounded-xl bg-slate-950/70 border border-white/[0.08] px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-400/50" autocomplete="off">
                                     </div>
                                 </div>
                             </div>
@@ -32157,6 +33168,9 @@
                 { label: '換班', meta: '交換班次', onclick: 'openSbcFlowSwap()', wide: false },
                 { label: '跨店支援', meta: '跨店人力調度', onclick: 'openSbcFlowCross()', wide: true }
             ];
+            if (typeof canAccessAnyPreleaveConsole === 'function' && canAccessAnyPreleaveConsole()) {
+                items.push({ label: '預排控制台', meta: '開放／進度', onclick: 'openPreleaveConsole()', wide: true });
+            }
             return `<div class="zdos-wcc-ops-grid" aria-label="主要操作" data-bsc="BSC-002">
                 ${items.map(item => `
                     <button type="button" class="zdos-wcc-ops-btn ${item.wide ? 'zdos-wcc-ops-btn--wide' : ''}" onclick="${item.onclick}">
@@ -58566,6 +59580,16 @@
             // -- VIEW BSC-001: 班表班務中心 --
             if (state.currentView === 'scheduleCenter') {
                 renderScheduleBusinessCenter(root);
+                return;
+            }
+
+            // -- VIEW PRELEAVE-CONSOLE-002 --
+            if (state.currentView === 'preleaveConsole') {
+                renderPreleaveConsole(root);
+                return;
+            }
+            if (state.currentView === 'preleave') {
+                renderPreleaveEmployeeView(root);
                 return;
             }
 
