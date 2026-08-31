@@ -10375,6 +10375,17 @@
             editingSalesRecordId: null,
             currentWorkforceTab: 'employees',
             workforceProfileEmployeeId: null,
+            leadershipProfileByEmployeeId: {},
+            leadershipAppointmentModalEmployeeId: null,
+            leadershipAppointmentSubmitting: false,
+            leadershipAppointmentPolicy: null,
+            leadershipReviewModalEmployeeId: null,
+            leadershipReviewSubmitting: false,
+            leadershipSettingsScope: 'company',
+            leadershipSettingsStoreCode: '',
+            leadershipSettingsRecord: null,
+            leadershipSettingsLoading: false,
+            leadershipSettingsSaving: false,
             quickScheduleMode: false,
             newDate: new Date().toISOString().split('T')[0], newShift: getDefaultShiftName(), newOverAmount: '', newSalesAmount: '', newExpenseNotes: '', newExpenseAmount: '', newLinaPay: '', newTwqr: '', newApplePay: '', invBarcode: '', invStockQty: '', invOrderQty: ''
         };
@@ -20491,8 +20502,14 @@
             { id: 'attendance', label: '出勤' },
             { id: 'schedule', label: '班表' },
             { id: 'analysis', label: '人力分析' },
-            { id: 'settings', label: '設定' }
+            { id: 'settings', label: '幹部管理' }
         ];
+
+        const canCurrentUserManageLeadershipSettings = () =>
+            String(state.cloudProfile?.role || state.cloudRole || '').trim() === 'owner';
+        const getVisibleWorkforceTabs = () => WORKFORCE_TAB_OPTIONS.filter(tab =>
+            tab.id !== 'settings' || canCurrentUserManageLeadershipSettings()
+        );
 
         const WORKFORCE_TAB_COPY = {
             employees: {
@@ -20521,7 +20538,7 @@
             const key = String(tab || '').trim();
             if (key === 'analytics') return 'analysis';
             if (key === 'leave') return 'attendance';
-            return WORKFORCE_TAB_OPTIONS.some(row => row.id === key) ? key : 'employees';
+            return getVisibleWorkforceTabs().some(row => row.id === key) ? key : 'employees';
         };
 
         const renderWorkforceAttendanceTypeLegend = () => {
@@ -20617,6 +20634,211 @@
                 </section>`;
         };
 
+        /** HR-052J.2｜owner-only 幹部制度設定；讀寫均只走 leadership settings RPC。 */
+        const LEADERSHIP_POLICY_REQUIRED_FIELDS = [
+            ['required_knowledge_keys', '學科必修 keys'],
+            ['required_practical_keys', '術科必修 keys'],
+            ['min_shift_logs', '最低帶班次數'],
+            ['decision_roles', '最終決議角色'],
+            ['target_role_profile_map', '正式職級角色映射']
+        ];
+        const parseLeadershipKeyList = value => [...new Set(String(value || '').split(/[\n,，]/).map(row => row.trim()).filter(Boolean))];
+        const formatLeadershipKeyList = value => Array.isArray(value) ? value.join('\n') : '';
+        const getLeadershipProfileRoleMap = settings => ({
+            deputy_leader: String(settings?.profile_role_target?.deputy_leader || settings?.target_role_profile_map?.deputy_leader || '').trim(),
+            supervisor: String(settings?.profile_role_target?.supervisor || settings?.target_role_profile_map?.supervisor || settings?.target_role_profile_map?.leader || '').trim()
+        });
+        const getLeadershipSettingsStoreUuid = async () => {
+            if (state.leadershipSettingsScope !== 'store') return null;
+            await ensureSupabaseStoreUuidMap();
+            return state.supabaseStoreUuidByCode?.[normalizeStoreIdCode(state.leadershipSettingsStoreCode)] || null;
+        };
+        const validateLeadershipPolicySettings = settings => {
+            const missing = [];
+            if (!Array.isArray(settings.required_knowledge_keys) || !settings.required_knowledge_keys.length) missing.push('學科必修 keys');
+            if (!Array.isArray(settings.required_practical_keys) || !settings.required_practical_keys.length) missing.push('術科必修 keys');
+            if (!Number.isInteger(settings.min_shift_logs) || settings.min_shift_logs < 1) missing.push('最低帶班次數（至少 1 次）');
+            if (!Array.isArray(settings.decision_roles) || !settings.decision_roles.length) missing.push('最終決議角色');
+            const mapping = getLeadershipProfileRoleMap(settings);
+            if (!mapping || typeof mapping !== 'object' || Array.isArray(mapping) || !mapping.deputy_leader || !mapping.supervisor) missing.push('副領班／領班的 profiles.role 映射');
+            return { ok: missing.length === 0, missing };
+        };
+        const readLeadershipPolicyForm = form => {
+            const fd = new FormData(form);
+            const deputyLeaderRole = String(fd.get('deputyLeaderProfileRole') || '').trim();
+            const supervisorRole = String(fd.get('supervisorProfileRole') || '').trim();
+            const settings = {
+                required_knowledge_keys: parseLeadershipKeyList(fd.get('requiredKnowledgeKeys')),
+                required_practical_keys: parseLeadershipKeyList(fd.get('requiredPracticalKeys')),
+                min_shift_logs: fd.get('minShiftLogs') === '' ? null : Number(fd.get('minShiftLogs')),
+                require_independent_lead: fd.get('requireIndependentLead') === 'on',
+                decision_roles: fd.getAll('decisionRoles'),
+                profile_role_target: {
+                    deputy_leader: deputyLeaderRole,
+                    supervisor: supervisorRole
+                },
+                target_role_profile_map: {
+                    deputy_leader: deputyLeaderRole,
+                    leader: supervisorRole
+                }
+            };
+            const duration = String(fd.get('defaultInternshipDurationDays') || '').trim();
+            const reminder = String(fd.get('reminderDaysBeforeEnd') || '').trim();
+            if (duration !== '') settings.default_internship_duration_days = Number(duration);
+            if (reminder !== '') settings.reminder_days_before_end = Number(reminder);
+            return settings;
+        };
+        window.updateLeadershipSettingsActivationState = function(form) {
+            if (!form) return;
+            const validation = validateLeadershipPolicySettings(readLeadershipPolicyForm(form));
+            const activateButton = form.querySelector('[data-activate="true"]');
+            if (activateButton) {
+                activateButton.disabled = !validation.ok || state.leadershipSettingsSaving;
+                activateButton.title = validation.ok ? '' : `請先設定：${validation.missing.join('、')}`;
+            }
+        };
+        const getLeadershipPolicyUnsetLabels = settings => LEADERSHIP_POLICY_REQUIRED_FIELDS.filter(([key]) => {
+            const value = settings?.[key];
+            if (key === 'min_shift_logs') return !Number.isInteger(value) || value < 1;
+            if (key === 'target_role_profile_map') {
+                const mapping = getLeadershipProfileRoleMap(settings);
+                return !mapping.deputy_leader || !mapping.supervisor;
+            }
+            return !Array.isArray(value) || value.length === 0;
+        }).map(([, label]) => label);
+
+        const fetchActiveLeadershipSettings = async ({ render = true } = {}) => {
+            if (!canCurrentUserManageLeadershipSettings()) return null;
+            if (!isSalesCloudEnabled() || !state.supabaseSessionReady) {
+                state.leadershipSettingsRecord = { error: '請先登入雲端 owner 帳號。' };
+                if (render) renderApp();
+                return null;
+            }
+            state.leadershipSettingsLoading = true;
+            if (render) renderApp();
+            try {
+                const storeId = await getLeadershipSettingsStoreUuid();
+                if (state.leadershipSettingsScope === 'store' && !storeId) throw new Error('請先選擇門市。');
+                const { data, error } = await getSupabaseClient().rpc('get_active_leadership_settings', { p_store_id: storeId });
+                if (error) throw error;
+                state.leadershipSettingsRecord = data || null;
+                return data || null;
+            } catch (error) {
+                console.error('[ZDOS HR-052J.2] settings load failed', error);
+                state.leadershipSettingsRecord = { error: error?.message || '制度設定載入失敗。' };
+                return null;
+            } finally {
+                state.leadershipSettingsLoading = false;
+                if (render && state.currentView === 'workforce' && state.currentWorkforceTab === 'settings') renderApp();
+            }
+        };
+
+        const renderLeadershipSettingsPanel = () => {
+            if (!canCurrentUserManageLeadershipSettings()) return '';
+            const record = state.leadershipSettingsRecord;
+            const settings = record?.settings || {};
+            const profileRoleMap = getLeadershipProfileRoleMap(settings);
+            const unset = getLeadershipPolicyUnsetLabels(settings);
+            const stores = getActiveStores();
+            const profileRoles = ['', 'staff', 'senior_staff', 'supervisor', 'manager', 'owner'];
+            const roleOptions = selected => profileRoles.map(role => `<option value="${role}" ${role === selected ? 'selected' : ''}>${role ? escapeHtmlText(getCloudRoleLabel(role)) + ` (${role})` : '尚未設定'}</option>`).join('');
+            const decisionRoles = ['owner', 'manager', 'supervisor'];
+            const status = record?.error
+                ? `<p class="text-xs text-rose-300">${escapeHtmlText(record.error)}</p>`
+                : record?.id
+                    ? `<p class="text-xs text-emerald-300">目前套用 ${escapeHtmlText(record.policy_version || '—')} · ${escapeHtmlText(record.scope_type === 'store' ? '門市覆寫' : '公司預設')}</p>`
+                    : '<p class="text-xs text-amber-200">此範圍目前沒有啟用中的制度。</p>';
+            const unsetHtml = unset.length
+                ? `<div class="rounded-xl border border-amber-500/25 bg-amber-950/25 p-3"><p class="text-xs font-bold text-amber-200">目前未設定，無法啟用</p><p class="mt-1 text-[10px] text-amber-100/75">${escapeHtmlText(unset.join('、'))}</p></div>`
+                : '<div class="rounded-xl border border-emerald-500/25 bg-emerald-950/25 p-3 text-xs font-bold text-emerald-300">啟用必要欄位已完整</div>';
+            return `<section class="zdos-workspace-card mt-2 p-4 sm:p-5 min-w-0 space-y-4">
+                <div><p class="text-[10px] tracking-[0.16em] text-violet-300 font-bold">HUMAN RESOURCES · 幹部管理</p><h2 class="mt-1 text-base font-black text-white">制度設定</h2><p class="mt-1 text-[11px] text-slate-400">只有集團首腦可查看與變更。所有變更均透過制度 RPC 留存。</p></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <label class="text-xs text-slate-400">制度範圍<select onchange="changeLeadershipSettingsScope(this.value)" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white"><option value="company" ${state.leadershipSettingsScope === 'company' ? 'selected' : ''}>公司預設</option><option value="store" ${state.leadershipSettingsScope === 'store' ? 'selected' : ''}>門市覆寫</option></select></label>
+                    <label class="text-xs text-slate-400">覆寫門市<select onchange="changeLeadershipSettingsStore(this.value)" ${state.leadershipSettingsScope === 'store' ? '' : 'disabled'} class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white disabled:opacity-40"><option value="">請選擇門市</option>${stores.map(store => `<option value="${escapeHtmlText(store.code)}" ${normalizeStoreIdCode(store.code) === normalizeStoreIdCode(state.leadershipSettingsStoreCode) ? 'selected' : ''}>${escapeHtmlText(store.name)}</option>`).join('')}</select></label>
+                </div>
+                ${state.leadershipSettingsLoading ? '<p class="text-xs text-slate-500">正在讀取制度設定…</p>' : status}
+                ${unsetHtml}
+                <form onsubmit="submitLeadershipSettings(event)" oninput="updateLeadershipSettingsActivationState(this)" onchange="updateLeadershipSettingsActivationState(this)" class="space-y-4">
+                    <label class="block text-xs font-bold text-slate-300">政策版本<input name="policyVersion" required value="${escapeHtmlText(record?.policy_version || 'v1.0')}" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white"></label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <label class="text-xs font-bold text-slate-300">學科必修 keys <span class="text-rose-400">*</span><textarea name="requiredKnowledgeKeys" rows="5" placeholder="每行一個，例如 M001" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white">${escapeHtmlText(formatLeadershipKeyList(settings.required_knowledge_keys))}</textarea></label>
+                        <label class="text-xs font-bold text-slate-300">術科必修 keys <span class="text-rose-400">*</span><textarea name="requiredPracticalKeys" rows="5" placeholder="每行一個，不替公司預填" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white">${escapeHtmlText(formatLeadershipKeyList(settings.required_practical_keys))}</textarea></label>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <label class="text-xs font-bold text-slate-300">最低帶班次數 <span class="text-rose-400">*</span><input name="minShiftLogs" type="number" min="1" step="1" value="${Number.isInteger(settings.min_shift_logs) ? settings.min_shift_logs : ''}" placeholder="至少 1 次" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white"></label>
+                        <label class="text-xs font-bold text-slate-300">預設實習天數（選填）<input name="defaultInternshipDurationDays" type="number" min="1" step="1" value="${Number.isInteger(settings.default_internship_duration_days) ? settings.default_internship_duration_days : ''}" placeholder="尚未設定" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white"></label>
+                        <label class="text-xs font-bold text-slate-300">到期前提醒天數（選填）<input name="reminderDaysBeforeEnd" type="number" min="0" step="1" value="${Number.isInteger(settings.reminder_days_before_end) ? settings.reminder_days_before_end : ''}" placeholder="尚未設定" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white"></label>
+                    </div>
+                    <label class="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-slate-950/40 p-3 text-xs text-slate-300"><input name="requireIndependentLead" type="checkbox" ${settings.require_independent_lead ? 'checked' : ''}>晉升前必須具備可獨立帶班資格</label>
+                    <fieldset class="rounded-xl border border-white/[0.08] p-3"><legend class="px-1 text-xs font-bold text-slate-300">最終決議角色 <span class="text-rose-400">*</span></legend><div class="flex flex-wrap gap-3 mt-2">${decisionRoles.map(role => `<label class="text-xs text-slate-300"><input name="decisionRoles" type="checkbox" value="${role}" ${settings.decision_roles?.includes(role) ? 'checked' : ''}> ${escapeHtmlText(getCloudRoleLabel(role))} (${role})</label>`).join('')}</div></fieldset>
+                    <fieldset class="rounded-xl border border-white/[0.08] p-3"><legend class="px-1 text-xs font-bold text-slate-300">目標職級 → profiles.role <span class="text-rose-400">*</span></legend><p class="text-[10px] text-slate-500 mb-3">請依公司權限制度明確映射；系統不會自行猜測。</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><label class="text-xs text-slate-400">副領班<select name="deputyLeaderProfileRole" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white">${roleOptions(profileRoleMap.deputy_leader)}</select></label><label class="text-xs text-slate-400">領班<select name="supervisorProfileRole" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white">${roleOptions(profileRoleMap.supervisor)}</select></label></div></fieldset>
+                    <p id="leadership-settings-error" class="hidden text-xs text-rose-300"></p>
+                    <div class="flex flex-col sm:flex-row gap-2"><button type="submit" data-activate="false" class="flex-1 py-2.5 rounded-xl border border-violet-500/35 bg-violet-600/15 text-violet-100 text-xs font-bold">儲存草稿</button><button type="submit" data-activate="true" ${unset.length ? 'disabled' : ''} title="${unset.length ? escapeHtmlText(`請先設定：${unset.join('、')}`) : ''}" class="flex-1 py-2.5 rounded-xl bg-violet-600 text-white text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed">儲存並啟用 v1.0</button></div>
+                    <p class="text-[9px] text-slate-600 text-center">只呼叫 upsert_leadership_settings；不直接寫入 leadership_settings</p>
+                </form>
+            </section>`;
+        };
+
+        window.changeLeadershipSettingsScope = async function(scope) {
+            state.leadershipSettingsScope = scope === 'store' ? 'store' : 'company';
+            state.leadershipSettingsRecord = null;
+            renderApp();
+            if (state.leadershipSettingsScope === 'company' || state.leadershipSettingsStoreCode) await fetchActiveLeadershipSettings();
+        };
+        window.changeLeadershipSettingsStore = async function(storeCode) {
+            state.leadershipSettingsStoreCode = normalizeStoreIdCode(storeCode);
+            state.leadershipSettingsRecord = null;
+            renderApp();
+            if (state.leadershipSettingsStoreCode) await fetchActiveLeadershipSettings();
+        };
+        window.submitLeadershipSettings = async function(event) {
+            event.preventDefault();
+            if (!canCurrentUserManageLeadershipSettings() || state.leadershipSettingsSaving) return;
+            const form = event.currentTarget;
+            const activate = event.submitter?.dataset?.activate === 'true';
+            const errorEl = form.querySelector('#leadership-settings-error');
+            const showError = message => { if (errorEl) { errorEl.textContent = message; errorEl.classList.remove('hidden'); } };
+            const settings = readLeadershipPolicyForm(form);
+            const validation = validateLeadershipPolicySettings(settings);
+            if (activate && !validation.ok) return showError(`無法啟用：請先設定${validation.missing.join('、')}。`);
+            const version = String(new FormData(form).get('policyVersion') || '').trim();
+            if (!version) return showError('請填寫政策版本。');
+            state.leadershipSettingsSaving = true;
+            [...form.querySelectorAll('button[type="submit"]')].forEach(button => button.disabled = true);
+            try {
+                const storeId = await getLeadershipSettingsStoreUuid();
+                if (state.leadershipSettingsScope === 'store' && !storeId) throw new Error('請先選擇覆寫門市。');
+                const { error } = await getSupabaseClient().rpc('upsert_leadership_settings', {
+                    p_scope_type: state.leadershipSettingsScope,
+                    p_store_id: storeId,
+                    p_policy_version: version,
+                    p_settings: settings,
+                    p_is_active: activate
+                });
+                if (error) throw error;
+                if (activate) {
+                    await fetchActiveLeadershipSettings({ render: false });
+                } else {
+                    state.leadershipSettingsRecord = {
+                        scope_type: state.leadershipSettingsScope,
+                        store_id: storeId,
+                        policy_version: version,
+                        settings,
+                        is_draft: true
+                    };
+                }
+                showToast(activate ? `幹部制度 ${version} 已啟用。` : `幹部制度 ${version} 草稿已儲存。`, 'success');
+                renderApp();
+            } catch (error) {
+                console.error('[ZDOS HR-052J.2] settings save failed', error);
+                showError(error?.message || '制度設定儲存失敗。');
+            } finally {
+                state.leadershipSettingsSaving = false;
+                [...form.querySelectorAll('button[type="submit"]')].forEach(button => button.disabled = false);
+            }
+        };
+
         const renderWorkforceEmployeesPanel = () => {
             const copy = WORKFORCE_TAB_COPY.employees;
             const employees = getEmployees();
@@ -20707,6 +20929,7 @@
             const mentor = getMentor(emp.id);
             const storeName = getStoreByCode(emp.storeId)?.name || emp.storeId;
             const employmentLabel = PERSONNEL_EMPLOYMENT_LABELS[emp.employmentType] || emp.employmentType;
+            const leadershipHtml = renderLeadershipAppointmentPanelHtml(emp);
             const orlLevel = getEmployeeOrlLevel(emp);
             const canEditOrl = canCurrentUserManageEmployeeOrl(emp.storeId);
             const orlOptions = ORL_LEVEL_DEFINITIONS.map(def => {
@@ -20763,11 +20986,510 @@
                     ${profileRow('狀態', `<span class="zdos-emp-status ${emp.status === 'active' ? 'zdos-emp-status--active' : emp.status === 'pending_data' ? 'zdos-emp-status--pending' : 'zdos-emp-status--other'}">${escapeHtmlText((typeof EMPLOYEE_INTAKE_STATUS_LABELS !== 'undefined' && EMPLOYEE_INTAKE_STATUS_LABELS[emp.status]) || emp.status || '—')}</span>`)}
                 </dl>
                 ${orlManageBlock}
+                ${leadershipHtml}
                 ${typeof renderEmployeeAuthPanelHtml === 'function' ? renderEmployeeAuthPanelHtml(emp) : ''}
                 <p class="mt-4 text-[10px] text-slate-600 text-center">${escapeHtmlText(employmentLabel)} · ${escapeHtmlText(emp.employmentStatus || '')}</p>`;
             document.body.appendChild(backdrop);
             document.body.appendChild(drawer);
         }
+
+        /** HR-052D｜職務與任命：雲端 profile + leadership appointment 為唯一狀態來源。 */
+        const LEADERSHIP_ACTIVE_STATUSES = new Set(['active', 'pending_assessment', 'pending_review', 'ready_for_promotion', 'extended']);
+        const LEADERSHIP_APPOINTER_ROLES = new Set(['owner', 'manager', 'supervisor']);
+        const LEADERSHIP_ELIGIBLE_ROLES = new Set(['staff', 'senior_staff']);
+        const LEADERSHIP_TARGET_ROLE_LABELS = { deputy_leader: '副領班', supervisor: '領班' };
+        const LEADERSHIP_RESULT_LABELS = { not_passed: '未達標', needs_improvement: '需加強', passed: '通過' };
+        const LEADERSHIP_RECOMMENDATION_LABELS = { promote: '建議正式晉升', extend: '建議延長實習', return: '建議返回原職級' };
+        const formatLeadershipRole = role => LEADERSHIP_TARGET_ROLE_LABELS[String(role || '').trim()] || getCloudRoleLabel(String(role || '').trim());
+        const getLeadershipProfileState = employeeId => state.leadershipProfileByEmployeeId?.[String(employeeId || '')] || null;
+        const setLeadershipProfileState = (employeeId, next) => {
+            state.leadershipProfileByEmployeeId = state.leadershipProfileByEmployeeId || {};
+            state.leadershipProfileByEmployeeId[String(employeeId || '')] = next;
+            return next;
+        };
+
+        const fetchLeadershipEmployeeState = async (emp, { render = true } = {}) => {
+            if (!emp) return { ok: false, message: '找不到員工資料。' };
+            if (!isSalesCloudEnabled() || !state.supabaseSessionReady) {
+                const next = setLeadershipProfileState(emp.id, { loading: false, ok: false, message: '請先登入雲端帳號。' });
+                if (render && state.workforceProfileEmployeeId === emp.id) renderWorkforceProfileDrawer();
+                return next;
+            }
+            setLeadershipProfileState(emp.id, { loading: true, ok: false, message: '' });
+            if (render && state.workforceProfileEmployeeId === emp.id) renderWorkforceProfileDrawer();
+            try {
+                const client = getSupabaseClient();
+                const profileId = await resolveLeaveCloudProfileId(String(emp.employeeNo || '').trim());
+                if (!profileId) throw new Error('找不到對應的雲端員工 Profile。');
+                await ensureSupabaseStoreUuidMap();
+                const storeId = state.supabaseStoreUuidByCode?.[normalizeStoreIdCode(emp.storeId)];
+                if (!storeId) throw new Error('找不到員工門市的雲端資料。');
+                const { data, error } = await client.rpc('get_leadership_employee_state', {
+                    p_employee_id: profileId,
+                    p_store_id: storeId
+                });
+                if (error) throw error;
+                if (!data?.profile) throw new Error('找不到對應的雲端員工 Profile。');
+                const next = setLeadershipProfileState(emp.id, {
+                    loading: false,
+                    ok: true,
+                    profile: data.profile,
+                    appointment: data.appointment || null,
+                    mentorProfile: data.mentor_profile || null,
+                    review: null
+                });
+                if (next.appointment?.id) {
+                    const appointmentId = next.appointment.id;
+                    const [progressResult, assessmentResult, shiftResult, historyResult, storeResult, appointmentPolicyResult] = await Promise.all([
+                        client.rpc('get_leadership_training_progress', { p_appointment_id: appointmentId }),
+                        client.from('leadership_assessments').select('id, assessment_type, assessment_key, result, comment, metadata, assessed_by, assessed_at, attempt_no').eq('appointment_id', appointmentId).order('assessed_at', { ascending: false }),
+                        client.from('leadership_shift_logs').select('id, result, can_lead_independently, shift_date').eq('appointment_id', appointmentId).order('shift_date', { ascending: false }),
+                        client.from('leadership_history').select('id, event_type, old_value, new_value, reason, actor_id, occurred_at').eq('appointment_id', appointmentId).order('occurred_at', { ascending: false }),
+                        client.from('stores').select('id, code, name').eq('id', next.appointment.store_id).maybeSingle(),
+                        client.from('leadership_appointments').select('policy_snapshot').eq('id', appointmentId).maybeSingle()
+                    ]);
+                    const readError = progressResult.error || assessmentResult.error || shiftResult.error || historyResult.error || storeResult.error || appointmentPolicyResult.error;
+                    if (readError) throw readError;
+                    next.appointment.policy_snapshot = appointmentPolicyResult.data?.policy_snapshot || {};
+                    const assessments = assessmentResult.data || [];
+                    const history = historyResult.data || [];
+                    const finalHistory = history.find(row => row.event_type === 'final_review_completed') || null;
+                    const finalAssessments = assessments.filter(row => row.assessment_type === 'final_review');
+                    const reviewerId = finalAssessments[0]?.assessed_by || finalHistory?.actor_id || null;
+                    let reviewerProfile = null;
+                    if (reviewerId) {
+                        const reviewerResult = await client.from('profiles').select('id, display_name, employee_no').eq('id', reviewerId).maybeSingle();
+                        if (!reviewerResult.error) reviewerProfile = reviewerResult.data || null;
+                    }
+                    next.review = buildLeadershipReviewSnapshot({
+                        appointment: next.appointment,
+                        assessments,
+                        shiftLogs: shiftResult.data || [],
+                        history,
+                        finalHistory,
+                        finalAssessments,
+                        reviewerProfile,
+                        store: storeResult.data || null,
+                        progress: progressResult.data || null
+                    });
+                }
+                if (render && state.workforceProfileEmployeeId === emp.id) renderWorkforceProfileDrawer();
+                return next;
+            } catch (error) {
+                console.error('[ZDOS HR-052D] leadership state load failed', error);
+                const next = setLeadershipProfileState(emp.id, { loading: false, ok: false, message: error?.message || '任命資料載入失敗。' });
+                if (render && state.workforceProfileEmployeeId === emp.id) renderWorkforceProfileDrawer();
+                return next;
+            }
+        };
+
+        const getLeadershipPolicyNumber = (snapshot, keys, fallback = 0) => {
+            for (const key of keys) {
+                const value = Number(snapshot?.[key]);
+                if (Number.isFinite(value) && value >= 0) return value;
+            }
+            return fallback;
+        };
+        const getLatestLeadershipAssessments = rows => {
+            const latest = new Map();
+            (rows || []).forEach(row => {
+                const key = `${row.assessment_type}:${row.assessment_key}`;
+                if (!latest.has(key)) latest.set(key, row);
+            });
+            return [...latest.values()];
+        };
+        const buildLeadershipReviewSnapshot = ({ appointment, assessments, shiftLogs, history, finalHistory, finalAssessments, reviewerProfile, store, progress }) => {
+            const latest = getLatestLeadershipAssessments(assessments);
+            const knowledgeRows = latest.filter(row => ['knowledge', 'academic', 'theory'].includes(row.assessment_type));
+            const practicalRows = latest.filter(row => row.assessment_type === 'practical');
+            const policy = appointment?.policy_snapshot || {};
+            const requiredPracticalKeys = Array.isArray(policy.practical_required_keys) ? policy.practical_required_keys : [];
+            const practicalRequired = requiredPracticalKeys.length || getLeadershipPolicyNumber(policy, ['practical_required_count', 'required_practical_count'], practicalRows.length);
+            const practicalPassed = practicalRows.filter(row => row.result === 'passed').length;
+            const shiftRequired = getLeadershipPolicyNumber(policy, ['shift_required_count', 'minimum_shift_count', 'required_shift_count'], 0);
+            const knowledgeCompleted = progress ? progress.knowledge_completed === true : knowledgeRows.length > 0 && knowledgeRows.every(row => row.result === 'passed');
+            const practicalCompleted = progress ? progress.practical_completed === true : practicalRequired > 0 && practicalPassed >= practicalRequired && (requiredPracticalKeys.length === 0 || requiredPracticalKeys.every(key => practicalRows.some(row => row.assessment_key === key && row.result === 'passed')));
+            const shiftCompleted = progress ? progress.shift_completed === true : shiftRequired > 0 && shiftLogs.length >= shiftRequired && shiftLogs.some(row => row.can_lead_independently === true);
+            const finalReviewCompleted = progress ? progress.final_review_completed === true : finalAssessments.length > 0 || !!finalHistory;
+            const finalValues = finalAssessments[0]?.metadata || finalHistory?.new_value?.details || finalHistory?.new_value || {};
+            const recommendation = finalValues.recommendation || finalHistory?.new_value?.recommendation || finalValues.supervisor_recommendation || null;
+            const policyConfigured = progress ? progress.policy_configured === true : true;
+            return {
+                assessments, shiftLogs, history, finalHistory, finalAssessments, reviewerProfile, store, progress,
+                knowledgeCompleted,
+                practicalPassed: progress?.practical_passed_count ?? practicalPassed,
+                practicalRequired: progress?.practical_required_count ?? practicalRequired,
+                practicalCompleted,
+                shiftCompletedCount: progress?.shift_passed_count ?? shiftLogs.filter(row => row.result === 'passed').length,
+                shiftRequired: progress?.shift_required_count ?? shiftRequired,
+                shiftCompleted,
+                finalReviewCompleted,
+                promotionReady: policyConfigured && knowledgeCompleted && practicalCompleted && shiftCompleted && finalReviewCompleted,
+                recommendation,
+                overallComment: finalAssessments[0]?.comment || finalHistory?.reason || finalValues.overall_comment || finalValues.comment || '',
+                reviewedAt: finalAssessments[0]?.assessed_at || finalHistory?.occurred_at || null
+            };
+        };
+
+        const renderLeadershipAppointmentPanelHtml = emp => {
+            const cloud = getLeadershipProfileState(emp.id);
+            const actorRole = String(state.cloudProfile?.role || state.cloudRole || '').trim();
+            const canAppoint = LEADERSHIP_APPOINTER_ROLES.has(actorRole);
+            let body = '<p class="text-[10px] text-slate-500">正在讀取 Supabase 任命狀態…</p>';
+            if (cloud && !cloud.loading && !cloud.ok) {
+                body = `<p class="text-[10px] text-rose-300">${escapeHtmlText(cloud.message || '任命狀態無法載入。')}</p>`;
+            } else if (cloud?.ok) {
+                const profileRole = String(cloud.profile?.role || '').trim();
+                const appointment = cloud.appointment;
+                const hasActive = !!appointment && LEADERSHIP_ACTIVE_STATUSES.has(String(appointment.status || ''));
+                if (hasActive) {
+                    const review = cloud.review;
+                    const decisionRoles = Array.isArray(appointment?.policy_snapshot?.decision_roles) ? appointment.policy_snapshot.decision_roles : [];
+                    const canDecide = canAppoint && decisionRoles.includes(actorRole);
+                    const canReview = canDecide && !!review?.promotionReady;
+                    const reviewReason = !canDecide ? '目前帳號不在本次任命的最終決議角色內' : !review ? '正在讀取培訓與總評資料' : !review.promotionReady ? '培訓或主管總評尚未完成' : '';
+                    body = `<div class="rounded-xl border border-emerald-500/25 bg-emerald-950/25 p-3 space-y-2">
+                        <div class="flex items-center justify-between gap-2"><strong class="text-sm text-emerald-300">實習幹部</strong><span class="text-[10px] px-2 py-0.5 rounded-full border border-emerald-500/25 text-emerald-200">${escapeHtmlText(appointment?.status || 'active')}</span></div>
+                        <dl class="grid grid-cols-2 gap-x-3 gap-y-1 text-[10px]">
+                            <dt class="text-slate-500">實習期間</dt><dd class="text-right text-slate-200">${escapeHtmlText(appointment ? `${appointment.effective_date} ～ ${appointment.planned_end_date}` : '—')}</dd>
+                            <dt class="text-slate-500">預定職級</dt><dd class="text-right text-slate-200">${escapeHtmlText(formatLeadershipRole(appointment?.target_role || ''))}</dd>
+                            <dt class="text-slate-500">培訓主管</dt><dd class="text-right text-slate-200">${escapeHtmlText(cloud.mentorProfile?.display_name || '未指定')}</dd>
+                            <dt class="text-slate-500">原職級</dt><dd class="text-right text-slate-200">${escapeHtmlText(formatLeadershipRole(appointment?.previous_role || ''))}</dd>
+                        </dl>
+                        ${review ? `<div class="pt-2 border-t border-emerald-500/15 grid grid-cols-2 gap-1 text-[10px]"><span class="text-slate-500">學科 ${review.knowledgeCompleted ? '✅' : '○'}</span><span class="text-slate-500">術科 ${review.practicalPassed}/${review.practicalRequired}</span><span class="text-slate-500">帶班 ${review.shiftCompletedCount}/${review.shiftRequired}</span><span class="text-slate-500">總評 ${review.finalReviewCompleted ? '✅' : '○'}</span></div>` : ''}
+                        <button type="button" onclick="openLeadershipReviewModal('${escapeHtmlText(emp.id)}')" ${canReview ? '' : 'disabled'} class="zdos-nav-btn w-full py-2.5 rounded-xl border border-amber-500/35 bg-amber-500/10 text-amber-100 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed">進行晉升審核</button>
+                        ${reviewReason ? `<p class="text-[10px] text-slate-500 text-center">${escapeHtmlText(reviewReason)}</p>` : ''}
+                    </div>`;
+                } else if (profileRole === 'trainee_manager') {
+                    body = `<div class="rounded-xl border border-amber-500/25 bg-amber-950/25 p-3 space-y-2">
+                        <div class="flex items-center justify-between gap-2"><strong class="text-sm text-amber-200">實習幹部資料待修正</strong><span class="text-[10px] px-2 py-0.5 rounded-full border border-amber-500/25 text-amber-100">資料不完整</span></div>
+                        <p class="text-[10px] text-amber-100/75">此員工的雲端職級為實習幹部，但找不到有效任命紀錄。晉升審核已鎖定，請先由人事主管確認歷史資料。</p>
+                        <button type="button" disabled class="zdos-nav-btn w-full py-2.5 rounded-xl border border-amber-500/25 bg-amber-500/10 text-amber-100 text-xs font-bold opacity-40 cursor-not-allowed">進行晉升審核</button>
+                    </div>`;
+                } else {
+                    const eligible = LEADERSHIP_ELIGIBLE_ROLES.has(profileRole) && cloud.profile?.is_active !== false;
+                    const reason = !canAppoint ? '目前帳號沒有任命權限' : !eligible ? `目前職級「${formatLeadershipRole(profileRole)}」不適用` : '';
+                    body = `<p class="text-[10px] text-slate-400 mb-2">目前職級：<strong class="text-slate-200">${escapeHtmlText(formatLeadershipRole(profileRole))}</strong></p>
+                        <button type="button" class="zdos-nav-btn w-full py-2.5 rounded-xl border border-violet-500/35 bg-violet-600/15 text-violet-100 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed" onclick="openLeadershipAppointmentModal('${escapeHtmlText(emp.id)}')" ${eligible && canAppoint ? '' : 'disabled'}>晉升實習幹部</button>
+                        ${reason ? `<p class="mt-2 text-[10px] text-slate-500 text-center">${escapeHtmlText(reason)}</p>` : ''}`;
+                }
+            }
+            return `<section class="mt-4 pt-4 border-t border-white/[0.06]"><div class="flex items-center justify-between gap-2 mb-2"><h3 class="text-xs font-bold text-slate-200">職務與任命</h3><span class="text-[9px] font-mono text-slate-600">HR-052D</span></div>${body}</section>`;
+        };
+
+        const getLeadershipMentorCandidates = emp => getEmployees().filter(row => {
+            if (row.id === emp.id || row.status !== 'active' || normalizeStoreIdCode(row.storeId) !== normalizeStoreIdCode(emp.storeId)) return false;
+            return LEADERSHIP_APPOINTER_ROLES.has(String(row.role || '').trim()) || /店長|經理|領班|實習幹部/.test(String(row.position || ''));
+        });
+        const addMonthsToIsoDate = (iso, months) => {
+            const date = new Date(`${iso}T12:00:00`);
+            if (Number.isNaN(date.getTime())) return '';
+            date.setMonth(date.getMonth() + Number(months || 0));
+            date.setDate(date.getDate() - 1);
+            return date.toISOString().slice(0, 10);
+        };
+        const addDaysToIsoDate = (iso, days) => {
+            const date = new Date(`${iso}T12:00:00`);
+            if (Number.isNaN(date.getTime())) return '';
+            date.setDate(date.getDate() + Number(days || 0));
+            return date.toISOString().slice(0, 10);
+        };
+        window.syncLeadershipPlannedEndDate = function() {
+            const modal = document.getElementById('leadership-appointment-modal');
+            const effective = modal?.querySelector('[name="effectiveDate"]')?.value;
+            const duration = modal?.querySelector('[name="durationMonths"]')?.value;
+            const planned = modal?.querySelector('[name="plannedEndDate"]');
+            if (planned && effective && duration) planned.value = addMonthsToIsoDate(effective, duration);
+        };
+
+        window.openLeadershipAppointmentModal = async function(employeeId) {
+            const emp = getEmployee(employeeId);
+            if (!emp) return showToast('找不到員工資料。', 'error');
+            let cloud = getLeadershipProfileState(emp.id);
+            if (!cloud?.ok) cloud = await fetchLeadershipEmployeeState(emp, { render: false });
+            const actorRole = String(state.cloudProfile?.role || state.cloudRole || '').trim();
+            const hasActive = !!cloud?.appointment && LEADERSHIP_ACTIVE_STATUSES.has(String(cloud.appointment.status || ''));
+            if (!cloud?.ok || !LEADERSHIP_APPOINTER_ROLES.has(actorRole) || !LEADERSHIP_ELIGIBLE_ROLES.has(String(cloud.profile?.role || '')) || hasActive) return showToast('此員工目前不可建立實習幹部任命。', 'error');
+            await ensureSupabaseStoreUuidMap();
+            const policyStoreId = state.supabaseStoreUuidByCode?.[normalizeStoreIdCode(emp.storeId)];
+            if (!policyStoreId) return showToast('找不到員工門市的雲端資料。', 'error');
+            const policyResult = await getSupabaseClient().rpc('get_active_leadership_settings', { p_store_id: policyStoreId });
+            if (policyResult.error) return showToast(policyResult.error.message || '幹部制度讀取失敗。', 'error');
+            const policy = policyResult.data || null;
+            const policyValidation = validateLeadershipPolicySettings(policy?.settings || {});
+            if (!policy?.id || !policyValidation.ok) {
+                const missing = policyValidation.missing.length ? `：${policyValidation.missing.join('、')}` : '';
+                return showToast(`目前沒有可用的幹部晉升制度${missing}`, 'error');
+            }
+            state.leadershipAppointmentPolicy = policy;
+            state.leadershipAppointmentModalEmployeeId = emp.id;
+            document.getElementById('leadership-appointment-modal')?.remove();
+            const today = new Date().toISOString().slice(0, 10);
+            const mentorOptions = getLeadershipMentorCandidates(emp).map(row => `<option value="${escapeHtmlText(row.id)}">${escapeHtmlText(row.name)} · ${escapeHtmlText(row.position || getEmployeeRoleLabel(row))}</option>`).join('');
+            const modal = document.createElement('div');
+            modal.id = 'leadership-appointment-modal';
+            modal.className = 'fixed inset-0 z-[1005] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md animate-fade-in';
+            modal.innerHTML = `<form class="w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-2xl border border-violet-500/25 bg-slate-900 shadow-2xl p-5 space-y-4" onsubmit="submitLeadershipAppointment(event)">
+                <div class="flex items-start justify-between gap-3"><div><p class="text-[10px] uppercase tracking-[0.16em] text-violet-300">Leadership Appointment</p><h2 class="text-lg font-black text-white mt-1">晉升實習幹部</h2></div><button type="button" onclick="closeLeadershipAppointmentModal()" class="zdos-nav-btn px-2 py-1 rounded-lg text-slate-400">✕</button></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <label class="text-[10px] font-bold text-slate-400">員工姓名<input readonly value="${escapeHtmlText(cloud.profile.display_name || emp.name)}" class="mt-1 w-full rounded-xl bg-slate-950/60 border border-white/[0.08] px-3 py-2 text-sm text-slate-300"></label>
+                    <label class="text-[10px] font-bold text-slate-400">所屬門市<input readonly value="${escapeHtmlText(getEmployeeStoreName(emp))}" class="mt-1 w-full rounded-xl bg-slate-950/60 border border-white/[0.08] px-3 py-2 text-sm text-slate-300"></label>
+                    <label class="text-[10px] font-bold text-slate-400">目前職級<input readonly value="${escapeHtmlText(formatLeadershipRole(cloud.profile.role))}" class="mt-1 w-full rounded-xl bg-slate-950/60 border border-white/[0.08] px-3 py-2 text-sm text-slate-300"></label>
+                    <label class="text-[10px] font-bold text-slate-400">任命主管<input readonly value="${escapeHtmlText(state.cloudProfile?.display_name || state.cloudProfile?.employee_no || '目前登入者')}" class="mt-1 w-full rounded-xl bg-slate-950/60 border border-white/[0.08] px-3 py-2 text-sm text-slate-300"></label>
+                    <label class="text-[10px] font-bold text-slate-400">生效日期<span class="text-rose-400"> *</span><input name="effectiveDate" type="date" required value="${today}" onchange="syncLeadershipPlannedEndDate()" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white"></label>
+                    <label class="text-[10px] font-bold text-slate-400">實習期間<select name="durationMonths" onchange="syncLeadershipPlannedEndDate()" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white"><option value="1">1 個月</option><option value="2">2 個月</option><option value="3" selected>3 個月</option><option value="6">6 個月</option></select></label>
+                    <label class="text-[10px] font-bold text-slate-400">預定結束日<span class="text-rose-400"> *</span><input name="plannedEndDate" type="date" required value="${addMonthsToIsoDate(today, 3)}" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white"></label>
+                    <label class="text-[10px] font-bold text-slate-400">預定晉升職級<span class="text-rose-400"> *</span><select name="targetRole" required class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white"><option value="deputy_leader">副領班</option><option value="supervisor">領班</option></select></label>
+                    <label class="sm:col-span-2 text-[10px] font-bold text-slate-400">培訓主管<select name="mentorEmployeeId" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white"><option value="">未指定</option>${mentorOptions}</select></label>
+                    <label class="sm:col-span-2 text-[10px] font-bold text-slate-400">任命備註<textarea name="notes" rows="3" maxlength="1000" placeholder="培訓重點或任命說明（選填）" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white resize-none"></textarea></label>
+                </div><p id="leadership-appointment-error" class="hidden text-xs text-rose-300"></p>
+                <div class="flex gap-2"><button type="button" onclick="closeLeadershipAppointmentModal()" class="flex-1 py-2.5 rounded-xl border border-white/[0.1] text-slate-300 text-xs font-bold">取消</button><button id="leadership-appointment-submit" type="submit" class="flex-1 py-2.5 rounded-xl bg-violet-600 text-white text-xs font-bold">確認任命</button></div>
+                <p class="text-[9px] text-slate-600 text-center">提交後僅呼叫 create_leadership_appointment RPC</p></form>`;
+            modal.addEventListener('click', event => { if (event.target === modal) closeLeadershipAppointmentModal(); });
+            document.body.appendChild(modal);
+        };
+
+        window.closeLeadershipAppointmentModal = function() {
+            if (state.leadershipAppointmentSubmitting) return;
+            state.leadershipAppointmentModalEmployeeId = null;
+            state.leadershipAppointmentPolicy = null;
+            document.getElementById('leadership-appointment-modal')?.remove();
+        };
+        const mapLeadershipAppointmentError = error => {
+            const message = String(error?.message || '');
+            if (message.includes('ACTIVE_APPOINTMENT_EXISTS')) return '此員工已有進行中的任命。';
+            if (message.includes('EMPLOYEE_ROLE_NOT_ELIGIBLE')) return '此員工目前職級不符合任命資格。';
+            if (message.includes('INSUFFICIENT_PERMISSION') || message.includes('STORE_ACCESS_DENIED')) return '您沒有此門市的任命權限。';
+            if (message.includes('INVALID_APPOINTMENT_DATES')) return '請確認生效日與預定結束日。';
+            if (message.includes('MENTOR_NOT_FOUND_OR_INACTIVE')) return '培訓主管不存在或已停用。';
+            if (message.includes('POLICY_NOT_CONFIGURED')) return '幹部晉升制度尚未啟用或必要欄位未設定完整。';
+            return error?.message || '任命建立失敗。';
+        };
+        window.submitLeadershipAppointment = async function(event) {
+            event.preventDefault();
+            if (state.leadershipAppointmentSubmitting) return;
+            const emp = getEmployee(state.leadershipAppointmentModalEmployeeId);
+            const form = event.target;
+            const errorEl = form.querySelector('#leadership-appointment-error');
+            const submitBtn = form.querySelector('#leadership-appointment-submit');
+            const showError = message => { if (errorEl) { errorEl.textContent = message; errorEl.classList.remove('hidden'); } };
+            if (!emp) return showError('找不到員工資料。');
+            const fd = new FormData(form);
+            const effectiveDate = String(fd.get('effectiveDate') || '');
+            const plannedEndDate = String(fd.get('plannedEndDate') || '');
+            if (!effectiveDate || !plannedEndDate || plannedEndDate < effectiveDate) return showError('預定結束日不可早於生效日。');
+            state.leadershipAppointmentSubmitting = true;
+            if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = '任命處理中…'; }
+            try {
+                const cloud = getLeadershipProfileState(emp.id) || await fetchLeadershipEmployeeState(emp, { render: false });
+                if (!cloud?.ok) throw new Error(cloud?.message || '員工雲端資料尚未就緒。');
+                await ensureSupabaseStoreUuidMap();
+                const storeId = state.supabaseStoreUuidByCode?.[normalizeStoreIdCode(emp.storeId)];
+                if (!storeId) throw new Error('找不到員工門市的雲端資料。');
+                const policyResult = await getSupabaseClient().rpc('get_active_leadership_settings', { p_store_id: storeId });
+                if (policyResult.error) throw policyResult.error;
+                const policy = policyResult.data || null;
+                const policySettings = policy?.settings || {};
+                const policyValidation = validateLeadershipPolicySettings(policySettings);
+                if (!policy?.id || !policyValidation.ok) throw new Error(`POLICY_NOT_CONFIGURED:${policyValidation.missing.join(',')}`);
+                const targetRole = String(fd.get('targetRole') || '');
+                const policyRoleMap = getLeadershipProfileRoleMap(policySettings);
+                const mappedProfileRole = String(policyRoleMap[targetRole] || '').trim();
+                if (!mappedProfileRole) throw new Error('POLICY_NOT_CONFIGURED:profile_role_target');
+                const policySnapshot = {
+                    ...policySettings,
+                    profile_role_target_map: policyRoleMap,
+                    profile_role_target: mappedProfileRole,
+                    target_role_profile_map: { deputy_leader: policyRoleMap.deputy_leader, leader: policyRoleMap.supervisor },
+                    leadership_settings_id: policy.id,
+                    policy_scope_type: policy.scope_type,
+                    policy_store_id: policy.store_id
+                };
+                const mentorEmployeeId = String(fd.get('mentorEmployeeId') || '').trim();
+                let mentorId = null;
+                if (mentorEmployeeId) {
+                    const mentor = getEmployee(mentorEmployeeId);
+                    if (!mentor) throw new Error('找不到培訓主管。');
+                    mentorId = await resolveLeaveCloudProfileId(String(mentor.employeeNo || '').trim());
+                    if (!mentorId) throw new Error('培訓主管尚未建立雲端帳號。');
+                }
+                const { error } = await getSupabaseClient().rpc('create_leadership_appointment', {
+                    p_employee_id: cloud.profile.id, p_store_id: storeId, p_effective_date: effectiveDate,
+                    p_planned_end_date: plannedEndDate, p_target_role: targetRole,
+                    p_mentor_id: mentorId, p_notes: String(fd.get('notes') || '').trim() || null,
+                    p_policy_version: policy.policy_version,
+                    p_policy_snapshot: policySnapshot
+                });
+                if (error) throw error;
+                document.getElementById('leadership-appointment-modal')?.remove();
+                state.leadershipAppointmentModalEmployeeId = null;
+                state.leadershipAppointmentPolicy = null;
+                await fetchLeadershipEmployeeState(emp, { render: false });
+                if (state.workforceProfileEmployeeId === emp.id) renderWorkforceProfileDrawer();
+                showToast(`${emp.name} 已任命為實習幹部。`, 'success');
+            } catch (error) {
+                console.error('[ZDOS HR-052D] appointment RPC failed', error);
+                showError(mapLeadershipAppointmentError(error));
+            } finally {
+                state.leadershipAppointmentSubmitting = false;
+                if (submitBtn?.isConnected) { submitBtn.disabled = false; submitBtn.textContent = '確認任命'; }
+            }
+        };
+
+        /** HR-052K｜晉升審核：摘要唯讀；正式決議只能呼叫後端 RPC。 */
+        const formatLeadershipDate = value => value ? new Date(value).toLocaleDateString('zh-TW') : '—';
+        const renderLeadershipFinalReviewHtml = review => {
+            const keys = [
+                ['management_judgment', '管理判斷'], ['floor_control', '現場掌控'],
+                ['people_leadership', '帶人能力'], ['proactive_reporting', '主動回報'], ['stability', '穩定度']
+            ];
+            const values = review?.finalAssessments?.[0]?.metadata || review?.finalHistory?.new_value?.details || review?.finalHistory?.new_value || {};
+            const latestByKey = new Map((review?.finalAssessments || []).map(row => [row.assessment_key, row]));
+            return keys.map(([key, label]) => {
+                const result = values[key] || latestByKey.get(key)?.result || '';
+                return `<div class="flex justify-between gap-3 py-1 border-b border-white/[0.05]"><span class="text-slate-500">${label}</span><strong class="text-slate-200">${escapeHtmlText(LEADERSHIP_RESULT_LABELS[result] || result || '—')}</strong></div>`;
+            }).join('');
+        };
+        const renderLeadershipReviewSummaryHtml = (emp, cloud) => {
+            const appointment = cloud.appointment;
+            const review = cloud.review;
+            const row = (label, value) => `<div class="rounded-xl bg-slate-950/45 border border-white/[0.06] p-3"><dt class="text-[9px] text-slate-500">${label}</dt><dd class="mt-1 text-xs font-bold text-slate-200">${escapeHtmlText(value || '—')}</dd></div>`;
+            return `<div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                ${row('員工', cloud.profile.display_name || emp.name)}${row('門市', review.store?.name || getEmployeeStoreName(emp))}
+                ${row('原職級', formatLeadershipRole(appointment.previous_role))}${row('目標職級', formatLeadershipRole(appointment.target_role))}
+                ${row('實習生效日', formatLeadershipDate(appointment.effective_date))}${row('預計結束日', formatLeadershipDate(appointment.planned_end_date))}
+                ${row('學科', review.knowledgeCompleted ? '已完成' : '未完成')}${row('術科', `${review.practicalPassed} / ${review.practicalRequired}`)}
+                ${row('實習帶班', `${review.shiftCompletedCount} / ${review.shiftRequired}`)}${row('主管總評', review.finalReviewCompleted ? '已完成' : '未完成')}
+            </div>
+            <section class="rounded-xl border border-white/[0.08] bg-slate-950/35 p-3"><div class="flex items-center justify-between gap-2 mb-2"><h3 class="text-xs font-bold text-white">最新主管總評</h3><span class="text-[9px] text-slate-500">${escapeHtmlText(formatLeadershipDate(review.reviewedAt))}</span></div>
+                <div class="text-[10px]">${renderLeadershipFinalReviewHtml(review)}</div>
+                <p class="mt-2 text-[10px] text-slate-400">評核主管：${escapeHtmlText(review.reviewerProfile?.display_name || '—')}</p>
+                <p class="mt-1 text-[10px] text-slate-400">主管評語：${escapeHtmlText(review.overallComment || '—')}</p>
+                <p class="mt-2 text-xs font-bold text-amber-200">${escapeHtmlText(LEADERSHIP_RECOMMENDATION_LABELS[review.recommendation] || '尚無主管建議')}</p>
+            </section>`;
+        };
+        window.openLeadershipReviewModal = async function(employeeId) {
+            const emp = getEmployee(employeeId);
+            if (!emp) return showToast('找不到員工資料。', 'error');
+            const cloud = await fetchLeadershipEmployeeState(emp, { render: false });
+            const actorRole = String(state.cloudProfile?.role || state.cloudRole || '').trim();
+            const active = !!cloud?.appointment && LEADERSHIP_ACTIVE_STATUSES.has(String(cloud.appointment.status || ''));
+            const decisionRoles = Array.isArray(cloud?.appointment?.policy_snapshot?.decision_roles) ? cloud.appointment.policy_snapshot.decision_roles : [];
+            if (!cloud?.ok || !active || String(cloud.profile?.role || '') !== 'trainee_manager' || !LEADERSHIP_APPOINTER_ROLES.has(actorRole) || !decisionRoles.includes(actorRole) || !cloud.review?.promotionReady) {
+                if (state.workforceProfileEmployeeId === emp.id) renderWorkforceProfileDrawer();
+                return showToast('培訓前置條件未完成，或您沒有晉升核准權限。', 'error');
+            }
+            state.leadershipReviewModalEmployeeId = emp.id;
+            document.getElementById('leadership-review-modal')?.remove();
+            const today = new Date().toISOString().slice(0, 10);
+            const modal = document.createElement('div');
+            modal.id = 'leadership-review-modal';
+            modal.className = 'fixed inset-0 z-[1006] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md animate-fade-in';
+            modal.innerHTML = `<form class="w-full max-w-3xl max-h-[94vh] overflow-y-auto rounded-2xl border border-amber-500/25 bg-slate-900 shadow-2xl p-5 space-y-4" onsubmit="submitLeadershipReviewOutcome(event)">
+                <div class="flex items-start justify-between gap-3"><div><p class="text-[10px] uppercase tracking-[0.16em] text-amber-300">Promotion Review</p><h2 class="text-lg font-black text-white mt-1">晉升審核</h2></div><button type="button" onclick="closeLeadershipReviewModal()" class="zdos-nav-btn px-2 py-1 rounded-lg text-slate-400">✕</button></div>
+                ${renderLeadershipReviewSummaryHtml(emp, cloud)}
+                <fieldset><legend class="text-xs font-bold text-slate-300 mb-2">最終決議</legend><div class="grid grid-cols-3 gap-2">
+                    <button type="button" data-review-outcome="promote" onclick="setLeadershipReviewOutcome('promote')" class="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-2 py-3 text-xs font-bold text-emerald-200">正式晉升</button>
+                    <button type="button" data-review-outcome="extend" onclick="setLeadershipReviewOutcome('extend')" class="rounded-xl border border-sky-500/30 bg-sky-500/10 px-2 py-3 text-xs font-bold text-sky-200">延長實習</button>
+                    <button type="button" data-review-outcome="return" onclick="setLeadershipReviewOutcome('return')" class="rounded-xl border border-rose-500/30 bg-rose-500/10 px-2 py-3 text-xs font-bold text-rose-200">返回原職級</button>
+                </div></fieldset>
+                <input type="hidden" name="outcome" value="promote">
+                <section data-review-panel="promote" class="rounded-xl border border-emerald-500/20 bg-emerald-950/20 p-3 grid sm:grid-cols-2 gap-3">
+                    <label class="text-[10px] font-bold text-slate-400">確認目標職級<input readonly value="${escapeHtmlText(formatLeadershipRole(cloud.appointment.target_role))}" class="mt-1 w-full rounded-xl bg-slate-950/60 border border-white/[0.08] px-3 py-2 text-sm text-slate-300"></label>
+                    <label class="text-[10px] font-bold text-slate-400">生效日期<input name="effectiveDate" type="date" readonly value="${today}" class="mt-1 w-full rounded-xl bg-slate-950/60 border border-white/[0.08] px-3 py-2 text-sm text-slate-300"><span class="block mt-1 text-[9px] font-normal text-slate-500">由後端以核准當日生效</span></label>
+                </section>
+                <section data-review-panel="extend" class="hidden rounded-xl border border-sky-500/20 bg-sky-950/20 p-3 grid sm:grid-cols-2 gap-3">
+                    <label class="text-[10px] font-bold text-slate-400">新預計結束日<span class="text-rose-400"> *</span><input name="newPlannedEndDate" type="date" min="${escapeHtmlText(addDaysToIsoDate(cloud.appointment.planned_end_date, 1))}" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white"></label>
+                    <label class="sm:col-span-2 text-[10px] font-bold text-slate-400">延長原因<span class="text-rose-400"> *</span><textarea name="extendReason" rows="3" maxlength="1000" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white resize-none"></textarea></label>
+                </section>
+                <section data-review-panel="return" class="hidden rounded-xl border border-rose-500/20 bg-rose-950/20 p-3 space-y-3">
+                    <p class="text-xs text-rose-100">將由後端依任命保存的原職級恢復為「${escapeHtmlText(formatLeadershipRole(cloud.appointment.previous_role))}」，畫面不提供職級選擇。</p>
+                    <label class="block text-[10px] font-bold text-slate-400">返回原因<span class="text-rose-400"> *</span><textarea name="returnReason" rows="3" maxlength="1000" class="mt-1 w-full rounded-xl bg-slate-950/70 border border-white/[0.1] px-3 py-2 text-sm text-white resize-none"></textarea></label>
+                </section>
+                <p id="leadership-review-error" class="hidden text-xs text-rose-300"></p>
+                <div class="flex gap-2"><button type="button" onclick="closeLeadershipReviewModal()" class="flex-1 py-2.5 rounded-xl border border-white/[0.1] text-slate-300 text-xs font-bold">取消</button><button id="leadership-review-submit" type="submit" class="flex-1 py-2.5 rounded-xl bg-amber-500 text-slate-950 text-xs font-black">確認正式晉升</button></div>
+                <p class="text-[9px] text-slate-600 text-center">人事異動只由 Supabase RPC transaction 執行</p>
+            </form>`;
+            modal.addEventListener('click', event => { if (event.target === modal) closeLeadershipReviewModal(); });
+            document.body.appendChild(modal);
+            setLeadershipReviewOutcome('promote');
+        };
+        window.setLeadershipReviewOutcome = function(outcome) {
+            const modal = document.getElementById('leadership-review-modal');
+            if (!modal || !['promote', 'extend', 'return'].includes(outcome)) return;
+            modal.querySelector('[name="outcome"]').value = outcome;
+            modal.querySelectorAll('[data-review-panel]').forEach(panel => panel.classList.toggle('hidden', panel.dataset.reviewPanel !== outcome));
+            modal.querySelectorAll('[data-review-outcome]').forEach(button => button.classList.toggle('ring-2', button.dataset.reviewOutcome === outcome));
+            const submit = modal.querySelector('#leadership-review-submit');
+            if (submit) submit.textContent = { promote: '確認正式晉升', extend: '確認延長實習', return: '確認返回原職級' }[outcome];
+        };
+        window.closeLeadershipReviewModal = function() {
+            if (state.leadershipReviewSubmitting) return;
+            state.leadershipReviewModalEmployeeId = null;
+            document.getElementById('leadership-review-modal')?.remove();
+        };
+        const mapLeadershipReviewError = error => {
+            const message = String(error?.message || '');
+            if (/Could not find the function|PGRST202/i.test(message)) return '後端最終決議 RPC 尚未建立，請先完成 HR-052J。';
+            if (/PROMOTION_NOT_READY|PREREQUISITE/i.test(message)) return '後端重新檢查後判定培訓前置條件尚未完成。';
+            if (/INSUFFICIENT_PERMISSION|STORE_ACCESS_DENIED|FORBIDDEN|SELF_DECISION/i.test(message)) return '您沒有此任命的核准權限。';
+            if (/POLICY_NOT_CONFIGURED/i.test(message)) return '本次任命缺少最終決議角色或職級映射，請先由 owner 檢查制度設定。';
+            if (/INVALID.*DATE|END_DATE/i.test(message)) return '請確認新的日期設定。';
+            return error?.message || '晉升審核送出失敗。';
+        };
+        const reloadLeadershipDecisionState = async (emp, profileId, appointmentId) => {
+            const refreshed = await fetchLeadershipEmployeeState(emp, { render: false });
+            if (!refreshed?.ok || refreshed.profile?.id !== profileId || refreshed.appointment?.id !== appointmentId) {
+                throw new Error('人事異動已完成，但重新讀取 profile／任命／歷程失敗。');
+            }
+            return refreshed;
+        };
+        window.submitLeadershipReviewOutcome = async function(event) {
+            event.preventDefault();
+            if (state.leadershipReviewSubmitting) return;
+            const emp = getEmployee(state.leadershipReviewModalEmployeeId);
+            const cloud = emp && getLeadershipProfileState(emp.id);
+            const form = event.target;
+            const errorEl = form.querySelector('#leadership-review-error');
+            const submit = form.querySelector('#leadership-review-submit');
+            const showError = message => { errorEl.textContent = message; errorEl.classList.remove('hidden'); };
+            if (!emp || !cloud?.appointment?.id || !cloud.review?.promotionReady) return showError('審核資料已失效，請關閉後重新載入。');
+            const fd = new FormData(form);
+            const outcome = String(fd.get('outcome') || '');
+            const plannedEndDate = String(cloud.appointment.planned_end_date || '');
+            const newEndDate = String(fd.get('newPlannedEndDate') || '');
+            const extendReason = String(fd.get('extendReason') || '').trim();
+            const returnReason = String(fd.get('returnReason') || '').trim();
+            if (outcome === 'extend' && (!newEndDate || newEndDate <= plannedEndDate || !extendReason)) return showError('請填寫晚於目前結束日的新日期與延長原因。');
+            if (outcome === 'return' && !returnReason) return showError('請填寫返回原職級的原因。');
+            const rpcByOutcome = {
+                promote: ['promote_leadership_appointment', { p_appointment_id: cloud.appointment.id }],
+                extend: ['extend_leadership_appointment', { p_appointment_id: cloud.appointment.id, p_new_end_date: newEndDate, p_reason: extendReason }],
+                return: ['return_leadership_appointment', { p_appointment_id: cloud.appointment.id, p_reason: returnReason }]
+            };
+            if (!rpcByOutcome[outcome]) return showError('請選擇有效的審核結果。');
+            state.leadershipReviewSubmitting = true;
+            submit.disabled = true;
+            submit.textContent = '處理中…';
+            errorEl.classList.add('hidden');
+            try {
+                const client = getSupabaseClient();
+                const [rpcName, rpcArgs] = rpcByOutcome[outcome];
+                const { error } = await client.rpc(rpcName, rpcArgs);
+                if (error) throw error;
+                document.getElementById('leadership-review-modal')?.remove();
+                state.leadershipReviewModalEmployeeId = null;
+                await reloadLeadershipDecisionState(emp, cloud.profile.id, cloud.appointment.id);
+                if (state.workforceProfileEmployeeId === emp.id) renderWorkforceProfileDrawer();
+                showToast({ promote: '正式晉升已完成。', extend: '實習期間已延長。', return: '已返回任命前原職級。' }[outcome], 'success');
+            } catch (error) {
+                console.error('[ZDOS HR-052K] review RPC failed', error);
+                showError(mapLeadershipReviewError(error));
+            } finally {
+                state.leadershipReviewSubmitting = false;
+                if (submit?.isConnected) { submit.disabled = false; setLeadershipReviewOutcome(outcome); }
+            }
+        };
 
         /** EMPLOYEE-AUTH-001 / AUTH-004｜員工詳情：建立帳號＋管理員重設密碼（僅 Founder／Owner／Admin） */
         const renderEmployeeAuthPanelHtml = (emp) => {
@@ -22943,6 +23665,9 @@
             state.currentWorkforceTab = next;
             state.workforceProfileEmployeeId = null;
             renderApp();
+            if (next === 'settings' && !state.leadershipSettingsRecord && !state.leadershipSettingsLoading) {
+                void fetchActiveLeadershipSettings();
+            }
         };
 
         window.openWorkforceEmployeeProfile = function(employeeId) {
@@ -22950,6 +23675,7 @@
             if (!emp) return showToast('找不到員工資料。', 'error');
             state.workforceProfileEmployeeId = emp.id;
             renderWorkforceProfileDrawer();
+            fetchLeadershipEmployeeState(emp).catch(() => {});
         };
         /** UI-013：Dashboard 入口別名（對接既有 profile drawer） */
         window.openWorkforceProfile = window.openWorkforceEmployeeProfile;
@@ -30793,6 +31519,9 @@
                 }
                 safeSetItem('zdos_current_view', 'workforce');
                 renderApp();
+                if (state.currentWorkforceTab === 'settings' && !state.leadershipSettingsRecord && !state.leadershipSettingsLoading) {
+                    void fetchActiveLeadershipSettings();
+                }
                 return;
             }
             if (view === 'scheduling') {
@@ -30818,7 +31547,7 @@
                 state.currentWorkforceTab || 'employees'
             );
             state.currentWorkforceTab = activeTab;
-            const tabBar = WORKFORCE_TAB_OPTIONS.map(tab => {
+            const tabBar = getVisibleWorkforceTabs().map(tab => {
                 const isActive = tab.id === activeTab;
                 const activeClass = isActive
                     ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md'
@@ -31040,7 +31769,9 @@
                                 ? renderWorkforceEmployeesPanel()
                                 : activeTab === 'attendance'
                                     ? renderWorkforceAttendancePanel()
-                                    : renderWorkforceTabPanel(activeTab)
+                                    : activeTab === 'settings'
+                                        ? renderLeadershipSettingsPanel()
+                                        : renderWorkforceTabPanel(activeTab)
                             }
                         </div>
                     </section>
