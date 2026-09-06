@@ -4408,9 +4408,27 @@
             normalizeAbilityLevel(getEmployeeAbilityMap(employeeId)[String(abilityId || '')]);
 
         const canManageAbilityForStore = storeId => canCurrentUserEditStoreSchedule(storeId);
+        // ACADEMY-NO-SELF-ASSESS-002｜幹部不得評核本人。
+        // 同時比對人員 id／員工編號，避免登入帳號與人事資料鍵值不同時繞過限制。
+        const isAcademySelfAssessmentTarget = employeeId => {
+            const target = getEmployee(employeeId);
+            const viewer = typeof getCurrentUserPersonnel === 'function' ? getCurrentUserPersonnel() : null;
+            if (!target || !viewer) return false;
+            const normalizeKey = value => String(value || '').trim().toLowerCase();
+            const targetKeys = new Set([
+                normalizeKey(target.id),
+                normalizeKey(target.employeeNo),
+                normalizeKey(target.employee_no)
+            ].filter(Boolean));
+            return [viewer.id, viewer.employeeNo, viewer.employee_no]
+                .map(normalizeKey)
+                .filter(Boolean)
+                .some(key => targetKeys.has(key));
+        };
         const canManageEmployeeAbility = employeeId => {
             const emp = getEmployee(employeeId);
             if (!emp) return false;
+            if (isAcademySelfAssessmentTarget(emp.id)) return false;
             return canManageAbilityForStore(normalizeStoreIdCode(emp.storeId));
         };
 
@@ -25068,6 +25086,7 @@
             if (root && state.currentView === 'academy') renderAbilityAcademy(root);
         };
         window.openAbilityAssessment = function(employeeId) {
+            if (isAcademySelfAssessmentTarget(employeeId)) return showToast('幹部不得評核本人，請由其他具權限主管進行考核。', 'error');
             if (!canManageEmployeeAbility(employeeId)) return showToast('無權評核此員工能力。', 'error');
             state.academySection = 'team';
             state.academyTab = 'team';
@@ -25083,6 +25102,7 @@
         window.saveAbilityAssessment = function(employeeId) {
             const emp = getEmployee(employeeId);
             if (!emp) return showToast('找不到員工資料。', 'error');
+            if (isAcademySelfAssessmentTarget(emp.id)) return showToast('幹部不得評核本人，請由其他具權限主管進行考核。', 'error');
             if (!canManageEmployeeAbility(emp.id)) return showToast('無權評核此員工能力。', 'error');
             const root = document.getElementById('root');
             const levels = {};
